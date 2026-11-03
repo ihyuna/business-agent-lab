@@ -266,7 +266,7 @@ input,select,textarea{border-radius:6px;border-color:#dfe2e7}
 .pbar .nm{font-size:15px;font-weight:800}
 .pbar .vit{display:flex;gap:14px;color:var(--muted);flex-wrap:wrap}
 .pbar .vit b{color:var(--ink);font-weight:700;font-variant-numeric:tabular-nums}
-.chartlay{display:grid;grid-template-columns:220px minmax(0,1fr) 286px;flex:1;min-height:0}
+.chartlay{display:grid;grid-template-columns:290px minmax(0,1fr) 262px;flex:1;min-height:0}
 .chartlay>div{min-height:0;overflow:auto}
 .cl-left{border-right:1px solid var(--line)}
 .cl-right{border-left:1px solid var(--line);padding:0 12px 16px}
@@ -294,6 +294,23 @@ input,select,textarea{border-radius:6px;border-color:#dfe2e7}
 .chart g.hov:hover .bar{fill:var(--accent)}
 .chart .axis{stroke:var(--line)}
 .chart .lbl{fill:var(--ink);font-weight:600;font-size:11px}
+.hist .hi.open{background:var(--accent-soft)}
+.hist .chev{color:var(--faint);font-size:12px}
+.visit{padding:10px 12px 12px;border-bottom:1px solid var(--line);background:var(--panel)}
+.visit .vh{display:flex;align-items:center;gap:6px}
+.visit .vd{color:var(--accent);font-weight:700;font-size:14px;font-variant-numeric:tabular-nums}
+.visit .vago{font-size:12px;font-weight:600}
+.visit .vok{color:var(--accent);font-weight:800}
+.visit .vl{display:flex;gap:6px;font-size:12px;margin:4px 0;color:var(--ink);line-height:1.45}
+.visit .ic{width:14px;height:14px;flex:none;stroke:var(--muted);fill:none;stroke-width:1.6;margin-top:2px}
+.visit .vsec{display:flex;align-items:center;border-top:1px solid var(--line);margin-top:8px;padding-top:8px;font-size:12px;color:var(--muted);font-weight:600}
+.visit .lnk{border:0;background:none;color:var(--accent);font-weight:700;font-size:12px;padding:2px 0}
+.visit .vex{display:flex;align-items:center;gap:6px;width:100%;text-align:left;border:1px solid transparent;background:none;border-radius:7px;padding:5px 6px;margin:1px 0;font-size:12.5px}
+.visit button.vex:hover{border-color:var(--accent);background:var(--accent-soft);box-shadow:0 1px 6px rgba(47,124,246,.18)}
+.visit .vex .en{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.visit .vex .es{color:var(--muted);font-size:12px;white-space:nowrap;max-width:46%;overflow:hidden;text-overflow:ellipsis}
+.visit .vex.off .en,.visit .vex.off .es{color:var(--faint);text-decoration:line-through}
+.toast{border-radius:12px;padding:10px 18px;font-weight:600}
 #device.port .planner{grid-template-columns:190px minmax(0,1fr)}
 #device.port .pl-right{display:none}
 #device.port .chartlay{grid-template-columns:200px minmax(0,1fr)}

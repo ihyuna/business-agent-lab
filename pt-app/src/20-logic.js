@@ -416,3 +416,19 @@ const restText=v=>v==null?'':`${Math.floor(v)}:${String(Math.round((v%1)*60)).pa
 /* 마무리: 모든 본세트가 계획 범위 위 끝(또는 목표 횟수) 이상이면 '목표 넘음'. 표시만 하고 올리기는 트레이너가 누른다 */
 function reachedTop(x){const w=x.sets.filter(st=>st.kind!=='warmup'&&st.done);if(!w.length)return false;return w.every(st=>{const g=repRange(st.adj&&st.adj.from?st.adj.from.r:st.pr);const a=isNum(st.ar)?st.ar:firstNum(st.ar);return g&&a!=null&&a>=g[1]})}
 const todayMemos=(m,s)=>m.notes.filter(n=>n.kind==='check'&&n.due===s.id&&!n.done);
+
+/* 지난 수업 종목을 다음 PT 계획에 그대로 복사 (실제값, 없으면 계획값) */
+function copyToNext(src,xs){
+  const m=M(src.memberId); const tgt=upcoming(m.id);
+  if(!tgt||tgt.id===src.id){toast('잡힌 다음 PT가 없어요. 먼저 다음 PT를 잡아 주세요');return null}
+  for(const x of xs){
+    const which=src.status==='completed';
+    let sets=x.sets.filter(st=>which?st.done:true).map(st=>mkSet(st.kind,which?(st.aw??st.pw):st.pw,which?(st.ar??st.pr):st.pr)).filter(st=>st.pw!=null||st.pr!=null);
+    const basis={tag:'복사',date:src.date,lines:[`${md(src.date)} ${splitName(src)} 기록을 그대로 복사했어요.`+(x.raw?` 수첩: ${x.raw}`:'')],options:[]};
+    let y=tgt.exercises.find(e=>e.exId===x.exId&&e.status!=='removed'&&e.status!=='swapped');
+    if(!sets.length){const p=planExercise(m,{exId:x.exId,role:x.role,structure:x.structure},tgt.date,tgt.templateId,tgt.exercises.map(e=>({role:e.role})));sets=p.sets;basis.lines.push('숫자가 없어 규칙으로 채웠어요.')}
+    if(y){y.sets=sets;y.basis=basis;y.edited=false}
+    else{y=planExercise(m,{exId:x.exId,role:x.role,structure:x.structure},tgt.date,tgt.templateId,tgt.exercises.map(e=>({role:e.role})));y.sets=sets;y.basis=basis;y.origin='added';if(x.setting)y.setting=x.setting;tgt.exercises.push(y)}
+  }
+  save(); return tgt;
+}

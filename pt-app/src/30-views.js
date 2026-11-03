@@ -193,6 +193,23 @@ function goalSec(m){
   return `<div><h3>목표 · 훈련 방향</h3>${g.map(x=>`<div class="small">· ${esc(x.text)}</div>`).join('')||'<div class="empty">목표가 없어요.</div>'}
     <div class="row" style="margin-top:6px"><span class="small">방향 <b>${blockText(b)}</b></span>${btn('바꾸기','modal',{type:'block',mid:m.id},'small')}</div></div>`;
 }
+const IC_MEMO=`<svg viewBox="0 0 24 24" class="ic"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4v-1h6v1M8.5 10h7M8.5 14h7"/></svg>`;
+const IC_PEN=`<svg viewBox="0 0 24 24" class="ic"><path d="M4 20l1-4L16 5l3 3L8 19z"/></svg>`;
+const IC_EX=`<svg viewBox="0 0 24 24" class="ic"><path d="M3 10v4M6 8v8M18 8v8M21 10v4M6 12h12"/></svg>`;
+/* 내원이력처럼 펼친 수업 카드: 종목을 누르면 다음 PT에 복사 */
+function visitCard(m,s,u){
+  const t=todayIso(); const ago=daysBetween(s.date,t); const can=u&&u.id!==s.id;
+  const exs=s.exercises.map(x=>{const off=x.status==='removed'||x.status==='swapped';const which=s.status==='completed'?'a':'p';const txt=fsets(x.sets,x.exId,which);
+    const inner=`${IC_EX}<span class="en">${esc(EX(x.exId).name)}</span>${x.role==='메인'?'<span class="pill blue">메인</span>':''}<span class="es num">${off?(x.status==='removed'?'뺌':'바꿈'):esc(txt||'숫자 없음')}</span>`;
+    return off?`<div class="vex off" title="${esc(x.raw||'')}">${inner}</div>`:`<button class="vex" data-act="copyEx" data-sid="${s.id}" data-uid="${x.uid}" title="${esc((x.raw?'수첩: '+x.raw+'\n':'')+(can?'눌러서 '+md(u.date)+' 수업에 복사':''))}">${inner}</button>`}).join('');
+  const notes=[s.memo?`<div class="vl">${IC_MEMO}<div>${esc(s.memo)}</div></div>`:'',...s.exercises.filter(x=>x.note||x.setting).slice(0,4).map(x=>`<div class="vl">${IC_PEN}<div><b>${esc(EX(x.exId).name)}</b> ${esc([x.setting,x.note].filter(Boolean).join(' · '))}</div></div>`)].join('');
+  return `<div class="visit"><div class="vh"><span class="vd">${s.date} <span class="vago">(${ago>0?ago+'일 전':ago===0?'오늘':-ago+'일 뒤'})</span></span>${s.status==='completed'?'<span class="vok">✓</span>':''}<span class="sp"></span>${btn('자세히','go',{to:s.status==='planned'||s.status==='in_progress'?'prep':'detail',sid:s.id},'ghost small')}</div>
+    <div class="row" style="gap:5px;margin:6px 0 8px"><span class="pill gray" style="border:1px solid var(--line);background:var(--panel)">${esc(splitName(s))}</span>${s.status==='completed'?pill(s.seeded?'수첩 기록':'앱 기록','blue'):pill(statusLabel[s.status],'gray')}</div>
+    ${notes}
+    <div class="vsec"><span>종목 ${s.exercises.length}</span><span class="sp"></span>${can&&s.status==='completed'?`<button class="lnk" data-act="copyAll" data-sid="${s.id}">전체 복사</button>`:''}</div>
+    ${exs||'<div class="empty">종목이 없어요.</div>'}
+    ${can&&s.status==='completed'?`<div class="tiny faint" style="margin-top:6px">종목을 누르면 ${md(u.date)} 수업 계획에 그 숫자 그대로 들어가요.</div>`:''}</div>`;
+}
 V.member=r=>{
   const m=M(r.mid); const u=upcoming(m.id); const done=completed(m.id); const t=todayIso(); const last=done[done.length-1];
   const d30=done.filter(s=>daysBetween(s.date,t)>=0&&daysBetween(s.date,t)<30).length;
@@ -200,10 +217,12 @@ V.member=r=>{
   const pbar=`<div class="pbar"><span class="nm">${esc(m.code)}</span>${pill('회원','blue')}${cn?pill('주의 '+cn,'red'):''}${m.goals.filter(g=>!g.end).length?pill('목표 있음','green'):''}
     <div class="vit"><span>누적 <b>${done.length}</b>회</span><span>최근 30일 <b>${d30}</b>회</span><span>첫 기록 <b>${done[0]?md(done[0].date):'—'}</b></span><span>마지막 <b>${last?md(last.date):'—'}</b>${last?` (${daysBetween(last.date,t)}일 전)`:''}</span><span>다음 PT <b>${u?mdw(u.date):'없음'}</b>${u?' '+esc(splitName(u)):''}</span></div></div>`;
   const all=msessions(m.id).filter(s=>s.status!=='plan_only'||true).slice().sort((a,b)=>byDate(b,a));
+  const open=UI.cur['hx-'+m.id]===undefined?(done[done.length-1]||{}).id:UI.cur['hx-'+m.id];
   const hist=all.map(s=>{const isNext=u&&s.id===u.id;const n=s.exercises.filter(x=>x.status==='done').length;
     const st=s.status==='completed'?'':s.status==='plan_only'?pill('계획만','gray'):pill(statusLabel[s.status],s.status==='planned'||s.status==='in_progress'?'blue':'gray');
-    return `<button class="hi${isNext?' next':''}" data-act="${s.status==='planned'||s.status==='in_progress'?'openSession':'go'}" data-to="detail" data-sid="${s.id}"><div class="row" style="gap:6px"><span class="d">${mdw(s.date)}</span>${pill(splitName(s))}${st}</div>
-      <div class="x">${s.exercises.filter(x=>x.status==='done'||s.status!=='completed').slice(0,4).map(x=>EX(x.exId).name).join(', ')}${n>4?' 외':''}</div></button>`}).join('')||'<div class="empty" style="padding:12px">기록이 없어요.</div>';
+    const head=`<button class="hi${isNext?' next':''}${open===s.id?' open':''}" data-act="histOpen" data-mid="${m.id}" data-sid="${s.id}" aria-expanded="${open===s.id}"><div class="row" style="gap:6px"><span class="d">${mdw(s.date)}</span>${pill(splitName(s))}${st}<span class="sp"></span><span class="chev">${open===s.id?'⌃':'⌄'}</span></div>
+      ${open===s.id?'':`<div class="x">${s.exercises.filter(x=>x.status==='done'||s.status!=='completed').slice(0,4).map(x=>EX(x.exId).name).join(', ')}${n>4?' 외':''}</div>`}</button>`;
+    return head+(open===s.id?visitCard(m,s,u):'')}).join('')||'<div class="empty" style="padding:12px">기록이 없어요.</div>';
   let next;
   if(u){const ip=u.status==='in_progress';
     next=`<div class="row"><div style="flex:1"><div style="font-size:16px;font-weight:700">${mdw(u.date)} ${esc(u.time||'')}</div><div class="muted small">${esc(splitName(u))}${u.goal?' · 오늘 목표: '+esc(u.goal):''}</div></div>${ip?pill('진행 중','green'):''}

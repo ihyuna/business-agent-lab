@@ -276,7 +276,7 @@ input,select,textarea{border-radius:6px;border-color:#dfe2e7}
 .pbar .nm{font-size:15px;font-weight:800}
 .pbar .vit{display:flex;gap:14px;color:var(--muted);flex-wrap:wrap}
 .pbar .vit b{color:var(--ink);font-weight:700;font-variant-numeric:tabular-nums}
-.chartlay{display:grid;grid-template-columns:220px minmax(0,1fr) 286px;flex:1;min-height:0}
+.chartlay{display:grid;grid-template-columns:290px minmax(0,1fr) 262px;flex:1;min-height:0}
 .chartlay>div{min-height:0;overflow:auto}
 .cl-left{border-right:1px solid var(--line)}
 .cl-right{border-left:1px solid var(--line);padding:0 12px 16px}
@@ -304,6 +304,23 @@ input,select,textarea{border-radius:6px;border-color:#dfe2e7}
 .chart g.hov:hover .bar{fill:var(--accent)}
 .chart .axis{stroke:var(--line)}
 .chart .lbl{fill:var(--ink);font-weight:600;font-size:11px}
+.hist .hi.open{background:var(--accent-soft)}
+.hist .chev{color:var(--faint);font-size:12px}
+.visit{padding:10px 12px 12px;border-bottom:1px solid var(--line);background:var(--panel)}
+.visit .vh{display:flex;align-items:center;gap:6px}
+.visit .vd{color:var(--accent);font-weight:700;font-size:14px;font-variant-numeric:tabular-nums}
+.visit .vago{font-size:12px;font-weight:600}
+.visit .vok{color:var(--accent);font-weight:800}
+.visit .vl{display:flex;gap:6px;font-size:12px;margin:4px 0;color:var(--ink);line-height:1.45}
+.visit .ic{width:14px;height:14px;flex:none;stroke:var(--muted);fill:none;stroke-width:1.6;margin-top:2px}
+.visit .vsec{display:flex;align-items:center;border-top:1px solid var(--line);margin-top:8px;padding-top:8px;font-size:12px;color:var(--muted);font-weight:600}
+.visit .lnk{border:0;background:none;color:var(--accent);font-weight:700;font-size:12px;padding:2px 0}
+.visit .vex{display:flex;align-items:center;gap:6px;width:100%;text-align:left;border:1px solid transparent;background:none;border-radius:7px;padding:5px 6px;margin:1px 0;font-size:12.5px}
+.visit button.vex:hover{border-color:var(--accent);background:var(--accent-soft);box-shadow:0 1px 6px rgba(47,124,246,.18)}
+.visit .vex .en{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.visit .vex .es{color:var(--muted);font-size:12px;white-space:nowrap;max-width:46%;overflow:hidden;text-overflow:ellipsis}
+.visit .vex.off .en,.visit .vex.off .es{color:var(--faint);text-decoration:line-through}
+.toast{border-radius:12px;padding:10px 18px;font-weight:600}
 #device.port .planner{grid-template-columns:190px minmax(0,1fr)}
 #device.port .pl-right{display:none}
 #device.port .chartlay{grid-template-columns:200px minmax(0,1fr)}
@@ -1804,6 +1821,22 @@ const restText=v=>v==null?'':`${Math.floor(v)}:${String(Math.round((v%1)*60)).pa
 /* 마무리: 모든 본세트가 계획 범위 위 끝(또는 목표 횟수) 이상이면 '목표 넘음'. 표시만 하고 올리기는 트레이너가 누른다 */
 function reachedTop(x){const w=x.sets.filter(st=>st.kind!=='warmup'&&st.done);if(!w.length)return false;return w.every(st=>{const g=repRange(st.adj&&st.adj.from?st.adj.from.r:st.pr);const a=isNum(st.ar)?st.ar:firstNum(st.ar);return g&&a!=null&&a>=g[1]})}
 const todayMemos=(m,s)=>m.notes.filter(n=>n.kind==='check'&&n.due===s.id&&!n.done);
+
+/* 지난 수업 종목을 다음 PT 계획에 그대로 복사 (실제값, 없으면 계획값) */
+function copyToNext(src,xs){
+  const m=M(src.memberId); const tgt=upcoming(m.id);
+  if(!tgt||tgt.id===src.id){toast('잡힌 다음 PT가 없어요. 먼저 다음 PT를 잡아 주세요');return null}
+  for(const x of xs){
+    const which=src.status==='completed';
+    let sets=x.sets.filter(st=>which?st.done:true).map(st=>mkSet(st.kind,which?(st.aw??st.pw):st.pw,which?(st.ar??st.pr):st.pr)).filter(st=>st.pw!=null||st.pr!=null);
+    const basis={tag:'복사',date:src.date,lines:[`${md(src.date)} ${splitName(src)} 기록을 그대로 복사했어요.`+(x.raw?` 수첩: ${x.raw}`:'')],options:[]};
+    let y=tgt.exercises.find(e=>e.exId===x.exId&&e.status!=='removed'&&e.status!=='swapped');
+    if(!sets.length){const p=planExercise(m,{exId:x.exId,role:x.role,structure:x.structure},tgt.date,tgt.templateId,tgt.exercises.map(e=>({role:e.role})));sets=p.sets;basis.lines.push('숫자가 없어 규칙으로 채웠어요.')}
+    if(y){y.sets=sets;y.basis=basis;y.edited=false}
+    else{y=planExercise(m,{exId:x.exId,role:x.role,structure:x.structure},tgt.date,tgt.templateId,tgt.exercises.map(e=>({role:e.role})));y.sets=sets;y.basis=basis;y.origin='added';if(x.setting)y.setting=x.setting;tgt.exercises.push(y)}
+  }
+  save(); return tgt;
+}
 /* ---------- 화면 조각 ---------- */
 function attrs(d){if(!d)return'';return Object.entries(d).map(([k,v])=>` data-${k}="${esc(v)}"`).join('')}
 function btn(label,act,data,cls,dis){return `<button class="btn ${cls||''}" data-act="${act}"${attrs(data)}${dis?' disabled':''}>${label}</button>`}
@@ -1999,6 +2032,23 @@ function goalSec(m){
   return `<div><h3>목표 · 훈련 방향</h3>${g.map(x=>`<div class="small">· ${esc(x.text)}</div>`).join('')||'<div class="empty">목표가 없어요.</div>'}
     <div class="row" style="margin-top:6px"><span class="small">방향 <b>${blockText(b)}</b></span>${btn('바꾸기','modal',{type:'block',mid:m.id},'small')}</div></div>`;
 }
+const IC_MEMO=`<svg viewBox="0 0 24 24" class="ic"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4v-1h6v1M8.5 10h7M8.5 14h7"/></svg>`;
+const IC_PEN=`<svg viewBox="0 0 24 24" class="ic"><path d="M4 20l1-4L16 5l3 3L8 19z"/></svg>`;
+const IC_EX=`<svg viewBox="0 0 24 24" class="ic"><path d="M3 10v4M6 8v8M18 8v8M21 10v4M6 12h12"/></svg>`;
+/* 내원이력처럼 펼친 수업 카드: 종목을 누르면 다음 PT에 복사 */
+function visitCard(m,s,u){
+  const t=todayIso(); const ago=daysBetween(s.date,t); const can=u&&u.id!==s.id;
+  const exs=s.exercises.map(x=>{const off=x.status==='removed'||x.status==='swapped';const which=s.status==='completed'?'a':'p';const txt=fsets(x.sets,x.exId,which);
+    const inner=`${IC_EX}<span class="en">${esc(EX(x.exId).name)}</span>${x.role==='메인'?'<span class="pill blue">메인</span>':''}<span class="es num">${off?(x.status==='removed'?'뺌':'바꿈'):esc(txt||'숫자 없음')}</span>`;
+    return off?`<div class="vex off" title="${esc(x.raw||'')}">${inner}</div>`:`<button class="vex" data-act="copyEx" data-sid="${s.id}" data-uid="${x.uid}" title="${esc((x.raw?'수첩: '+x.raw+'\n':'')+(can?'눌러서 '+md(u.date)+' 수업에 복사':''))}">${inner}</button>`}).join('');
+  const notes=[s.memo?`<div class="vl">${IC_MEMO}<div>${esc(s.memo)}</div></div>`:'',...s.exercises.filter(x=>x.note||x.setting).slice(0,4).map(x=>`<div class="vl">${IC_PEN}<div><b>${esc(EX(x.exId).name)}</b> ${esc([x.setting,x.note].filter(Boolean).join(' · '))}</div></div>`)].join('');
+  return `<div class="visit"><div class="vh"><span class="vd">${s.date} <span class="vago">(${ago>0?ago+'일 전':ago===0?'오늘':-ago+'일 뒤'})</span></span>${s.status==='completed'?'<span class="vok">✓</span>':''}<span class="sp"></span>${btn('자세히','go',{to:s.status==='planned'||s.status==='in_progress'?'prep':'detail',sid:s.id},'ghost small')}</div>
+    <div class="row" style="gap:5px;margin:6px 0 8px"><span class="pill gray" style="border:1px solid var(--line);background:var(--panel)">${esc(splitName(s))}</span>${s.status==='completed'?pill(s.seeded?'수첩 기록':'앱 기록','blue'):pill(statusLabel[s.status],'gray')}</div>
+    ${notes}
+    <div class="vsec"><span>종목 ${s.exercises.length}</span><span class="sp"></span>${can&&s.status==='completed'?`<button class="lnk" data-act="copyAll" data-sid="${s.id}">전체 복사</button>`:''}</div>
+    ${exs||'<div class="empty">종목이 없어요.</div>'}
+    ${can&&s.status==='completed'?`<div class="tiny faint" style="margin-top:6px">종목을 누르면 ${md(u.date)} 수업 계획에 그 숫자 그대로 들어가요.</div>`:''}</div>`;
+}
 V.member=r=>{
   const m=M(r.mid); const u=upcoming(m.id); const done=completed(m.id); const t=todayIso(); const last=done[done.length-1];
   const d30=done.filter(s=>daysBetween(s.date,t)>=0&&daysBetween(s.date,t)<30).length;
@@ -2006,10 +2056,12 @@ V.member=r=>{
   const pbar=`<div class="pbar"><span class="nm">${esc(m.code)}</span>${pill('회원','blue')}${cn?pill('주의 '+cn,'red'):''}${m.goals.filter(g=>!g.end).length?pill('목표 있음','green'):''}
     <div class="vit"><span>누적 <b>${done.length}</b>회</span><span>최근 30일 <b>${d30}</b>회</span><span>첫 기록 <b>${done[0]?md(done[0].date):'—'}</b></span><span>마지막 <b>${last?md(last.date):'—'}</b>${last?` (${daysBetween(last.date,t)}일 전)`:''}</span><span>다음 PT <b>${u?mdw(u.date):'없음'}</b>${u?' '+esc(splitName(u)):''}</span></div></div>`;
   const all=msessions(m.id).filter(s=>s.status!=='plan_only'||true).slice().sort((a,b)=>byDate(b,a));
+  const open=UI.cur['hx-'+m.id]===undefined?(done[done.length-1]||{}).id:UI.cur['hx-'+m.id];
   const hist=all.map(s=>{const isNext=u&&s.id===u.id;const n=s.exercises.filter(x=>x.status==='done').length;
     const st=s.status==='completed'?'':s.status==='plan_only'?pill('계획만','gray'):pill(statusLabel[s.status],s.status==='planned'||s.status==='in_progress'?'blue':'gray');
-    return `<button class="hi${isNext?' next':''}" data-act="${s.status==='planned'||s.status==='in_progress'?'openSession':'go'}" data-to="detail" data-sid="${s.id}"><div class="row" style="gap:6px"><span class="d">${mdw(s.date)}</span>${pill(splitName(s))}${st}</div>
-      <div class="x">${s.exercises.filter(x=>x.status==='done'||s.status!=='completed').slice(0,4).map(x=>EX(x.exId).name).join(', ')}${n>4?' 외':''}</div></button>`}).join('')||'<div class="empty" style="padding:12px">기록이 없어요.</div>';
+    const head=`<button class="hi${isNext?' next':''}${open===s.id?' open':''}" data-act="histOpen" data-mid="${m.id}" data-sid="${s.id}" aria-expanded="${open===s.id}"><div class="row" style="gap:6px"><span class="d">${mdw(s.date)}</span>${pill(splitName(s))}${st}<span class="sp"></span><span class="chev">${open===s.id?'⌃':'⌄'}</span></div>
+      ${open===s.id?'':`<div class="x">${s.exercises.filter(x=>x.status==='done'||s.status!=='completed').slice(0,4).map(x=>EX(x.exId).name).join(', ')}${n>4?' 외':''}</div>`}</button>`;
+    return head+(open===s.id?visitCard(m,s,u):'')}).join('')||'<div class="empty" style="padding:12px">기록이 없어요.</div>';
   let next;
   if(u){const ip=u.status==='in_progress';
     next=`<div class="row"><div style="flex:1"><div style="font-size:16px;font-weight:700">${mdw(u.date)} ${esc(u.time||'')}</div><div class="muted small">${esc(splitName(u))}${u.goal?' · 오늘 목표: '+esc(u.goal):''}</div></div>${ip?pill('진행 중','green'):''}
@@ -2800,6 +2852,9 @@ const ACT={
   back:()=>back(),
   home:()=>home(),
   tab:d=>home(d.v),
+  histOpen:d=>{const k='hx-'+d.mid;const cur=UI.cur[k]===undefined?(completed(d.mid).slice(-1)[0]||{}).id:UI.cur[k];UI.cur[k]=cur===d.sid?null:d.sid;render()},
+  copyEx:d=>{const src=SES(d.sid);const x=src.exercises.find(e=>e.uid===d.uid);const r=copyToNext(src,[x]);if(r)toast(`${EX(x.exId).name}을(를) ${md(r.date)} 수업에 복사했어요`)},
+  copyAll:d=>{const src=SES(d.sid);const xs=src.exercises.filter(e=>e.status!=='removed'&&e.status!=='swapped');const r=copyToNext(src,xs);if(r)toast(`종목 ${xs.length}개를 ${md(r.date)} 수업에 복사했어요`)},
   setDay:d=>{S.today=d.v;seedOthers(S.today);save();render()},
   shiftDay:d=>{S.today=addDays(todayIso(),+d.dir);seedOthers(S.today);save();render()},
   noop:()=>{},
