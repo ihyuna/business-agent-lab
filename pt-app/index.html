@@ -557,6 +557,13 @@ function bestE1(m,exId,beforeDate){
   }
   return null;
 }
+function lastWeight(m,exId,beforeDate){
+  for(const s of prevDone(m,beforeDate)){
+    const x=s.exercises.find(e=>e.exId===exId&&e.status==='done'); if(!x) continue;
+    const st=x.sets.filter(st=>st.kind!=='warmup'&&isNum(st.aw)&&st.aw>0).pop(); if(st) return {w:st.aw,date:s.date};
+  }
+  return null;
+}
 const wFor=(e1,reps,rir,inc)=>floorTo(e1/(1+(reps+rir)/30),inc);
 
 function fillExercise(m,item,date,splitId,force,prevItems){
@@ -579,6 +586,11 @@ function fillExercise(m,item,date,splitId,force,prevItems){
     out.sets=src.x.sets.filter(st=>st.aw!=null||st.ar!=null).map(st=>mkSet(st.kind,st.aw,st.ar));
     B.tag=mode==='same'?'같은 분할':'최근'; B.date=src.s.date;
     B.lines.push(`${mdw(src.s.date)} ${splitName(src.s)} 실제값: ${fsets(src.x.sets,item.exId,'a')||'—'}`);
+    // 그날 무게나 횟수가 비어 있으면: 무게는 그 전 실제 무게, 횟수는 역할 기준으로 채운다
+    const noW=v=>v==null||v==='';if(out.sets.some(st=>noW(st.pw))){const lw=lastWeight(m,item.exId,src.s.date);
+      if(lw){out.sets.forEach(st=>{if(noW(st.pw))st.pw=lw.w});B.lines.push(`그날 무게가 없어 그 전 ${md(lw.date)} 실제 무게 ${fw(lw.w,item.exId)}를 씀`)}
+      else{B.tag='무게 찾기';B.lines.push('이 종목의 무게 기록이 없어 무게를 비워 둠')}}
+    const noR=v=>v==null||v==='';if(out.sets.some(st=>noR(st.pr))){out.sets.forEach(st=>{if(noR(st.pr))st.pr=R.target});B.lines.push(`그날 횟수가 없어 역할(${item.role}) 기준 ${R.target}회로 채움 (논문 기준 임시값)`)}
     if(src.x.role&&src.x.role!==item.role) B.lines.push(`그때 역할은 ${src.x.role}, 오늘 역할은 ${item.role}`);
     const between=msessions(m.id).filter(s=>s.date<date&&s.date>src.s.date&&(mode==='recent'||s.templateId===splitId));
     for(const k of between){const y=k.exercises.find(e=>e.exId===item.exId); if(!y) continue;
