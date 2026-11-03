@@ -6,7 +6,7 @@ PT 트레이너가 회원 수업을 준비하고, 진행하고, 마무리하는 
 
 ## 여는 법
 
-`index.html`을 브라우저로 열면 됩니다. 서버나 설치가 필요 없습니다. 입력한 내용은 그 브라우저의 localStorage(`pt-mvp-proto-v3`)에만 남고, 화면의 '처음 상태로 되돌리기'로 지울 수 있습니다.
+크롬 등 브라우저에서 `app.html`을 열면 됩니다(파일로 열거나 웹 주소로). 서버나 설치가 필요 없습니다. `index.html`은 Claude 아티팩트용 조각입니다. 입력한 내용은 그 브라우저의 localStorage(`pt-mvp-proto-v3.2`)에만 남고, 화면의 '처음 상태로 되돌리기'로 지울 수 있습니다.
 
 오른쪽 '시나리오 따라 하기' 패널이 8개 장면을 안내합니다. 각 단계에서 직접 누르거나 '대신 하기'를 누르면 됩니다.
 
@@ -35,14 +35,14 @@ PT 트레이너가 회원 수업을 준비하고, 진행하고, 마무리하는 
 | `src/30-views.js`, `src/31-views2.js` | 화면 |
 | `src/35-guide.js` | '시나리오 따라 하기' 장면 |
 | `src/40-actions.js` | 버튼 동작 |
-| `build.sh` | `src/`를 합쳐 `index.html`을 만듭니다 |
+| `build.sh` | `src/`를 합쳐 `index.html`과 독립 페이지 `app.html`을 만듭니다 |
 
 `index.html`은 빌드 결과물입니다. `src/`를 고친 뒤 다시 만들어 주세요.
 
 ## 빌드와 테스트
 
 ```sh
-sh build.sh          # index.html 다시 만들기
+sh build.sh          # index.html, app.html 다시 만들기
 node test/smoke.js   # 8개 장면을 끝까지 자동으로 돌려 보고 결과와 오류를 출력
 node test/check.js   # 장면 1~7을 한 단계씩 돌리며 시간 띠·색 표시 상태를 출력
 ```
