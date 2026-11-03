@@ -167,78 +167,139 @@ mark{background:var(--warn-soft);color:var(--ink);border-radius:3px;padding:0 1p
 #device.port .prep-row{grid-template-columns:20px 130px 150px 90px minmax(0,1fr) 36px}
 #device.port .strip{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
 
-/* ===== EMR 테마 (2026-11-03, 병원 EMR 화면 느낌: 남색 머리띠, 회청색 바탕, 흰 패널 + 회색 머리줄, 촘촘한 표) ===== */
+/* ===== 클리닉 EMR 테마 v2 (2026-11-03, 닥터팔레트 차트·플래너 화면 참고: 흰 바탕, 얇은 회색 선, 왼쪽 메뉴, 파스텔 꼬리표, 시간표 블록) ===== */
 :root{
-  --bg:#dfe5ee; --device:#eef2f7; --panel:#ffffff; --ink:#1b2533; --muted:#556275; --faint:#8592a3;
-  --line:#d3dbe6; --soft:#f3f6fa; --hd:#f0f3f8; --accent:#2862c4; --accent-soft:#e7effc; --accent-ink:#ffffff;
-  --nav:#1d2f4e; --nav-ink:#e8eef8; --nav-muted:#a9b8d0; --zebra:#f8fafc; --bar:#7aa0dc;
-  --good:#1f7a4d; --good-soft:#e3f3ea; --warn:#93620a; --warn-soft:#fcf1d8; --bad:#b4342a; --bad-soft:#fbe5e2;
+  --bg:#e9ecf1; --device:#ffffff; --panel:#ffffff; --ink:#1f2329; --muted:#6b7380; --faint:#9aa1ab;
+  --line:#e6e8ec; --soft:#f6f7f9; --hd:#f6f7f9; --accent:#2f7cf6; --accent-soft:#eaf2ff; --accent-ink:#ffffff;
+  --side:#f7f8fa; --zebra:#fafbfc; --bar:#9bbdf7; --now:#f0434b;
+  --good:#1e9a5a; --good-soft:#e6f6ec; --warn:#c27a00; --warn-soft:#fff3dc; --bad:#e5484d; --bad-soft:#ffebec;
+  --p1:#2f7cf6; --p1s:#e9f1ff; --p2:#9b51e0; --p2s:#f4ecfd; --p3:#e5486f; --p3s:#ffeaf0; --p4:#1e9a5a; --p4s:#e6f6ec; --p5:#d97706; --p5s:#fff3e0; --p6:#0e8a9a; --p6s:#e4f6f8;
   --font:"Pretendard","IBM Plex Sans KR","Apple SD Gothic Neo","Noto Sans KR","Malgun Gothic",system-ui,sans-serif}
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
-  --bg:#0f141b; --device:#141a22; --panel:#1b222c; --ink:#e3e9f1; --muted:#a3afbf; --faint:#7a8697;
-  --line:#2e3846; --soft:#222a35; --hd:#212a36; --accent:#6c9ef0; --accent-soft:#1d2c45; --accent-ink:#0b1424;
-  --nav:#0b1220; --nav-ink:#dfe7f3; --nav-muted:#8c9bb3; --zebra:#1e2530; --bar:#5d86c9;
-  --good:#5cc08b; --good-soft:#163024; --warn:#e3b24f; --warn-soft:#352b17; --bad:#ef8a7d; --bad-soft:#3b201d}}
+  --bg:#0e1116; --device:#16191f; --panel:#16191f; --ink:#e6e9ee; --muted:#a0a8b4; --faint:#747c88;
+  --line:#2a2f37; --soft:#1e2229; --hd:#1e2229; --accent:#5b9bff; --accent-soft:#1a2a45; --accent-ink:#081324;
+  --side:#121519; --zebra:#1a1d23; --bar:#4e78b8; --now:#ff6b70;
+  --good:#4cc787; --good-soft:#15291e; --warn:#f0b04a; --warn-soft:#33270f; --bad:#ff7d80; --bad-soft:#3a1d1f;
+  --p1:#7fb0ff; --p1s:#1b2b47; --p2:#c39af2; --p2s:#2c2140; --p3:#ff8fab; --p3s:#3d1f29; --p4:#5fd197; --p4s:#15291e; --p5:#f5b24f; --p5s:#352710; --p6:#5cd0de; --p6s:#132e33}}
 :root[data-theme="dark"]{
-  --bg:#0f141b; --device:#141a22; --panel:#1b222c; --ink:#e3e9f1; --muted:#a3afbf; --faint:#7a8697;
-  --line:#2e3846; --soft:#222a35; --hd:#212a36; --accent:#6c9ef0; --accent-soft:#1d2c45; --accent-ink:#0b1424;
-  --nav:#0b1220; --nav-ink:#dfe7f3; --nav-muted:#8c9bb3; --zebra:#1e2530; --bar:#5d86c9;
-  --good:#5cc08b; --good-soft:#163024; --warn:#e3b24f; --warn-soft:#352b17; --bad:#ef8a7d; --bad-soft:#3b201d}
-#device{font-size:14px;border-radius:14px}
-.top{background:var(--nav);color:var(--nav-ink);border-bottom:0;min-height:52px;padding:8px 14px}
-.top h1{font-size:17px;letter-spacing:-.01em}
-.top .sub,.top .muted,.top .tiny{color:var(--nav-muted)}
-.top .btn{background:transparent;color:var(--nav-ink);border-color:rgba(255,255,255,.22);border-radius:5px}
-.top .btn:hover{border-color:var(--nav-ink);background:rgba(255,255,255,.06)}
-.top .btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
-.top .btn.ghost{color:var(--nav-ink)}
+  --bg:#0e1116; --device:#16191f; --panel:#16191f; --ink:#e6e9ee; --muted:#a0a8b4; --faint:#747c88;
+  --line:#2a2f37; --soft:#1e2229; --hd:#1e2229; --accent:#5b9bff; --accent-soft:#1a2a45; --accent-ink:#081324;
+  --side:#121519; --zebra:#1a1d23; --bar:#4e78b8; --now:#ff6b70;
+  --good:#4cc787; --good-soft:#15291e; --warn:#f0b04a; --warn-soft:#33270f; --bad:#ff7d80; --bad-soft:#3a1d1f;
+  --p1:#7fb0ff; --p1s:#1b2b47; --p2:#c39af2; --p2s:#2c2140; --p3:#ff8fab; --p3s:#3d1f29; --p4:#5fd197; --p4s:#15291e; --p5:#f5b24f; --p5s:#352710; --p6:#5cd0de; --p6s:#132e33}
+#device{font-size:13.5px;border-radius:14px}
+.top{background:var(--panel);border-bottom:1px solid var(--line);min-height:50px;padding:8px 14px}
+.top h1{font-size:16px;font-weight:700;letter-spacing:-.01em}
+.top .sub{font-size:12px}
 .scroll{padding:12px 14px 20px}
-.btn{border-radius:5px;padding:6px 11px}
-.btn.small{border-radius:4px}
-.actbar .btn.primary{border-radius:6px}
-.card{border-radius:6px;padding:0 12px 10px;box-shadow:0 1px 2px rgba(20,35,60,.05)}
-.card>h2:first-child{margin:0 -12px 8px;padding:7px 12px;background:var(--hd);border-bottom:1px solid var(--line);border-radius:6px 6px 0 0;font-size:13px;font-weight:700;color:var(--ink)}
-.card>h2:first-child::before{content:'';width:3px;height:12px;background:var(--accent);border-radius:2px}
-.card>:first-child:not(h2){margin-top:10px}
-.strip .card{padding:0 10px 8px}
-.strip .card>h2:first-child{margin:0 -10px 6px;padding:5px 10px;font-size:12px;color:var(--muted)}
-.chip{border-radius:4px}
-.tag{border-radius:3px;font-weight:600;font-size:11.5px;padding:1px 6px;border:1px solid transparent}
-.tag.warn{border-color:color-mix(in srgb,var(--warn) 35%,transparent)} .tag.bad{border-color:color-mix(in srgb,var(--bad) 35%,transparent)} .tag.good{border-color:color-mix(in srgb,var(--good) 35%,transparent)}
-th{background:var(--hd);color:var(--muted);font-size:12px;font-weight:600;border-bottom:1px solid var(--line);border-top:1px solid var(--line);white-space:nowrap}
-td{font-size:13px}
-tbody tr:nth-child(even),table tr:nth-child(even) td{background:var(--zebra)}
+.btn{border-radius:6px;padding:5px 11px;border-color:#dfe2e7;font-size:13px}
+.btn.primary{border-radius:6px}
+.btn.small{border-radius:5px;font-size:12px}
+.card{border-radius:8px;padding:10px 12px;box-shadow:none}
+.card h2{font-size:13px;font-weight:700}
+.chip{border-radius:6px;font-size:12px}
+.chip.on{background:var(--accent);border-color:var(--accent)}
+.tag{border-radius:4px;font-weight:600;font-size:11px;padding:1px 6px}
+th{background:var(--hd);color:var(--muted);font-size:11.5px;font-weight:600;white-space:nowrap}
+td{font-size:12.5px}
+table tr:nth-child(even) td{background:var(--zebra)}
 tr.click:hover td{background:var(--accent-soft)}
 .li{padding:8px 4px}
-.li.click:hover{background:var(--accent-soft)}
-.tabbar{background:var(--panel)}
-.tabbar button.on{box-shadow:inset 0 3px 0 var(--accent);background:var(--accent-soft)}
-.setchip{border-radius:4px}
-.editor,.note-box,.prep-hist{border-radius:5px}
-.banner{border-radius:5px}
-input,select,textarea{border-radius:4px}
-#guide{border-radius:8px}
-/* 회원 정보 띠 (EMR 환자 띠) */
-.pband{display:flex;align-items:stretch;background:var(--panel);border:1px solid var(--line);border-radius:6px;margin-bottom:10px;overflow:hidden}
-.pband .who{display:flex;flex-direction:column;justify-content:center;padding:8px 14px;background:var(--accent-soft);border-right:1px solid var(--line);min-width:120px}
-.pband .who b{font-size:18px;color:var(--accent)}
-.pband .kvc{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));flex:1}
-.pband .kvc div{padding:7px 10px;border-right:1px solid var(--line)}
-.pband .kvc div:last-child{border-right:0}
-.pband dt{font-size:11px;color:var(--muted);margin-bottom:2px}
-.pband dd{margin:0;font-weight:600;font-size:14px;font-variant-numeric:tabular-nums;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.pband dd .u{font-size:11px;color:var(--muted);font-weight:500;margin-left:2px}
-#device.port .pband .kvc{grid-template-columns:repeat(3,minmax(0,1fr))}
-#device.port .pband .kvc div:nth-child(3){border-right:0}
-#device.port .pband .kvc div:nth-child(-n+3){border-bottom:1px solid var(--line)}
+.li.click:hover{background:var(--soft)}
+.setchip{border-radius:6px}
+input,select,textarea{border-radius:6px;border-color:#dfe2e7}
+.strip h2{font-size:12px}
+/* 왼쪽 메뉴 */
+#app:has(> .sidenav){padding-left:84px}
+.tabbar.sidenav{position:absolute;left:0;top:0;bottom:0;width:84px;flex-direction:column;align-items:stretch;border-top:0;border-right:1px solid var(--line);background:var(--side);padding:10px 8px;gap:2px;box-sizing:border-box}
+.sidenav .logo{display:flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:8px;border:1.5px solid var(--accent);color:var(--accent);font-weight:800;font-size:13px;margin:2px auto 12px}
+.tabbar.sidenav button{flex:none;display:flex;flex-direction:column;align-items:center;gap:3px;padding:9px 0 8px;border-radius:8px;font-size:11.5px;color:var(--muted);box-shadow:none}
+.tabbar.sidenav button svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.7}
+.tabbar.sidenav button:hover{background:var(--soft)}
+.tabbar.sidenav button.on{background:var(--accent-soft);color:var(--accent);font-weight:700;box-shadow:none}
+.sidenav .sp{flex:1}
+/* 파스텔 꼬리표 */
+.pill{display:inline-flex;align-items:center;border-radius:4px;padding:1px 6px;font-size:11.5px;font-weight:600;white-space:nowrap;line-height:1.5}
+.c1{color:var(--p1);background:var(--p1s)} .c2{color:var(--p2);background:var(--p2s)} .c3{color:var(--p3);background:var(--p3s)} .c4{color:var(--p4);background:var(--p4s)} .c5{color:var(--p5);background:var(--p5s)} .c6{color:var(--p6);background:var(--p6s)}
+.pill.red{color:var(--bad);background:var(--bad-soft)} .pill.gray{color:var(--muted);background:var(--soft)} .pill.blue{color:var(--accent);background:var(--accent-soft)} .pill.green{color:var(--good);background:var(--good-soft)} .pill.orange{color:var(--warn);background:var(--warn-soft)}
+/* 오늘 = 플래너 */
+.planner{display:grid;grid-template-columns:212px minmax(0,1fr) 236px;height:100%;min-height:0}
+.planner>div{min-height:0;overflow:auto}
+.pl-left{border-right:1px solid var(--line);padding:12px}
+.pl-right{border-left:1px solid var(--line);padding:12px 12px 16px}
+.pl-mid{display:flex;flex-direction:column}
+.pl-colhd{display:flex;align-items:center;gap:6px;padding:10px 14px;border-bottom:1px solid var(--line);font-weight:700;font-size:13px;position:sticky;top:0;background:var(--panel);z-index:2}
+.pl-colhd .n{color:var(--faint);font-weight:500}
+.mcal{font-size:11.5px;text-align:center;font-variant-numeric:tabular-nums}
+.mcal .hd{display:flex;align-items:center;justify-content:center;gap:10px;font-weight:700;font-size:12.5px;margin-bottom:6px}
+.mcal table{table-layout:fixed} .mcal td,.mcal th{padding:2px 0;border:0;background:none!important;text-align:center}
+.mcal th{color:var(--faint);font-weight:500;font-size:11px}
+.mcal button{border:0;background:none;width:26px;height:26px;border-radius:50%;font-size:11.5px;position:relative;padding:0}
+.mcal button.other{color:var(--faint);opacity:.55}
+.mcal button.sun{color:var(--bad)}
+.mcal button.has::after{content:'';position:absolute;left:50%;bottom:2px;width:4px;height:4px;margin-left:-2px;border-radius:50%;background:var(--accent)}
+.mcal button.today{background:var(--accent);color:#fff;font-weight:700}
+.mcal button.today::after{background:#fff}
+.mcal button:hover:not(.today){background:var(--soft)}
+.pl-sec{margin-top:14px;font-size:12px;color:var(--muted);font-weight:700;display:flex;align-items:center;gap:6px}
+.legend2{display:flex;flex-direction:column;gap:6px;margin-top:8px;font-size:12.5px}
+.legend2 i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px;vertical-align:-1px}
+.tl{position:relative;flex:none}
+.tl .hr{position:absolute;left:0;right:0;border-top:1px solid var(--line)}
+.tl .hr span{position:absolute;left:10px;top:4px;font-size:11px;color:var(--faint);font-variant-numeric:tabular-nums}
+.tl .blk{position:absolute;left:64px;right:14px;border-radius:6px;padding:7px 10px;box-sizing:border-box;border-left:3px solid currentColor;overflow:hidden;display:flex;gap:10px;align-items:flex-start;cursor:pointer}
+.tl .blk:hover{filter:brightness(.98);box-shadow:0 1px 4px rgba(0,0,0,.08)}
+.tl .blk .bt{font-size:11px;font-weight:600;font-variant-numeric:tabular-nums}
+.tl .blk .bn{color:var(--ink);font-size:14px;font-weight:700}
+.tl .blk .bs{color:var(--ink);font-weight:500}
+.tl .blk .bd{color:var(--muted);font-size:12px;margin-top:2px}
+.tl .blk .more{margin-left:auto;color:var(--muted)}
+.tl .now{position:absolute;left:52px;right:0;border-top:1.5px solid var(--now);z-index:1}
+.tl .now::before{content:'';position:absolute;left:-4px;top:-4.5px;width:7px;height:7px;border-radius:50%;background:var(--now)}
+.untimed{padding:8px 14px;border-bottom:1px solid var(--line)}
+.recent .ri{display:flex;align-items:center;gap:8px;padding:7px 0;font-size:12.5px;cursor:pointer}
+.recent .ri:hover b{color:var(--accent)}
+.recent .ri .ago{margin-left:auto;color:var(--faint);font-size:11.5px;white-space:nowrap}
+.recent .dhd{font-size:11.5px;color:var(--faint);margin:10px 0 2px}
+/* 회원 = 차트 화면 */
+.pbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:8px 14px;border-bottom:1px solid var(--line);font-size:12.5px;background:var(--panel)}
+.pbar .nm{font-size:15px;font-weight:800}
+.pbar .vit{display:flex;gap:14px;color:var(--muted);flex-wrap:wrap}
+.pbar .vit b{color:var(--ink);font-weight:700;font-variant-numeric:tabular-nums}
+.chartlay{display:grid;grid-template-columns:220px minmax(0,1fr) 286px;flex:1;min-height:0}
+.chartlay>div{min-height:0;overflow:auto}
+.cl-left{border-right:1px solid var(--line)}
+.cl-right{border-left:1px solid var(--line);padding:0 12px 16px}
+.cl-mid{padding:12px 14px 20px;background:var(--soft)}
+.hist .hi{display:block;width:100%;text-align:left;border:0;border-bottom:1px solid var(--line);background:none;padding:9px 12px}
+.hist .hi:hover{background:var(--soft)}
+.hist .hi.next{background:var(--accent-soft)}
+.hist .hi .d{font-weight:700;font-variant-numeric:tabular-nums;font-size:12.5px}
+.hist .hi .x{color:var(--muted);font-size:11.5px;margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.box{background:var(--panel);border:1px solid var(--line);border-radius:8px;margin-bottom:12px}
+.box>.bh{display:flex;align-items:center;gap:8px;padding:9px 12px;border-bottom:1px solid var(--line);font-weight:700;font-size:13px}
+.box>.bb{padding:10px 12px}
+.sec3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr))}
+.sec3>div{padding:10px 12px;border-right:1px solid var(--line);min-width:0}
+.sec3>div:last-child{border-right:0}
+.sec3 h3{margin:0 0 6px;font-size:12.5px;font-weight:700}
+.sec3 .row{flex-wrap:wrap!important}
+.sec3 .row>input{flex:1 1 100%!important;width:auto!important;order:-1}
+.sec3 .row>select{flex:1;width:auto!important}
+.sec3 .li{padding:5px 0;font-size:12.5px;align-items:flex-start}
+.cl-right h3{font-size:12.5px;font-weight:700;margin:14px 0 6px;display:flex;align-items:center;gap:6px}
 .dtable td,.dtable th{padding:5px 8px}
 .dtable td.memo{color:var(--muted);font-size:12px;max-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .chart .bar{fill:var(--bar)} .chart .bar.last{fill:var(--accent)}
 .chart g.hov:hover .bar{fill:var(--accent)}
 .chart .axis{stroke:var(--line)}
 .chart .lbl{fill:var(--ink);font-weight:600;font-size:11px}
-.charts2{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:12px}
-#device.port .charts2{grid-template-columns:minmax(0,1fr)}
+#device.port .planner{grid-template-columns:190px minmax(0,1fr)}
+#device.port .pl-right{display:none}
+#device.port .chartlay{grid-template-columns:200px minmax(0,1fr)}
+#device.port .cl-right{grid-column:1/-1;border-left:0;border-top:1px solid var(--line)}
+#device.port .sec3{grid-template-columns:minmax(0,1fr)}
+#device.port .sec3>div{border-right:0;border-bottom:1px solid var(--line)}
 @media (prefers-reduced-motion: reduce){*{transition:none!important;animation:none!important}}
 </style>
 <div id="shell">
@@ -1753,7 +1814,16 @@ function topBar(title,sub,right,o={}){
   return `<div class="top">${o.noBack?'':btn('‹ 뒤로','back',null,'ghost')}<div class="grow"><h1>${title}</h1>${sub?`<div class="sub">${sub}</div>`:''}</div><div class="row" style="flex-wrap:nowrap">${right||''}</div></div>`;
 }
 function actBar(left,right){return `<div class="actbar">${left||''}<span class="sp"></span>${right||''}</div>`}
-function tabBar(cur){return `<div class="tabbar">${[['today','오늘'],['members','회원']].map(([v,l])=>`<button class="${cur===v?'on':''}" data-act="tab" data-v="${v}">${l}</button>`).join('')}</div>`}
+const NAV_IC={today:`<svg viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="15" rx="2"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg>`,
+ members:`<svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.8-3.6 3.4-5.5 6.5-5.5s5.7 1.9 6.5 5.5"/><circle cx="17" cy="9" r="2.6"/><path d="M16.5 14.6c2.6.2 4.3 1.9 5 5.4"/></svg>`,
+ search:`<svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></svg>`,
+ settings:`<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2.8v2.4M12 18.8v2.4M2.8 12h2.4M18.8 12h2.4M5.5 5.5l1.7 1.7M16.8 16.8l1.7 1.7M5.5 18.5l1.7-1.7M16.8 7.2l1.7-1.7"/></svg>`};
+function tabBar(cur){return `<nav class="tabbar sidenav" aria-label="메뉴"><div class="logo">P</div>${[['today','오늘','tab'],['members','회원','tab']].map(([v,l,a])=>`<button class="${cur===v?'on':''}" data-act="${a}" data-v="${v}">${NAV_IC[v]}${l}</button>`).join('')}
+  <button data-act="go" data-to="search">${NAV_IC.search}기록 찾기</button><span class="sp"></span><button data-act="go" data-to="settings">${NAV_IC.settings}설정</button></nav>`}
+/* 파스텔 꼬리표: 같은 글자는 늘 같은 색 */
+function hueOf(t){let h=0;for(const c of String(t||''))h=(h*31+c.charCodeAt(0))>>>0;return 'c'+(h%6+1)}
+const pill=(t,cls)=>`<span class="pill ${cls||hueOf(t)}">${esc(t)}</span>`;
+const memberHue=m=>'c'+(S.members.indexOf(m)%6+1);
 const EXAMPLE=t=>`<span class="ex-ex">${t||'예시'}</span>`;
 function lab(arr,v){const f=arr.find(a=>a[0]===v);return f?f[1]:'—'}
 const curBlock=m=>m.blocks[m.blocks.length-1];
@@ -1802,15 +1872,49 @@ function sessionRow(s,o={}){
     ${cn?`<span class="tag warn">주의 ${cn}</span>`:''}${ck?`<span class="tag">확인 ${ck}</span>`:''}${st}
     ${s.status==='planned'?`<button class="btn ghost more" data-act="modal" data-type="sessMenu" data-sid="${s.id}" aria-label="수업 메뉴">…</button>`:'<span style="width:44px"></span>'}</div>`;
 }
+function miniCal(d){
+  const x=pd(d); const y=x.getFullYear(), mo=x.getMonth(); const first=new Date(y,mo,1); const start=new Date(y,mo,1-first.getDay());
+  const has=new Set(S.sessions.filter(s=>s.status!=='plan_only').map(s=>s.date));
+  let rows='';for(let w=0;w<6;w++){rows+='<tr>';for(let k=0;k<7;k++){const c=new Date(start);c.setDate(start.getDate()+w*7+k);const ci=iso(c);
+    rows+=`<td><button class="${c.getMonth()!==mo?'other ':''}${k===0?'sun ':''}${has.has(ci)?'has ':''}${ci===d?'today':''}" data-act="setDay" data-v="${ci}" aria-label="${md(ci)}">${c.getDate()}</button></td>`}rows+='</tr>'}
+  return `<div class="mcal"><div class="hd">${y}. ${mo+1}</div><table><tr>${DOW.map(w=>`<th>${w}</th>`).join('')}</tr>${rows}</table></div>`;
+}
+function tlBlock(s,top,h){
+  const m=M(s.memberId); const l=prevDone(m,s.date)[0]; const cn=openCautions(m).length;
+  const st=s.status==='in_progress'?pill('진행 중','green'):s.status==='completed'?pill('끝남','gray'):s.status!=='planned'?pill(statusLabel[s.status],'gray'):'';
+  const [hh,mm]=(s.time||'0:0').split(':').map(Number); const end=`${String(hh+1).padStart(2,'0')}:${String(mm).padStart(2,'0')}`;
+  return `<div class="blk srow ${memberHue(m)}" style="top:${top}px;height:${h}px" data-act="openSession" data-sid="${s.id}">
+    <div style="flex:1;min-width:0"><div class="bt">${esc(s.time)}-${end} ${EXAMPLE('예시')}</div>
+      <div><span class="bn">${esc(m.code)}</span> <span class="bs">· ${esc(splitName(s))}</span> ${cn?pill('주의 '+cn,'red'):''} ${st}</div>
+      <div class="bd">${s.goal?'오늘 목표: '+esc(s.goal)+' · ':''}${l?`마지막 수업 <b>${daysBetween(l.date,s.date)}일 전</b> (${md(l.date)} ${esc(splitName(l))})`:'첫 수업'}</div>
+      ${todayMemos(m,s).map(n=>`<div class="bd" style="color:var(--accent)">오늘 메모: ${esc(n.text)}</div>`).join('')}</div>
+    ${s.status==='planned'?`<button class="btn ghost more" data-act="modal" data-type="sessMenu" data-sid="${s.id}" aria-label="수업 메뉴">…</button>`:''}</div>`;
+}
 V.today=()=>{
   const d=todayIso(); const dt=pd(d);
   const list=S.sessions.filter(s=>s.date===d&&s.status!=='plan_only').sort(byDate);
+  const timed=list.filter(s=>/^\d{1,2}:\d{2}$/.test(s.time||'')), untimed=list.filter(s=>!timed.includes(s));
+  const hs=timed.map(s=>Number(s.time.split(':')[0])); const h0=hs.length?Math.max(6,Math.min(...hs)-1):9, h1=hs.length?Math.min(23,Math.max(...hs)+2):18;
+  const HH=78; let grid='';for(let h=h0;h<=h1;h++) grid+=`<div class="hr" style="top:${(h-h0)*HH}px"><span>${String(h).padStart(2,'0')}:00</span></div>`;
+  const blocks=timed.map(s=>{const [hh,mm]=s.time.split(':').map(Number);return tlBlock(s,(hh-h0+mm/60)*HH+3,HH-6)}).join('');
   const up=S.sessions.filter(s=>s.date>d&&s.status==='planned').sort(byDate).slice(0,5);
+  const rec=S.sessions.filter(s=>s.date<=d&&(s.status==='completed'||s.status==='no_show'||s.status==='cancelled')).sort((a,b)=>byDate(b,a)).slice(0,14);
+  let lastD='';const recHTML=rec.map(s=>{const m=M(s.memberId);const hd=s.date!==lastD?`<div class="dhd">${mdw(s.date)}</div>`:'';lastD=s.date;
+    return hd+`<div class="ri" data-act="go" data-to="detail" data-sid="${s.id}">${s.status==='completed'?pill('완료','green'):pill(statusLabel[s.status],'red')}<b>${esc(m.code)}</b><span class="muted">${esc(splitName(s))}</span><span class="ago">${daysBetween(s.date,d)?daysBetween(s.date,d)+'일 전':'오늘'}</span></div>`}).join('')||'<div class="empty">기록이 없어요.</div>';
+  const legend=S.members.map(m=>`<div><i class="${memberHue(m)}" style="background:currentColor"></i>${esc(m.code)}</div>`).join('');
   const nav=`<span class="tiny muted">시연용 날짜</span>${btn('‹','shiftDay',{dir:-1},'small')}${btn('›','shiftDay',{dir:1},'small')}`;
-  return topBar(`${dt.getMonth()+1}월 ${dt.getDate()}일 (${DOW[dt.getDay()]})`,`오늘 수업 ${list.length}`,nav,{noBack:true})+
-   `<div class="scroll" data-sk="main"><div class="card"><div class="list">${list.map(s=>sessionRow(s)).join('')||'<div class="empty">오늘 잡힌 수업이 없어요.</div>'}</div></div>
-    ${up.length?`<div class="small muted" style="margin:16px 4px 6px;font-weight:600">다가오는 수업</div><div class="card"><div class="list">${up.map(s=>sessionRow(s,{date:1})).join('')}</div></div>`:''}
-    <div class="tiny faint" style="margin:12px 4px">시간은 예시예요. 다른 회원 기록은 수첩 날짜 그대로라 시연 날짜와 맞지 않을 수 있어요.</div></div>`+tabBar('today');
+  return topBar(`플래너 <span class="muted" style="font-weight:500;font-size:14px;margin-left:6px">${dt.getFullYear()}년 ${dt.getMonth()+1}월 ${dt.getDate()}일 ${DOW[dt.getDay()]}요일</span>`,`오늘 수업 ${list.length}`,nav,{noBack:true})+
+   `<div class="planner" style="flex:1;min-height:0">
+     <div class="pl-left">${miniCal(d)}
+       <div class="pl-sec">회원 ${S.members.length}</div><div class="legend2">${legend}</div>
+       ${up.length?`<div class="pl-sec">다가오는 수업</div>${up.map(s=>`<div class="li click srow small" data-act="openSession" data-sid="${s.id}" style="padding:6px 0"><div style="flex:1"><b>${md(s.date)}</b> ${esc(M(s.memberId).code)} <span class="muted">${esc(splitName(s))}</span></div><button class="btn ghost more" data-act="modal" data-type="sessMenu" data-sid="${s.id}" aria-label="수업 메뉴">…</button></div>`).join('')}`:''}
+       <div class="tiny faint" style="margin-top:12px">시간은 예시예요. 다른 회원 기록은 수첩 날짜 그대로예요.</div></div>
+     <div class="pl-mid" data-sk="main"><div class="pl-colhd">PT 수업 <span class="n">${list.length}</span></div>
+       ${untimed.length?`<div class="untimed">${untimed.map(s=>`<div class="li click srow" data-act="openSession" data-sid="${s.id}"><span class="pill gray">시간 미정</span><b>${esc(M(s.memberId).code)}</b> ${esc(splitName(s))}<span class="sp"></span>${s.status==='planned'?`<button class="btn ghost more" data-act="modal" data-type="sessMenu" data-sid="${s.id}" aria-label="수업 메뉴">…</button>`:''}</div>`).join('')}</div>`:''}
+       <div class="tl" style="height:${(h1-h0)*HH+10}px">${grid}${blocks}</div>
+       ${list.length?'':'<div class="empty" style="padding:14px">오늘 잡힌 수업이 없어요.</div>'}</div>
+     <div class="pl-right"><div style="font-weight:700;font-size:13px">최근 기록</div><div class="recent">${recHTML}</div></div>
+   </div>`+tabBar('today');
 };
 
 /* ---------- 회원 목록 ---------- */
@@ -1851,64 +1955,77 @@ function goalCard(m){
     <hr class="sep"><div class="row"><span>훈련 방향: <b>${blockText(b)}</b></span><span class="sp"></span>${btn('바꾸기','modal',{type:'block',mid:m.id},'small')}</div>
     ${m.blocks.length>1?`<div class="tiny muted">지난 방향: ${m.blocks.slice(0,-1).reverse().map(blockText).join(' / ')}</div>`:''}</div>`;
 }
-/* EMR 환자 띠: 숫자는 수업 기록에서 센 값만 */
-function memberBand(m){
-  const done=completed(m.id); const u=upcoming(m.id); const last=done[done.length-1]; const t=todayIso();
-  const d30=done.filter(s=>daysBetween(s.date,t)>=0&&daysBetween(s.date,t)<30).length;
-  const cnt={};for(const s of done){const n=splitName(s);cnt[n]=(cnt[n]||0)+1}
-  const top=Object.entries(cnt).sort((a,b)=>b[1]-a[1]).slice(0,2).map(x=>x[0]).join(' · ')||'—';
-  const kv=(k,v)=>`<div><dt>${k}</dt><dd>${v}</dd></div>`;
-  return `<div class="pband" role="group" aria-label="회원 요약"><div class="who"><b>${esc(m.code)}</b><span class="tiny muted">회원</span></div><dl class="kvc" style="margin:0">
-    ${kv('첫 기록',done[0]?md(done[0].date):'—')}
-    ${kv('누적 수업',`${done.length}<span class="u">회</span>`)}
-    ${kv('최근 30일',`${d30}<span class="u">회</span>`)}
-    ${kv('마지막 수업',last?`${md(last.date)} <span class="u">${daysBetween(last.date,t)}일 전</span>`:'—')}
-    ${kv('다음 PT',u?`${md(u.date)} <span class="u">${esc(splitName(u))}</span>`:'없음')}
-    ${kv('자주 한 분할',esc(top))}</dl></div>`;
-}
 /* 월별 수업 횟수 막대 (한 계열, 마지막 달만 강조, 막대마다 툴팁) */
 function monthBars(m,W,H){
   const done=completed(m.id); if(!done.length) return '<div class="empty">수업 기록이 없어요.</div>';
   const by={};for(const s of done){const k=s.date.slice(0,7);by[k]=(by[k]||0)+1}
   const a=done[0].date.slice(0,7), b=done[done.length-1].date.slice(0,7); const ks=[];let [y,mo]=a.split('-').map(Number);
   while(true){const k=`${y}-${String(mo).padStart(2,'0')}`;ks.push(k);if(k===b||ks.length>24)break;mo++;if(mo>12){mo=1;y++}}
-  const padL=28,padR=8,padT=16,padB=22; const max=Math.max(...ks.map(k=>by[k]||0)); const ymax=Math.max(4,Math.ceil(max/4)*4);
+  const padL=24,padR=4,padT=16,padB=20; const max=Math.max(...ks.map(k=>by[k]||0)); const ymax=Math.max(4,Math.ceil(max/4)*4);
   const bw=(W-padL-padR)/ks.length; const Y=v=>padT+(1-v/ymax)*(H-padT-padB);
   let g='';for(let v=0;v<=ymax;v+=ymax/4) g+=`<line class="axis" x1="${padL}" x2="${W-padR}" y1="${Y(v)}" y2="${Y(v)}"/><text x="${padL-5}" y="${Y(v)+4}" text-anchor="end">${v}</text>`;
-  const bars=ks.map((k,i)=>{const v=by[k]||0;const x=padL+i*bw+Math.max(2,bw*.18);const w=Math.max(4,bw-2*Math.max(2,bw*.18));const h=Y(0)-Y(v);
+  const bars=ks.map((k,i)=>{const v=by[k]||0;const gap=Math.max(2,bw*.2);const x=padL+i*bw+gap;const w=Math.max(4,bw-2*gap);const h=Y(0)-Y(v);
     const r=Math.min(4,w/2,h);const last=i===ks.length-1;
     const path=v?`M${x},${Y(0)} V${Y(v)+r} Q${x},${Y(v)} ${x+r},${Y(v)} H${x+w-r} Q${x+w},${Y(v)} ${x+w},${Y(v)+r} V${Y(0)} Z`:'';
-    return `<g class="hov"><rect x="${padL+i*bw}" y="${padT}" width="${bw}" height="${H-padT-padB}" fill="transparent"/>${v?`<path class="bar${last?' last':''}" d="${path}"/>`:''}${(last||v===max)&&v?`<text class="lbl" x="${x+w/2}" y="${Y(v)-4}" text-anchor="middle">${v}</text>`:''}<text x="${x+w/2}" y="${H-6}" text-anchor="middle">${Number(k.slice(5))}월</text><title>${k.slice(0,4)}년 ${Number(k.slice(5))}월 · 수업 ${v}회</title></g>`}).join('');
+    return `<g class="hov"><rect x="${padL+i*bw}" y="${padT}" width="${bw}" height="${H-padT-padB}" fill="transparent"/>${v?`<path class="bar${last?' last':''}" d="${path}"/>`:''}${(last||v===max)&&v?`<text class="lbl" x="${x+w/2}" y="${Y(v)-4}" text-anchor="middle">${v}</text>`:''}<text x="${x+w/2}" y="${H-5}" text-anchor="middle">${Number(k.slice(5))}</text><title>${k.slice(0,4)}년 ${Number(k.slice(5))}월 · 수업 ${v}회</title></g>`}).join('');
   return `<svg class="chart" width="100%" viewBox="0 0 ${W} ${H}" role="img" aria-label="월별 수업 횟수">${g}${bars}</svg>`;
 }
-/* 메인 종목 최고 무게 미니 추이 */
 function mainTrend(m,W,H){
   const cnt={};for(const s of completed(m.id))for(const x of s.exercises)if(x.status==='done'&&x.role==='메인'&&topSet(x))cnt[x.exId]=(cnt[x.exId]||0)+1;
   const ex=Object.keys(cnt).sort((a,b)=>cnt[b]-cnt[a])[0]; if(!ex) return {ex:null,svg:'<div class="empty">메인 종목 무게 기록이 없어요.</div>'};
-  const ser=trendSeries(m,ex).slice(-12); const pts=ser.map(o=>({date:o.s.date,v:o.t.w,label:`${md(o.s.date)} ${ftop(o.t,ex)}`}));
-  return {ex,svg:`<div style="overflow:hidden">${chartSVG(pts,W,H,p=>fw(p.v,ex)).replace(/data-act="trendPt"/g,"").replace('<svg class="chart" width="'+W+'" height="'+H+'"',`<svg class="chart" width="100%" viewBox="0 0 ${W} ${H}"`)}</div>`};
+  const ser=trendSeries(m,ex).slice(-10); const pts=ser.map(o=>({date:o.s.date,v:o.t.w,label:`${md(o.s.date)} ${ftop(o.t,ex)}`}));
+  return {ex,svg:chartSVG(pts,W,H,p=>fw(p.v,ex),null,{fewX:1}).replace(/data-act="trendPt"/g,'').replace(`<svg class="chart" width="${W}" height="${H}"`,`<svg class="chart" width="100%" viewBox="0 0 ${W} ${H}"`)};
+}
+function cautionSec(m){
+  const rows=openCautions(m).map(c=>`<div class="li">${pill(c.part,'red')}<div style="flex:1">${esc(c.text)}<div class="tiny muted">${c.since?md(c.since)+'부터':''}</div></div>${btn('닫기','closeCaution',{mid:m.id,id:c.id},'small ghost')}</div>`).join('')||'<div class="empty">열린 주의사항이 없어요.</div>';
+  return `<div><h3>주의사항</h3>${rows}<div class="row" style="margin-top:6px">${dSel('cPart-'+m.id,pairs(['어깨','무릎','허리','목','손목','발목','고관절','기타']),'어깨',{w:80})}${dIn('cText-'+m.id,'짧게 적기',{grow:1})}${btn('넣기','addCaution',{mid:m.id},'small')}</div></div>`;
+}
+function checkSec(m){
+  const rows=checks(m).map(c=>`<div class="li"><input type="checkbox" data-act="noteDone" data-mid="${m.id}" data-id="${c.id}" aria-label="확인함"><div style="flex:1">${esc(c.text)}<div class="tiny muted">${c.created?md(c.created)+'에 남김':''}</div></div></div>`).join('')||'<div class="empty">없어요.</div>';
+  return `<div><h3>다음에 확인할 것</h3>${rows}<div class="row" style="margin-top:6px">${dIn('nCheck-'+m.id,'예: 핵스쿼트 무릎 각도',{grow:1})}${btn('넣기','addNote',{mid:m.id,kind:'check'},'small')}</div></div>`;
+}
+function goalSec(m){
+  const g=m.goals.filter(g=>!g.end); const b=curBlock(m);
+  return `<div><h3>목표 · 훈련 방향</h3>${g.map(x=>`<div class="small">· ${esc(x.text)}</div>`).join('')||'<div class="empty">목표가 없어요.</div>'}
+    <div class="row" style="margin-top:6px"><span class="small">방향 <b>${blockText(b)}</b></span>${btn('바꾸기','modal',{type:'block',mid:m.id},'small')}</div></div>`;
 }
 V.member=r=>{
-  const m=M(r.mid); const u=upcoming(m.id); const done=completed(m.id); const recent=done.slice(-5).reverse();
+  const m=M(r.mid); const u=upcoming(m.id); const done=completed(m.id); const t=todayIso(); const last=done[done.length-1];
+  const d30=done.filter(s=>daysBetween(s.date,t)>=0&&daysBetween(s.date,t)<30).length;
+  const cn=openCautions(m).length;
+  const pbar=`<div class="pbar"><span class="nm">${esc(m.code)}</span>${pill('회원','blue')}${cn?pill('주의 '+cn,'red'):''}${m.goals.filter(g=>!g.end).length?pill('목표 있음','green'):''}
+    <div class="vit"><span>누적 <b>${done.length}</b>회</span><span>최근 30일 <b>${d30}</b>회</span><span>첫 기록 <b>${done[0]?md(done[0].date):'—'}</b></span><span>마지막 <b>${last?md(last.date):'—'}</b>${last?` (${daysBetween(last.date,t)}일 전)`:''}</span><span>다음 PT <b>${u?mdw(u.date):'없음'}</b>${u?' '+esc(splitName(u)):''}</span></div></div>`;
+  const all=msessions(m.id).filter(s=>s.status!=='plan_only'||true).slice().sort((a,b)=>byDate(b,a));
+  const hist=all.map(s=>{const isNext=u&&s.id===u.id;const n=s.exercises.filter(x=>x.status==='done').length;
+    const st=s.status==='completed'?'':s.status==='plan_only'?pill('계획만','gray'):pill(statusLabel[s.status],s.status==='planned'||s.status==='in_progress'?'blue':'gray');
+    return `<button class="hi${isNext?' next':''}" data-act="${s.status==='planned'||s.status==='in_progress'?'openSession':'go'}" data-to="detail" data-sid="${s.id}"><div class="row" style="gap:6px"><span class="d">${mdw(s.date)}</span>${pill(splitName(s))}${st}</div>
+      <div class="x">${s.exercises.filter(x=>x.status==='done'||s.status!=='completed').slice(0,4).map(x=>EX(x.exId).name).join(', ')}${n>4?' 외':''}</div></button>`}).join('')||'<div class="empty" style="padding:12px">기록이 없어요.</div>';
   let next;
-  if(u){
-    const ip=u.status==='in_progress';
-    next=`<div class="row"><div style="flex:1"><div style="font-size:18px;font-weight:700">${mdw(u.date)} ${esc(u.time||'')}</div><div class="muted small">${esc(splitName(u))}${u.goal?' · 오늘 목표: '+esc(u.goal):''}</div></div>${ip?'<span class="tag good">진행 중</span>':''}
+  if(u){const ip=u.status==='in_progress';
+    next=`<div class="row"><div style="flex:1"><div style="font-size:16px;font-weight:700">${mdw(u.date)} ${esc(u.time||'')}</div><div class="muted small">${esc(splitName(u))}${u.goal?' · 오늘 목표: '+esc(u.goal):''}</div></div>${ip?pill('진행 중','green'):''}
       ${ip?btn('이어서 하기','openSession',{sid:u.id},'primary'):btn('수업 준비','openSession',{sid:u.id},'primary')+`<button class="btn ghost more" data-act="modal" data-type="sessMenu" data-sid="${u.id}" aria-label="수업 메뉴">…</button>`}</div>`;
   } else next=`<div class="row"><span class="muted">잡힌 수업이 없어요.</span><span class="sp"></span>${btn('다음 PT 잡기','modal',{type:'schedule',mid:m.id},'primary')}</div>`;
-  const mainOf=s=>{const x=s.exercises.find(e=>e.status==='done'&&e.role==='메인')||s.exercises.find(e=>e.status==='done');const t=x&&topSet(x);return x?`${esc(EX(x.exId).name)}${t?` <b class="num">${ftop(t,x.exId)}</b>`:''}`:'—'};
-  const rec=recent.map(s=>`<tr class="click" data-act="go" data-to="detail" data-sid="${s.id}"><td class="num">${mdw(s.date)}</td><td><b>${esc(splitName(s))}</b></td><td class="num">${s.exercises.filter(x=>x.status==='done').length}</td><td>${mainOf(s)}</td><td class="memo" title="${esc(s.memo||'')}">${esc(s.memo||'')}</td></tr>`).join('');
-  const W=UI.orient==='land'?520:700; const mt=mainTrend(m,W,150);
+  const recent=done.slice(-5).reverse();
+  const mainOf=s=>{const x=s.exercises.find(e=>e.status==='done'&&e.role==='메인')||s.exercises.find(e=>e.status==='done');const tt=x&&topSet(x);return x?`${esc(EX(x.exId).name)}${tt?` <b class="num">${ftop(tt,x.exId)}</b>`:''}`:'—'};
+  const rec=recent.map(s=>`<tr class="click" data-act="go" data-to="detail" data-sid="${s.id}"><td class="num">${mdw(s.date)}</td><td>${pill(splitName(s))}</td><td>${mainOf(s)}</td><td class="memo" title="${esc(s.memo||'')}">${esc(s.memo||'')}</td></tr>`).join('');
+  const mt=mainTrend(m,262,130);
+  const notes=m.notes.filter(n=>['general','lifestyle','diet','self_train','personality'].includes(n.kind));
   return topBar(esc(m.code),'회원 한눈에',
-      btn('추이','go',{to:'trend',mid:m.id})+btn('수업 기록','go',{to:'history',mid:m.id})+btn('루틴 틀','go',{to:'templates',mid:m.id})+btn('회원 정보','go',{to:'memberEdit',mid:m.id}))+
-    `<div class="scroll" data-sk="main">${memberBand(m)}
-     <div class="grid2" style="margin-bottom:12px"><div class="card"><h2>다음 PT</h2>${next}</div>${goalCard(m)}</div>
-     <div class="charts2" style="margin-bottom:12px"><div class="card"><h2>월별 수업 횟수</h2>${monthBars(m,W,150)}</div>
-       <div class="card"><h2>메인 종목 최고 무게${mt.ex?` <span class="tiny muted" style="font-weight:500">${esc(EX(mt.ex).name)} · 최근 12회</span>`:''}</h2>${mt.svg}</div></div>
-     <div class="card" style="margin-bottom:12px"><h2>최근 수업 ${recent.length}회</h2>${rec?`<table class="dtable" style="table-layout:fixed"><colgroup><col style="width:92px"><col style="width:96px"><col style="width:48px"><col style="width:220px"><col></colgroup><tr><th>날짜</th><th>분할</th><th>종목</th><th>메인 종목 최고</th><th>메모</th></tr>${rec}</table>`:'<div class="empty">아직 수업 기록이 없어요.</div>'}
-       ${done.length>5?btn(`수업 기록 ${done.length}회 모두 보기`,'go',{to:'history',mid:m.id},'ghost small'):''}</div>
-     <div class="grid2"><div class="col">${cautionCard(m)}${checkCard(m)}</div>
-      <div class="col">${notesCard(m,['general','lifestyle','diet','self_train','personality'],'메모')}</div></div></div>`;
+      btn('추이','go',{to:'trend',mid:m.id})+btn('수업 기록','go',{to:'history',mid:m.id})+btn('루틴 틀','go',{to:'templates',mid:m.id})+btn('회원 정보','go',{to:'memberEdit',mid:m.id}))+pbar+
+    `<div class="chartlay">
+      <div class="cl-left"><div class="pl-colhd">수업 이력 <span class="n">${all.length}</span></div><div class="hist">${hist}</div></div>
+      <div class="cl-mid" data-sk="main">
+        <div class="box"><div class="bh">다음 PT</div><div class="bb">${next}</div></div>
+        <div class="box"><div class="sec3">${cautionSec(m)}${checkSec(m)}${goalSec(m)}</div></div>
+        <div class="box"><div class="bh">최근 수업 ${recent.length}회<span class="sp"></span>${done.length>5?btn(`전체 ${done.length}회`,'go',{to:'history',mid:m.id},'ghost small'):''}</div>
+          ${rec?`<table class="dtable" style="table-layout:fixed"><colgroup><col style="width:84px"><col style="width:120px"><col style="width:210px"><col></colgroup><tr><th>날짜</th><th>분할</th><th>메인 종목 최고</th><th>메모</th></tr>${rec}</table>`:'<div class="empty" style="padding:10px 12px">아직 수업 기록이 없어요.</div>'}</div>
+      </div>
+      <div class="cl-right">
+        <h3>월별 수업 횟수</h3>${monthBars(m,262,130)}
+        <h3>메인 종목 최고 무게 ${mt.ex?`<span class="tiny muted" style="font-weight:500">${esc(EX(mt.ex).name)}</span>`:''}</h3>${mt.svg}
+        <h3>메모</h3>${notes.map(n=>`<div class="li small" style="align-items:flex-start">${pill(NOTE_KINDS[n.kind],'gray')}<div style="flex:1">${esc(n.text)}</div>${btn('지우기','delNote',{mid:m.id,id:n.id},'small ghost')}</div>`).join('')||'<div class="empty">없어요.</div>'}
+        <div class="row" style="margin-top:6px;flex-wrap:nowrap">${dSel('nKind-'+m.id,['general','lifestyle','diet','self_train','personality'].map(k=>[k,NOTE_KINDS[k]]),'general',{w:84})}${dIn('nText-'+m.id,'메모',{grow:1})}${btn('넣기','addNote',{mid:m.id},'small')}</div>
+      </div></div>`;
 };
 
 /* ---------- 회원 정보 ---------- */
@@ -2135,7 +2252,7 @@ V.summary=r=>{
 
 /* ---------- 10단계 추이 ---------- */
 function trendSeries(m,exId){return completed(m.id).map(s=>{const x=s.exercises.find(e=>e.exId===exId&&e.status==='done');const t=x&&topSet(x);return t?{s,x,t}:null}).filter(Boolean)}
-function chartSVG(pts,W,Hh,fmt,sel){
+function chartSVG(pts,W,Hh,fmt,sel,o={}){
   if(!pts.length) return '<div class="empty">그릴 기록이 없어요.</div>';
   const padL=44,padR=16,padT=14,padB=28; const xs=pts.map(p=>pd(p.date).getTime()); const x0=Math.min(...xs),x1=Math.max(...xs);
   const ymax=Math.max(...pts.map(p=>p.v))*1.15||1; const X=t=>x1===x0?padL+(W-padL-padR)/2:padL+(t-x0)/(x1-x0)*(W-padL-padR); const Y=v=>padT+(1-v/ymax)*(Hh-padT-padB);
@@ -2143,7 +2260,7 @@ function chartSVG(pts,W,Hh,fmt,sel){
   for(let v=0;v<=ymax;v+=step) grid+=`<line x1="${padL}" x2="${W-padR}" y1="${Y(v)}" y2="${Y(v)}" stroke="var(--line)" stroke-width="1"/><text x="${padL-6}" y="${Y(v)+4}" text-anchor="end">${v}</text>`;
   const path=pts.map((p,i)=>`${i?'L':'M'}${X(xs[i]).toFixed(1)},${Y(p.v).toFixed(1)}`).join(' ');
   const dots=pts.map((p,i)=>`<g data-act="trendPt" data-i="${i}" style="cursor:pointer"><circle cx="${X(xs[i])}" cy="${Y(p.v)}" r="14" fill="transparent"/><circle cx="${X(xs[i])}" cy="${Y(p.v)}" r="${sel===i?6:4.5}" fill="var(--accent)" stroke="var(--panel)" stroke-width="2"/><title>${esc(p.label)}</title></g>`).join('');
-  const xl=pts.map((p,i)=>`<text x="${X(xs[i])}" y="${Hh-8}" text-anchor="middle">${md(p.date)}</text>`).join('');
+  const xl=pts.map((p,i)=>o.fewX&&i&&i<pts.length-1?'':`<text x="${X(xs[i])}" y="${Hh-8}" text-anchor="middle">${md(p.date)}</text>`).join('');
   const lastI=pts.length-1;
   return `<svg class="chart" width="${W}" height="${Hh}" role="img" aria-label="최고 무게 추이">${grid}<path d="${path}" fill="none" stroke="var(--accent)" stroke-width="2"/>${dots}${xl}<text x="${X(xs[lastI])}" y="${Y(pts[lastI].v)-12}" text-anchor="middle" style="fill:var(--ink);font-weight:600">${esc(fmt(pts[lastI]))}</text></svg>`;
 }
@@ -2560,7 +2677,7 @@ const SCENES=[
     at:()=>UI.route.name==='members'?'[data-to="member"][data-mid="m3"]':'.tabbar [data-v="members"]',
     done:()=>UI.route.name==='member'&&UI.route.mid==='m3'||UI.route.name==='trend',
     auto:()=>{home('members');go('member',{mid:'m3'})}},
-   {say:"회원 한눈에 맨 위 띠에 누적 수업, 최근 30일, 마지막 수업, 다음 PT가 있고, 아래에 월별 수업 횟수와 메인 종목 무게 그래프, 최근 수업 5회 표(10/16 메모 포함), 주의사항과 확인할 것이 있어요. 위 '추이'를 눌러요.",
+   {say:"회원 한눈에는 병원 차트 화면처럼 위에 요약 줄, 왼쪽에 수업 이력, 가운데에 다음 PT·주의사항·확인할 것·목표와 최근 수업 5회 표(10/16 메모 포함), 오른쪽에 월별 수업 그래프와 메인 종목 무게 그래프가 있어요. 위 '추이'를 눌러요.",
     at:()=>'.top [data-to="trend"]',
     done:()=>UI.route.name==='trend',
     auto:()=>go('trend',{mid:'m3'})},
@@ -2673,6 +2790,7 @@ const ACT={
   back:()=>back(),
   home:()=>home(),
   tab:d=>home(d.v),
+  setDay:d=>{S.today=d.v;seedOthers(S.today);save();render()},
   shiftDay:d=>{S.today=addDays(todayIso(),+d.dir);seedOthers(S.today);save();render()},
   noop:()=>{},
   go:d=>{const p={};if(d.mid)p.mid=d.mid;if(d.sid)p.sid=d.sid;go(d.to,p)},

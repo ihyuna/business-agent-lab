@@ -261,7 +261,7 @@ const SCENES=[
     at:()=>UI.route.name==='members'?'[data-to="member"][data-mid="m3"]':'.tabbar [data-v="members"]',
     done:()=>UI.route.name==='member'&&UI.route.mid==='m3'||UI.route.name==='trend',
     auto:()=>{home('members');go('member',{mid:'m3'})}},
-   {say:"회원 한눈에 맨 위 띠에 누적 수업, 최근 30일, 마지막 수업, 다음 PT가 있고, 아래에 월별 수업 횟수와 메인 종목 무게 그래프, 최근 수업 5회 표(10/16 메모 포함), 주의사항과 확인할 것이 있어요. 위 '추이'를 눌러요.",
+   {say:"회원 한눈에는 병원 차트 화면처럼 위에 요약 줄, 왼쪽에 수업 이력, 가운데에 다음 PT·주의사항·확인할 것·목표와 최근 수업 5회 표(10/16 메모 포함), 오른쪽에 월별 수업 그래프와 메인 종목 무게 그래프가 있어요. 위 '추이'를 눌러요.",
     at:()=>'.top [data-to="trend"]',
     done:()=>UI.route.name==='trend',
     auto:()=>go('trend',{mid:'m3'})},

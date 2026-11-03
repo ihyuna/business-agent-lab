@@ -48,6 +48,7 @@ const ACT={
   back:()=>back(),
   home:()=>home(),
   tab:d=>home(d.v),
+  setDay:d=>{S.today=d.v;seedOthers(S.today);save();render()},
   shiftDay:d=>{S.today=addDays(todayIso(),+d.dir);seedOthers(S.today);save();render()},
   noop:()=>{},
   go:d=>{const p={};if(d.mid)p.mid=d.mid;if(d.sid)p.sid=d.sid;go(d.to,p)},

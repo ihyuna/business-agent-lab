@@ -130,7 +130,7 @@ V.summary=r=>{
 
 /* ---------- 10단계 추이 ---------- */
 function trendSeries(m,exId){return completed(m.id).map(s=>{const x=s.exercises.find(e=>e.exId===exId&&e.status==='done');const t=x&&topSet(x);return t?{s,x,t}:null}).filter(Boolean)}
-function chartSVG(pts,W,Hh,fmt,sel){
+function chartSVG(pts,W,Hh,fmt,sel,o={}){
   if(!pts.length) return '<div class="empty">그릴 기록이 없어요.</div>';
   const padL=44,padR=16,padT=14,padB=28; const xs=pts.map(p=>pd(p.date).getTime()); const x0=Math.min(...xs),x1=Math.max(...xs);
   const ymax=Math.max(...pts.map(p=>p.v))*1.15||1; const X=t=>x1===x0?padL+(W-padL-padR)/2:padL+(t-x0)/(x1-x0)*(W-padL-padR); const Y=v=>padT+(1-v/ymax)*(Hh-padT-padB);
@@ -138,7 +138,7 @@ function chartSVG(pts,W,Hh,fmt,sel){
   for(let v=0;v<=ymax;v+=step) grid+=`<line x1="${padL}" x2="${W-padR}" y1="${Y(v)}" y2="${Y(v)}" stroke="var(--line)" stroke-width="1"/><text x="${padL-6}" y="${Y(v)+4}" text-anchor="end">${v}</text>`;
   const path=pts.map((p,i)=>`${i?'L':'M'}${X(xs[i]).toFixed(1)},${Y(p.v).toFixed(1)}`).join(' ');
   const dots=pts.map((p,i)=>`<g data-act="trendPt" data-i="${i}" style="cursor:pointer"><circle cx="${X(xs[i])}" cy="${Y(p.v)}" r="14" fill="transparent"/><circle cx="${X(xs[i])}" cy="${Y(p.v)}" r="${sel===i?6:4.5}" fill="var(--accent)" stroke="var(--panel)" stroke-width="2"/><title>${esc(p.label)}</title></g>`).join('');
-  const xl=pts.map((p,i)=>`<text x="${X(xs[i])}" y="${Hh-8}" text-anchor="middle">${md(p.date)}</text>`).join('');
+  const xl=pts.map((p,i)=>o.fewX&&i&&i<pts.length-1?'':`<text x="${X(xs[i])}" y="${Hh-8}" text-anchor="middle">${md(p.date)}</text>`).join('');
   const lastI=pts.length-1;
   return `<svg class="chart" width="${W}" height="${Hh}" role="img" aria-label="최고 무게 추이">${grid}<path d="${path}" fill="none" stroke="var(--accent)" stroke-width="2"/>${dots}${xl}<text x="${X(xs[lastI])}" y="${Y(pts[lastI].v)-12}" text-anchor="middle" style="fill:var(--ink);font-weight:600">${esc(fmt(pts[lastI]))}</text></svg>`;
 }
