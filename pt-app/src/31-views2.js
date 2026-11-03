@@ -158,10 +158,10 @@ V.trend=r=>{
    `<div class="scroll" data-sk="main"><div class="card"><h2>종목별 최고 무게</h2>
      <div class="row" style="margin-bottom:8px">${exs.map(id=>`<button class="chip${id===ex?' on':''}" data-act="pickTrend" data-mid="${m.id}" data-v="${id}">${esc(EX(id).name)} <span class="tiny">${cnt[id]}</span></button>`).join(' ')||'<span class="empty">기록이 없어요.</span>'}</div>
      ${ex?`<div class="small muted">${esc(EX(ex).name)} · 수업마다 가장 무거운 본세트 (워밍업 제외). 점을 누르면 그날 숫자가 보여요.</div>${chartSVG(pts,W,230,p=>fw(p.v,ex),sel)}
-     <div class="small" style="min-height:20px">${picked?`<b>${mdw(picked.s.date)}</b> ${esc(splitName(picked.s))} · ${esc(fsets(picked.x.sets,ex,'a'))}${picked.x.raw?` <span class="dimline">원문: ${esc(picked.x.raw)}</span>`:''}`:''}</div>
+     <div class="small" style="min-height:20px">${picked?`<b>${mdw(picked.s.date)}</b> ${esc(splitName(picked.s))} · ${esc(fsets(picked.x.sets,ex,'a'))}${picked.x.raw?` <span class="dimline">수첩: ${esc(picked.x.raw)}</span>`:''}`:''}</div>
      ${blocks?`<div class="small">훈련 방향: ${blocks}</div>`:''}
      <table style="margin-top:6px"><tr><th>날짜</th><th>분할</th><th>실제 세트</th><th>최고</th></tr>${rows}</table>`:''}</div>
-    <div class="card" style="margin-top:12px"><h2>체중 <span class="tag good">4a</span></h2><table><tr><th>날짜</th><th>체중</th><th>골격근량</th></tr>${body||'<tr><td colspan="3" class="empty">체중 기록이 없어요. 예시 데이터에도 없었어요.</td></tr>'}</table>
+    <div class="card" style="margin-top:12px"><h2>체중 <span class="tag good">4a</span></h2><table><tr><th>날짜</th><th>체중</th><th>골격근량</th></tr>${body||'<tr><td colspan="3" class="empty">체중 기록이 없어요. 수첩에도 없었어요.</td></tr>'}</table>
      <div class="row" style="margin-top:6px">${dIn('bDate-'+m.id,'',{type:'date',w:150})}${dIn('bW-'+m.id,'체중',{w:70,im:'decimal'})}${dIn('bM-'+m.id,'골격근',{w:70,im:'decimal'})}${btn('넣기','addBody',{mid:m.id},'small')}</div></div></div>`;
 };
 
@@ -183,12 +183,12 @@ V.detail=r=>{
   const parts={}; for(const x of s.exercises){if(x.status!=='done')continue;const p=EX(x.exId).part||'기타';parts[p]=(parts[p]||0)+x.sets.filter(st=>st.kind!=='warmup'&&(st.done||(s.seeded&&(st.aw!=null||st.ar!=null)))).length}
   const rows=s.exercises.map((x,i)=>`<tr><td class="num">${i+1}</td><td><b class="${x.status==='removed'?'st-removed':x.status==='swapped'?'st-swapped':''}">${esc(EX(x.exId).name)}</b><div class="tiny muted">${x.role}${x.status==='removed'?' · 뺌'+(x.reason?' ('+esc(x.reason)+')':''):x.status==='swapped'?' · 바꿈':''}${x.origin==='added'?' · 새로 넣음':x.origin==='swap'?' · 바꿔 넣음':''}</div></td>
      <td class="small">${esc(fsets(x.sets,x.exId,'p'))||'—'}</td><td class="small">${s.status==='plan_only'?'<span class="faint">했는지 모름</span>':esc(fsets(x.sets,x.exId,'a'))||'—'}${x.sets.some(st=>isNum(st.rir))?`<div class="tiny muted">여유 횟수 ${x.sets.filter(st=>isNum(st.rir)).map(st=>st.rir).join(', ')}</div>`:''}</td>
-     <td class="small">${x.setting?'세팅 '+esc(x.setting)+'<br>':''}${x.note?esc(x.note)+'<br>':''}${x.raw?`<span class="dimline">원문: ${esc(x.raw)}</span>`:''}</td></tr>`).join('');
+     <td class="small">${x.setting?'세팅 '+esc(x.setting)+'<br>':''}${x.note?esc(x.note)+'<br>':''}${x.raw?`<span class="dimline">수첩: ${esc(x.raw)}</span>`:''}</td></tr>`).join('');
   const nt=Object.entries(s.nextTargets||{}).map(([k,t])=>`${EX(k).name} ${t.w!=null?fw(t.w,k):''}${t.r!=null?' × '+t.r:''}${t.text?' '+t.text:''}`);
-  return topBar(esc(m.code)+` ${mdw(s.date)} ${esc(splitName(s))}`,`${statusLabel[s.status]}${s.seeded?' · 예시 기록':''} · 수업 상세`,s.status==='planned'||s.status==='in_progress'?btn('수업으로','openSession',{sid:s.id},'primary'):'')+
+  return topBar(esc(m.code)+` ${mdw(s.date)} ${esc(splitName(s))}`,`${statusLabel[s.status]}${s.seeded?' · 수첩에서 옮긴 기록':''} · 수업 상세`,s.status==='planned'||s.status==='in_progress'?btn('수업으로','openSession',{sid:s.id},'primary'):'')+
    `<div class="scroll" data-sk="main">
     ${s.cond||s.goal||s.memo||nt.length?`<div class="card" style="margin-bottom:10px"><dl class="kv">${s.goal?`<dt>오늘 목표</dt><dd>${esc(s.goal)}</dd>`:''}${s.cond?`<dt>컨디션</dt><dd>${condLine(s.cond)}</dd>`:''}${s.memo?`<dt>수업 메모</dt><dd>${esc(s.memo)}</dd>`:''}${(s.observations||[]).length?`<dt>관찰</dt><dd>${s.observations.map(o=>lab(OBS,o.kind)+(o.dir==='up'?' 좋아짐':' 나빠짐')).join(', ')}</dd>`:''}${nt.length?`<dt>다음 목표</dt><dd>${esc(nt.join(' / '))}</dd>`:''}</dl></div>`:''}
-    <div class="card"><table><tr><th>#</th><th>종목</th><th>계획</th><th>실제</th><th>메모</th></tr>${rows}</table>
+    <div class="card"><table><tr><th>#</th><th>종목</th><th>계획</th><th>실제</th><th>메모 · 수첩 원문</th></tr>${rows}</table>
     ${Object.keys(parts).length?`<div class="tiny muted" style="margin-top:6px">부위별 본세트 수: ${Object.entries(parts).map(([p,n])=>`${p} ${n}`).join(', ')} · 볼륨 ${sessionVolume(s).toLocaleString()}</div>`:''}</div></div>`;
 };
 

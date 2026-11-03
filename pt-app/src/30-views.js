@@ -75,7 +75,7 @@ V.today=()=>{
   return topBar(`${dt.getMonth()+1}월 ${dt.getDate()}일 (${DOW[dt.getDay()]})`,`오늘 수업 ${list.length}`,nav,{noBack:true})+
    `<div class="scroll" data-sk="main"><div class="card"><div class="list">${list.map(s=>sessionRow(s)).join('')||'<div class="empty">오늘 잡힌 수업이 없어요.</div>'}</div></div>
     ${up.length?`<div class="small muted" style="margin:16px 4px 6px;font-weight:600">다가오는 수업</div><div class="card"><div class="list">${up.map(s=>sessionRow(s,{date:1})).join('')}</div></div>`:''}
-    <div class="tiny faint" style="margin:12px 4px">시간은 예시예요. 다른 회원의 예시 기록은 시연 날짜와 맞지 않을 수 있어요.</div></div>`+tabBar('today');
+    <div class="tiny faint" style="margin:12px 4px">시간은 예시예요. 다른 회원 기록은 수첩 날짜 그대로라 시연 날짜와 맞지 않을 수 있어요.</div></div>`+tabBar('today');
 };
 
 /* ---------- 회원 목록 ---------- */
@@ -83,12 +83,12 @@ V.members=()=>{
   const rows=S.members.map(m=>{const u=upcoming(m.id);const l=lastSession(m);return `<div class="li click" data-act="go" data-to="member" data-mid="${m.id}">
       <div style="flex:1;min-width:0"><b>${esc(m.code)}</b> <span class="muted small">${m.goals[0]?esc(m.goals[0].text):''}</span>
       <div class="tiny muted">다음 PT ${u?mdw(u.date)+' '+esc(splitName(u)):'없음'} · 지난 수업 ${l?md(l.date)+' '+esc(splitName(l)):'없음'} · 기록 ${completed(m.id).length}회</div></div>${openCautions(m).length?`<span class="tag warn">주의 ${openCautions(m).length}</span>`:''}<span class="faint">›</span></div>`}).join('');
-  return topBar('회원',`${S.members.length}명 · 가상 회원 예시 기록으로 채운 프로토타입`,btn('기록 찾기','go',{to:'search'})+btn('설정','go',{to:'settings'})+btn('+ 회원','newMember'),{noBack:true})+
+  return topBar('회원',`${S.members.length}명 · 트레이너 수첩 기록으로 채운 프로토타입`,btn('기록 찾기','go',{to:'search'})+btn('설정','go',{to:'settings'})+btn('+ 회원','newMember'),{noBack:true})+
    `<div class="scroll" data-sk="main"><div class="card"><div class="list">${rows}</div></div>
     <div class="card" style="margin-top:12px"><h2>이 프로토타입</h2>
       <ul class="small" style="margin:0 0 8px;padding-left:18px">
-        <li>회원과 기록은 모두 지어낸 예시예요. 실제 사람 기록이 아니에요.</li>
-        <li>역할, 여유 횟수, 쉬는 시간, 기구 눈금은 ${EXAMPLE('예시')}나 논문 기준 임시값(D59)이에요.</li>
+        <li>회원 기록은 트레이너 수첩의 실제 숫자이고, 이름은 성+00 코드로 바꿨어요(D61).</li>
+        <li>역할, 여유 횟수, 쉬는 시간, 기구 눈금은 수첩에 없어서 ${EXAMPLE('예시')}나 논문 기준 임시값(D59)이에요.</li>
         <li>입력한 것은 이 브라우저에만 저장돼요.</li></ul>
       ${UI.confirmReset?`<div class="row"><span class="small">입력한 것을 모두 지우고 처음 상태로 되돌릴까요?</span>${btn('되돌리기','reset',null,'danger')}${btn('아니요','confirmReset',{v:0})}</div>`:btn('처음 상태로 되돌리기','confirmReset',{v:1},'small')}</div></div>`+tabBar('members');
 };
@@ -140,7 +140,7 @@ V.memberEdit=r=>{
   const body=m.body.slice().reverse().map(b=>`<tr><td class="num">${md(b.date)}</td><td class="num">${b.height??''}</td><td class="num">${b.weight??''}</td><td class="num">${b.muscle??''}</td></tr>`).join('');
   return topBar(esc(m.code)+' 회원 정보','비운 칸은 아직 모름으로 둬요')+
    `<div class="scroll" data-sk="main"><div class="grid2"><div class="col">
-     <div class="card"><h2>이름</h2><div class="row">${bIn('mCode',m.code,{mid:m.id},{w:200})}</div></div>
+     <div class="card"><h2>이름</h2><div class="row">${bIn('mCode',m.code,{mid:m.id},{w:200})}<span class="tiny muted">폴더 밖에서는 성+00 코드로 써요(D61)</span></div></div>
      <div class="card"><h2>목표</h2><div class="list">${goals}</div><div class="row" style="margin-top:6px;flex-wrap:nowrap">${dIn('gText-'+m.id,'예: 3~4개월 안으로 10kg 감량',{grow:1})}${dIn('gStart-'+m.id,'',{type:'date',w:150})}${btn('+ 목표','addGoal',{mid:m.id},'small')}</div><div class="tiny muted" style="margin-top:4px">목표는 덮어쓰지 않고 날짜와 함께 쌓여요(D24).</div></div>
      ${cautionCard(m)}
      ${goalCard(m)}</div>
@@ -215,7 +215,7 @@ V.prep=r=>{
       <button class="btn ghost small" style="text-align:left;white-space:normal;color:var(--ink)" data-act="toggle" data-t="${key}" title="지난 기록 펼치기"><span class="small">${lastTxt}</span> <span class="faint">${open?'▴':'▾'}</span></button>
       <div>${basisTag(s,x)}</div><div class="pe-sets">${x.sets.map((st,i)=>ro?roChip(s,x,i):setChip(s,x,i)).join('')||'<span class="faint small">세트 없음</span>'}${ro?'':btn('+','addSet',{sid:s.id,uid:x.uid},'small ghost')}</div>
       ${ro?'':`<button class="btn ghost more" data-act="modal" data-type="exMenu" data-sid="${s.id}" data-uid="${x.uid}" aria-label="종목 메뉴">…</button>`}</div>
-      ${open?`<div class="prep-hist">${h.slice().reverse().map(o=>`<div>${mdw(o.s.date)} ${esc(splitName(o.s))} · <b>${esc(fsets(o.x.sets,x.exId,'a'))}</b>${o.x.setting?` <span class="tiny muted">세팅 ${esc(o.x.setting)}</span>`:''}${o.x.raw?`<div class="dimline">원문: ${esc(o.x.raw)}</div>`:''}</div>`).join('')||'기록 없음'}${memo&&memo.memo?`<div class="tiny muted">종목 메모 ${memo.date?md(memo.date):''}: ${esc(memo.memo)}</div>`:''}</div>`:''}
+      ${open?`<div class="prep-hist">${h.slice().reverse().map(o=>`<div>${mdw(o.s.date)} ${esc(splitName(o.s))} · <b>${esc(fsets(o.x.sets,x.exId,'a'))}</b>${o.x.setting?` <span class="tiny muted">세팅 ${esc(o.x.setting)}</span>`:''}${o.x.raw?`<div class="dimline">수첩: ${esc(o.x.raw)}</div>`:''}</div>`).join('')||'기록 없음'}${memo&&memo.memo?`<div class="tiny muted">종목 메모 ${memo.date?md(memo.date):''}: ${esc(memo.memo)}</div>`:''}</div>`:''}
       ${ed&&!ro?editorHTML(s,x,+UI.edit.i):''}</div>`}).join('');
   const pm=planMinutes(s);
   return topBar(esc(m.code)+' 수업 준비',`${mdw(s.date)} ${esc(s.time||'')} · ${esc(splitName(s))}${ro?' · 수업이 시작돼 고칠 수 없어요':''}`,ro?'':btn('+ 종목','modal',{type:'addEx',sid:s.id},'small'))+

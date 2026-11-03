@@ -69,20 +69,196 @@ const EXERCISES={
   frontraise:{name:'프론트 레이즈 (듀얼케이블)',part:'어깨',unit:'lb',inc:5}
 };
 
-/* ---------- 예시 데이터 ----------
-   모두 지어낸 가상 회원 기록이다. 실제 사람 기록이 아니다.
+/* ---------- 수첩 기록 → 앱 데이터 ----------
    세트 표기: "45x20-25x2" = 무게 45, 횟수 20-25, 2세트. "40x16, 40x12" = 두 세트. "50" = 무게만.
    "x30x2" = 무게 없이 30회 2세트. 앞에 W: 워밍업, T: 탑, B: 백오프, D: 드롭.
-   p = 계획이 실제와 다를 때만. */
+   p = 계획(지운 숫자 등)이 실제와 다를 때만. 실제 사람 기록이라 이름은 성+00 코드(D61). */
 const SEED_MEMBERS=[
- {"id":"m3","code":"회원 A","goals":[],"notes":[],"cautions":[],"templates":[{"id":"t3a","name":"하체","items":[["inner","보조"],["scurl","보조"],["hacksq","메인"],["legpress","보조"],["legext","마무리 털기"]]},{"id":"t3b","name":"밀기","items":[["incdb","메인","탑세트+백오프"],["nitro","보조"],["sdbsp","보조"],["machlat","마무리 털기"]]},{"id":"t3c","name":"당기기","items":[["cybrow","메인"],["bbrow","보조"],["truet","보조"],["multirow","보조"],["shrug","마무리 털기"]]}],"exMemos":{"hacksq":{"setting":"발판:2","memo":"","date":"2026-09-15"},"cybrow":{"setting":"패드:3, 의자:5","memo":"가슴 먼저 열고 당기기","date":"2026-09-24"},"legpress":{"setting":"등받이:2","memo":"","date":"2026-08-31"}},"sessions":[{"d":"2026-08-24","t":"t3a","ex":[["inner","보조","32.5x20-25x2",{}],["scurl","보조","45x20x3",{}],["hacksq","메인","15x8-15x3",{"setting":"발판:2"}],["legpress","보조","35x20x3",{"setting":"등받이:2"}]]},{"d":"2026-08-31","t":"t3a","ex":[["inner","보조","32.5x45, 47.5x8",{}],["scurl","보조","35x20x3",{"p":"45x20x3"}],["hacksq","메인","15x20, 35x",{"setting":"발판:2"}],["legpress","보조","35x20x3",{}]]},{"d":"2026-09-08","t":"t3a","ex":[["inner","보조","40x25",{}],["scurl","보조","35x20, 45x15x2",{"p":"35x20x3"}],["hacksq","메인","15x, 35x8-12x3",{}],["legpress","보조","",{"status":"swapped","to":"lunge"}],["lunge","보조","x30x2",{"origin":"swap"}],["legext","마무리 털기","",{"status":"removed","reason":"기타"}]]},{"d":"2026-09-15","t":"t3a","ex":[["inner","보조","40x20-25x2",{}],["scurl","보조","45x20x2",{"p":"45x15x3"}],["hacksq","메인","35x8-12x2",{"p":"35x8-12x3","setting":"발판:2"}],["legpress","보조","50x8, 35x13-20x2",{}],["lunge","보조","",{"origin":"added"}]]},{"d":"2026-09-16","t":"t3b","ex":[["incdb","메인","40x12, T:50x6-10x2, B:30x",{}],["nitro","보조","35x20x3",{}],["sdbsp","보조","15xx3",{}],["machlat","마무리 털기","x15-25x3",{}]]},{"d":"2026-09-17","t":"t3c","memo":"당기기 첫 동작 연결이 어색함 (가상)","ex":[["cybrow","메인","7x12x3",{"note":"가슴 먼저 열고 당기기"}],["bbrow","보조","35x8-12x3",{}],["truet","보조","25",{}],["multirow","보조","15",{}],["shrug","마무리 털기","25",{}]]},{"d":"2026-09-22","t":"t3a","targets":{"hacksq":{"w":50,"text":"50kg 도전"}},"ex":[["inner","보조","40x20-25x2",{}],["scurl","보조","45x20x3",{}],["hacksq","메인","35x16, 35x12",{}],["legpress","보조","35x20x2",{}],["legext","마무리 털기","40x20",{}]]},{"d":"2026-09-24","t":"t3c","memo":"무게 줄이고 호흡·가동범위 다시 확인 (가상)","ex":[["cybrow","메인","7",{"setting":"패드:3, 의자:5","note":"가슴 먼저 열고 당기기"}],["bbrow","보조","",{"status":"removed","reason":"기타"}],["truet","보조","25",{"note":"허리 중립 유지"}],["multirow","보조","",{}],["shrug","마무리 털기","",{"status":"removed","reason":"기타"}]]},{"d":"2026-09-30","t":"t3a","planOnly":true,"ex":[["inner","보조","40",{}],["scurl","보조","45",{}],["hacksq","메인","50",{}],["legpress","보조","35",{}],["legext","마무리 털기","40",{}]]}],"next":{"d":"2026-10-07","t":"t3a","time":"19:00"}},
- {"id":"m1","code":"회원 B","goals":[],"notes":[],"cautions":[],"templates":[{"id":"t1a","name":"밀기","items":[["bbinc","메인"],["ohp","보조"],["panadec","보조"],["pushdown","마무리 털기"]]}],"exMemos":{},"sessions":[{"d":"2026-07-07","t":"t1a","ex":[["bbinc","메인","52.5x13, 57.5x8, 57.5x6",{}],["ohp","보조","37.5x15, 42.5x5, 42.5x10",{}],["panadec","보조","22.5x실패지점x2",{}],["pushdown","마무리 털기","25x22",{}]]}]},
- {"id":"m2","code":"회원 C","goals":[{"text":"4개월 안에 체지방 줄이기 (가상)","start":""}],"notes":[{"kind":"diet","text":"저녁을 늦게 먹는 편 (가상)"}],"cautions":[],"templates":[{"id":"t2a","name":"앞다리","items":[["inout","보조"],["calf","마무리 털기"],["hacksq","메인"],["legpress","보조"],["legext","마무리 털기"]]}],"exMemos":{"hacksq":{"setting":"발판:2","memo":"","date":"2026-08-03"}},"sessions":[{"d":"2026-07-17","t":"t2a","ex":[["inout","보조","17.5x20",{}],["calf","마무리 털기","",{}],["hacksq","메인","5x18",{"setting":"발판:2"}],["legpress","보조","",{"status":"swapped","to":"goblet"}],["goblet","보조","20x32x2",{"origin":"swap"}],["legext","마무리 털기","",{}]]},{"d":"2026-08-03","t":"t2a","ex":[["inout","보조","",{}],["hacksq","메인","15x16",{"setting":"발판:2"}],["legpress","보조","",{"status":"swapped","to":"goblet"}],["goblet","보조","20x31x2",{"origin":"swap"}],["legext","마무리 털기","10",{}]]},{"d":"2026-09-01","t":"t2a","ex":[["inout","보조","17.5x20-25, 25x7-14",{}],["hacksq","메인","35x13x2",{"setting":"발판:2"}],["legpress","보조","",{"status":"swapped","to":"goblet"}],["goblet","보조","30x26x3",{"origin":"swap"}],["legext","마무리 털기","30x19x2",{}]]}]},
- {"id":"m4","code":"회원 D","goals":[{"text":"계단 오를 때 덜 지치기 (가상)","start":""}],"notes":[{"kind":"general","text":"상체 뒤쪽이 약한 편 (가상)"}],"cautions":[],"templates":[{"id":"t4a","name":"하체","items":[["scurl","보조"],["hackpress","메인"],["legpress","보조"],["legext","마무리 털기"]]}],"exMemos":{},"sessions":[{"d":"2026-08-19","t":"t4a","ex":[["scurl","보조","25",{}],["hackpress","메인","52.5xx3",{}],["legpress","보조","32.5xx3",{}],["legext","마무리 털기","60x13",{"p":"x21x3"}]]},{"d":"2026-09-11","t":"t4a","planOnly":true,"ex":[["scurl","보조","25",{}],["hackpress","메인","42.5",{}],["legpress","보조","32.5",{}],["legext","마무리 털기","60x13",{}]]},{"d":"2026-09-15","t":"t4a","ex":[["scurl","보조","25",{}],["hackpress","메인","",{"status":"removed","reason":"기타"}],["legpress","보조","22.5x18x3",{}],["legext","마무리 털기","60x19x3",{"p":"40x19x3"}]]},{"d":"2026-10-12","t":"t4a","ex":[["scurl","보조","25x21x4",{}],["legext","마무리 털기","60x20x4",{}],["legpress","보조","22.5x19",{}],["hackpress","메인","x26x3",{}]]}],"next":{"d":"2026-10-19","t":"t4a","time":""}},
- {"id":"m5","code":"회원 E","goals":[],"notes":[],"cautions":[],"templates":[{"id":"t5a","name":"앞","items":[["inner","보조"],["outer","보조"],["legpress","메인"],["dbsp","보조"],["dblat","마무리 털기"]]}],"exMemos":{},"sessions":[{"d":"2026-09-15","t":"t5a","ex":[["inner","보조","12.5x21x3",{}],["outer","보조","20x20x3",{}],["legpress","메인","17.5",{}],["dbsp","보조","10x5",{}],["dblat","마무리 털기","1x26",{}]]},{"d":"2026-10-06","t":"t5a","ex":[["inner","보조","12.5x20, 20x20x2",{"p":"12.5x20x3"}],["outer","보조","27.5x18x3",{"p":"20x19x3"}],["legpress","메인","17.5x15x3",{}],["dbsp","보조","10xx3",{}],["dblat","마무리 털기","1x20",{}]]},{"d":"2026-10-13","t":"t5a","ex":[["inner","보조","12.5x20, 12.5x24x2",{}],["outer","보조","27.5x25x3",{}],["legpress","메인","17.5x18, 27.5x13x2",{}],["dbsp","보조","",{}],["dblat","마무리 털기","",{"status":"swapped","to":"smithpu"}],["smithpu","마무리 털기","",{"origin":"swap"}]]}],"next":{"d":"2026-10-20","t":"t5a","time":""}},
- {"id":"m6","code":"회원 F","goals":[],"notes":[{"kind":"general","text":"월·토 오후 수업 선호 (가상)"}],"cautions":[],"templates":[{"id":"t6a","name":"당기","items":[["panalat","메인"],["truet","보조"],["megat","보조"],["lowrow","보조"],["shrug","마무리 털기"]]},{"id":"t6b","name":"밀기","items":[["atlinc","메인"],["panadec","보조"],["panasp","보조"],["dblat","마무리 털기"]]}],"exMemos":{"panalat":{"setting":"1번","memo":"","date":"2026-09-15"},"megat":{"setting":"의자 3","memo":"","date":"2026-09-15"}},"sessions":[{"d":"2026-09-08","t":"t6b","memo":"어깨 쪽 부담 확인 (가상)","ex":[["atlinc","메인","",{}],["panadec","보조","",{}],["panasp","보조","",{"status":"removed","reason":"기타"}],["dblat","마무리 털기","",{"status":"removed","reason":"기타"}]]},{"d":"2026-09-15","t":"t6a","memo":"세팅부터 다시 잡기 (가상)","ex":[["panalat","메인","17.5x18x3",{"setting":"1번"}],["truet","보조","22.5x12-20x3",{"p":"42.5x12x3"}],["megat","보조","17.5x15-20x3",{"setting":"의자 3"}],["lowrow","보조","22.5x16-19x3",{}],["shrug","마무리 털기","17.5x20x2",{}]]}]}
+ {id:'m3',code:'이00_3',goals:[],notes:[],cautions:[],
+  templates:[
+   {id:'t3a',name:'하체',items:[['inner','보조'],['scurl','보조'],['hacksq','메인'],['legpress','보조'],['legext','마무리 털기']]},
+   {id:'t3b',name:'밀기',items:[['incdb','메인','탑세트+백오프'],['nitro','보조'],['sdbsp','보조'],['machlat','마무리 털기']]},
+   {id:'t3c',name:'당기기',items:[['cybrow','메인'],['bbrow','보조'],['truet','보조'],['multirow','보조'],['shrug','마무리 털기']]}],
+  exMemos:{hacksq:{setting:'발판:1, 밴드o',memo:'',date:'2026-09-15'},cybrow:{setting:'패드:4, 의자:6',memo:'날개뼈 먼저',date:'2026-09-24'},legpress:{setting:'등받이:1',memo:'',date:'2026-08-31'}},
+  sessions:[
+   {d:'2026-08-24',t:'t3a',ex:[
+     ['inner','보조','37.5x20-25x2',{raw:'1. 이너타이 37.5 x 20-25reps x 2sets.'}],
+     ['scurl','보조','50x20x3',{raw:'2, 시티드 레그컬 50x 20 x 3sets.'}],
+     ['hacksq','메인','20x8-15x3',{raw:'3, 핵스쿼트 (~~발판:2~~, 밴드o) 20kg x 8-15reps x 3sets. -▷ 발판: 1로 변경.',setting:'밴드o'}],
+     ['legpress','보조','40x20x3',{raw:'4. 레그프레스(프라임)(등받이:1) 40/40kg x 20reps x 3sets.',setting:'등받이:1'}]]},
+   {d:'2026-08-31',t:'t3a',ex:[
+     ['inner','보조','37.5x45, 52.5x8',{raw:'1, 이너타이 37.5 x {위: 45reps}~~20-25reps~~ x ~~2sets~~. -▷ 52.5 kg x 8reps.'}],
+     ['scurl','보조','40x20x3',{p:'50x20x3',raw:'2, 시티드 레그컬 ~~50 x 20reps x 3sets~~. 40 x 20reps x 3sets.'}],
+     ['hacksq','메인','20x20, 40x',{raw:'3. 핵스쿼트 (발판:1, 밴드o) 20kg x 8~~-15reps x 3sets~~. 20reps, 40kg x (짝 불확실)',setting:'발판:1, 밴드o'}],
+     ['legpress','보조','40x20x3',{raw:'4. 레그프레스(프라임, 등받이:1) 40/40kg x 20reps x 3sets.'}]]},
+   {d:'2026-09-08',t:'t3a',ex:[
+     ['inner','보조','45x25',{raw:'1. 이너타이 ~~위칭:3 52.5kg x 3sets~~ 45kg x 25reps.'}],
+     ['scurl','보조','40x20, 50x15x2',{p:'40x20x3',raw:'2, 시티드 레그컬 40 x 20reps x ~~3sets~~ -▷ 50 x ~~25~~ ⑮ x2sets.'}],
+     ['hacksq','메인','20x, 40x8-12x3',{raw:'3, 핵스쿼트(발판:1, 밴드o) 20kg 해보고 40kg 20개[?] -▷ 40kg x ~~12reps~~ x 3. {아래: 8-12reps.}'}],
+     ['legpress','보조','',{status:'swapped',to:'lunge',raw:'4, ~~프라임 레그프레스(등받이:1) 40/40kg x 20reps x 3sets~~.'}],
+     ['lunge','보조','x30x2',{origin:'swap',raw:'↳ 워킹런지로 마무리. x ~~3sets~~. 30reps x2sets'}],
+     ['legext','마무리 털기','',{status:'removed',reason:'기타',raw:'4, ~~레그 익스텐션~~.'}]]},
+   {d:'2026-09-15',t:'t3a',ex:[
+     ['inner','보조','45x20-25x2',{raw:'1, 이너타이 45 x 20-25 x 2.'}],
+     ['scurl','보조','50x20x2',{p:'50x15x3',raw:'2, 시티드 레그컬 50 x ~~15 x 3~~ 20 x ~~3~~2 (walking)'}],
+     ['hacksq','메인','40x8-12x2',{p:'40x8-12x3',raw:'3, 핵스쿼트 (발판: 1, 밴드 o) 40kg x ~~8-12 x~~ 3 x 8-12 x 2',setting:'발판:1, 밴드o'}],
+     ['legpress','보조','60x8, 40x13-20x2',{raw:'4, 레그프레스 (CYBEX) 60/60kg x 8, 40/40kg x 13-20 x 2'}],
+     ['lunge','보조','',{origin:'added',raw:'5, 워킹런지 아 런지 마무리.'}]]},
+   {d:'2026-09-16',t:'t3b',ex:[
+     ['incdb','메인','45x12, T:55x6-10x2, B:35x',{raw:'1, 인클라인 덤벨 프레스 45/45lb x 12 x ~~4sets~~ , 55/55lb x 6-10 x 2 ⤵ backoff 35/35lb.'}],
+     ['nitro','보조','30x20x3',{raw:'2, 너틸러스 니트로 체스트 30 x 20 x 3sets.'}],
+     ['sdbsp','보조','10xx3',{raw:'3, 숄더 프레스 (시티드 덤벨) 10/10lb x ~~25reps x~~ 3 .'}],
+     ['machlat','마무리 털기','x15-25x3',{raw:'4, 머신 사레레 [빈칸] 15-25 x 3.'}]]},
+   {d:'2026-09-17',t:'t3c',memo:'▷ 이어가는 느낌이 없음. -▷ 핀으 수정.',ex:[
+     ['cybrow','메인','8x12x3',{raw:'1, 싸이벡스 시티드로우 {위: ▷ 날개뼈로 시동걸고 시작으로 수정.} ~~12 x [빈칸] -15 x 3sets~~ ↳ 8 x 12 x 3sets.',note:'날개뼈로 시동걸고 시작으로 수정.'}],
+     ['bbrow','보조','40x8-12x3',{raw:'2, 바벨로우 40 x 8-12 x 3sets'}],
+     ['truet','보조','20',{raw:'3, 트루티바로우 20'}],
+     ['multirow','보조','20',{raw:'4, 멀티로우 20/20'}],
+     ['shrug','마무리 털기','20',{raw:'5, 슈러그. 20/20'}]]},
+   {d:'2026-09-22',t:'t3a',targets:{hacksq:{w:60,text:'60kg 도전',raw:'-▷ 60kg 도전 예정.'}},ex:[
+     ['inner','보조','45x20-25x2',{raw:'1, 이너타이 45 x 20-25 x 2'}],
+     ['scurl','보조','50x20x3',{raw:'2, 시티드 레그컬 50 x 20 x 3'}],
+     ['hacksq','메인','40x16, 40x12',{raw:'3, 핵스쿼트 40kg x 16reps, 12reps. -▷ 60kg 도전 예정.'}],
+     ['legpress','보조','40x20x2',{raw:'4, 레그프레스 40/40kg x 20 x 2'}],
+     ['legext','마무리 털기','30x20',{raw:'5, 레그 익스텐션 ~~30-50~~. 30 x 20.'}]]},
+   {d:'2026-09-24',t:'t3c',memo:'* 종목 무게 줄이고 다시 기본 첵. (호흡, 가동범위, 텐션유지)',ex:[
+     ['cybrow','메인','8',{raw:'1, 싸이벡스 시티드로우 (패드4, 의자6) ~~12 x 15 x 3~~ 8 (날개뼈 먼저)',setting:'패드:4, 의자:6',note:'날개뼈 먼저'}],
+     ['bbrow','보조','',{status:'removed',reason:'기타',raw:'~~2, 바벨로우~~'}],
+     ['truet','보조','20',{raw:'3, 트루티바로우 20 (키커지는 느낌, 척추 1자 만들기.)',note:'키커지는 느낌, 척추 1자 만들기.'}],
+     ['multirow','보조','',{raw:'4, 멀티로우 (의자 없어서 3)(팔꿈치 벌리고 기대기) — 일부 판독 불확실'}],
+     ['shrug','마무리 털기','',{status:'removed',reason:'기타',raw:'~~5, 슈러그~~'}]]},
+   {d:'2026-09-30',t:'t3a',planOnly:true,ex:[
+     ['inner','보조','45',{raw:'1, 이너타이 45'}],
+     ['scurl','보조','50',{raw:'2, 시티드 레그컬 50'}],
+     ['hacksq','메인','60',{raw:'3, 핵스쿼트 60 도전'}],
+     ['legpress','보조','40',{raw:'4, 레그프레스 40/40kg'}],
+     ['legext','마무리 털기','30',{raw:'5, 레그 익스텐션 30'}]]}],
+  next:{d:'2026-10-07',t:'t3a',time:'19:00'}},
+
+ {id:'m1',code:'이00_1',goals:[],notes:[],cautions:[],
+  templates:[{id:'t1a',name:'밀기',items:[['bbinc','메인'],['ohp','보조'],['panadec','보조'],['pushdown','마무리 털기']]}],
+  exMemos:{},
+  sessions:[
+   {d:'2026-07-07',t:'t1a',ex:[
+     ['bbinc','메인','55x13, 60x6, 60x5',{raw:'바벨 인클라인 (55kg x 13reps.), 60kg x 6reps, 5reps.'}],
+     ['ohp','보조','35x13, 40x6, 40x8',{raw:'~~시티드 OHP~~. OHP. 35kg x 13reps, 40kg x 6reps, 8reps.'}],
+     ['panadec','보조','25x실패지점x2',{raw:'파나타 디클라인 25/25kg x 실패지점 x 2sets (보조 o).'}],
+     ['pushdown','마무리 털기','30x20',{raw:'케이블 푸쉬다운 30lb x 20reps.'}]]}]},
+
+ {id:'m2',code:'이00_2',goals:[{text:'3~4개월 안으로 10kg 감량',start:''}],
+  notes:[{kind:'diet',text:'하루 2끼 식단 (끼니별 kcal는 수첩에 있음)'}],cautions:[],
+  templates:[{id:'t2a',name:'앞다리',items:[['inout','보조'],['calf','마무리 털기'],['hacksq','메인'],['legpress','보조'],['legext','마무리 털기']]}],
+  exMemos:{hacksq:{setting:'발판:2, 무릎 정렬',memo:'',date:'2026-08-03'}},
+  sessions:[
+   {d:'2026-07-17',t:'t2a',ex:[
+     ['inout','보조','22.5x20',{raw:'1. 이너/아웃 타이 / 카프레이즈 — (22.5 / 45 / 0) / × 20reps (세트 부분 덧씀)'}],
+     ['calf','마무리 털기','',{}],
+     ['hacksq','메인','10x20',{raw:'2. 핵스쿼트 — (발판:4) … 10kg × 20 부분 확인',setting:'발판:4'}],
+     ['legpress','보조','',{status:'swapped',to:'goblet',raw:'3. ~~[운동명]~~ 고블릿 스쿼트'}],
+     ['goblet','보조','15x30x2',{origin:'swap',raw:'고블릿 스쿼트 — 15lb × 30reps × 2sets'}],
+     ['legext','마무리 털기','',{raw:'4. 레그 익스텐션'}]]},
+   {d:'2026-08-03',t:'t2a',ex:[
+     ['inout','보조','',{raw:'1. 이너/아웃 타이'}],
+     ['hacksq','메인','20x15',{raw:'2. 핵스쿼트 — (발판:2, 무릎 정렬) / 20kg × 15reps × [판독 불가]sets',setting:'발판:2, 무릎 정렬'}],
+     ['legpress','보조','',{status:'swapped',to:'goblet'}],
+     ['goblet','보조','15x30x2',{origin:'swap',raw:'3. 고블릿 스쿼트 — 15lb × 30reps × 2sets'}],
+     ['legext','마무리 털기','30',{raw:'4. 레그 익스텐션 30'}]]},
+   {d:'2026-09-01',t:'t2a',ex:[
+     ['inout','보조','22.5x20-25, 30x8-12',{raw:'1. 이너타이 — 22.5 × 20~25, 30 × 8~12'}],
+     ['hacksq','메인','40x15x2',{raw:'2. 핵스쿼트 — (발판:2, [판독 불가]:0) / 40kg × 15reps × 2sets (앞 수치 취소)',setting:'발판:2'}],
+     ['legpress','보조','',{status:'swapped',to:'goblet'}],
+     ['goblet','보조','25x25x3',{origin:'swap',raw:'3. 고블릿 스쿼트 — 25lb × 25 × 3'}],
+     ['legext','마무리 털기','50x20x2',{raw:'4. 레그 익스텐션 — 50 × 20 × 2sets'}]]}]},
+
+ {id:'m4',code:'김00',goals:[{text:'일상과 함께할 수 있는 운동을 원하신다 (문장 일부 불확실)',start:''}],
+  notes:[{kind:'general',text:'등근육이 약.'},{kind:'general',text:'주 2일 → 상하 / 주 3일 → 앞, 뒤, 상체 (10/13 메모, 끝 낱말 판독 불확실)'}],cautions:[],
+  templates:[{id:'t4a',name:'하체',items:[['scurl','보조'],['hackpress','메인'],['legpress','보조'],['legext','마무리 털기']]}],
+  exMemos:{},
+  sessions:[
+   {d:'2026-08-19',t:'t4a',ex:[
+     ['scurl','보조','30',{raw:'1. 시티드 레그컬 (~~[횟수/세트 표기]~~) 30'}],
+     ['hackpress','메인','50xx3',{raw:'2. 핵프레스 (3sets) 50/50kg.'}],
+     ['legpress','보조','30xx3',{raw:'3. 레그프레스 (3sets) 30/30kg.'}],
+     ['legext','마무리 털기','50x12',{p:'x20x3',raw:'4. 레그 익스텐션 (~~3sets~~) (~~20reps~~) 50 × 12'}]]},
+   {d:'2026-09-11',t:'t4a',planOnly:true,ex:[
+     ['scurl','보조','30',{}],['hackpress','메인','40',{raw:'2. 핵프레스 40/40kg'}],['legpress','보조','30',{raw:'3. 레그프레스 30/30kg'}],['legext','마무리 털기','50x12',{}]]},
+   {d:'2026-09-15',t:'t4a',ex:[
+     ['scurl','보조','30',{}],
+     ['hackpress','메인','',{status:'removed',reason:'기타',raw:'2. ~~핵프레스 40/40kg~~'}],
+     ['legpress','보조','20x20x3',{raw:'3. 레그프레스 20/20kg × 20 × 3'}],
+     ['legext','마무리 털기','50x20x3',{p:'30x20x3',raw:'4. 레그 익스텐션 ~~30~~ 50 × 20 × 3'}]]},
+   {d:'2026-10-12',t:'t4a',ex:[
+     ['scurl','보조','30x20x4',{raw:'1. 시티드 레그컬 30 × 20 × 4'}],
+     ['legext','마무리 털기','50x20x4',{raw:'2. 레그 익스텐션 50 × 20 × 4'}],
+     ['legpress','보조','20x20',{raw:'3. 레그 프레스 20/20kg × 20, ~~30/30kg × [판독 불가]~~'}],
+     ['hackpress','메인','x25x3',{raw:'4. 핵프레스 ([괄호 안 판독 불가]) 25reps × 3sets.'}]]}],
+  next:{d:'2026-10-19',t:'t4a',time:''}},
+
+ {id:'m5',code:'정00',goals:[],notes:[],cautions:[],
+  templates:[{id:'t5a',name:'앞',items:[['inner','보조'],['outer','보조'],['legpress','메인'],['dbsp','보조'],['dblat','마무리 털기']]}],
+  exMemos:{},
+  sessions:[
+   {d:'2026-09-15',t:'t5a',ex:[
+     ['inner','보조','15x20x3',{raw:'1. 이너타이 15 × 20 × 3'}],
+     ['outer','보조','22.5x20x3',{raw:'2. 아웃타이 22.5 × 20 × 3 ([판독 불확실])'}],
+     ['legpress','메인','20',{raw:'3. 레그프레스 20kg'}],
+     ['dbsp','보조','5x5',{raw:'4. ~~[운동명 판독 불확실]~~ 덤벨 숄더프레스 5/5lb × 5'}],
+     ['dblat','마무리 털기','1x25',{raw:'5. 덤벨 사레레 1/1kg × 25'}]]},
+   {d:'2026-10-06',t:'t5a',ex:[
+     ['inner','보조','15x20, 22.5x20x2',{p:'15x20x3',raw:'1. 이너타이 ~~15 × 20 × 3~~ 15 - 22.5 × 20 × 3 — 수정 부분의 구분 불확실'}],
+     ['outer','보조','30x20x3',{p:'22.5x20x3',raw:'2. 아웃타이 ~~22.5 × 20 × 3~~ 30 × 20 × 3'}],
+     ['legpress','메인','20x15x3',{raw:'3. 레그프레스 20/20kg × [판독 불확실] - 15reps × 3'}],
+     ['dbsp','보조','5xx3',{raw:'4. 덤벨 숄더프레스 5/5lb × [판독 불확실] → [판독 불확실] × 3sets'}],
+     ['dblat','마무리 털기','1x20',{raw:'5. 덤벨 사레레 1/1kg × [판독 불확실] → 20'}]]},
+   {d:'2026-10-13',t:'t5a',ex:[
+     ['inner','보조','15x20, 15x25x2',{raw:'1. 이너타이 15 × 20, ~~[판독 불확실]~~, 15 × 25 × 2'}],
+     ['outer','보조','30x25x3',{raw:'2. 아웃타이 30 × 25 × 3'}],
+     ['legpress','메인','20x20, 30x12x2',{raw:'3. 레그프레스 20/20kg × 20, 30/30kg × 12 × 2'}],
+     ['dbsp','보조','',{raw:'4. 덤벨 [운동명 일부 불확실] → [판독 불확실] 17kg + 2.3 + 2.3kg × 20 × 3'}],
+     ['dblat','마무리 털기','',{status:'swapped',to:'smithpu',raw:'5. → 스미스 푸쉬업 ([판독 불확실])'}],
+     ['smithpu','마무리 털기','',{origin:'swap'}]]}],
+  next:{d:'2026-10-20',t:'t5a',time:''}},
+
+ {id:'m6',code:'최00',goals:[],notes:[{kind:'general',text:'9월 첫째주간 월 15시(당기기) 토요일 14시(어깨) (8/28 메모, 일부 판독 불확실)'}],cautions:[],
+  templates:[
+   {id:'t6a',name:'당기',items:[['panalat','메인'],['truet','보조'],['megat','보조'],['lowrow','보조'],['shrug','마무리 털기']]},
+   {id:'t6b',name:'밀기',items:[['atlinc','메인'],['panadec','보조'],['panasp','보조'],['dblat','마무리 털기']]}],
+  exMemos:{panalat:{setting:'2번',memo:'',date:'2026-09-15'},megat:{setting:'의자 4.5, 발 0.5',memo:'',date:'2026-09-15'}},
+  sessions:[
+   {d:'2026-09-08',t:'t6b',memo:'어깨 케어 -> ... [판독 불확실]',ex:[
+     ['atlinc','메인','',{raw:'1. 아틀 인클라인 [첫 단어 판독 불확실]'}],
+     ['panadec','보조','',{raw:'2. 파나타 디클라인'}],
+     ['panasp','보조','',{status:'removed',reason:'기타',raw:'3. ~~파나타 숄더프레스~~'}],
+     ['dblat','마무리 털기','',{status:'removed',reason:'기타',raw:'4. ~~덤벨 사레레~~'}]]},
+   {d:'2026-09-15',t:'t6a',memo:'* 세팅에서부터 근육에 [판독 불확실] / ↓ 어깨 [판독 불확실]',ex:[
+     ['panalat','메인','20x20x3',{raw:'1. 파나타 싱글 (2번) 20/20kg × 20reps × 3sets',setting:'2번'}],
+     ['truet','보조','20x12-18x3',{p:'40x12x3',raw:'2. 트루 티바로우 ~~40kg × 12~~ → drop하여 20kg × 12~18reps × 3sets'}],
+     ['megat','보조','20x15-20x3',{raw:'3. 메가머스 티바로우 20kg × 15~20 × 3 ([의자?] 4.5, 발 0.5)',setting:'의자 4.5, 발 0.5'}],
+     ['lowrow','보조','20x15-20x3',{raw:'4. [운동명 판독 불확실] (Low row) 20/20kg × 15~20 × 3'}],
+     ['shrug','마무리 털기','20x20x2',{raw:'5. 슈러그 20/20kg × 20 × 2sets'}]]}]}
 ];
 
-/* 시나리오 장면 7·8에서 넣는 회원 A 기록 (10/7 뒤). 앱의 '오늘'이 그 날짜를 지날 때만 넣는다 */
-const M3_TEMPLATE_BACK={"id":"t3d","name":"후면사슬","items":[["deadlift","메인"],["bbrow","보조"],["truet","보조"]],"note":"10/9 기록에서 만든 틀"};
-const M3_LATER={"2026-10-08":{"d":"2026-10-08","t":"t3b","ex":[["incdb","메인","50x10-15x3",{"note":"내릴 때 천천히"}],["nitro","보조","35x15x3",{"note":"다른 종목과 묶어서"}],["pushup","보조","x13x3",{"origin":"added"}],["sdbsp","보조","",{}],["machlat","마무리 털기","",{}]]},"2026-10-09":{"d":"2026-10-09","t":"t3d","memo":"종목 이름만 남김 (가상)","ex":[["deadlift","메인","",{}],["bbrow","보조","",{}],["truet","보조","",{}]]},"2026-10-15":{"d":"2026-10-15","t":"t3b","ex":[["ohp","메인","25x12x3",{"origin":"added"}],["strive","보조","10x20x3",{"origin":"added"}],["frontraise","보조","15x12-15x3",{"origin":"added"}]]},"2026-10-16":{"d":"2026-10-16","t":"t3c","memo":"시간 여유 없음, 등 종목 움직임 위주 (가상)","ex":[["deadlift","메인","",{"origin":"added"}],["bbrow","보조","",{"status":"swapped","to":"truet"}],["truet","보조","25",{"origin":"swap"}],["latpd","보조","",{"origin":"added"}],["cybrow","메인","7",{"setting":"패드:3, 의자:5"}]]}};
+/* 시나리오 장면 7·8에서 넣는 이00_3 수첩 기록 (10/7 뒤). 앱의 '오늘'이 그 날짜를 지날 때만 넣는다 */
+const M3_TEMPLATE_BACK={id:'t3d',name:'후면사슬',items:[['deadlift','메인'],['bbrow','보조'],['truet','보조']],note:'수첩 10/9 칸에서 만듦'};
+const M3_LATER={
+ '2026-10-08':{d:'2026-10-08',t:'t3b',ex:[
+   ['incdb','메인','55x10-15x3',{raw:'1, 인클라인 덤벨 55/55lb x 10-15reps x 3sets. (부위를 느낌)(강도 유지x)',note:'부위를 느낌, 강도 유지x'}],
+   ['nitro','보조','30x15x3',{raw:'2, 너틸러스 니트로 체스트 ⊕ 푸쉬업. (30 x 15reps ⊕ 13reps) x 3.',note:'푸쉬업과 슈퍼세트'}],
+   ['pushup','보조','x13x3',{origin:'added',raw:'(니트로 체스트와 슈퍼세트) 13reps x 3'}],
+   ['sdbsp','보조','',{raw:'3, 숄더프레스 (덤벨시티드) ⊕'}],
+   ['machlat','마무리 털기','',{raw:'4, 머신 사레레'}]]},
+ '2026-10-09':{d:'2026-10-09',t:'t3d',memo:'수첩에는 종목 이름만 있다.',ex:[
+   ['deadlift','메인','',{raw:'1, 데드리프트'}],
+   ['bbrow','보조','',{raw:'2, 바벨로우'}],
+   ['truet','보조','',{raw:'3, 트루 티바로우'}]]},
+ '2026-10-15':{d:'2026-10-15',t:'t3b',ex:[
+   ['ohp','메인','30x12x3',{origin:'added',raw:'1, OHP, 30kg. x 12 x 3'}],
+   ['strive','보조','7.5x20x3',{origin:'added',raw:'2, 스트라이브 7.5kg x 20x3'}],
+   ['frontraise','보조','10x12-15x3',{origin:'added',raw:'3, 프론트 레이즈(듀얼케이블)(원암) 10lb x 12-15 x 3 (끝 숫자 판독 불확실)'}]]},
+ '2026-10-16':{d:'2026-10-16',t:'t3c',memo:'* 2, 3, 4번 종목에서는 날개뼈의 움직임에 집중. 5. 라잉 레그컬과 워킹 런지를 통한 심박수 + 체중감량 고려. └▷ 오늘 시간적인 여유가 없음.',ex:[
+   ['deadlift','메인','',{origin:'added',raw:'1, 데드리프트 (심박수 + 강도)'}],
+   ['bbrow','보조','',{status:'swapped',to:'truet',raw:'2, ~~바벨로우~~ 트루 티바로우 20kg'}],
+   ['truet','보조','20',{origin:'swap',raw:'트루 티바로우 20kg'}],
+   ['latpd','보조','',{origin:'added',raw:'③④ 오버그립 랫풀다운 (그립 단어 판독 불확실)'}],
+   ['cybrow','메인','8',{raw:'3, 싸이벡스 시티드 로우. (패드:4, 의자:6) 8',setting:'패드:4, 의자:6'}]]}
+};

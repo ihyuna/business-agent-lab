@@ -53,7 +53,7 @@ function buildSeed(){
     const m={id:sm.id,code:sm.code,goals:clone(sm.goals).map(g=>({id:uid('g'),...g})),cautions:[],
       notes:sm.notes.map(n=>({id:uid('n'),kind:n.kind,text:n.text,created:'',done:false})),
       body:[],movement:[],blocks:[],exMemos:clone(sm.exMemos||{}),
-      templates:sm.templates.map(t=>({id:t.id,name:t.name,items:t.items.map(([exId,role,structure])=>({exId,role,structure:structure||'스트레이트'})),versions:[{date:'',note:'예시 목록에서 만듦'}]}))};
+      templates:sm.templates.map(t=>({id:t.id,name:t.name,items:t.items.map(([exId,role,structure])=>({exId,role,structure:structure||'스트레이트'})),versions:[{date:'',note:'수첩 목록에서 만듦'}]}))};
     st.members.push(m);
     for(const ss of sm.sessions) seedSession(m,ss);
     if(sm.next) createPlanned(m,sm.next.d,sm.next.time,sm.next.t);

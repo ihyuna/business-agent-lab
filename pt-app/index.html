@@ -251,23 +251,199 @@ const EXERCISES={
   frontraise:{name:'프론트 레이즈 (듀얼케이블)',part:'어깨',unit:'lb',inc:5}
 };
 
-/* ---------- 예시 데이터 ----------
-   모두 지어낸 가상 회원 기록이다. 실제 사람 기록이 아니다.
+/* ---------- 수첩 기록 → 앱 데이터 ----------
    세트 표기: "45x20-25x2" = 무게 45, 횟수 20-25, 2세트. "40x16, 40x12" = 두 세트. "50" = 무게만.
    "x30x2" = 무게 없이 30회 2세트. 앞에 W: 워밍업, T: 탑, B: 백오프, D: 드롭.
-   p = 계획이 실제와 다를 때만. */
+   p = 계획(지운 숫자 등)이 실제와 다를 때만. 실제 사람 기록이라 이름은 성+00 코드(D61). */
 const SEED_MEMBERS=[
- {"id":"m3","code":"회원 A","goals":[],"notes":[],"cautions":[],"templates":[{"id":"t3a","name":"하체","items":[["inner","보조"],["scurl","보조"],["hacksq","메인"],["legpress","보조"],["legext","마무리 털기"]]},{"id":"t3b","name":"밀기","items":[["incdb","메인","탑세트+백오프"],["nitro","보조"],["sdbsp","보조"],["machlat","마무리 털기"]]},{"id":"t3c","name":"당기기","items":[["cybrow","메인"],["bbrow","보조"],["truet","보조"],["multirow","보조"],["shrug","마무리 털기"]]}],"exMemos":{"hacksq":{"setting":"발판:2","memo":"","date":"2026-09-15"},"cybrow":{"setting":"패드:3, 의자:5","memo":"가슴 먼저 열고 당기기","date":"2026-09-24"},"legpress":{"setting":"등받이:2","memo":"","date":"2026-08-31"}},"sessions":[{"d":"2026-08-24","t":"t3a","ex":[["inner","보조","32.5x20-25x2",{}],["scurl","보조","45x20x3",{}],["hacksq","메인","15x8-15x3",{"setting":"발판:2"}],["legpress","보조","35x20x3",{"setting":"등받이:2"}]]},{"d":"2026-08-31","t":"t3a","ex":[["inner","보조","32.5x45, 47.5x8",{}],["scurl","보조","35x20x3",{"p":"45x20x3"}],["hacksq","메인","15x20, 35x",{"setting":"발판:2"}],["legpress","보조","35x20x3",{}]]},{"d":"2026-09-08","t":"t3a","ex":[["inner","보조","40x25",{}],["scurl","보조","35x20, 45x15x2",{"p":"35x20x3"}],["hacksq","메인","15x, 35x8-12x3",{}],["legpress","보조","",{"status":"swapped","to":"lunge"}],["lunge","보조","x30x2",{"origin":"swap"}],["legext","마무리 털기","",{"status":"removed","reason":"기타"}]]},{"d":"2026-09-15","t":"t3a","ex":[["inner","보조","40x20-25x2",{}],["scurl","보조","45x20x2",{"p":"45x15x3"}],["hacksq","메인","35x8-12x2",{"p":"35x8-12x3","setting":"발판:2"}],["legpress","보조","50x8, 35x13-20x2",{}],["lunge","보조","",{"origin":"added"}]]},{"d":"2026-09-16","t":"t3b","ex":[["incdb","메인","40x12, T:50x6-10x2, B:30x",{}],["nitro","보조","35x20x3",{}],["sdbsp","보조","15xx3",{}],["machlat","마무리 털기","x15-25x3",{}]]},{"d":"2026-09-17","t":"t3c","memo":"당기기 첫 동작 연결이 어색함 (가상)","ex":[["cybrow","메인","7x12x3",{"note":"가슴 먼저 열고 당기기"}],["bbrow","보조","35x8-12x3",{}],["truet","보조","25",{}],["multirow","보조","15",{}],["shrug","마무리 털기","25",{}]]},{"d":"2026-09-22","t":"t3a","targets":{"hacksq":{"w":50,"text":"50kg 도전"}},"ex":[["inner","보조","40x20-25x2",{}],["scurl","보조","45x20x3",{}],["hacksq","메인","35x16, 35x12",{}],["legpress","보조","35x20x2",{}],["legext","마무리 털기","40x20",{}]]},{"d":"2026-09-24","t":"t3c","memo":"무게 줄이고 호흡·가동범위 다시 확인 (가상)","ex":[["cybrow","메인","7",{"setting":"패드:3, 의자:5","note":"가슴 먼저 열고 당기기"}],["bbrow","보조","",{"status":"removed","reason":"기타"}],["truet","보조","25",{"note":"허리 중립 유지"}],["multirow","보조","",{}],["shrug","마무리 털기","",{"status":"removed","reason":"기타"}]]},{"d":"2026-09-30","t":"t3a","planOnly":true,"ex":[["inner","보조","40",{}],["scurl","보조","45",{}],["hacksq","메인","50",{}],["legpress","보조","35",{}],["legext","마무리 털기","40",{}]]}],"next":{"d":"2026-10-07","t":"t3a","time":"19:00"}},
- {"id":"m1","code":"회원 B","goals":[],"notes":[],"cautions":[],"templates":[{"id":"t1a","name":"밀기","items":[["bbinc","메인"],["ohp","보조"],["panadec","보조"],["pushdown","마무리 털기"]]}],"exMemos":{},"sessions":[{"d":"2026-07-07","t":"t1a","ex":[["bbinc","메인","52.5x13, 57.5x8, 57.5x6",{}],["ohp","보조","37.5x15, 42.5x5, 42.5x10",{}],["panadec","보조","22.5x실패지점x2",{}],["pushdown","마무리 털기","25x22",{}]]}]},
- {"id":"m2","code":"회원 C","goals":[{"text":"4개월 안에 체지방 줄이기 (가상)","start":""}],"notes":[{"kind":"diet","text":"저녁을 늦게 먹는 편 (가상)"}],"cautions":[],"templates":[{"id":"t2a","name":"앞다리","items":[["inout","보조"],["calf","마무리 털기"],["hacksq","메인"],["legpress","보조"],["legext","마무리 털기"]]}],"exMemos":{"hacksq":{"setting":"발판:2","memo":"","date":"2026-08-03"}},"sessions":[{"d":"2026-07-17","t":"t2a","ex":[["inout","보조","17.5x20",{}],["calf","마무리 털기","",{}],["hacksq","메인","5x18",{"setting":"발판:2"}],["legpress","보조","",{"status":"swapped","to":"goblet"}],["goblet","보조","20x32x2",{"origin":"swap"}],["legext","마무리 털기","",{}]]},{"d":"2026-08-03","t":"t2a","ex":[["inout","보조","",{}],["hacksq","메인","15x16",{"setting":"발판:2"}],["legpress","보조","",{"status":"swapped","to":"goblet"}],["goblet","보조","20x31x2",{"origin":"swap"}],["legext","마무리 털기","10",{}]]},{"d":"2026-09-01","t":"t2a","ex":[["inout","보조","17.5x20-25, 25x7-14",{}],["hacksq","메인","35x13x2",{"setting":"발판:2"}],["legpress","보조","",{"status":"swapped","to":"goblet"}],["goblet","보조","30x26x3",{"origin":"swap"}],["legext","마무리 털기","30x19x2",{}]]}]},
- {"id":"m4","code":"회원 D","goals":[{"text":"계단 오를 때 덜 지치기 (가상)","start":""}],"notes":[{"kind":"general","text":"상체 뒤쪽이 약한 편 (가상)"}],"cautions":[],"templates":[{"id":"t4a","name":"하체","items":[["scurl","보조"],["hackpress","메인"],["legpress","보조"],["legext","마무리 털기"]]}],"exMemos":{},"sessions":[{"d":"2026-08-19","t":"t4a","ex":[["scurl","보조","25",{}],["hackpress","메인","52.5xx3",{}],["legpress","보조","32.5xx3",{}],["legext","마무리 털기","60x13",{"p":"x21x3"}]]},{"d":"2026-09-11","t":"t4a","planOnly":true,"ex":[["scurl","보조","25",{}],["hackpress","메인","42.5",{}],["legpress","보조","32.5",{}],["legext","마무리 털기","60x13",{}]]},{"d":"2026-09-15","t":"t4a","ex":[["scurl","보조","25",{}],["hackpress","메인","",{"status":"removed","reason":"기타"}],["legpress","보조","22.5x18x3",{}],["legext","마무리 털기","60x19x3",{"p":"40x19x3"}]]},{"d":"2026-10-12","t":"t4a","ex":[["scurl","보조","25x21x4",{}],["legext","마무리 털기","60x20x4",{}],["legpress","보조","22.5x19",{}],["hackpress","메인","x26x3",{}]]}],"next":{"d":"2026-10-19","t":"t4a","time":""}},
- {"id":"m5","code":"회원 E","goals":[],"notes":[],"cautions":[],"templates":[{"id":"t5a","name":"앞","items":[["inner","보조"],["outer","보조"],["legpress","메인"],["dbsp","보조"],["dblat","마무리 털기"]]}],"exMemos":{},"sessions":[{"d":"2026-09-15","t":"t5a","ex":[["inner","보조","12.5x21x3",{}],["outer","보조","20x20x3",{}],["legpress","메인","17.5",{}],["dbsp","보조","10x5",{}],["dblat","마무리 털기","1x26",{}]]},{"d":"2026-10-06","t":"t5a","ex":[["inner","보조","12.5x20, 20x20x2",{"p":"12.5x20x3"}],["outer","보조","27.5x18x3",{"p":"20x19x3"}],["legpress","메인","17.5x15x3",{}],["dbsp","보조","10xx3",{}],["dblat","마무리 털기","1x20",{}]]},{"d":"2026-10-13","t":"t5a","ex":[["inner","보조","12.5x20, 12.5x24x2",{}],["outer","보조","27.5x25x3",{}],["legpress","메인","17.5x18, 27.5x13x2",{}],["dbsp","보조","",{}],["dblat","마무리 털기","",{"status":"swapped","to":"smithpu"}],["smithpu","마무리 털기","",{"origin":"swap"}]]}],"next":{"d":"2026-10-20","t":"t5a","time":""}},
- {"id":"m6","code":"회원 F","goals":[],"notes":[{"kind":"general","text":"월·토 오후 수업 선호 (가상)"}],"cautions":[],"templates":[{"id":"t6a","name":"당기","items":[["panalat","메인"],["truet","보조"],["megat","보조"],["lowrow","보조"],["shrug","마무리 털기"]]},{"id":"t6b","name":"밀기","items":[["atlinc","메인"],["panadec","보조"],["panasp","보조"],["dblat","마무리 털기"]]}],"exMemos":{"panalat":{"setting":"1번","memo":"","date":"2026-09-15"},"megat":{"setting":"의자 3","memo":"","date":"2026-09-15"}},"sessions":[{"d":"2026-09-08","t":"t6b","memo":"어깨 쪽 부담 확인 (가상)","ex":[["atlinc","메인","",{}],["panadec","보조","",{}],["panasp","보조","",{"status":"removed","reason":"기타"}],["dblat","마무리 털기","",{"status":"removed","reason":"기타"}]]},{"d":"2026-09-15","t":"t6a","memo":"세팅부터 다시 잡기 (가상)","ex":[["panalat","메인","17.5x18x3",{"setting":"1번"}],["truet","보조","22.5x12-20x3",{"p":"42.5x12x3"}],["megat","보조","17.5x15-20x3",{"setting":"의자 3"}],["lowrow","보조","22.5x16-19x3",{}],["shrug","마무리 털기","17.5x20x2",{}]]}]}
+ {id:'m3',code:'이00_3',goals:[],notes:[],cautions:[],
+  templates:[
+   {id:'t3a',name:'하체',items:[['inner','보조'],['scurl','보조'],['hacksq','메인'],['legpress','보조'],['legext','마무리 털기']]},
+   {id:'t3b',name:'밀기',items:[['incdb','메인','탑세트+백오프'],['nitro','보조'],['sdbsp','보조'],['machlat','마무리 털기']]},
+   {id:'t3c',name:'당기기',items:[['cybrow','메인'],['bbrow','보조'],['truet','보조'],['multirow','보조'],['shrug','마무리 털기']]}],
+  exMemos:{hacksq:{setting:'발판:1, 밴드o',memo:'',date:'2026-09-15'},cybrow:{setting:'패드:4, 의자:6',memo:'날개뼈 먼저',date:'2026-09-24'},legpress:{setting:'등받이:1',memo:'',date:'2026-08-31'}},
+  sessions:[
+   {d:'2026-08-24',t:'t3a',ex:[
+     ['inner','보조','37.5x20-25x2',{raw:'1. 이너타이 37.5 x 20-25reps x 2sets.'}],
+     ['scurl','보조','50x20x3',{raw:'2, 시티드 레그컬 50x 20 x 3sets.'}],
+     ['hacksq','메인','20x8-15x3',{raw:'3, 핵스쿼트 (~~발판:2~~, 밴드o) 20kg x 8-15reps x 3sets. -▷ 발판: 1로 변경.',setting:'밴드o'}],
+     ['legpress','보조','40x20x3',{raw:'4. 레그프레스(프라임)(등받이:1) 40/40kg x 20reps x 3sets.',setting:'등받이:1'}]]},
+   {d:'2026-08-31',t:'t3a',ex:[
+     ['inner','보조','37.5x45, 52.5x8',{raw:'1, 이너타이 37.5 x {위: 45reps}~~20-25reps~~ x ~~2sets~~. -▷ 52.5 kg x 8reps.'}],
+     ['scurl','보조','40x20x3',{p:'50x20x3',raw:'2, 시티드 레그컬 ~~50 x 20reps x 3sets~~. 40 x 20reps x 3sets.'}],
+     ['hacksq','메인','20x20, 40x',{raw:'3. 핵스쿼트 (발판:1, 밴드o) 20kg x 8~~-15reps x 3sets~~. 20reps, 40kg x (짝 불확실)',setting:'발판:1, 밴드o'}],
+     ['legpress','보조','40x20x3',{raw:'4. 레그프레스(프라임, 등받이:1) 40/40kg x 20reps x 3sets.'}]]},
+   {d:'2026-09-08',t:'t3a',ex:[
+     ['inner','보조','45x25',{raw:'1. 이너타이 ~~위칭:3 52.5kg x 3sets~~ 45kg x 25reps.'}],
+     ['scurl','보조','40x20, 50x15x2',{p:'40x20x3',raw:'2, 시티드 레그컬 40 x 20reps x ~~3sets~~ -▷ 50 x ~~25~~ ⑮ x2sets.'}],
+     ['hacksq','메인','20x, 40x8-12x3',{raw:'3, 핵스쿼트(발판:1, 밴드o) 20kg 해보고 40kg 20개[?] -▷ 40kg x ~~12reps~~ x 3. {아래: 8-12reps.}'}],
+     ['legpress','보조','',{status:'swapped',to:'lunge',raw:'4, ~~프라임 레그프레스(등받이:1) 40/40kg x 20reps x 3sets~~.'}],
+     ['lunge','보조','x30x2',{origin:'swap',raw:'↳ 워킹런지로 마무리. x ~~3sets~~. 30reps x2sets'}],
+     ['legext','마무리 털기','',{status:'removed',reason:'기타',raw:'4, ~~레그 익스텐션~~.'}]]},
+   {d:'2026-09-15',t:'t3a',ex:[
+     ['inner','보조','45x20-25x2',{raw:'1, 이너타이 45 x 20-25 x 2.'}],
+     ['scurl','보조','50x20x2',{p:'50x15x3',raw:'2, 시티드 레그컬 50 x ~~15 x 3~~ 20 x ~~3~~2 (walking)'}],
+     ['hacksq','메인','40x8-12x2',{p:'40x8-12x3',raw:'3, 핵스쿼트 (발판: 1, 밴드 o) 40kg x ~~8-12 x~~ 3 x 8-12 x 2',setting:'발판:1, 밴드o'}],
+     ['legpress','보조','60x8, 40x13-20x2',{raw:'4, 레그프레스 (CYBEX) 60/60kg x 8, 40/40kg x 13-20 x 2'}],
+     ['lunge','보조','',{origin:'added',raw:'5, 워킹런지 아 런지 마무리.'}]]},
+   {d:'2026-09-16',t:'t3b',ex:[
+     ['incdb','메인','45x12, T:55x6-10x2, B:35x',{raw:'1, 인클라인 덤벨 프레스 45/45lb x 12 x ~~4sets~~ , 55/55lb x 6-10 x 2 ⤵ backoff 35/35lb.'}],
+     ['nitro','보조','30x20x3',{raw:'2, 너틸러스 니트로 체스트 30 x 20 x 3sets.'}],
+     ['sdbsp','보조','10xx3',{raw:'3, 숄더 프레스 (시티드 덤벨) 10/10lb x ~~25reps x~~ 3 .'}],
+     ['machlat','마무리 털기','x15-25x3',{raw:'4, 머신 사레레 [빈칸] 15-25 x 3.'}]]},
+   {d:'2026-09-17',t:'t3c',memo:'▷ 이어가는 느낌이 없음. -▷ 핀으 수정.',ex:[
+     ['cybrow','메인','8x12x3',{raw:'1, 싸이벡스 시티드로우 {위: ▷ 날개뼈로 시동걸고 시작으로 수정.} ~~12 x [빈칸] -15 x 3sets~~ ↳ 8 x 12 x 3sets.',note:'날개뼈로 시동걸고 시작으로 수정.'}],
+     ['bbrow','보조','40x8-12x3',{raw:'2, 바벨로우 40 x 8-12 x 3sets'}],
+     ['truet','보조','20',{raw:'3, 트루티바로우 20'}],
+     ['multirow','보조','20',{raw:'4, 멀티로우 20/20'}],
+     ['shrug','마무리 털기','20',{raw:'5, 슈러그. 20/20'}]]},
+   {d:'2026-09-22',t:'t3a',targets:{hacksq:{w:60,text:'60kg 도전',raw:'-▷ 60kg 도전 예정.'}},ex:[
+     ['inner','보조','45x20-25x2',{raw:'1, 이너타이 45 x 20-25 x 2'}],
+     ['scurl','보조','50x20x3',{raw:'2, 시티드 레그컬 50 x 20 x 3'}],
+     ['hacksq','메인','40x16, 40x12',{raw:'3, 핵스쿼트 40kg x 16reps, 12reps. -▷ 60kg 도전 예정.'}],
+     ['legpress','보조','40x20x2',{raw:'4, 레그프레스 40/40kg x 20 x 2'}],
+     ['legext','마무리 털기','30x20',{raw:'5, 레그 익스텐션 ~~30-50~~. 30 x 20.'}]]},
+   {d:'2026-09-24',t:'t3c',memo:'* 종목 무게 줄이고 다시 기본 첵. (호흡, 가동범위, 텐션유지)',ex:[
+     ['cybrow','메인','8',{raw:'1, 싸이벡스 시티드로우 (패드4, 의자6) ~~12 x 15 x 3~~ 8 (날개뼈 먼저)',setting:'패드:4, 의자:6',note:'날개뼈 먼저'}],
+     ['bbrow','보조','',{status:'removed',reason:'기타',raw:'~~2, 바벨로우~~'}],
+     ['truet','보조','20',{raw:'3, 트루티바로우 20 (키커지는 느낌, 척추 1자 만들기.)',note:'키커지는 느낌, 척추 1자 만들기.'}],
+     ['multirow','보조','',{raw:'4, 멀티로우 (의자 없어서 3)(팔꿈치 벌리고 기대기) — 일부 판독 불확실'}],
+     ['shrug','마무리 털기','',{status:'removed',reason:'기타',raw:'~~5, 슈러그~~'}]]},
+   {d:'2026-09-30',t:'t3a',planOnly:true,ex:[
+     ['inner','보조','45',{raw:'1, 이너타이 45'}],
+     ['scurl','보조','50',{raw:'2, 시티드 레그컬 50'}],
+     ['hacksq','메인','60',{raw:'3, 핵스쿼트 60 도전'}],
+     ['legpress','보조','40',{raw:'4, 레그프레스 40/40kg'}],
+     ['legext','마무리 털기','30',{raw:'5, 레그 익스텐션 30'}]]}],
+  next:{d:'2026-10-07',t:'t3a',time:'19:00'}},
+
+ {id:'m1',code:'이00_1',goals:[],notes:[],cautions:[],
+  templates:[{id:'t1a',name:'밀기',items:[['bbinc','메인'],['ohp','보조'],['panadec','보조'],['pushdown','마무리 털기']]}],
+  exMemos:{},
+  sessions:[
+   {d:'2026-07-07',t:'t1a',ex:[
+     ['bbinc','메인','55x13, 60x6, 60x5',{raw:'바벨 인클라인 (55kg x 13reps.), 60kg x 6reps, 5reps.'}],
+     ['ohp','보조','35x13, 40x6, 40x8',{raw:'~~시티드 OHP~~. OHP. 35kg x 13reps, 40kg x 6reps, 8reps.'}],
+     ['panadec','보조','25x실패지점x2',{raw:'파나타 디클라인 25/25kg x 실패지점 x 2sets (보조 o).'}],
+     ['pushdown','마무리 털기','30x20',{raw:'케이블 푸쉬다운 30lb x 20reps.'}]]}]},
+
+ {id:'m2',code:'이00_2',goals:[{text:'3~4개월 안으로 10kg 감량',start:''}],
+  notes:[{kind:'diet',text:'하루 2끼 식단 (끼니별 kcal는 수첩에 있음)'}],cautions:[],
+  templates:[{id:'t2a',name:'앞다리',items:[['inout','보조'],['calf','마무리 털기'],['hacksq','메인'],['legpress','보조'],['legext','마무리 털기']]}],
+  exMemos:{hacksq:{setting:'발판:2, 무릎 정렬',memo:'',date:'2026-08-03'}},
+  sessions:[
+   {d:'2026-07-17',t:'t2a',ex:[
+     ['inout','보조','22.5x20',{raw:'1. 이너/아웃 타이 / 카프레이즈 — (22.5 / 45 / 0) / × 20reps (세트 부분 덧씀)'}],
+     ['calf','마무리 털기','',{}],
+     ['hacksq','메인','10x20',{raw:'2. 핵스쿼트 — (발판:4) … 10kg × 20 부분 확인',setting:'발판:4'}],
+     ['legpress','보조','',{status:'swapped',to:'goblet',raw:'3. ~~[운동명]~~ 고블릿 스쿼트'}],
+     ['goblet','보조','15x30x2',{origin:'swap',raw:'고블릿 스쿼트 — 15lb × 30reps × 2sets'}],
+     ['legext','마무리 털기','',{raw:'4. 레그 익스텐션'}]]},
+   {d:'2026-08-03',t:'t2a',ex:[
+     ['inout','보조','',{raw:'1. 이너/아웃 타이'}],
+     ['hacksq','메인','20x15',{raw:'2. 핵스쿼트 — (발판:2, 무릎 정렬) / 20kg × 15reps × [판독 불가]sets',setting:'발판:2, 무릎 정렬'}],
+     ['legpress','보조','',{status:'swapped',to:'goblet'}],
+     ['goblet','보조','15x30x2',{origin:'swap',raw:'3. 고블릿 스쿼트 — 15lb × 30reps × 2sets'}],
+     ['legext','마무리 털기','30',{raw:'4. 레그 익스텐션 30'}]]},
+   {d:'2026-09-01',t:'t2a',ex:[
+     ['inout','보조','22.5x20-25, 30x8-12',{raw:'1. 이너타이 — 22.5 × 20~25, 30 × 8~12'}],
+     ['hacksq','메인','40x15x2',{raw:'2. 핵스쿼트 — (발판:2, [판독 불가]:0) / 40kg × 15reps × 2sets (앞 수치 취소)',setting:'발판:2'}],
+     ['legpress','보조','',{status:'swapped',to:'goblet'}],
+     ['goblet','보조','25x25x3',{origin:'swap',raw:'3. 고블릿 스쿼트 — 25lb × 25 × 3'}],
+     ['legext','마무리 털기','50x20x2',{raw:'4. 레그 익스텐션 — 50 × 20 × 2sets'}]]}]},
+
+ {id:'m4',code:'김00',goals:[{text:'일상과 함께할 수 있는 운동을 원하신다 (문장 일부 불확실)',start:''}],
+  notes:[{kind:'general',text:'등근육이 약.'},{kind:'general',text:'주 2일 → 상하 / 주 3일 → 앞, 뒤, 상체 (10/13 메모, 끝 낱말 판독 불확실)'}],cautions:[],
+  templates:[{id:'t4a',name:'하체',items:[['scurl','보조'],['hackpress','메인'],['legpress','보조'],['legext','마무리 털기']]}],
+  exMemos:{},
+  sessions:[
+   {d:'2026-08-19',t:'t4a',ex:[
+     ['scurl','보조','30',{raw:'1. 시티드 레그컬 (~~[횟수/세트 표기]~~) 30'}],
+     ['hackpress','메인','50xx3',{raw:'2. 핵프레스 (3sets) 50/50kg.'}],
+     ['legpress','보조','30xx3',{raw:'3. 레그프레스 (3sets) 30/30kg.'}],
+     ['legext','마무리 털기','50x12',{p:'x20x3',raw:'4. 레그 익스텐션 (~~3sets~~) (~~20reps~~) 50 × 12'}]]},
+   {d:'2026-09-11',t:'t4a',planOnly:true,ex:[
+     ['scurl','보조','30',{}],['hackpress','메인','40',{raw:'2. 핵프레스 40/40kg'}],['legpress','보조','30',{raw:'3. 레그프레스 30/30kg'}],['legext','마무리 털기','50x12',{}]]},
+   {d:'2026-09-15',t:'t4a',ex:[
+     ['scurl','보조','30',{}],
+     ['hackpress','메인','',{status:'removed',reason:'기타',raw:'2. ~~핵프레스 40/40kg~~'}],
+     ['legpress','보조','20x20x3',{raw:'3. 레그프레스 20/20kg × 20 × 3'}],
+     ['legext','마무리 털기','50x20x3',{p:'30x20x3',raw:'4. 레그 익스텐션 ~~30~~ 50 × 20 × 3'}]]},
+   {d:'2026-10-12',t:'t4a',ex:[
+     ['scurl','보조','30x20x4',{raw:'1. 시티드 레그컬 30 × 20 × 4'}],
+     ['legext','마무리 털기','50x20x4',{raw:'2. 레그 익스텐션 50 × 20 × 4'}],
+     ['legpress','보조','20x20',{raw:'3. 레그 프레스 20/20kg × 20, ~~30/30kg × [판독 불가]~~'}],
+     ['hackpress','메인','x25x3',{raw:'4. 핵프레스 ([괄호 안 판독 불가]) 25reps × 3sets.'}]]}],
+  next:{d:'2026-10-19',t:'t4a',time:''}},
+
+ {id:'m5',code:'정00',goals:[],notes:[],cautions:[],
+  templates:[{id:'t5a',name:'앞',items:[['inner','보조'],['outer','보조'],['legpress','메인'],['dbsp','보조'],['dblat','마무리 털기']]}],
+  exMemos:{},
+  sessions:[
+   {d:'2026-09-15',t:'t5a',ex:[
+     ['inner','보조','15x20x3',{raw:'1. 이너타이 15 × 20 × 3'}],
+     ['outer','보조','22.5x20x3',{raw:'2. 아웃타이 22.5 × 20 × 3 ([판독 불확실])'}],
+     ['legpress','메인','20',{raw:'3. 레그프레스 20kg'}],
+     ['dbsp','보조','5x5',{raw:'4. ~~[운동명 판독 불확실]~~ 덤벨 숄더프레스 5/5lb × 5'}],
+     ['dblat','마무리 털기','1x25',{raw:'5. 덤벨 사레레 1/1kg × 25'}]]},
+   {d:'2026-10-06',t:'t5a',ex:[
+     ['inner','보조','15x20, 22.5x20x2',{p:'15x20x3',raw:'1. 이너타이 ~~15 × 20 × 3~~ 15 - 22.5 × 20 × 3 — 수정 부분의 구분 불확실'}],
+     ['outer','보조','30x20x3',{p:'22.5x20x3',raw:'2. 아웃타이 ~~22.5 × 20 × 3~~ 30 × 20 × 3'}],
+     ['legpress','메인','20x15x3',{raw:'3. 레그프레스 20/20kg × [판독 불확실] - 15reps × 3'}],
+     ['dbsp','보조','5xx3',{raw:'4. 덤벨 숄더프레스 5/5lb × [판독 불확실] → [판독 불확실] × 3sets'}],
+     ['dblat','마무리 털기','1x20',{raw:'5. 덤벨 사레레 1/1kg × [판독 불확실] → 20'}]]},
+   {d:'2026-10-13',t:'t5a',ex:[
+     ['inner','보조','15x20, 15x25x2',{raw:'1. 이너타이 15 × 20, ~~[판독 불확실]~~, 15 × 25 × 2'}],
+     ['outer','보조','30x25x3',{raw:'2. 아웃타이 30 × 25 × 3'}],
+     ['legpress','메인','20x20, 30x12x2',{raw:'3. 레그프레스 20/20kg × 20, 30/30kg × 12 × 2'}],
+     ['dbsp','보조','',{raw:'4. 덤벨 [운동명 일부 불확실] → [판독 불확실] 17kg + 2.3 + 2.3kg × 20 × 3'}],
+     ['dblat','마무리 털기','',{status:'swapped',to:'smithpu',raw:'5. → 스미스 푸쉬업 ([판독 불확실])'}],
+     ['smithpu','마무리 털기','',{origin:'swap'}]]}],
+  next:{d:'2026-10-20',t:'t5a',time:''}},
+
+ {id:'m6',code:'최00',goals:[],notes:[{kind:'general',text:'9월 첫째주간 월 15시(당기기) 토요일 14시(어깨) (8/28 메모, 일부 판독 불확실)'}],cautions:[],
+  templates:[
+   {id:'t6a',name:'당기',items:[['panalat','메인'],['truet','보조'],['megat','보조'],['lowrow','보조'],['shrug','마무리 털기']]},
+   {id:'t6b',name:'밀기',items:[['atlinc','메인'],['panadec','보조'],['panasp','보조'],['dblat','마무리 털기']]}],
+  exMemos:{panalat:{setting:'2번',memo:'',date:'2026-09-15'},megat:{setting:'의자 4.5, 발 0.5',memo:'',date:'2026-09-15'}},
+  sessions:[
+   {d:'2026-09-08',t:'t6b',memo:'어깨 케어 -> ... [판독 불확실]',ex:[
+     ['atlinc','메인','',{raw:'1. 아틀 인클라인 [첫 단어 판독 불확실]'}],
+     ['panadec','보조','',{raw:'2. 파나타 디클라인'}],
+     ['panasp','보조','',{status:'removed',reason:'기타',raw:'3. ~~파나타 숄더프레스~~'}],
+     ['dblat','마무리 털기','',{status:'removed',reason:'기타',raw:'4. ~~덤벨 사레레~~'}]]},
+   {d:'2026-09-15',t:'t6a',memo:'* 세팅에서부터 근육에 [판독 불확실] / ↓ 어깨 [판독 불확실]',ex:[
+     ['panalat','메인','20x20x3',{raw:'1. 파나타 싱글 (2번) 20/20kg × 20reps × 3sets',setting:'2번'}],
+     ['truet','보조','20x12-18x3',{p:'40x12x3',raw:'2. 트루 티바로우 ~~40kg × 12~~ → drop하여 20kg × 12~18reps × 3sets'}],
+     ['megat','보조','20x15-20x3',{raw:'3. 메가머스 티바로우 20kg × 15~20 × 3 ([의자?] 4.5, 발 0.5)',setting:'의자 4.5, 발 0.5'}],
+     ['lowrow','보조','20x15-20x3',{raw:'4. [운동명 판독 불확실] (Low row) 20/20kg × 15~20 × 3'}],
+     ['shrug','마무리 털기','20x20x2',{raw:'5. 슈러그 20/20kg × 20 × 2sets'}]]}]}
 ];
 
-/* 시나리오 장면 7·8에서 넣는 회원 A 기록 (10/7 뒤). 앱의 '오늘'이 그 날짜를 지날 때만 넣는다 */
-const M3_TEMPLATE_BACK={"id":"t3d","name":"후면사슬","items":[["deadlift","메인"],["bbrow","보조"],["truet","보조"]],"note":"10/9 기록에서 만든 틀"};
-const M3_LATER={"2026-10-08":{"d":"2026-10-08","t":"t3b","ex":[["incdb","메인","50x10-15x3",{"note":"내릴 때 천천히"}],["nitro","보조","35x15x3",{"note":"다른 종목과 묶어서"}],["pushup","보조","x13x3",{"origin":"added"}],["sdbsp","보조","",{}],["machlat","마무리 털기","",{}]]},"2026-10-09":{"d":"2026-10-09","t":"t3d","memo":"종목 이름만 남김 (가상)","ex":[["deadlift","메인","",{}],["bbrow","보조","",{}],["truet","보조","",{}]]},"2026-10-15":{"d":"2026-10-15","t":"t3b","ex":[["ohp","메인","25x12x3",{"origin":"added"}],["strive","보조","10x20x3",{"origin":"added"}],["frontraise","보조","15x12-15x3",{"origin":"added"}]]},"2026-10-16":{"d":"2026-10-16","t":"t3c","memo":"시간 여유 없음, 등 종목 움직임 위주 (가상)","ex":[["deadlift","메인","",{"origin":"added"}],["bbrow","보조","",{"status":"swapped","to":"truet"}],["truet","보조","25",{"origin":"swap"}],["latpd","보조","",{"origin":"added"}],["cybrow","메인","7",{"setting":"패드:3, 의자:5"}]]}};
+/* 시나리오 장면 7·8에서 넣는 이00_3 수첩 기록 (10/7 뒤). 앱의 '오늘'이 그 날짜를 지날 때만 넣는다 */
+const M3_TEMPLATE_BACK={id:'t3d',name:'후면사슬',items:[['deadlift','메인'],['bbrow','보조'],['truet','보조']],note:'수첩 10/9 칸에서 만듦'};
+const M3_LATER={
+ '2026-10-08':{d:'2026-10-08',t:'t3b',ex:[
+   ['incdb','메인','55x10-15x3',{raw:'1, 인클라인 덤벨 55/55lb x 10-15reps x 3sets. (부위를 느낌)(강도 유지x)',note:'부위를 느낌, 강도 유지x'}],
+   ['nitro','보조','30x15x3',{raw:'2, 너틸러스 니트로 체스트 ⊕ 푸쉬업. (30 x 15reps ⊕ 13reps) x 3.',note:'푸쉬업과 슈퍼세트'}],
+   ['pushup','보조','x13x3',{origin:'added',raw:'(니트로 체스트와 슈퍼세트) 13reps x 3'}],
+   ['sdbsp','보조','',{raw:'3, 숄더프레스 (덤벨시티드) ⊕'}],
+   ['machlat','마무리 털기','',{raw:'4, 머신 사레레'}]]},
+ '2026-10-09':{d:'2026-10-09',t:'t3d',memo:'수첩에는 종목 이름만 있다.',ex:[
+   ['deadlift','메인','',{raw:'1, 데드리프트'}],
+   ['bbrow','보조','',{raw:'2, 바벨로우'}],
+   ['truet','보조','',{raw:'3, 트루 티바로우'}]]},
+ '2026-10-15':{d:'2026-10-15',t:'t3b',ex:[
+   ['ohp','메인','30x12x3',{origin:'added',raw:'1, OHP, 30kg. x 12 x 3'}],
+   ['strive','보조','7.5x20x3',{origin:'added',raw:'2, 스트라이브 7.5kg x 20x3'}],
+   ['frontraise','보조','10x12-15x3',{origin:'added',raw:'3, 프론트 레이즈(듀얼케이블)(원암) 10lb x 12-15 x 3 (끝 숫자 판독 불확실)'}]]},
+ '2026-10-16':{d:'2026-10-16',t:'t3c',memo:'* 2, 3, 4번 종목에서는 날개뼈의 움직임에 집중. 5. 라잉 레그컬과 워킹 런지를 통한 심박수 + 체중감량 고려. └▷ 오늘 시간적인 여유가 없음.',ex:[
+   ['deadlift','메인','',{origin:'added',raw:'1, 데드리프트 (심박수 + 강도)'}],
+   ['bbrow','보조','',{status:'swapped',to:'truet',raw:'2, ~~바벨로우~~ 트루 티바로우 20kg'}],
+   ['truet','보조','20',{origin:'swap',raw:'트루 티바로우 20kg'}],
+   ['latpd','보조','',{origin:'added',raw:'③④ 오버그립 랫풀다운 (그립 단어 판독 불확실)'}],
+   ['cybrow','메인','8',{raw:'3, 싸이벡스 시티드 로우. (패드:4, 의자:6) 8',setting:'패드:4, 의자:6'}]]}
+};
 /* ---------- 도구 ---------- */
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 let _n=0; const uid=p=>(p||'x')+Date.now().toString(36)+(_n++).toString(36);
@@ -323,7 +499,7 @@ function buildSeed(){
     const m={id:sm.id,code:sm.code,goals:clone(sm.goals).map(g=>({id:uid('g'),...g})),cautions:[],
       notes:sm.notes.map(n=>({id:uid('n'),kind:n.kind,text:n.text,created:'',done:false})),
       body:[],movement:[],blocks:[],exMemos:clone(sm.exMemos||{}),
-      templates:sm.templates.map(t=>({id:t.id,name:t.name,items:t.items.map(([exId,role,structure])=>({exId,role,structure:structure||'스트레이트'})),versions:[{date:'',note:'예시 목록에서 만듦'}]}))};
+      templates:sm.templates.map(t=>({id:t.id,name:t.name,items:t.items.map(([exId,role,structure])=>({exId,role,structure:structure||'스트레이트'})),versions:[{date:'',note:'수첩 목록에서 만듦'}]}))};
     st.members.push(m);
     for(const ss of sm.sessions) seedSession(m,ss);
     if(sm.next) createPlanned(m,sm.next.d,sm.next.time,sm.next.t);
@@ -743,7 +919,7 @@ V.today=()=>{
   return topBar(`${dt.getMonth()+1}월 ${dt.getDate()}일 (${DOW[dt.getDay()]})`,`오늘 수업 ${list.length}`,nav,{noBack:true})+
    `<div class="scroll" data-sk="main"><div class="card"><div class="list">${list.map(s=>sessionRow(s)).join('')||'<div class="empty">오늘 잡힌 수업이 없어요.</div>'}</div></div>
     ${up.length?`<div class="small muted" style="margin:16px 4px 6px;font-weight:600">다가오는 수업</div><div class="card"><div class="list">${up.map(s=>sessionRow(s,{date:1})).join('')}</div></div>`:''}
-    <div class="tiny faint" style="margin:12px 4px">시간은 예시예요. 다른 회원의 예시 기록은 시연 날짜와 맞지 않을 수 있어요.</div></div>`+tabBar('today');
+    <div class="tiny faint" style="margin:12px 4px">시간은 예시예요. 다른 회원 기록은 수첩 날짜 그대로라 시연 날짜와 맞지 않을 수 있어요.</div></div>`+tabBar('today');
 };
 
 /* ---------- 회원 목록 ---------- */
@@ -751,12 +927,12 @@ V.members=()=>{
   const rows=S.members.map(m=>{const u=upcoming(m.id);const l=lastSession(m);return `<div class="li click" data-act="go" data-to="member" data-mid="${m.id}">
       <div style="flex:1;min-width:0"><b>${esc(m.code)}</b> <span class="muted small">${m.goals[0]?esc(m.goals[0].text):''}</span>
       <div class="tiny muted">다음 PT ${u?mdw(u.date)+' '+esc(splitName(u)):'없음'} · 지난 수업 ${l?md(l.date)+' '+esc(splitName(l)):'없음'} · 기록 ${completed(m.id).length}회</div></div>${openCautions(m).length?`<span class="tag warn">주의 ${openCautions(m).length}</span>`:''}<span class="faint">›</span></div>`}).join('');
-  return topBar('회원',`${S.members.length}명 · 가상 회원 예시 기록으로 채운 프로토타입`,btn('기록 찾기','go',{to:'search'})+btn('설정','go',{to:'settings'})+btn('+ 회원','newMember'),{noBack:true})+
+  return topBar('회원',`${S.members.length}명 · 트레이너 수첩 기록으로 채운 프로토타입`,btn('기록 찾기','go',{to:'search'})+btn('설정','go',{to:'settings'})+btn('+ 회원','newMember'),{noBack:true})+
    `<div class="scroll" data-sk="main"><div class="card"><div class="list">${rows}</div></div>
     <div class="card" style="margin-top:12px"><h2>이 프로토타입</h2>
       <ul class="small" style="margin:0 0 8px;padding-left:18px">
-        <li>회원과 기록은 모두 지어낸 예시예요. 실제 사람 기록이 아니에요.</li>
-        <li>역할, 여유 횟수, 쉬는 시간, 기구 눈금은 ${EXAMPLE('예시')}나 논문 기준 임시값(D59)이에요.</li>
+        <li>회원 기록은 트레이너 수첩의 실제 숫자이고, 이름은 성+00 코드로 바꿨어요(D61).</li>
+        <li>역할, 여유 횟수, 쉬는 시간, 기구 눈금은 수첩에 없어서 ${EXAMPLE('예시')}나 논문 기준 임시값(D59)이에요.</li>
         <li>입력한 것은 이 브라우저에만 저장돼요.</li></ul>
       ${UI.confirmReset?`<div class="row"><span class="small">입력한 것을 모두 지우고 처음 상태로 되돌릴까요?</span>${btn('되돌리기','reset',null,'danger')}${btn('아니요','confirmReset',{v:0})}</div>`:btn('처음 상태로 되돌리기','confirmReset',{v:1},'small')}</div></div>`+tabBar('members');
 };
@@ -808,7 +984,7 @@ V.memberEdit=r=>{
   const body=m.body.slice().reverse().map(b=>`<tr><td class="num">${md(b.date)}</td><td class="num">${b.height??''}</td><td class="num">${b.weight??''}</td><td class="num">${b.muscle??''}</td></tr>`).join('');
   return topBar(esc(m.code)+' 회원 정보','비운 칸은 아직 모름으로 둬요')+
    `<div class="scroll" data-sk="main"><div class="grid2"><div class="col">
-     <div class="card"><h2>이름</h2><div class="row">${bIn('mCode',m.code,{mid:m.id},{w:200})}</div></div>
+     <div class="card"><h2>이름</h2><div class="row">${bIn('mCode',m.code,{mid:m.id},{w:200})}<span class="tiny muted">폴더 밖에서는 성+00 코드로 써요(D61)</span></div></div>
      <div class="card"><h2>목표</h2><div class="list">${goals}</div><div class="row" style="margin-top:6px;flex-wrap:nowrap">${dIn('gText-'+m.id,'예: 3~4개월 안으로 10kg 감량',{grow:1})}${dIn('gStart-'+m.id,'',{type:'date',w:150})}${btn('+ 목표','addGoal',{mid:m.id},'small')}</div><div class="tiny muted" style="margin-top:4px">목표는 덮어쓰지 않고 날짜와 함께 쌓여요(D24).</div></div>
      ${cautionCard(m)}
      ${goalCard(m)}</div>
@@ -883,7 +1059,7 @@ V.prep=r=>{
       <button class="btn ghost small" style="text-align:left;white-space:normal;color:var(--ink)" data-act="toggle" data-t="${key}" title="지난 기록 펼치기"><span class="small">${lastTxt}</span> <span class="faint">${open?'▴':'▾'}</span></button>
       <div>${basisTag(s,x)}</div><div class="pe-sets">${x.sets.map((st,i)=>ro?roChip(s,x,i):setChip(s,x,i)).join('')||'<span class="faint small">세트 없음</span>'}${ro?'':btn('+','addSet',{sid:s.id,uid:x.uid},'small ghost')}</div>
       ${ro?'':`<button class="btn ghost more" data-act="modal" data-type="exMenu" data-sid="${s.id}" data-uid="${x.uid}" aria-label="종목 메뉴">…</button>`}</div>
-      ${open?`<div class="prep-hist">${h.slice().reverse().map(o=>`<div>${mdw(o.s.date)} ${esc(splitName(o.s))} · <b>${esc(fsets(o.x.sets,x.exId,'a'))}</b>${o.x.setting?` <span class="tiny muted">세팅 ${esc(o.x.setting)}</span>`:''}${o.x.raw?`<div class="dimline">원문: ${esc(o.x.raw)}</div>`:''}</div>`).join('')||'기록 없음'}${memo&&memo.memo?`<div class="tiny muted">종목 메모 ${memo.date?md(memo.date):''}: ${esc(memo.memo)}</div>`:''}</div>`:''}
+      ${open?`<div class="prep-hist">${h.slice().reverse().map(o=>`<div>${mdw(o.s.date)} ${esc(splitName(o.s))} · <b>${esc(fsets(o.x.sets,x.exId,'a'))}</b>${o.x.setting?` <span class="tiny muted">세팅 ${esc(o.x.setting)}</span>`:''}${o.x.raw?`<div class="dimline">수첩: ${esc(o.x.raw)}</div>`:''}</div>`).join('')||'기록 없음'}${memo&&memo.memo?`<div class="tiny muted">종목 메모 ${memo.date?md(memo.date):''}: ${esc(memo.memo)}</div>`:''}</div>`:''}
       ${ed&&!ro?editorHTML(s,x,+UI.edit.i):''}</div>`}).join('');
   const pm=planMinutes(s);
   return topBar(esc(m.code)+' 수업 준비',`${mdw(s.date)} ${esc(s.time||'')} · ${esc(splitName(s))}${ro?' · 수업이 시작돼 고칠 수 없어요':''}`,ro?'':btn('+ 종목','modal',{type:'addEx',sid:s.id},'small'))+
@@ -1053,10 +1229,10 @@ V.trend=r=>{
    `<div class="scroll" data-sk="main"><div class="card"><h2>종목별 최고 무게</h2>
      <div class="row" style="margin-bottom:8px">${exs.map(id=>`<button class="chip${id===ex?' on':''}" data-act="pickTrend" data-mid="${m.id}" data-v="${id}">${esc(EX(id).name)} <span class="tiny">${cnt[id]}</span></button>`).join(' ')||'<span class="empty">기록이 없어요.</span>'}</div>
      ${ex?`<div class="small muted">${esc(EX(ex).name)} · 수업마다 가장 무거운 본세트 (워밍업 제외). 점을 누르면 그날 숫자가 보여요.</div>${chartSVG(pts,W,230,p=>fw(p.v,ex),sel)}
-     <div class="small" style="min-height:20px">${picked?`<b>${mdw(picked.s.date)}</b> ${esc(splitName(picked.s))} · ${esc(fsets(picked.x.sets,ex,'a'))}${picked.x.raw?` <span class="dimline">원문: ${esc(picked.x.raw)}</span>`:''}`:''}</div>
+     <div class="small" style="min-height:20px">${picked?`<b>${mdw(picked.s.date)}</b> ${esc(splitName(picked.s))} · ${esc(fsets(picked.x.sets,ex,'a'))}${picked.x.raw?` <span class="dimline">수첩: ${esc(picked.x.raw)}</span>`:''}`:''}</div>
      ${blocks?`<div class="small">훈련 방향: ${blocks}</div>`:''}
      <table style="margin-top:6px"><tr><th>날짜</th><th>분할</th><th>실제 세트</th><th>최고</th></tr>${rows}</table>`:''}</div>
-    <div class="card" style="margin-top:12px"><h2>체중 <span class="tag good">4a</span></h2><table><tr><th>날짜</th><th>체중</th><th>골격근량</th></tr>${body||'<tr><td colspan="3" class="empty">체중 기록이 없어요. 예시 데이터에도 없었어요.</td></tr>'}</table>
+    <div class="card" style="margin-top:12px"><h2>체중 <span class="tag good">4a</span></h2><table><tr><th>날짜</th><th>체중</th><th>골격근량</th></tr>${body||'<tr><td colspan="3" class="empty">체중 기록이 없어요. 수첩에도 없었어요.</td></tr>'}</table>
      <div class="row" style="margin-top:6px">${dIn('bDate-'+m.id,'',{type:'date',w:150})}${dIn('bW-'+m.id,'체중',{w:70,im:'decimal'})}${dIn('bM-'+m.id,'골격근',{w:70,im:'decimal'})}${btn('넣기','addBody',{mid:m.id},'small')}</div></div></div>`;
 };
 
@@ -1078,12 +1254,12 @@ V.detail=r=>{
   const parts={}; for(const x of s.exercises){if(x.status!=='done')continue;const p=EX(x.exId).part||'기타';parts[p]=(parts[p]||0)+x.sets.filter(st=>st.kind!=='warmup'&&(st.done||(s.seeded&&(st.aw!=null||st.ar!=null)))).length}
   const rows=s.exercises.map((x,i)=>`<tr><td class="num">${i+1}</td><td><b class="${x.status==='removed'?'st-removed':x.status==='swapped'?'st-swapped':''}">${esc(EX(x.exId).name)}</b><div class="tiny muted">${x.role}${x.status==='removed'?' · 뺌'+(x.reason?' ('+esc(x.reason)+')':''):x.status==='swapped'?' · 바꿈':''}${x.origin==='added'?' · 새로 넣음':x.origin==='swap'?' · 바꿔 넣음':''}</div></td>
      <td class="small">${esc(fsets(x.sets,x.exId,'p'))||'—'}</td><td class="small">${s.status==='plan_only'?'<span class="faint">했는지 모름</span>':esc(fsets(x.sets,x.exId,'a'))||'—'}${x.sets.some(st=>isNum(st.rir))?`<div class="tiny muted">여유 횟수 ${x.sets.filter(st=>isNum(st.rir)).map(st=>st.rir).join(', ')}</div>`:''}</td>
-     <td class="small">${x.setting?'세팅 '+esc(x.setting)+'<br>':''}${x.note?esc(x.note)+'<br>':''}${x.raw?`<span class="dimline">원문: ${esc(x.raw)}</span>`:''}</td></tr>`).join('');
+     <td class="small">${x.setting?'세팅 '+esc(x.setting)+'<br>':''}${x.note?esc(x.note)+'<br>':''}${x.raw?`<span class="dimline">수첩: ${esc(x.raw)}</span>`:''}</td></tr>`).join('');
   const nt=Object.entries(s.nextTargets||{}).map(([k,t])=>`${EX(k).name} ${t.w!=null?fw(t.w,k):''}${t.r!=null?' × '+t.r:''}${t.text?' '+t.text:''}`);
-  return topBar(esc(m.code)+` ${mdw(s.date)} ${esc(splitName(s))}`,`${statusLabel[s.status]}${s.seeded?' · 예시 기록':''} · 수업 상세`,s.status==='planned'||s.status==='in_progress'?btn('수업으로','openSession',{sid:s.id},'primary'):'')+
+  return topBar(esc(m.code)+` ${mdw(s.date)} ${esc(splitName(s))}`,`${statusLabel[s.status]}${s.seeded?' · 수첩에서 옮긴 기록':''} · 수업 상세`,s.status==='planned'||s.status==='in_progress'?btn('수업으로','openSession',{sid:s.id},'primary'):'')+
    `<div class="scroll" data-sk="main">
     ${s.cond||s.goal||s.memo||nt.length?`<div class="card" style="margin-bottom:10px"><dl class="kv">${s.goal?`<dt>오늘 목표</dt><dd>${esc(s.goal)}</dd>`:''}${s.cond?`<dt>컨디션</dt><dd>${condLine(s.cond)}</dd>`:''}${s.memo?`<dt>수업 메모</dt><dd>${esc(s.memo)}</dd>`:''}${(s.observations||[]).length?`<dt>관찰</dt><dd>${s.observations.map(o=>lab(OBS,o.kind)+(o.dir==='up'?' 좋아짐':' 나빠짐')).join(', ')}</dd>`:''}${nt.length?`<dt>다음 목표</dt><dd>${esc(nt.join(' / '))}</dd>`:''}</dl></div>`:''}
-    <div class="card"><table><tr><th>#</th><th>종목</th><th>계획</th><th>실제</th><th>메모</th></tr>${rows}</table>
+    <div class="card"><table><tr><th>#</th><th>종목</th><th>계획</th><th>실제</th><th>메모 · 수첩 원문</th></tr>${rows}</table>
     ${Object.keys(parts).length?`<div class="tiny muted" style="margin-top:6px">부위별 본세트 수: ${Object.entries(parts).map(([p,n])=>`${p} ${n}`).join(', ')} · 볼륨 ${sessionVolume(s).toLocaleString()}</div>`:''}</div></div>`;
 };
 
@@ -1246,7 +1422,7 @@ const SCENES=[
  {t:'장면 1. 출근, 오늘',sub:'10/7 (수) 14:30 · 화면: 오늘',
   enter(){S.today='2026-10-07';save();home('today')},
   steps:[
-   {say:"앱을 열면 '오늘'이에요. '19:00 · 회원 A · 하체' 줄에 오늘 목표(핵스쿼트 50kg 도전)와 '마지막 수업 13일 전'이 보여요. 회원이 카톡으로 \"2주 만이라 살살 해 주세요\"라고 했다고 해 봐요(가정). 줄 오른쪽 '…'을 눌러 오늘 메모 칸에 적고 '넣기'를 눌러요.",
+   {say:"앱을 열면 '오늘'이에요. '19:00 · 이00_3 · 하체' 줄에 오늘 목표(핵스쿼트 60kg 도전)와 '마지막 수업 13일 전'이 보여요. 회원이 카톡으로 \"2주 만이라 살살 해 주세요\"라고 했다고 해 봐요(가정). 줄 오른쪽 '…'을 눌러 오늘 메모 칸에 적고 '넣기'를 눌러요.",
     at:()=>{const s=GD.s107();if(UI.modal&&UI.modal.type==='sessMenu')return (UI.draft['tm-'+s.id]||'').trim()?'.modal [data-act="todayMemo"]':`.modal [data-d="tm-${s.id}"]`;return UI.route.name==='today'?`.srow[data-sid="${s.id}"] .more`:'.tabbar [data-v="today"]'},
     done:()=>todayMemos(GD.m(),GD.s107()).length>0,
     auto:()=>{const s=GD.s107();GD.m().notes.push({id:uid('n'),kind:'check',text:'2주 만이라 살살 해 주세요 (가정)',created:'2026-10-07',due:s.id,done:false});UI.modal=null;save();home('today')}},
@@ -1256,28 +1432,28 @@ const SCENES=[
     auto:()=>{home('today');ACT.openSession({sid:GD.s107().id})}}]},
  {t:'장면 2. 수업 30분 전, 기록 읽기',sub:'18:30 · 화면: 수업 준비 (위 띠와 지난 기록)',
   steps:[
-   {say:"브리핑과 예정 루틴이 한 장이에요. 맨 위 띠 셋에 주의사항·물어볼 것과 오늘 메모, 목표, 지난 수업(13일 전 9/24 당기기, 9/30 하체는 계획만 있어 건너뜀)이 있어요. 아래 종목 줄 가운데가 지난 같은 분할 실제값이에요. 핵스쿼트 줄의 '9/22 35kg × 16, 12'를 눌러 최근 4회를 펼쳐요.",
+   {say:"브리핑과 예정 루틴이 한 장이에요. 맨 위 띠 셋에 주의사항·물어볼 것과 오늘 메모, 목표, 지난 수업(13일 전 9/24 당기기, 9/30 하체는 계획만 있어 건너뜀)이 있어요. 아래 종목 줄 가운데가 지난 같은 분할 실제값이에요. 핵스쿼트 줄의 '9/22 40kg × 16, 12'를 눌러 최근 4회를 펼쳐요.",
     at:()=>`[data-act="toggle"][data-t="br-${gex(GD.s107(),'hacksq').uid}"]`,
     done:()=>!!UI.open['br-'+gex(GD.s107(),'hacksq').uid],
     auto:()=>{ensureR('prep',GD.s107());UI.open['br-'+gex(GD.s107(),'hacksq').uid]=true;render()}},
-   {say:"8/24 15kg부터 9/22 35kg까지 보여요. 오른쪽 오늘 계획은 9/22에 남긴 목표 그대로 50kg이에요. '목표 9/22 !' 꼬리표를 눌러 근거를 읽어요. 35kg × 16은 10회가 넘어 추정 1RM 공식을 쓰지 않았다는 줄과, 기본 숫자가 컨디션 '보통' 기준이라는 줄이 있어요. '닫기'.",
+   {say:"8/24 20kg부터 9/22 40kg까지 보여요. 오른쪽 오늘 계획은 9/22에 남긴 목표 그대로 60kg이에요. '목표 9/22 !' 꼬리표를 눌러 근거를 읽어요. 40kg × 16은 10회가 넘어 추정 1RM 공식을 쓰지 않았다는 줄과, 기본 숫자가 컨디션 '보통' 기준이라는 줄이 있어요. '닫기'.",
     at:()=>UI.modal&&UI.modal.type==='basis'?'.modal [data-act="closeModal"]':`[data-act="basis"][data-uid="${gex(GD.s107(),'hacksq').uid}"]`,
     done:()=>!!UI.flags.basisSeen&&!UI.modal,
     auto:()=>{ensureR('prep',GD.s107());UI.flags.basisSeen=true;UI.modal=null;render()}}]},
  {t:'장면 3. 같은 화면에서 계획 고치기',sub:'18:40 · 화면: 수업 준비 (오늘 계획)',
   steps:[
-   {say:"35kg에서 16회를 했으니 50kg도 12회를 노려요. 핵스쿼트 본세트 첫 칸 '50kg × 8'을 눌러 횟수를 12로 바꾸고 '아래 세트에도'를 눌러요.",
+   {say:"40kg에서 16회를 했으니 60kg도 12회를 노려요. 핵스쿼트 본세트 첫 칸 '60kg × 8'을 눌러 횟수를 12로 바꾸고 '아래 세트에도'를 눌러요.",
     at:()=>{const x=gex(GD.s107(),'hacksq');const i=x.sets.findIndex(st=>st.kind!=='warmup');if(isEdit(x,i))return x.sets[i].pr===12?'.editor [data-act="below"]':'.editor [data-on="ev"][data-f="r"]';return `.setchip[data-uid="${x.uid}"][data-i="${i}"]`},
     done:()=>{const w=gex(GD.s107(),'hacksq').sets.filter(st=>st.kind!=='warmup');return w.length>0&&w.every(st=>st.pr===12)},
     auto:()=>{const s=GD.s107(),x=gex(s,'hacksq');const i=x.sets.findIndex(st=>st.kind!=='warmup');setField(s,x,i,'r',12);applyBelow(s,x,i);UI.edit=null;ensureR('prep',s);render()}},
-   {say:"워밍업은 한 세트면 된다고 봐요. 워밍업 '37.5kg × 12'를 눌러 '이 세트 빼기'를 눌러요.",
-    at:()=>{const x=gex(GD.s107(),'hacksq');const i=x.sets.findIndex(st=>st.kind==='warmup'&&st.pw===37.5);if(i<0)return '';return isEdit(x,i)?'.editor [data-act="delSet"]':`.setchip[data-uid="${x.uid}"][data-i="${i}"]`},
-    done:()=>!gex(GD.s107(),'hacksq').sets.some(st=>st.kind==='warmup'&&st.pw===37.5),
-    auto:()=>{const x=gex(GD.s107(),'hacksq');const i=x.sets.findIndex(st=>st.kind==='warmup'&&st.pw===37.5);if(i>=0){x.sets.splice(i,1);x.edited=true}UI.edit=null;render()}},
-   {say:"남은 워밍업 '25kg × 12'를 눌러 무게 35, 횟수 8로 고쳐요. 숫자 칸에 바로 써도 되고 −, +를 눌러도 돼요.",
-    at:()=>{const x=gex(GD.s107(),'hacksq');const i=x.sets.findIndex(st=>st.kind==='warmup');if(i<0)return '';if(!isEdit(x,i))return `.setchip[data-uid="${x.uid}"][data-i="${i}"]`;return x.sets[i].pw!==35?'.editor [data-on="ev"][data-f="w"]':x.sets[i].pr!==8?'.editor [data-on="ev"][data-f="r"]':'.editor [data-act="closeEdit"]'},
-    done:()=>{const w=gex(GD.s107(),'hacksq').sets.filter(st=>st.kind==='warmup');return w.length===1&&w[0].pw===35&&w[0].pr===8},
-    auto:()=>{const s=GD.s107(),x=gex(s,'hacksq');const i=x.sets.findIndex(st=>st.kind==='warmup');if(i>=0){setField(s,x,i,'w',35);setField(s,x,i,'r',8)}UI.edit=null;render()}},
+   {say:"워밍업은 한 세트면 된다고 봐요. 워밍업 '45kg × 12'를 눌러 '이 세트 빼기'를 눌러요.",
+    at:()=>{const x=gex(GD.s107(),'hacksq');const i=x.sets.findIndex(st=>st.kind==='warmup'&&st.pw===45);if(i<0)return '';return isEdit(x,i)?'.editor [data-act="delSet"]':`.setchip[data-uid="${x.uid}"][data-i="${i}"]`},
+    done:()=>!gex(GD.s107(),'hacksq').sets.some(st=>st.kind==='warmup'&&st.pw===45),
+    auto:()=>{const x=gex(GD.s107(),'hacksq');const i=x.sets.findIndex(st=>st.kind==='warmup'&&st.pw===45);if(i>=0){x.sets.splice(i,1);x.edited=true}UI.edit=null;render()}},
+   {say:"남은 워밍업 '30kg × 12'를 눌러 무게 40, 횟수 8로 고쳐요. 숫자 칸에 바로 써도 되고 −, +를 눌러도 돼요.",
+    at:()=>{const x=gex(GD.s107(),'hacksq');const i=x.sets.findIndex(st=>st.kind==='warmup');if(i<0)return '';if(!isEdit(x,i))return `.setchip[data-uid="${x.uid}"][data-i="${i}"]`;return x.sets[i].pw!==40?'.editor [data-on="ev"][data-f="w"]':x.sets[i].pr!==8?'.editor [data-on="ev"][data-f="r"]':'.editor [data-act="closeEdit"]'},
+    done:()=>{const w=gex(GD.s107(),'hacksq').sets.filter(st=>st.kind==='warmup');return w.length===1&&w[0].pw===40&&w[0].pr===8},
+    auto:()=>{const s=GD.s107(),x=gex(s,'hacksq');const i=x.sets.findIndex(st=>st.kind==='warmup');if(i>=0){setField(s,x,i,'w',40);setField(s,x,i,'r',8)}UI.edit=null;render()}},
    {say:"나머지 종목은 그대로 둬요. 저장 버튼은 없어요. 아래 왼쪽 '계획 약 N분 / 수업 60분'으로 시간이 맞는지 보고, 회원이 오면 '수업 시작 ›'을 눌러요.",
     at:()=>'.actbar [data-to="live"]',
     done:()=>onR('live',GD.s107())||GD.s107().status!=='planned',
@@ -1288,11 +1464,11 @@ const SCENES=[
     at:()=>'[data-act="cond"][data-item="fatigue"][data-v="poor"]',
     done:()=>GD.s107().cond?.fatigue==='poor',
     auto:()=>{const s=GD.s107();ensureR('live',s);s.cond=s.cond||{sleep:'normal',fatigue:'normal',soreness:'normal',pain:'none',painWhere:''};s.cond.fatigue='poor';applyCondition(s);save();render()}},
-   {say:"메인·보조 종목 숫자가 주황색으로 바뀌었어요(핵스쿼트 50kg × 12 → × 11). 주황색 핵스쿼트 칸을 눌러 까닭을 읽고 '닫기'. 여유 1개를 더 남기고, 10회가 넘는 세트라 무게 대신 횟수를 1개 줄였다고 나와요.",
+   {say:"메인·보조 종목 숫자가 주황색으로 바뀌었어요(핵스쿼트 60kg × 12 → × 11). 주황색 핵스쿼트 칸을 눌러 까닭을 읽고 '닫기'. 여유 1개를 더 남기고, 10회가 넘는 세트라 무게 대신 횟수를 1개 줄였다고 나와요.",
     at:()=>{const s=GD.s107(),x=gex(s,'hacksq');if(UI.modal&&UI.modal.type==='adj')return '.modal [data-act="closeModal"]';const i=x.sets.findIndex(st=>adjCls(st));return i<0?'':`.setchip[data-act="adj"][data-uid="${x.uid}"][data-i="${i}"]`},
     done:()=>{const x=gex(GD.s107(),'hacksq');return !!UI.flags.adjLast&&UI.flags.adjLast.startsWith(x.uid+':')&&!UI.modal},
     auto:()=>{const x=gex(GD.s107(),'hacksq');UI.flags.adjLast=x.uid+':'+x.sets.findIndex(st=>st.kind!=='warmup');UI.modal=null;render()}},
-   {say:"예시 기록에서는 10/7을 평소대로 했으니 피로를 '평소'로 되돌려요. 주황색이 사라지고 원래 숫자로 돌아와요.",
+   {say:"수첩 10/7에는 평소대로 했으니 피로를 '평소'로 되돌려요. 주황색이 사라지고 원래 숫자로 돌아와요.",
     at:()=>'[data-act="cond"][data-item="fatigue"][data-v="normal"]',
     done:()=>GD.s107().cond?.fatigue==='normal',
     auto:()=>{const s=GD.s107();s.cond.fatigue='normal';applyCondition(s);save();render()}},
@@ -1300,64 +1476,64 @@ const SCENES=[
     at:()=>'.actbar [data-act="startSession"]',
     done:()=>GD.s107().status!=='planned',
     auto:()=>ACT.startSession({sid:GD.s107().id})}]},
- {t:'장면 5. 수업 1시간, 세트마다 한 번',sub:'19:04~19:55 · 화면: 수업 · 예시 기록',
+ {t:'장면 5. 수업 1시간, 세트마다 한 번',sub:'19:04~19:55 · 화면: 수업 · 수첩 10/7 칸 그대로',
   steps:[
-   {say:"위 띠에 지금 시각, 끝까지 남은 분, 남은 종목 예상 분이 있어요(시연 시계는 세트를 누를 때마다 가요). 이너타이 1세트는 25 × 20으로 했다고 해 봐요(예시). 무게 '40'을 눌러 25, 횟수 '20-25'를 눌러 20을 넣어요. 가볍게 시작한 세트라 남은 세트는 그대로예요.",
-    at:()=>{const s=GD.s107(),x=gex(s,'inner');return atSets(s,x,[[25,20,'w']])},
-    done:()=>isSet(gex(GD.s107(),'inner').sets[0],25,20),
-    auto:()=>{const s=GD.s107();liveSet(s,gex(s,'inner'),0,25,20);UI.edit=null;render()}},
-   {say:"2세트는 횟수 '20-25'를 눌러 20을 넣고, '+ 세트'로 한 세트 더 넣어 '그대로'를 눌러요(40 × 20 × 2). 세트 줄에 '쉼 1:15'처럼 쉬는 시간이 저절로 남아요.",
-    at:()=>{const s=GD.s107(),x=gex(s,'inner');return atSets(s,x,[[25,20,'w'],[40,20,'r'],[40,20,'same']])},
-    done:()=>{const x=gex(GD.s107(),'inner');return isSet(x.sets[1],40,20)&&isSet(x.sets[2],40,20)},
-    auto:()=>{const s=GD.s107(),x=gex(s,'inner');liveSet(s,x,1,40,20);liveSet(s,x,2,40,20);UI.edit=null;render()}},
-   {say:"'다음 종목: 시티드 레그컬'을 누르고, 1세트 무게를 35로(35 × 20), 2세트 횟수를 25로(45 × 25) 넣어요.",
-    at:()=>{const s=GD.s107();return atSets(s,gex(s,'scurl'),[[35,20,'w'],[45,25,'r']])},
-    done:()=>{const x=gex(GD.s107(),'scurl');return isSet(x.sets[0],35,20)&&isSet(x.sets[1],45,25)},
-    auto:()=>{const s=GD.s107(),x=gex(s,'scurl');liveSet(s,x,0,35,20);liveSet(s,x,1,45,25);UI.edit=null;render()}},
+   {say:"위 띠에 지금 시각, 끝까지 남은 분, 남은 종목 예상 분이 있어요(시연 시계는 세트를 누를 때마다 가요). 이너타이 1세트는 수첩에 30 × 20이에요. 무게 '45'를 눌러 30, 횟수 '20-25'를 눌러 20을 넣어요. 가볍게 시작한 세트라 남은 세트는 그대로예요.",
+    at:()=>{const s=GD.s107(),x=gex(s,'inner');return atSets(s,x,[[30,20,'w']])},
+    done:()=>isSet(gex(GD.s107(),'inner').sets[0],30,20),
+    auto:()=>{const s=GD.s107();liveSet(s,gex(s,'inner'),0,30,20);UI.edit=null;render()}},
+   {say:"2세트는 횟수 '20-25'를 눌러 20을 넣고, '+ 세트'로 한 세트 더 넣어 '그대로'를 눌러요(수첩 45 × 20 × 2). 세트 줄에 '쉼 1:15'처럼 쉬는 시간이 저절로 남아요.",
+    at:()=>{const s=GD.s107(),x=gex(s,'inner');return atSets(s,x,[[30,20,'w'],[45,20,'r'],[45,20,'same']])},
+    done:()=>{const x=gex(GD.s107(),'inner');return isSet(x.sets[1],45,20)&&isSet(x.sets[2],45,20)},
+    auto:()=>{const s=GD.s107(),x=gex(s,'inner');liveSet(s,x,1,45,20);liveSet(s,x,2,45,20);UI.edit=null;render()}},
+   {say:"'다음 종목: 시티드 레그컬'을 누르고, 수첩대로 1세트 무게를 40으로(40 × 20), 2세트 횟수를 25로(50 × 25) 넣어요.",
+    at:()=>{const s=GD.s107();return atSets(s,gex(s,'scurl'),[[40,20,'w'],[50,25,'r']])},
+    done:()=>{const x=gex(GD.s107(),'scurl');return isSet(x.sets[0],40,20)&&isSet(x.sets[1],50,25)},
+    auto:()=>{const s=GD.s107(),x=gex(s,'scurl');liveSet(s,x,0,40,20);liveSet(s,x,1,50,25);UI.edit=null;render()}},
    {say:"계획 20회보다 5개 더 해서 3세트 횟수가 보라색 25회로 바뀌었어요. 보라색 꼬리표를 눌러 까닭을 읽고 '닫기'. 10회가 넘는 세트라 무게는 그대로 두고 횟수만 맞췄어요.",
     at:()=>{const s=GD.s107();return atAdj(s,gex(s,'scurl'),2)},
     done:()=>adjSeen(gex(GD.s107(),'scurl'),2)||gex(GD.s107(),'scurl').sets[2]?.done,
     auto:()=>{UI.flags.adjLast=gex(GD.s107(),'scurl').uid+':2';UI.modal=null;render()}},
-   {say:"3세트 '그대로'를 눌러요. 바뀐 숫자 45 × 25로 끝나요.",
-    at:()=>{const s=GD.s107();return atSets(s,gex(s,'scurl'),[[35,20,'w'],[45,25,'r'],[45,25,'same']])},
-    done:()=>isSet(gex(GD.s107(),'scurl').sets[2],45,25),
-    auto:()=>{const s=GD.s107();liveSet(s,gex(s,'scurl'),2,45,25);render()}},
-   {say:"'다음 종목: 핵스쿼트'. 예시로 워밍업 35kg × 8, 본세트 50kg × 12 × 3을 하다가 2세트에서 1개를 못 했다고 해 봐요. 워밍업 '그대로', 1세트 '그대로', 2세트는 횟수를 눌러 11을 넣어요. 1개 차이라 3세트는 그대로예요.",
-    at:()=>{const s=GD.s107();return atSets(s,gex(s,'hacksq'),[[35,8,'same'],[50,12,'same'],[50,11,'r']])},
-    done:()=>{const x=gex(GD.s107(),'hacksq');return isSet(x.sets[0],35,8)&&isSet(x.sets[1],50,12)&&isSet(x.sets[2],50,11)},
-    auto:()=>{const s=GD.s107(),x=gex(s,'hacksq');liveSet(s,x,0,35,8);liveSet(s,x,1,50,12);liveSet(s,x,2,50,11);UI.edit=null;render()}},
+   {say:"3세트 '그대로'를 눌러요. 바뀐 숫자 50 × 25로 끝나요.",
+    at:()=>{const s=GD.s107();return atSets(s,gex(s,'scurl'),[[40,20,'w'],[50,25,'r'],[50,25,'same']])},
+    done:()=>isSet(gex(GD.s107(),'scurl').sets[2],50,25),
+    auto:()=>{const s=GD.s107();liveSet(s,gex(s,'scurl'),2,50,25);render()}},
+   {say:"'다음 종목: 핵스쿼트'. 수첩은 \"40kg x 8, 60kg. x 12 x 3\", \"2set에서 1개를 실패\"예요. 워밍업 '그대로', 1세트 '그대로', 2세트는 횟수를 눌러 11을 넣어요. 1개 차이라 3세트는 그대로예요.",
+    at:()=>{const s=GD.s107();return atSets(s,gex(s,'hacksq'),[[40,8,'same'],[60,12,'same'],[60,11,'r']])},
+    done:()=>{const x=gex(GD.s107(),'hacksq');return isSet(x.sets[0],40,8)&&isSet(x.sets[1],60,12)&&isSet(x.sets[2],60,11)},
+    auto:()=>{const s=GD.s107(),x=gex(s,'hacksq');liveSet(s,x,0,40,8);liveSet(s,x,1,60,12);liveSet(s,x,2,60,11);UI.edit=null;render()}},
    {say:"판단 A: 회원이 힘들어해 쉬는 시간을 2분 30초에서 5분 넘게 늘려요. 앱에는 아무것도 안 눌러도 되지만, 시연에서는 시간이 지난 것을 보여 주려고 위 띠의 '시연 시계 +5분'을 눌러요.",
     at:()=>'[data-act="plusFive"]',
     done:()=>(GD.s107().extraRest||0)>=5||!!gex(GD.s107(),'hacksq').sets[3]?.done,
     auto:()=>ACT.plusFive({sid:GD.s107().id})},
    {say:"3세트 '그대로'. 세트 줄에 '쉼 7:30'이 노란색으로 남아요(계획의 2배 넘게 쉼). 오래 쉰 만큼 위 띠가 빨개졌어요: 남은 분이 남은 종목 예상 + 마무리 5분보다 5분 넘게 남지 않아요. 뒤쪽 레그 익스텐션에 '뺄 수 있음'이 붙어요.",
-    at:()=>{const s=GD.s107();return atSets(s,gex(s,'hacksq'),[[35,8,'same'],[50,12,'same'],[50,11,'r'],[50,12,'same']])},
-    done:()=>isSet(gex(GD.s107(),'hacksq').sets[3],50,12),
-    auto:()=>{const s=GD.s107();liveSet(s,gex(s,'hacksq'),3,50,12);render()}},
-   {say:"판단 B: 레그프레스 대신 원레그 핵프레스를 해요. '다음 종목: 레그프레스' → '…' → '바꾸기' → '원레그 핵프레스' → '오늘만'인 채로 '바꾸기'.",
+    at:()=>{const s=GD.s107();return atSets(s,gex(s,'hacksq'),[[40,8,'same'],[60,12,'same'],[60,11,'r'],[60,12,'same']])},
+    done:()=>isSet(gex(GD.s107(),'hacksq').sets[3],60,12),
+    auto:()=>{const s=GD.s107();liveSet(s,gex(s,'hacksq'),3,60,12);render()}},
+   {say:"판단 B: 수첩에서 레그프레스는 지우고 원레그 핵프레스를 했어요. '다음 종목: 레그프레스' → '…' → '바꾸기' → '원레그 핵프레스' → '오늘만'인 채로 '바꾸기'.",
     at:()=>{const s=GD.s107(),x=gex(s,'legpress');return atMenu(s,x,'swap',()=>UI.modal.to==='olhack'?(UI.modal.scope==='template'?'.modal [data-act="pickScope"][data-v="today"]':'.modal [data-act="doSwap"]'):'.modal [data-act="pickSwap"][data-v="olhack"]')},
     done:()=>GD.s107().exercises.find(e=>e.exId==='legpress').status==='swapped',
     auto:()=>{const s=GD.s107();ensureR('live',s);const x=s.exercises.find(e=>e.exId==='legpress');if(x.status!=='swapped'){const y=swapExercise(s,x,'olhack','today');UI.cur[s.id]=y.uid}UI.modal=null;showAsk({sid:s.id,uid:x.uid,kind:'swap'})}},
-   {say:"아래에 이유 칩이 5초 떠요. 예로 '컨디션'을 눌러요. 안 누르면 '이유 없음'으로 남고 그냥 사라져요.",
+   {say:"아래에 이유 칩이 5초 떠요. 수첩에 이유는 없어서 예로 '컨디션'을 눌러요. 안 누르면 '이유 없음'으로 남고 그냥 사라져요.",
     at:()=>atAsk('컨디션'),
     done:()=>{const x=GD.s107().exercises.find(e=>e.exId==='legpress');return x.reason==='컨디션'||!UI.ask},
     auto:()=>{const s=GD.s107();s.exercises.find(e=>e.exId==='legpress').reason='컨디션';UI.ask=null;save();render()}},
-   {say:"원레그 핵프레스는 처음이라 무게가 비어 있고 꼬리표가 '무게 찾기'예요. 1세트 무게를 눌러 15를 넣어요(예시). 남은 두 세트 무게가 보라색 15로 채워져요.",
+   {say:"원레그 핵프레스는 처음이라 무게가 비어 있고 꼬리표가 '무게 찾기'예요. 1세트 무게를 눌러 20을 넣어요(예시, 수첩에는 숫자가 없어요). 남은 두 세트 무게가 보라색 20으로 채워져요.",
     at:()=>{const s=GD.s107(),x=gex(s,'olhack');return x?atLive(s,x,0,'w'):''},
-    done:()=>{const x=gex(GD.s107(),'olhack');return !!x&&x.sets[0]?.done&&x.sets[0].aw===15},
-    auto:()=>{const s=GD.s107(),x=gex(s,'olhack');UI.cur[s.id]=x.uid;setField(s,x,0,'w',15);UI.edit=null;render()}},
+    done:()=>{const x=gex(GD.s107(),'olhack');return !!x&&x.sets[0]?.done&&x.sets[0].aw===20},
+    auto:()=>{const s=GD.s107(),x=gex(s,'olhack');UI.cur[s.id]=x.uid;setField(s,x,0,'w',20);UI.edit=null;render()}},
    {say:"한쪽씩 하느라 오래 걸렸다고 보고 '시연 시계 +5분'을 한 번 더 누른 뒤(예시), 2세트와 3세트 '그대로'를 눌러요.",
-    at:()=>{const s=GD.s107(),x=gex(s,'olhack');if(!x.sets[1]?.done&&(s.extraRest||0)<5)return '[data-act="plusFive"]';return atSets(s,x,[[15,10,'w'],[15,10,'same'],[15,10,'same']])},
-    done:()=>{const x=gex(GD.s107(),'olhack');return isSet(x.sets[1],15,10)&&isSet(x.sets[2],15,10)},
-    auto:()=>{const s=GD.s107(),x=gex(s,'olhack');if(!x.sets[1].done)ACT.plusFive({sid:s.id});liveSet(s,x,1,15,10);liveSet(s,x,2,15,10);UI.edit=null;render()}},
+    at:()=>{const s=GD.s107(),x=gex(s,'olhack');if(!x.sets[1]?.done&&(s.extraRest||0)<5)return '[data-act="plusFive"]';return atSets(s,x,[[20,10,'w'],[20,10,'same'],[20,10,'same']])},
+    done:()=>{const x=gex(GD.s107(),'olhack');return isSet(x.sets[1],20,10)&&isSet(x.sets[2],20,10)},
+    auto:()=>{const s=GD.s107(),x=gex(s,'olhack');if(!x.sets[1].done)ACT.plusFive({sid:s.id});liveSet(s,x,1,20,10);liveSet(s,x,2,20,10);UI.edit=null;render()}},
    {say:"판단 C: 원레그도 오래 걸려 남은 시간은 10분이에요. 위 띠는 여전히 빨갛고, 다음 줄 레그 익스텐션에 '뺄 수 있음'이 붙어 있어요. 앱이 빼지는 않아요. 레그 익스텐션으로 가서 '…' → '빼기'를 눌러요.",
     at:()=>{const s=GD.s107();return atRemove(s,gex(s,'legext'))},
     done:()=>gex(GD.s107(),'legext').status==='removed',
     auto:()=>{const s=GD.s107(),x=gex(s,'legext');ensureR('live',s);UI.cur[s.id]=x.uid;ACT.removeNow({sid:s.id,uid:x.uid})}},
-   {say:"시간이 모자란 때라 이유 칩 '시간'이 미리 골라져 있어요. 그대로 두면 돼요. 카드 아래 '수업 메모'에 \"쉬는 시간을 길게 가져감 (예시)\"을 적어요.",
+   {say:"시간이 모자란 때라 이유 칩 '시간'이 미리 골라져 있어요. 그대로 두면 돼요. 카드 아래 '수업 메모'에 \"쉬는 시간이 너무 필요하다.\"를 적어요(수첩 그대로).",
     at:()=>'[data-on="sMemo"]',
     done:()=>/쉬는 시간/.test(GD.s107().memo||''),
-    auto:()=>{GD.s107().memo='쉬는 시간을 길게 가져감 (예시)';save();render()}},
+    auto:()=>{GD.s107().memo='쉬는 시간이 너무 필요하다.';save();render()}},
    {say:"위쪽 '마무리'를 눌러요.",
     at:()=>'.top [data-to="summary"]',
     done:()=>onR('summary',GD.s107())||GD.s107().status==='completed',
@@ -1368,15 +1544,15 @@ const SCENES=[
     at:()=>'[data-act="raiseNext"][data-ex="scurl"]',
     done:()=>!!(ensureNext(GD.s107()).targets.scurl||{}).raised,
     auto:()=>{const s=GD.s107();ensureR('summary',s);ACT.raiseNext({sid:s.id,ex:'scurl'})}},
-   {say:"다음 목표 47.5 × 25가 들어왔어요. 트레이너가 한 번에 더 올리기로 했다고 보고 무게 칸을 55로 고쳐요(예시). 핵스쿼트는 2세트 11회라 '목표 넘음'이 없어요. 그대로 둬요.",
+   {say:"다음 목표 52.5 × 25가 들어왔어요. 수첩에서는 다음 하체에 60으로 올렸으니 무게 칸을 60으로 고쳐요. 핵스쿼트는 2세트 11회라 '목표 넘음'이 없어요. 그대로 둬요.",
     at:()=>'[data-on="nt"][data-ex="scurl"][data-f="w"]',
     done:()=>(ensureNext(GD.s107()).targets.scurl||{}).w===60,
-    auto:()=>{const t=ensureNext(GD.s107()).targets.scurl;t.w=55;save();render()}},
+    auto:()=>{const t=ensureNext(GD.s107()).targets.scurl;t.w=60;save();render()}},
    {say:"레그 익스텐션은 '시간' 때문에 뺐으니 다음 하체에 다시 들어간다고 적혀 있어요. 6번 다음에 확인할 것에 '원레그 핵프레스 시작 무게 다시 보기'를 적고 '넣기'(예시).",
     at:()=>/원레그/.test(UI.draft['nCheck-m3']||'')?'[data-act="addNote"][data-kind="check"]':'[data-d="nCheck-m3"]',
     done:()=>checks(GD.m()).some(n=>/원레그/.test(n.text)),
     auto:()=>{GD.m().notes.push({id:uid('n'),kind:'check',text:'원레그 핵프레스 시작 무게 다시 보기',created:'2026-10-07',done:false});save();render()}},
-   {say:"5번 다음 PT 날짜를 10/8 (목)로 바꿔요. 분할은 순서상 다음인 밀기예요.",
+   {say:"5번 다음 PT 날짜를 10/8 (목)로 바꿔요. 분할은 순서상 다음인 밀기예요(수첩에서도 다음 날 밀기).",
     at:()=>'[data-on="np"][data-f="date"]',
     done:()=>{const np=ensureNext(GD.s107()).np;return np.on&&np.date==='2026-10-08'&&np.tid==='t3b'},
     auto:()=>{const np=ensureNext(GD.s107()).np;Object.assign(np,{on:true,date:'2026-10-08',tid:'t3b'});save();render()}},
@@ -1384,10 +1560,10 @@ const SCENES=[
     at:()=>'.actbar [data-act="finish"]',
     done:()=>GD.s107().status==='completed',
     auto:()=>ACT.finish({sid:GD.s107().id})}]},
- {t:'장면 7. 다음 하체, 이어지는 숫자',sub:'10/12 (월) → 10/14 (수) · 예시 기록',
+ {t:'장면 7. 다음 하체, 이어지는 숫자',sub:'10/12 (월) → 10/14 (수) · 수첩 10/14 칸 그대로',
   enter(){seedLater('2026-10-08');seedLater('2026-10-09');if(!GD.sLeg())createPlanned(GD.m(),'2026-10-12','19:00','t3a');S.today='2026-10-12';save();home('today')},
   steps:[
-   {say:"10/12 (월)이에요. 10/8 밀기와 10/9 후면사슬은 예시 기록으로 채워 뒀어요. 회원이 미루자고 해요(예시). 회원 A 줄 '…' → '옮기기'.",
+   {say:"10/12 (월)이에요. 10/8 밀기와 10/9 후면사슬은 수첩 기록으로 채워 뒀어요. 회원이 미루자고 해요(예시). 이00_3 줄 '…' → '옮기기'.",
     at:()=>UI.modal&&UI.modal.type==='sessMenu'?'.modal [data-type="schedule"]':`.srow[data-sid="${GD.sLeg().id}"] .more`,
     done:()=>UI.modal&&UI.modal.type==='schedule'||GD.sLeg().date!=='2026-10-12',
     auto:()=>{home('today');UI.modal={type:'schedule',mid:'m3',sid:GD.sLeg().id};render()}},
@@ -1399,15 +1575,15 @@ const SCENES=[
     at:()=>'.top [data-act="shiftDay"][data-dir="1"]',
     done:()=>todayIso()>='2026-10-14',
     auto:()=>{S.today='2026-10-14';save();home('today')}},
-   {say:"회원 A 줄을 눌러 수업 준비를 열어요. 시티드 레그컬은 10/7에 올린 '목표 10/7' 55 × 25, 핵스쿼트는 10/7 실제값, 레그 익스텐션은 다시 들어와 있어요. 위 띠에 10/7 메모와 '원레그 핵프레스 시작 무게 다시 보기'가 떠요.",
+   {say:"이00_3 줄을 눌러 수업 준비를 열어요. 시티드 레그컬은 10/7에 올린 '목표 10/7' 60 × 25, 핵스쿼트는 10/7 실제값, 레그 익스텐션은 다시 들어와 있어요. 위 띠에 10/7 메모와 '원레그 핵프레스 시작 무게 다시 보기'가 떠요.",
     at:()=>`[data-act="openSession"][data-sid="${GD.sLeg().id}"]`,
     done:()=>onR('prep',GD.sLeg())||GD.sLeg().status!=='planned',
     auto:()=>go('prep',{sid:GD.sLeg().id})},
-   {say:"이번에는 이너타이를 하지 않기로 해요(예시). 이너타이 줄 '…' → '빼기', 이유 칩 '기타'.",
+   {say:"수첩 10/14에는 이너타이가 없어요. 이너타이 줄 '…' → '빼기', 이유 칩 '기타'.",
     at:()=>{const s=GD.sLeg(),x=gex(s,'inner');return x.status==='removed'?atAsk('기타'):atRemove(s,x)},
     done:()=>{const x=gex(GD.sLeg(),'inner');return x.status==='removed'&&(x.reason==='기타'||!UI.ask)},
     auto:()=>{const s=GD.sLeg(),x=gex(s,'inner');ensureR('prep',s);removeExercise(s,x,'기타');UI.ask=null;UI.modal=null;save();render()}},
-   {say:"레그프레스 줄 '…' → '바꾸기' → '원레그 핵프레스' → 이번에는 '루틴 틀에도' → '바꾸기'. 숫자는 10/7에 한 15 × 10으로 채워져요.",
+   {say:"레그프레스 줄 '…' → '바꾸기' → '원레그 핵프레스' → 이번에는 '루틴 틀에도' → '바꾸기'. 숫자는 10/7에 한 20 × 10으로 채워져요.",
     at:()=>{const s=GD.sLeg();return atMenu(s,s.exercises.find(e=>e.exId==='legpress'),'swap',()=>UI.modal.to!=='olhack'?'.modal [data-act="pickSwap"][data-v="olhack"]':UI.modal.scope!=='template'?'.modal [data-act="pickScope"][data-v="template"]':'.modal [data-act="doSwap"]')},
     done:()=>{const x=GD.sLeg().exercises.find(e=>e.exId==='legpress');return x.status==='swapped'&&x.scope==='template'},
     auto:()=>{const s=GD.sLeg();ensureR('prep',s);const x=s.exercises.find(e=>e.exId==='legpress');if(x.status!=='swapped')swapExercise(s,x,'olhack','template');UI.modal=null;UI.ask=null;render()}},
@@ -1415,26 +1591,26 @@ const SCENES=[
     at:()=>UI.route.name==='live'?'.actbar [data-act="startSession"]':'.actbar [data-to="live"]',
     done:()=>GD.sLeg().status!=='planned',
     auto:()=>{UI.ask=null;ACT.startSession({sid:GD.sLeg().id})}},
-   {say:"시티드 레그컬은 예시로 45 × 20, 55 × 25 × 2를 해요. 1세트를 45 × 20으로 고치고(가볍게 시작, 남은 세트는 그대로), 2·3세트는 '그대로'.",
-    at:()=>{const s=GD.sLeg();return atSets(s,gex(s,'scurl'),[[45,20,'w'],[55,25,'same'],[55,25,'same']])},
-    done:()=>{const x=gex(GD.sLeg(),'scurl');return isSet(x.sets[0],45,20)&&isSet(x.sets[1],55,25)&&isSet(x.sets[2],55,25)},
-    auto:()=>{const s=GD.sLeg(),x=gex(s,'scurl');liveSet(s,x,0,45,20);liveSet(s,x,1,55,25);liveSet(s,x,2,55,25);UI.edit=null;render()}},
-   {say:"핵스쿼트는 예시로 워밍업 35kg × 23을 해요. 워밍업 횟수를 23으로 고치고, 본세트는 '그대로' 세 번.",
-    at:()=>{const s=GD.sLeg(),x=gex(s,'hacksq');const want=[[35,23,'r']].concat(x.sets.slice(1).map(st=>[st.pw,st.pr,'same']));return atSets(s,x,want)},
-    done:()=>{const x=gex(GD.sLeg(),'hacksq');return isSet(x.sets[0],35,23)&&x.sets.every(st=>st.done)},
-    auto:()=>{const s=GD.sLeg(),x=gex(s,'hacksq');liveSet(s,x,0,35,23);x.sets.forEach((st,i)=>{if(!st.done)liveSet(s,x,i,null,null)});UI.edit=null;render()}},
-   {say:"원레그 핵프레스는 예시로 20회 × 4세트를 해요. 1세트 횟수를 20으로 넣으면, 계획 10회보다 10개 더 해서 남은 세트가 보라색 17.5 × 10으로 바뀌어요. 앱 제안일 뿐이에요. 2세트를 15 × 20으로 고쳐요.",
-    at:()=>{const s=GD.sLeg();return atSets(s,gex(s,'olhack'),[[15,20,'r'],[15,20,'w']])},
-    done:()=>{const x=gex(GD.sLeg(),'olhack');return isSet(x.sets[0],15,20)&&isSet(x.sets[1],15,20)},
-    auto:()=>{const s=GD.sLeg(),x=gex(s,'olhack');liveSet(s,x,0,15,20);liveSet(s,x,1,15,20);UI.edit=null;render()}},
-   {say:"3세트는 '원래 숫자로' 돌아가 15 × 10이에요. 3세트를 15 × 20으로 고치고, '+ 세트' → '그대로'로 4세트를 채워요.",
-    at:()=>{const s=GD.sLeg();return atSets(s,gex(s,'olhack'),[[15,20,'r'],[15,20,'w'],[15,20,'r'],[15,20,'same']])},
-    done:()=>{const x=gex(GD.sLeg(),'olhack');return [0,1,2,3].every(i=>isSet(x.sets[i],15,20))},
-    auto:()=>{const s=GD.sLeg(),x=gex(s,'olhack');[2,3].forEach(i=>liveSet(s,x,i,15,20));UI.edit=null;render()}},
-   {say:"레그 익스텐션은 예시로 40 × 25 × 2를 해요. 횟수를 25로 고치고 '+ 세트' → '그대로'.",
-    at:()=>{const s=GD.sLeg();return atSets(s,gex(s,'legext'),[[40,25,'r'],[40,25,'same']])},
-    done:()=>{const x=gex(GD.sLeg(),'legext');return isSet(x.sets[0],40,25)&&isSet(x.sets[1],40,25)},
-    auto:()=>{const s=GD.sLeg(),x=gex(s,'legext');liveSet(s,x,0,40,25);liveSet(s,x,1,40,25);UI.edit=null;render()}},
+   {say:"시티드 레그컬은 수첩에 50x20, 60x25x2예요. 1세트를 50 × 20으로 고치고(가볍게 시작, 남은 세트는 그대로), 2·3세트는 '그대로'.",
+    at:()=>{const s=GD.sLeg();return atSets(s,gex(s,'scurl'),[[50,20,'w'],[60,25,'same'],[60,25,'same']])},
+    done:()=>{const x=gex(GD.sLeg(),'scurl');return isSet(x.sets[0],50,20)&&isSet(x.sets[1],60,25)&&isSet(x.sets[2],60,25)},
+    auto:()=>{const s=GD.sLeg(),x=gex(s,'scurl');liveSet(s,x,0,50,20);liveSet(s,x,1,60,25);liveSet(s,x,2,60,25);UI.edit=null;render()}},
+   {say:"핵스쿼트는 수첩에 \"40 x 23reps, 60kg.\"이에요. 워밍업 횟수를 23으로 고치고, 본세트는 '그대로' 세 번(본세트 횟수는 수첩에 없어 예시).",
+    at:()=>{const s=GD.sLeg(),x=gex(s,'hacksq');const want=[[40,23,'r']].concat(x.sets.slice(1).map(st=>[st.pw,st.pr,'same']));return atSets(s,x,want)},
+    done:()=>{const x=gex(GD.sLeg(),'hacksq');return isSet(x.sets[0],40,23)&&x.sets.every(st=>st.done)},
+    auto:()=>{const s=GD.sLeg(),x=gex(s,'hacksq');liveSet(s,x,0,40,23);x.sets.forEach((st,i)=>{if(!st.done)liveSet(s,x,i,null,null)});UI.edit=null;render()}},
+   {say:"원레그 핵프레스는 수첩에 \"20 x 4\"(20회 × 4세트로 본 해석)예요. 1세트 횟수를 20으로 넣으면, 계획 10회보다 10개 더 해서 남은 세트가 보라색 22.5 × 10으로 바뀌어요. 앱 제안일 뿐이에요. 수첩대로 2세트를 20 × 20으로 고쳐요.",
+    at:()=>{const s=GD.sLeg();return atSets(s,gex(s,'olhack'),[[20,20,'r'],[20,20,'w']])},
+    done:()=>{const x=gex(GD.sLeg(),'olhack');return isSet(x.sets[0],20,20)&&isSet(x.sets[1],20,20)},
+    auto:()=>{const s=GD.sLeg(),x=gex(s,'olhack');liveSet(s,x,0,20,20);liveSet(s,x,1,20,20);UI.edit=null;render()}},
+   {say:"3세트는 '원래 숫자로' 돌아가 20 × 10이에요. 3세트를 20 × 20으로 고치고, '+ 세트' → '그대로'로 4세트를 채워요.",
+    at:()=>{const s=GD.sLeg();return atSets(s,gex(s,'olhack'),[[20,20,'r'],[20,20,'w'],[20,20,'r'],[20,20,'same']])},
+    done:()=>{const x=gex(GD.sLeg(),'olhack');return [0,1,2,3].every(i=>isSet(x.sets[i],20,20))},
+    auto:()=>{const s=GD.sLeg(),x=gex(s,'olhack');[2,3].forEach(i=>liveSet(s,x,i,20,20));UI.edit=null;render()}},
+   {say:"레그 익스텐션은 수첩에 30x25x2예요. 횟수를 25로 고치고 '+ 세트' → '그대로'.",
+    at:()=>{const s=GD.sLeg();return atSets(s,gex(s,'legext'),[[30,25,'r'],[30,25,'same']])},
+    done:()=>{const x=gex(GD.sLeg(),'legext');return isSet(x.sets[0],30,25)&&isSet(x.sets[1],30,25)},
+    auto:()=>{const s=GD.sLeg(),x=gex(s,'legext');liveSet(s,x,0,30,25);liveSet(s,x,1,30,25);UI.edit=null;render()}},
    {say:"'마무리'. 이너타이를 '기타'로 뺐으니 '루틴 틀도 고칠까요?'가 떠요. '예, 오늘 것으로'.",
     at:()=>UI.route.name==='summary'?'[data-act="tplAnswer"][data-v="yes"]':'.top [data-to="summary"]',
     done:()=>GD.sLeg().tplAnswer==='yes',
@@ -1446,7 +1622,7 @@ const SCENES=[
  {t:'장면 8. 추이 보고 훈련 방향 정하기',sub:'10/16 (금) · 화면: 회원 한눈에 → 추이',
   enter(){seedLater('2026-10-15');seedLater('2026-10-16');S.today='2026-10-16';save();home('today')},
   steps:[
-   {say:"몇 주에 한 번은 회원별로 흐름을 봐요. 10/15 밀기와 10/16 당기기는 예시 기록으로 채워 뒀어요. 아래 '회원' 탭을 누르고 회원 A를 눌러요.",
+   {say:"몇 주에 한 번은 회원별로 흐름을 봐요. 10/15 밀기와 10/16 당기기는 수첩 기록으로 채워 뒀어요. 아래 '회원' 탭을 누르고 이00_3을 눌러요.",
     at:()=>UI.route.name==='members'?'[data-to="member"][data-mid="m3"]':'.tabbar [data-v="members"]',
     done:()=>UI.route.name==='member'&&UI.route.mid==='m3'||UI.route.name==='trend',
     auto:()=>{home('members');go('member',{mid:'m3'})}},
@@ -1454,11 +1630,11 @@ const SCENES=[
     at:()=>'.top [data-to="trend"]',
     done:()=>UI.route.name==='trend',
     auto:()=>go('trend',{mid:'m3'})},
-   {say:"핵스쿼트가 골라져 있어요. 8/24 15kg, 8/31~9/22 35kg, 10/7·10/14 50kg이에요. 점을 눌러 그날 숫자를 봐요.",
+   {say:"핵스쿼트가 골라져 있어요. 8/24 20kg, 8/31~9/22 40kg, 10/7·10/14 60kg이에요. 점을 눌러 그날 숫자와 수첩 원문을 봐요.",
     at:()=>'.chart [data-act="trendPt"]:last-of-type',
     done:()=>UI.cur['trendPt-m3']!=null,
     auto:()=>{ensureR('trend');UI.cur['trendPt-m3']=0;render()}},
-   {say:"10/16 메모를 보고, 위 '훈련 방향 바꾸기'에서 방향 하나와 시작일을 골라 저장해요. 무엇을 고를지는 트레이너가 정해요('대신 하기'는 예시로 조절을 골라요). 앱은 원인을 판단하지 않고 데이터만 보여 줘요.",
+   {say:"10/16 메모 \"라잉 레그컬과 워킹 런지를 통한 심박수 + 체중감량 고려.\"를 보고, 위 '훈련 방향 바꾸기'에서 방향 하나와 시작일을 골라 저장해요. 무엇을 고를지는 수첩에 없어 트레이너가 정해요('대신 하기'는 예시로 조절을 골라요). 앱은 원인을 판단하지 않고 데이터만 보여 줘요.",
     at:()=>UI.modal&&UI.modal.type==='block'?'.modal [data-act="saveBlock"]':'.top [data-type="block"]',
     done:()=>GD.m().blocks.length>0,
     auto:()=>{GD.m().blocks.push({dir:'조절',focus:'심박수·체중감량 (예시)',start:'2026-10-19'});UI.modal=null;save();render()}}]}
@@ -1511,7 +1687,7 @@ function guideAfter(){
    ${cur?`<div class="row"><span class="tiny muted">노란 테두리를 눌러요.</span><span class="sp"></span><button class="btn small" data-g="auto">이 단계 대신 하기</button></div>`
      :`<div class="g-done">${last?'시나리오 끝이에요.':'이 장면은 끝났어요.'}</div>`}
    <div class="row" style="margin-top:10px">${last?'':`<button class="btn${cur?'':' primary'}" data-g="next">다음 장면 ›</button>`}<span class="sp"></span><button class="btn small ghost" data-g="restart">이 장면 처음부터</button></div>
-   <div class="g-foot">회원과 숫자는 모두 지어낸 예시예요. 뒤 장면을 고르면 앞 장면을 자동으로 채우고, 앞 장면을 고르면 처음 상태로 되돌린 뒤 그 장면까지 채워요.</div>`;
+   <div class="g-foot">숫자는 트레이너 수첩 그대로이고, 수첩에 없는 값은 (예시)로 적었어요. 뒤 장면을 고르면 앞 장면을 자동으로 채우고, 앞 장면을 고르면 처음 상태로 되돌린 뒤 그 장면까지 채워요.</div>`;
 }
 /* ---------- 그리기 ---------- */
 const routeKey=()=>UI.route.name+':'+(UI.route.sid||UI.route.mid||'');
