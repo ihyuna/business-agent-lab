@@ -280,7 +280,10 @@ MOD.sessMenu=o=>{const s=SES(o.sid),m=M(s.memberId);
   return `<h3>${esc(m.code)} · ${mdw(s.date)} ${esc(splitName(s))}</h3><div class="col" style="gap:8px">
    <div class="field"><label>오늘 메모 (카톡에서 들은 말 등, 수업 준비와 수업 시작에 다시 떠요)</label><div class="row" style="flex-wrap:nowrap">${dIn('tm-'+s.id,'예: 2주 만이라 살살 해 주세요',{grow:1})}${btn('넣기','todayMemo',{sid:s.id},'small')}</div>
      ${todayMemos(m,s).map(n=>`<div class="tiny muted">· ${esc(n.text)}</div>`).join('')}</div>
-   ${btn('옮기기','modal',{type:'schedule',mid:m.id,sid:s.id})}${btn('회원 한눈에','go',{to:'member',mid:m.id})}${btn('안 옴','markSession',{sid:s.id,v:'no_show'})}${btn('취소','markSession',{sid:s.id,v:'cancelled'})}</div>
+   <div class="row">${btn('옮기기','modal',{type:'schedule',mid:m.id,sid:s.id})}${btn('회원 한눈에','go',{to:'member',mid:m.id})}</div>
+   <div class="field" style="border-top:1px solid var(--line);padding-top:10px"><label>못 하게 됐을 때 · 사유를 고르고 누르면 오른쪽 '최근 기록'에 남아요</label>
+     <div class="row">${CX_REASONS.map(r=>`<button class="chip${(UI.draft['cx-'+s.id]||'')===r?' on':''}" data-act="draftSet" data-key="cx-${s.id}" data-v="${r}">${r}</button>`).join('')}</div>
+     <div class="row" style="margin-top:4px">${btn('취소','markSession',{sid:s.id,v:'cancelled'},'danger')}${btn('안 옴','markSession',{sid:s.id,v:'no_show'},'danger')}</div></div></div>
    <div class="row" style="justify-content:flex-end;margin-top:12px">${btn('닫기','closeModal')}</div>`};
 MOD.exMenu=o=>{const s=SES(o.sid),x=s.exercises.find(e=>e.uid===o.uid);const d={sid:s.id,uid:x.uid};
   return `<h3>${esc(EX(x.exId).name)}</h3><div class="col" style="gap:8px">

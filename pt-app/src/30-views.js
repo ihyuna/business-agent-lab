@@ -87,6 +87,9 @@ function tlBlock(s,top,h){
   const m=M(s.memberId); const l=prevDone(m,s.date)[0]; const cn=openCautions(m).length;
   const st=s.status==='in_progress'?pill('진행 중','green'):s.status==='completed'?pill('끝남','gray'):s.status!=='planned'?pill(statusLabel[s.status],'gray'):'';
   const [hh,mm]=(s.time||'0:0').split(':').map(Number); const end=`${String(hh+1).padStart(2,'0')}:${String(mm).padStart(2,'0')}`;
+  if(s.status==='cancelled'||s.status==='no_show'){const c=changes().filter(c=>c.sid===s.id&&c.kind===s.status).slice(-1)[0];
+    return `<div class="blk cx" style="top:${top}px;height:${h}px"><div style="flex:1;min-width:0"><div class="bt">${esc(s.time)}-${end} ${s.status==='cancelled'?pill('취소','red'):pill('안 옴','orange')}${c&&c.reason?' <span class="muted">'+esc(c.reason)+'</span>':''}</div>
+      <div><span class="bn">${esc(m.code)}</span> <span class="bs">· ${esc(splitName(s))}</span></div><div class="bd">계획은 다음 같은 분할로 넘어가요</div></div>${btn('되돌리기','markSession',{sid:s.id,v:'planned'},'small')}</div>`}
   return `<div class="blk srow ${memberHue(m)}" style="top:${top}px;height:${h}px" data-act="openSession" data-sid="${s.id}">
     <div style="flex:1;min-width:0"><div class="bt">${esc(s.time)}-${end} ${EXAMPLE('예시')}</div>
       <div><span class="bn">${esc(m.code)}</span> <span class="bs">· ${esc(splitName(s))}</span> ${cn?pill('주의 '+cn,'red'):''} ${st}</div>
@@ -102,10 +105,23 @@ V.today=()=>{
   const HH=78; let grid='';for(let h=h0;h<=h1;h++) grid+=`<div class="hr" style="top:${(h-h0)*HH}px"><span>${String(h).padStart(2,'0')}:00</span></div>`;
   const blocks=timed.map(s=>{const [hh,mm]=s.time.split(':').map(Number);return tlBlock(s,(hh-h0+mm/60)*HH+3,HH-6)}).join('');
   const up=S.sessions.filter(s=>s.date>d&&s.status==='planned').sort(byDate).slice(0,5);
-  const rec=S.sessions.filter(s=>s.date<=d&&(s.status==='completed'||s.status==='no_show'||s.status==='cancelled')).sort((a,b)=>byDate(b,a)).slice(0,14);
-  let lastD='';const recHTML=rec.map(s=>{const m=M(s.memberId);const hd=s.date!==lastD?`<div class="dhd">${mdw(s.date)}</div>`:'';lastD=s.date;
-    return hd+`<div class="ri" data-act="go" data-to="detail" data-sid="${s.id}">${s.status==='completed'?pill('완료','green'):pill(statusLabel[s.status],'red')}<b>${esc(m.code)}</b><span class="muted">${esc(splitName(s))}</span><span class="ago">${daysBetween(s.date,d)?daysBetween(s.date,d)+'일 전':'오늘'}</span></div>`}).join('')||'<div class="empty">기록이 없어요.</div>';
-  const legend=S.members.map(m=>`<div><i class="${memberHue(m)}" style="background:currentColor"></i>${esc(m.code)}</div>`).join('');
+  const tab=UI.cur.recentTab||'all';
+  const evDone=S.sessions.filter(s=>s.date<=d&&s.status==='completed').map(s=>({k:'done',date:s.date,s}));
+  const evCx=changes().filter(c=>c.kind!=='moved'&&SES(c.sid)&&SES(c.sid).status===c.kind).map(c=>({k:c.kind,date:c.date,s:SES(c.sid),c}));
+  const evMv=changes().filter(c=>c.kind==='moved'&&SES(c.sid)).map(c=>({k:'moved',date:c.at,s:SES(c.sid),c}));
+  const in30=e=>daysBetween(e.date,d)>=0&&daysBetween(e.date,d)<30;
+  const n30={done:evDone.filter(in30).length,cx:evCx.filter(e=>e.k==='cancelled'&&in30(e)).length,ns:evCx.filter(e=>e.k==='no_show'&&in30(e)).length};
+  const rate=n30.done+n30.cx+n30.ns?Math.round((n30.cx+n30.ns)/(n30.done+n30.cx+n30.ns)*100):0;
+  const pool=tab==='done'?evDone:tab==='cx'?evCx:tab==='moved'?evMv:[...evDone,...evCx,...evMv];
+  const rec=pool.sort((a,b)=>a.date<b.date?1:a.date>b.date?-1:(a.k==='done')-(b.k==='done')).slice(0,30);
+  const pillOf=e=>e.k==='done'?pill('완료','green'):e.k==='cancelled'?pill('취소','red'):e.k==='no_show'?pill('안 옴','orange'):pill('옮김','blue');
+  const sub=e=>e.k==='moved'?`${md(e.c.from)}${e.c.fromTime?' '+esc(e.c.fromTime):''} → ${md(e.s.date)}${e.s.time?' '+esc(e.s.time):''}`:e.c&&e.c.reason?esc(e.c.reason):esc(splitName(e.s));
+  let lastD='';const recHTML=rec.map(e=>{const m=M(e.s.memberId);const hd=e.date!==lastD?`<div class="dhd">${mdw(e.date)}</div>`:'';lastD=e.date;const ago=daysBetween(e.date,d);
+    return hd+`<div class="ri${e.k!=='done'?' alt':''}" data-act="${e.k==='done'?'go':'go'}" data-to="${e.k==='done'?'detail':'member'}" data-sid="${e.s.id}" data-mid="${m.id}">${pillOf(e)}<b>${esc(m.code)}</b><span class="muted">${sub(e)}</span><span class="ago">${ago>0?ago+'일 전':ago===0?'오늘':-ago+'일 뒤'}</span></div>`}).join('')
+    ||`<div class="empty">${tab==='cx'?"취소·안 옴이 아직 없어요. 수첩에는 취소 기록이 없어서, 수업 '…'에서 취소나 안 옴을 누르면 여기에 쌓여요.":tab==='moved'?"옮긴 수업이 아직 없어요. 수업 '…' → 옮기기를 하면 여기에 남아요.":'기록이 없어요.'}</div>`;
+  const tabs=[['all','전체'],['done','완료'],['cx','취소·안 옴',evCx.length],['moved','옮김',evMv.length]].map(([v,l,n])=>`<button class="chip${tab===v?' on':''}" data-act="recentTab" data-v="${v}">${l}${n?` <b>${n}</b>`:''}</button>`).join('');
+  const stat=`<div class="rstat"><div><span>완료</span><b>${n30.done}</b></div><div><span>취소</span><b class="r">${n30.cx}</b></div><div><span>안 옴</span><b class="o">${n30.ns}</b></div><div><span>못 한 %</span><b>${rate}%</b></div></div>`;
+  const legend=S.members.map(m=>{const nc=msessions(m.id).filter(x=>x.status==='cancelled'||x.status==='no_show').length;return `<div><i class="${memberHue(m)}" style="background:currentColor"></i>${esc(m.code)}${nc?` <span class="pill red" style="margin-left:4px">못 함 ${nc}</span>`:''}</div>`}).join('');
   const nav=`<span class="tiny muted">시연용 날짜</span>${btn('‹','shiftDay',{dir:-1},'small')}${btn('›','shiftDay',{dir:1},'small')}`;
   return topBar(`플래너 <span class="muted" style="font-weight:500;font-size:14px;margin-left:6px">${dt.getFullYear()}년 ${dt.getMonth()+1}월 ${dt.getDate()}일 ${DOW[dt.getDay()]}요일</span>`,`오늘 수업 ${list.length}`,nav,{noBack:true})+
    `<div class="planner" style="flex:1;min-height:0">
@@ -117,7 +133,7 @@ V.today=()=>{
        ${untimed.length?`<div class="untimed">${untimed.map(s=>`<div class="li click srow" data-act="openSession" data-sid="${s.id}"><span class="pill gray">시간 미정</span><b>${esc(M(s.memberId).code)}</b> ${esc(splitName(s))}<span class="sp"></span>${s.status==='planned'?`<button class="btn ghost more" data-act="modal" data-type="sessMenu" data-sid="${s.id}" aria-label="수업 메뉴">…</button>`:''}</div>`).join('')}</div>`:''}
        <div class="tl" style="height:${(h1-h0)*HH+10}px">${grid}${blocks}</div>
        ${list.length?'':'<div class="empty" style="padding:14px">오늘 잡힌 수업이 없어요.</div>'}</div>
-     <div class="pl-right"><div style="font-weight:700;font-size:13px">최근 기록</div><div class="recent">${recHTML}</div></div>
+     <div class="pl-right"><div style="font-weight:700;font-size:13px">최근 기록 <span class="tiny muted" style="font-weight:500">최근 30일</span></div>${stat}<div class="row" style="gap:4px;margin:8px 0 2px">${tabs}</div><div class="recent">${recHTML}</div></div>
    </div>`+tabBar('today');
 };
 
@@ -215,7 +231,7 @@ V.member=r=>{
   const d30=done.filter(s=>daysBetween(s.date,t)>=0&&daysBetween(s.date,t)<30).length;
   const cn=openCautions(m).length;
   const pbar=`<div class="pbar"><span class="nm">${esc(m.code)}</span>${pill('회원','blue')}${cn?pill('주의 '+cn,'red'):''}${m.goals.filter(g=>!g.end).length?pill('목표 있음','green'):''}
-    <div class="vit"><span>누적 <b>${done.length}</b>회</span><span>최근 30일 <b>${d30}</b>회</span><span>첫 기록 <b>${done[0]?md(done[0].date):'—'}</b></span><span>마지막 <b>${last?md(last.date):'—'}</b>${last?` (${daysBetween(last.date,t)}일 전)`:''}</span><span>다음 PT <b>${u?mdw(u.date):'없음'}</b>${u?' '+esc(splitName(u)):''}</span></div></div>`;
+    <div class="vit"><span>누적 <b>${done.length}</b>회</span><span>최근 30일 <b>${d30}</b>회</span>${(()=>{const c=msessions(m.id).filter(x=>x.status==='cancelled').length,n=msessions(m.id).filter(x=>x.status==='no_show').length;return `<span>취소 <b style="color:${c?'var(--bad)':'inherit'}">${c}</b> · 안 옴 <b style="color:${n?'var(--warn)':'inherit'}">${n}</b></span>`})()}<span>첫 기록 <b>${done[0]?md(done[0].date):'—'}</b></span><span>마지막 <b>${last?md(last.date):'—'}</b>${last?` (${daysBetween(last.date,t)}일 전)`:''}</span><span>다음 PT <b>${u?mdw(u.date):'없음'}</b>${u?' '+esc(splitName(u)):''}</span></div></div>`;
   const all=msessions(m.id).filter(s=>s.status!=='plan_only'||true).slice().sort((a,b)=>byDate(b,a));
   const open=UI.cur['hx-'+m.id]===undefined?(done[done.length-1]||{}).id:UI.cur['hx-'+m.id];
   const hist=all.map(s=>{const isNext=u&&s.id===u.id;const n=s.exercises.filter(x=>x.status==='done').length;

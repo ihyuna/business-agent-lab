@@ -432,3 +432,7 @@ function copyToNext(src,xs){
   }
   save(); return tgt;
 }
+/* 취소·안 옴·일정 변경 기록 (수첩에는 없음, 앱에서 누를 때만 쌓임) */
+const CX_REASONS=['회원 사정','아픔·컨디션','일·학교','연락 없음','트레이너 사정','기타'];
+function logChange(c){S.changes=S.changes||[];S.changes.push({id:uid('c'),at:todayIso(),...c})}
+const changes=()=>S.changes||[];

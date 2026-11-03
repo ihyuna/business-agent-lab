@@ -256,6 +256,13 @@ input,select,textarea{border-radius:6px;border-color:#dfe2e7}
 .tl .blk .more{margin-left:auto;color:var(--muted)}
 .tl .now{position:absolute;left:52px;right:0;border-top:1.5px solid var(--now);z-index:1}
 .tl .now::before{content:'';position:absolute;left:-4px;top:-4.5px;width:7px;height:7px;border-radius:50%;background:var(--now)}
+.tl .blk.cx{color:var(--faint);background:repeating-linear-gradient(135deg,var(--soft) 0 6px,var(--panel) 6px 12px);border:1px dashed var(--line);border-left:3px solid var(--faint);cursor:default}
+.tl .blk.cx .bn,.tl .blk.cx .bs{color:var(--faint);text-decoration:line-through}
+.rstat{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border:1px solid var(--line);border-radius:8px;margin-top:8px;overflow:hidden}
+.rstat div{padding:6px 4px;text-align:center;border-right:1px solid var(--line)} .rstat div:last-child{border-right:0}
+.rstat span{display:block;font-size:10.5px;color:var(--muted)} .rstat b{font-size:15px;font-variant-numeric:tabular-nums} .rstat b.r{color:var(--bad)} .rstat b.o{color:var(--warn)}
+.pl-right .chip{padding:2px 7px;font-size:11.5px}
+.recent .ri.alt b{text-decoration:none}
 .untimed{padding:8px 14px;border-bottom:1px solid var(--line)}
 .recent .ri{display:flex;align-items:center;gap:8px;padding:7px 0;font-size:12.5px;cursor:pointer}
 .recent .ri:hover b{color:var(--accent)}

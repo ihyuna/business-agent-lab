@@ -85,9 +85,12 @@ const ACT={
   tplDel:d=>{const t=tplOf(M(d.mid),d.tid);const [it]=t.items.splice(+d.i,1);tplTouched(t,EX(it.exId).name+' 뺌');save();render()},
   tplAdd:d=>{const t=tplOf(M(d.mid),d.tid);const exId=fv('tplAdd-'+t.id)||'hacksq';t.items.push({exId,role:fv('tplAddRole-'+t.id)||'보조',structure:'스트레이트'});tplTouched(t,EX(exId).name+' 넣음');save();render()},
   // 일정
-  markSession:d=>{const s=SES(d.sid);s.status=d.v;UI.modal=null;save();toast(`${statusLabel[d.v]}으로 남겼어요. 다음 목표와 확인할 것은 다음 수업으로 넘어가요.`)},
+  markSession:d=>{const s=SES(d.sid);const prev=s.status;s.status=d.v;UI.modal=null;
+    if(d.v==='planned'){S.changes=(S.changes||[]).filter(c=>!(c.sid===s.id&&(c.kind==='cancelled'||c.kind==='no_show')));save();return toast('되돌렸어요. 다시 예정 수업이에요.')}
+    logChange({kind:d.v,sid:s.id,mid:s.memberId,date:s.date,reason:fv('cx-'+s.id)||''});clearDraft('cx-'+s.id);save();toast(`${statusLabel[d.v]}으로 남겼어요. 다음 목표와 확인할 것은 다음 수업으로 넘어가요.`)},
+  recentTab:d=>{UI.cur.recentTab=d.v;render()},
   saveSchedule:()=>{const o=UI.modal;const m=M(o.mid);const date=fv('sc-d');if(!date)return toast('날짜를 골라 주세요');
-    if(o.sid){const s=SES(o.sid);s.date=date;s.time=fv('sc-t');UI.modal=null;clearDraft('sc-d','sc-t');save();toast('날짜만 옮겼어요. 계획은 그대로예요.')}
+    if(o.sid){const s=SES(o.sid);if(s.date!==date||(s.time||'')!==fv('sc-t'))logChange({kind:'moved',sid:s.id,mid:s.memberId,date,from:s.date,fromTime:s.time||'',toTime:fv('sc-t')||'',reason:fv('mv-r')||''});s.date=date;s.time=fv('sc-t');UI.modal=null;clearDraft('sc-d','sc-t');save();toast('날짜만 옮겼어요. 계획은 그대로예요.')}
     else{const tid=fv('sc-s');if(!tid)return toast('루틴 틀에서 분할을 먼저 만들어 주세요');createPlanned(m,date,fv('sc-t'),tid);UI.modal=null;clearDraft('sc-d','sc-t','sc-s');save();toast('잡았어요. 수업 준비를 미리 채워 뒀어요.')}},
   // 예정 루틴
   basis:d=>{UI.modal={type:'basis',sid:d.sid,uid:d.uid};UI.flags.basisSeen=true;UI.edit=null;render()},
