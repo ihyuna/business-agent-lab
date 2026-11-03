@@ -166,6 +166,79 @@ mark{background:var(--warn-soft);color:var(--ink);border-radius:3px;padding:0 1p
 .draft-row:last-child{border-bottom:0}
 #device.port .prep-row{grid-template-columns:20px 130px 150px 90px minmax(0,1fr) 36px}
 #device.port .strip{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+
+/* ===== EMR 테마 (2026-11-03, 병원 EMR 화면 느낌: 남색 머리띠, 회청색 바탕, 흰 패널 + 회색 머리줄, 촘촘한 표) ===== */
+:root{
+  --bg:#dfe5ee; --device:#eef2f7; --panel:#ffffff; --ink:#1b2533; --muted:#556275; --faint:#8592a3;
+  --line:#d3dbe6; --soft:#f3f6fa; --hd:#f0f3f8; --accent:#2862c4; --accent-soft:#e7effc; --accent-ink:#ffffff;
+  --nav:#1d2f4e; --nav-ink:#e8eef8; --nav-muted:#a9b8d0; --zebra:#f8fafc; --bar:#7aa0dc;
+  --good:#1f7a4d; --good-soft:#e3f3ea; --warn:#93620a; --warn-soft:#fcf1d8; --bad:#b4342a; --bad-soft:#fbe5e2;
+  --font:"Pretendard","IBM Plex Sans KR","Apple SD Gothic Neo","Noto Sans KR","Malgun Gothic",system-ui,sans-serif}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0f141b; --device:#141a22; --panel:#1b222c; --ink:#e3e9f1; --muted:#a3afbf; --faint:#7a8697;
+  --line:#2e3846; --soft:#222a35; --hd:#212a36; --accent:#6c9ef0; --accent-soft:#1d2c45; --accent-ink:#0b1424;
+  --nav:#0b1220; --nav-ink:#dfe7f3; --nav-muted:#8c9bb3; --zebra:#1e2530; --bar:#5d86c9;
+  --good:#5cc08b; --good-soft:#163024; --warn:#e3b24f; --warn-soft:#352b17; --bad:#ef8a7d; --bad-soft:#3b201d}}
+:root[data-theme="dark"]{
+  --bg:#0f141b; --device:#141a22; --panel:#1b222c; --ink:#e3e9f1; --muted:#a3afbf; --faint:#7a8697;
+  --line:#2e3846; --soft:#222a35; --hd:#212a36; --accent:#6c9ef0; --accent-soft:#1d2c45; --accent-ink:#0b1424;
+  --nav:#0b1220; --nav-ink:#dfe7f3; --nav-muted:#8c9bb3; --zebra:#1e2530; --bar:#5d86c9;
+  --good:#5cc08b; --good-soft:#163024; --warn:#e3b24f; --warn-soft:#352b17; --bad:#ef8a7d; --bad-soft:#3b201d}
+#device{font-size:14px;border-radius:14px}
+.top{background:var(--nav);color:var(--nav-ink);border-bottom:0;min-height:52px;padding:8px 14px}
+.top h1{font-size:17px;letter-spacing:-.01em}
+.top .sub,.top .muted,.top .tiny{color:var(--nav-muted)}
+.top .btn{background:transparent;color:var(--nav-ink);border-color:rgba(255,255,255,.22);border-radius:5px}
+.top .btn:hover{border-color:var(--nav-ink);background:rgba(255,255,255,.06)}
+.top .btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+.top .btn.ghost{color:var(--nav-ink)}
+.scroll{padding:12px 14px 20px}
+.btn{border-radius:5px;padding:6px 11px}
+.btn.small{border-radius:4px}
+.actbar .btn.primary{border-radius:6px}
+.card{border-radius:6px;padding:0 12px 10px;box-shadow:0 1px 2px rgba(20,35,60,.05)}
+.card>h2:first-child{margin:0 -12px 8px;padding:7px 12px;background:var(--hd);border-bottom:1px solid var(--line);border-radius:6px 6px 0 0;font-size:13px;font-weight:700;color:var(--ink)}
+.card>h2:first-child::before{content:'';width:3px;height:12px;background:var(--accent);border-radius:2px}
+.card>:first-child:not(h2){margin-top:10px}
+.strip .card{padding:0 10px 8px}
+.strip .card>h2:first-child{margin:0 -10px 6px;padding:5px 10px;font-size:12px;color:var(--muted)}
+.chip{border-radius:4px}
+.tag{border-radius:3px;font-weight:600;font-size:11.5px;padding:1px 6px;border:1px solid transparent}
+.tag.warn{border-color:color-mix(in srgb,var(--warn) 35%,transparent)} .tag.bad{border-color:color-mix(in srgb,var(--bad) 35%,transparent)} .tag.good{border-color:color-mix(in srgb,var(--good) 35%,transparent)}
+th{background:var(--hd);color:var(--muted);font-size:12px;font-weight:600;border-bottom:1px solid var(--line);border-top:1px solid var(--line);white-space:nowrap}
+td{font-size:13px}
+tbody tr:nth-child(even),table tr:nth-child(even) td{background:var(--zebra)}
+tr.click:hover td{background:var(--accent-soft)}
+.li{padding:8px 4px}
+.li.click:hover{background:var(--accent-soft)}
+.tabbar{background:var(--panel)}
+.tabbar button.on{box-shadow:inset 0 3px 0 var(--accent);background:var(--accent-soft)}
+.setchip{border-radius:4px}
+.editor,.note-box,.prep-hist{border-radius:5px}
+.banner{border-radius:5px}
+input,select,textarea{border-radius:4px}
+#guide{border-radius:8px}
+/* 회원 정보 띠 (EMR 환자 띠) */
+.pband{display:flex;align-items:stretch;background:var(--panel);border:1px solid var(--line);border-radius:6px;margin-bottom:10px;overflow:hidden}
+.pband .who{display:flex;flex-direction:column;justify-content:center;padding:8px 14px;background:var(--accent-soft);border-right:1px solid var(--line);min-width:120px}
+.pband .who b{font-size:18px;color:var(--accent)}
+.pband .kvc{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));flex:1}
+.pband .kvc div{padding:7px 10px;border-right:1px solid var(--line)}
+.pband .kvc div:last-child{border-right:0}
+.pband dt{font-size:11px;color:var(--muted);margin-bottom:2px}
+.pband dd{margin:0;font-weight:600;font-size:14px;font-variant-numeric:tabular-nums;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pband dd .u{font-size:11px;color:var(--muted);font-weight:500;margin-left:2px}
+#device.port .pband .kvc{grid-template-columns:repeat(3,minmax(0,1fr))}
+#device.port .pband .kvc div:nth-child(3){border-right:0}
+#device.port .pband .kvc div:nth-child(-n+3){border-bottom:1px solid var(--line)}
+.dtable td,.dtable th{padding:5px 8px}
+.dtable td.memo{color:var(--muted);font-size:12px;max-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.chart .bar{fill:var(--bar)} .chart .bar.last{fill:var(--accent)}
+.chart g.hov:hover .bar{fill:var(--accent)}
+.chart .axis{stroke:var(--line)}
+.chart .lbl{fill:var(--ink);font-weight:600;font-size:11px}
+.charts2{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:12px}
+#device.port .charts2{grid-template-columns:minmax(0,1fr)}
 @media (prefers-reduced-motion: reduce){*{transition:none!important;animation:none!important}}
 </style>
 <div id="shell">

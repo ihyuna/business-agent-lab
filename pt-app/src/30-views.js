@@ -116,21 +116,64 @@ function goalCard(m){
     <hr class="sep"><div class="row"><span>훈련 방향: <b>${blockText(b)}</b></span><span class="sp"></span>${btn('바꾸기','modal',{type:'block',mid:m.id},'small')}</div>
     ${m.blocks.length>1?`<div class="tiny muted">지난 방향: ${m.blocks.slice(0,-1).reverse().map(blockText).join(' / ')}</div>`:''}</div>`;
 }
+/* EMR 환자 띠: 숫자는 수업 기록에서 센 값만 */
+function memberBand(m){
+  const done=completed(m.id); const u=upcoming(m.id); const last=done[done.length-1]; const t=todayIso();
+  const d30=done.filter(s=>daysBetween(s.date,t)>=0&&daysBetween(s.date,t)<30).length;
+  const cnt={};for(const s of done){const n=splitName(s);cnt[n]=(cnt[n]||0)+1}
+  const top=Object.entries(cnt).sort((a,b)=>b[1]-a[1]).slice(0,2).map(x=>x[0]).join(' · ')||'—';
+  const kv=(k,v)=>`<div><dt>${k}</dt><dd>${v}</dd></div>`;
+  return `<div class="pband" role="group" aria-label="회원 요약"><div class="who"><b>${esc(m.code)}</b><span class="tiny muted">회원</span></div><dl class="kvc" style="margin:0">
+    ${kv('첫 기록',done[0]?md(done[0].date):'—')}
+    ${kv('누적 수업',`${done.length}<span class="u">회</span>`)}
+    ${kv('최근 30일',`${d30}<span class="u">회</span>`)}
+    ${kv('마지막 수업',last?`${md(last.date)} <span class="u">${daysBetween(last.date,t)}일 전</span>`:'—')}
+    ${kv('다음 PT',u?`${md(u.date)} <span class="u">${esc(splitName(u))}</span>`:'없음')}
+    ${kv('자주 한 분할',esc(top))}</dl></div>`;
+}
+/* 월별 수업 횟수 막대 (한 계열, 마지막 달만 강조, 막대마다 툴팁) */
+function monthBars(m,W,H){
+  const done=completed(m.id); if(!done.length) return '<div class="empty">수업 기록이 없어요.</div>';
+  const by={};for(const s of done){const k=s.date.slice(0,7);by[k]=(by[k]||0)+1}
+  const a=done[0].date.slice(0,7), b=done[done.length-1].date.slice(0,7); const ks=[];let [y,mo]=a.split('-').map(Number);
+  while(true){const k=`${y}-${String(mo).padStart(2,'0')}`;ks.push(k);if(k===b||ks.length>24)break;mo++;if(mo>12){mo=1;y++}}
+  const padL=28,padR=8,padT=16,padB=22; const max=Math.max(...ks.map(k=>by[k]||0)); const ymax=Math.max(4,Math.ceil(max/4)*4);
+  const bw=(W-padL-padR)/ks.length; const Y=v=>padT+(1-v/ymax)*(H-padT-padB);
+  let g='';for(let v=0;v<=ymax;v+=ymax/4) g+=`<line class="axis" x1="${padL}" x2="${W-padR}" y1="${Y(v)}" y2="${Y(v)}"/><text x="${padL-5}" y="${Y(v)+4}" text-anchor="end">${v}</text>`;
+  const bars=ks.map((k,i)=>{const v=by[k]||0;const x=padL+i*bw+Math.max(2,bw*.18);const w=Math.max(4,bw-2*Math.max(2,bw*.18));const h=Y(0)-Y(v);
+    const r=Math.min(4,w/2,h);const last=i===ks.length-1;
+    const path=v?`M${x},${Y(0)} V${Y(v)+r} Q${x},${Y(v)} ${x+r},${Y(v)} H${x+w-r} Q${x+w},${Y(v)} ${x+w},${Y(v)+r} V${Y(0)} Z`:'';
+    return `<g class="hov"><rect x="${padL+i*bw}" y="${padT}" width="${bw}" height="${H-padT-padB}" fill="transparent"/>${v?`<path class="bar${last?' last':''}" d="${path}"/>`:''}${(last||v===max)&&v?`<text class="lbl" x="${x+w/2}" y="${Y(v)-4}" text-anchor="middle">${v}</text>`:''}<text x="${x+w/2}" y="${H-6}" text-anchor="middle">${Number(k.slice(5))}월</text><title>${k.slice(0,4)}년 ${Number(k.slice(5))}월 · 수업 ${v}회</title></g>`}).join('');
+  return `<svg class="chart" width="100%" viewBox="0 0 ${W} ${H}" role="img" aria-label="월별 수업 횟수">${g}${bars}</svg>`;
+}
+/* 메인 종목 최고 무게 미니 추이 */
+function mainTrend(m,W,H){
+  const cnt={};for(const s of completed(m.id))for(const x of s.exercises)if(x.status==='done'&&x.role==='메인'&&topSet(x))cnt[x.exId]=(cnt[x.exId]||0)+1;
+  const ex=Object.keys(cnt).sort((a,b)=>cnt[b]-cnt[a])[0]; if(!ex) return {ex:null,svg:'<div class="empty">메인 종목 무게 기록이 없어요.</div>'};
+  const ser=trendSeries(m,ex).slice(-12); const pts=ser.map(o=>({date:o.s.date,v:o.t.w,label:`${md(o.s.date)} ${ftop(o.t,ex)}`}));
+  return {ex,svg:`<div style="overflow:hidden">${chartSVG(pts,W,H,p=>fw(p.v,ex)).replace(/data-act="trendPt"/g,"").replace('<svg class="chart" width="'+W+'" height="'+H+'"',`<svg class="chart" width="100%" viewBox="0 0 ${W} ${H}"`)}</div>`};
+}
 V.member=r=>{
-  const m=M(r.mid); const u=upcoming(m.id); const done=completed(m.id); const recent=done.slice(-3).reverse();
+  const m=M(r.mid); const u=upcoming(m.id); const done=completed(m.id); const recent=done.slice(-5).reverse();
   let next;
   if(u){
     const ip=u.status==='in_progress';
-    next=`<div class="row"><div style="flex:1"><div style="font-size:20px;font-weight:600">${mdw(u.date)} ${esc(u.time||'')}</div><div class="muted">${esc(splitName(u))}${u.goal?' · 오늘 목표: '+esc(u.goal):''}</div></div>${ip?'<span class="tag good">진행 중</span>':''}
+    next=`<div class="row"><div style="flex:1"><div style="font-size:18px;font-weight:700">${mdw(u.date)} ${esc(u.time||'')}</div><div class="muted small">${esc(splitName(u))}${u.goal?' · 오늘 목표: '+esc(u.goal):''}</div></div>${ip?'<span class="tag good">진행 중</span>':''}
       ${ip?btn('이어서 하기','openSession',{sid:u.id},'primary'):btn('수업 준비','openSession',{sid:u.id},'primary')+`<button class="btn ghost more" data-act="modal" data-type="sessMenu" data-sid="${u.id}" aria-label="수업 메뉴">…</button>`}</div>`;
   } else next=`<div class="row"><span class="muted">잡힌 수업이 없어요.</span><span class="sp"></span>${btn('다음 PT 잡기','modal',{type:'schedule',mid:m.id},'primary')}</div>`;
-  const rec=recent.map(s=>`<div class="li click" data-act="go" data-to="detail" data-sid="${s.id}"><div style="width:76px" class="num">${mdw(s.date)}</div><div style="flex:1;min-width:0"><b>${esc(splitName(s))}</b> <span class="tiny muted">${s.exercises.filter(x=>x.status==='done').map(x=>EX(x.exId).name).join(', ')}</span>${s.memo?`<div class="tiny muted">메모: ${esc(s.memo)}</div>`:''}</div><span class="faint">›</span></div>`).join('')||'<div class="empty">아직 수업 기록이 없어요.</div>';
+  const mainOf=s=>{const x=s.exercises.find(e=>e.status==='done'&&e.role==='메인')||s.exercises.find(e=>e.status==='done');const t=x&&topSet(x);return x?`${esc(EX(x.exId).name)}${t?` <b class="num">${ftop(t,x.exId)}</b>`:''}`:'—'};
+  const rec=recent.map(s=>`<tr class="click" data-act="go" data-to="detail" data-sid="${s.id}"><td class="num">${mdw(s.date)}</td><td><b>${esc(splitName(s))}</b></td><td class="num">${s.exercises.filter(x=>x.status==='done').length}</td><td>${mainOf(s)}</td><td class="memo" title="${esc(s.memo||'')}">${esc(s.memo||'')}</td></tr>`).join('');
+  const W=UI.orient==='land'?520:700; const mt=mainTrend(m,W,150);
   return topBar(esc(m.code),'회원 한눈에',
       btn('추이','go',{to:'trend',mid:m.id})+btn('수업 기록','go',{to:'history',mid:m.id})+btn('루틴 틀','go',{to:'templates',mid:m.id})+btn('회원 정보','go',{to:'memberEdit',mid:m.id}))+
-    `<div class="scroll" data-sk="main"><div class="card" style="margin-bottom:12px"><h2>다음 PT</h2>${next}</div><div class="grid2"><div class="col">
-      ${cautionCard(m)}${checkCard(m)}</div>
-      <div class="col">${goalCard(m)}<div class="card"><h2>최근 수업 3회</h2><div class="list">${rec}</div>${done.length>3?btn(`수업 기록 ${done.length}회 모두 보기`,'go',{to:'history',mid:m.id},'ghost small'):''}</div>
-      ${notesCard(m,['general','lifestyle','diet','self_train','personality'],'메모')}</div></div></div>`;
+    `<div class="scroll" data-sk="main">${memberBand(m)}
+     <div class="grid2" style="margin-bottom:12px"><div class="card"><h2>다음 PT</h2>${next}</div>${goalCard(m)}</div>
+     <div class="charts2" style="margin-bottom:12px"><div class="card"><h2>월별 수업 횟수</h2>${monthBars(m,W,150)}</div>
+       <div class="card"><h2>메인 종목 최고 무게${mt.ex?` <span class="tiny muted" style="font-weight:500">${esc(EX(mt.ex).name)} · 최근 12회</span>`:''}</h2>${mt.svg}</div></div>
+     <div class="card" style="margin-bottom:12px"><h2>최근 수업 ${recent.length}회</h2>${rec?`<table class="dtable" style="table-layout:fixed"><colgroup><col style="width:92px"><col style="width:96px"><col style="width:48px"><col style="width:220px"><col></colgroup><tr><th>날짜</th><th>분할</th><th>종목</th><th>메인 종목 최고</th><th>메모</th></tr>${rec}</table>`:'<div class="empty">아직 수업 기록이 없어요.</div>'}
+       ${done.length>5?btn(`수업 기록 ${done.length}회 모두 보기`,'go',{to:'history',mid:m.id},'ghost small'):''}</div>
+     <div class="grid2"><div class="col">${cautionCard(m)}${checkCard(m)}</div>
+      <div class="col">${notesCard(m,['general','lifestyle','diet','self_train','personality'],'메모')}</div></div></div>`;
 };
 
 /* ---------- 회원 정보 ---------- */
