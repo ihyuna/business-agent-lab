@@ -14,7 +14,7 @@ const isNum=v=>typeof v==='number'&&Number.isFinite(v);
 const firstNum=v=>{if(isNum(v))return v;const m=String(v??'').match(/\d+(\.\d+)?/);return m?Number(m[0]):null};
 
 /* ---------- 상태 ---------- */
-const KEY='pt-mvp-proto-v3';
+const KEY='pt-mvp-proto-v3.1';
 let S=null;
 const UI={ask:null,route:{name:'today'},stack:[],modal:null,draft:{},toast:null,orient:'land',fit:true,timer:null,cur:{},open:{},search:'',edit:null,flags:{}};
 const todayIso=()=>(S&&S.today)||'2026-10-07';
@@ -56,9 +56,17 @@ function buildSeed(){
       templates:sm.templates.map(t=>({id:t.id,name:t.name,items:t.items.map(([exId,role,structure])=>({exId,role,structure:structure||'스트레이트'})),versions:[{date:'',note:'수첩 목록에서 만듦'}]}))};
     st.members.push(m);
     for(const ss of sm.sessions) seedSession(m,ss);
-    if(sm.next) createPlanned(m,sm.next.d,sm.next.time,sm.next.t);
+    for(const n of [].concat(sm.next||[])) createPlanned(m,n.d,n.time,n.t);
   }
   return st;
+}
+/* 다른 회원의 10/7 뒤 수첩 기록: 시연 날짜가 그날을 지나면 넣는다. 같은 날 계획 수업이 있으면 기록으로 바꾼다 */
+function seedOthers(upTo){
+  for(const [mid,list] of Object.entries(OTHERS_LATER)){const m=M(mid);if(!m)continue;
+    for(const ss of list){if(ss.d>=upTo)continue;
+      const p=S.sessions.find(s=>s.memberId===mid&&s.date===ss.d&&s.status==='planned');if(p)S.sessions.splice(S.sessions.indexOf(p),1);
+      if(S.sessions.some(s=>s.memberId===mid&&s.date===ss.d&&s.seeded))continue;
+      seedSession(m,ss)}}
 }
 function seedSession(m,ss){
       const s={id:uid('s'),memberId:m.id,date:ss.d,time:'',templateId:ss.t,status:ss.planOnly?'plan_only':'completed',cond:null,cautionChecks:{},goal:'',memo:ss.memo||'',observations:[],nextTargets:clone(ss.targets||{}),seeded:true,exercises:[]};

@@ -196,7 +196,7 @@ const SCENES=[
     done:()=>GD.s107().status==='completed',
     auto:()=>ACT.finish({sid:GD.s107().id})}]},
  {t:'장면 7. 다음 하체, 이어지는 숫자',sub:'10/12 (월) → 10/14 (수) · 수첩 10/14 칸 그대로',
-  enter(){seedLater('2026-10-08');seedLater('2026-10-09');if(!GD.sLeg())createPlanned(GD.m(),'2026-10-12','19:00','t3a');S.today='2026-10-12';save();home('today')},
+  enter(){seedLater('2026-10-08');seedLater('2026-10-09');if(!GD.sLeg())createPlanned(GD.m(),'2026-10-12','19:00','t3a');S.today='2026-10-12';seedOthers(S.today);save();home('today')},
   steps:[
    {say:"10/12 (월)이에요. 10/8 밀기와 10/9 후면사슬은 수첩 기록으로 채워 뒀어요. 회원이 미루자고 해요(예시). 이00_3 줄 '…' → '옮기기'.",
     at:()=>UI.modal&&UI.modal.type==='sessMenu'?'.modal [data-type="schedule"]':`.srow[data-sid="${GD.sLeg().id}"] .more`,
@@ -255,7 +255,7 @@ const SCENES=[
     done:()=>GD.sLeg().status==='completed',
     auto:()=>{const s=GD.sLeg();Object.assign(ensureNext(s).np,{on:true,date:'2026-10-15',tid:'t3b'});ACT.finish({sid:s.id})}}]},
  {t:'장면 8. 추이 보고 훈련 방향 정하기',sub:'10/16 (금) · 화면: 회원 한눈에 → 추이',
-  enter(){seedLater('2026-10-15');seedLater('2026-10-16');S.today='2026-10-16';save();home('today')},
+  enter(){seedLater('2026-10-15');seedLater('2026-10-16');S.today='2026-10-16';seedOthers(S.today);save();home('today')},
   steps:[
    {say:"몇 주에 한 번은 회원별로 흐름을 봐요. 10/15 밀기와 10/16 당기기는 수첩 기록으로 채워 뒀어요. 아래 '회원' 탭을 누르고 이00_3을 눌러요.",
     at:()=>UI.route.name==='members'?'[data-to="member"][data-mid="m3"]':'.tabbar [data-v="members"]',
