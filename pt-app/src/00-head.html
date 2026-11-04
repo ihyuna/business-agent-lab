@@ -325,6 +325,46 @@ input,select,textarea{border-radius:6px;border-color:#dfe2e7}
 #device.port .sec3{grid-template-columns:minmax(0,1fr)}
 #device.port .sec3>div{border-right:0;border-bottom:1px solid var(--line)}
 @media (prefers-reduced-motion: reduce){*{transition:none!important;animation:none!important}}
+
+/* 끝난 수업 회색, 변화 그래프, 근육 지도 (D76) */
+.tl .blk.fin{color:var(--faint);background:var(--soft);border-left-color:var(--line)}
+.tl .blk.fin .bn,.tl .blk.fin .bs{color:var(--muted)}
+.tl .blk.fin .bd{color:var(--faint)}
+.pl-key{display:flex;flex-wrap:wrap;gap:4px 10px;margin-top:8px;font-size:11.5px;color:var(--muted)}
+.pl-key i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:4px;vertical-align:-1px}
+.pl-key .k-todo{background:var(--accent-soft);border-left:3px solid var(--accent)}
+.pl-key .k-fin{background:var(--soft);border-left:3px solid var(--line)}
+.pl-key .k-cx{background:repeating-linear-gradient(135deg,var(--soft) 0 3px,var(--panel) 3px 6px);border:1px dashed var(--line)}
+:root{--mus0:#eceff2;--mus1:#f6d3c9;--mus2:#eda38f;--mus3:#dd6b4f;--mus4:#b8432a;--musbase:#f6f7f8;--musline:#c9d0d6}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--mus0:#2c333b;--mus1:#4a2c25;--mus2:#7a3a2a;--mus3:#b5523a;--mus4:#ec7a5c;--musbase:#262c33;--musline:#3d464f}}
+:root[data-theme="dark"]{--mus0:#2c333b;--mus1:#4a2c25;--mus2:#7a3a2a;--mus3:#b5523a;--mus4:#ec7a5c;--musbase:#262c33;--musline:#3d464f}
+.musmap{display:block;margin:2px auto 4px}
+.musmap .bbase>*{fill:var(--musbase);stroke:var(--musline);stroke-width:1}
+.musmap [data-m]{stroke:var(--panel);stroke-width:1}
+.musmap .ml{font-size:10px;fill:var(--faint)}
+.muslegend{display:flex;align-items:center;gap:3px;font-size:11px;color:var(--muted);margin:2px 0 4px}
+.muslegend i{width:16px;height:8px;border-radius:2px;display:inline-block}
+.muslegend .sp{flex:1}
+.mustop{display:flex;flex-wrap:wrap;gap:3px 10px;font-size:12px;margin-bottom:4px}
+.mustop b{font-weight:700}
+.dsum{display:flex;gap:12px;font-size:12px;color:var(--muted);margin-bottom:6px}
+.dsum .up b{color:var(--good)} .dsum .dn b{color:var(--bad)}
+.dchart .dl{display:grid;grid-template-columns:minmax(0,118px) 120px 44px minmax(0,1fr);gap:8px;align-items:center;font-size:12.5px;padding:3px 0;border-bottom:1px solid var(--soft)}
+.dchart .dn-name{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:600}
+.dchart .dbar{position:relative;height:12px;background:linear-gradient(var(--line),var(--line)) 50% 0/1px 100% no-repeat}
+.dchart .dbar i{position:absolute;top:2px;height:8px;border-radius:2px}
+.dchart .dbar i.up{background:var(--good)} .dchart .dbar i.dn{background:var(--bad)}
+.dchart .deq{position:absolute;left:calc(50% - 3px);top:3px;width:6px;height:6px;border-radius:50%;background:var(--faint)}
+.dchart .dfirst{position:absolute;left:50%;transform:translateX(-50%);font-size:10.5px;color:var(--faint);top:-1px}
+.dchart .dv{font-weight:700;font-variant-numeric:tabular-nums;text-align:right}
+.dchart .dv.up{color:var(--good)} .dchart .dv.dn{color:var(--bad)} .dchart .dv.eq{color:var(--faint)}
+.dchart .dlab{color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sumviz{display:grid;grid-template-columns:minmax(0,1fr) 200px;gap:14px;align-items:start}
+.sumviz .dchart .dl{grid-template-columns:minmax(0,1fr) 80px 44px;row-gap:0}
+.sumviz .dchart .dlab{grid-column:1/-1;font-size:11.5px}
+.untimed .srow.fin{background:var(--soft);color:var(--faint);border-left:3px solid var(--line);padding-left:8px}
+.untimed .srow.fin b{color:var(--muted)}
+.untimed .srow.todo{border-left:3px solid var(--accent);padding-left:8px;background:var(--accent-soft)}
 </style>
 <div id="shell">
   <div id="bar">

@@ -90,6 +90,7 @@ const ACT={
     if(d.v==='planned'){S.changes=(S.changes||[]).filter(c=>!(c.sid===s.id&&(c.kind==='cancelled'||c.kind==='no_show')));save();return toast('되돌렸어요. 다시 예정 수업이에요.')}
     logChange({kind:d.v,sid:s.id,mid:s.memberId,date:s.date,reason:fv('cx-'+s.id)||''});clearDraft('cx-'+s.id);save();toast(`${statusLabel[d.v]}으로 남겼어요. 다음 목표와 확인할 것은 다음 수업으로 넘어가요.`)},
   setExampleCx:d=>{S.settings.exampleCx=d.v==='1';if(S.settings.exampleCx)addExampleCx();else removeExampleCx();save();render()},
+  musRange:d=>{UI.cur['mus-'+d.mid]=d.v;render()},
   recentTab:d=>{UI.cur.recentTab=d.v;render()},
   saveSchedule:()=>{const o=UI.modal;const m=M(o.mid);const date=fv('sc-d');if(!date)return toast('날짜를 골라 주세요');
     if(o.sid){const s=SES(o.sid);if(s.date!==date||(s.time||'')!==fv('sc-t'))logChange({kind:'moved',sid:s.id,mid:s.memberId,date,from:s.date,fromTime:s.time||'',toTime:fv('sc-t')||'',reason:fv('mv-r')||''});s.date=date;s.time=fv('sc-t');UI.modal=null;clearDraft('sc-d','sc-t');save();toast('날짜만 옮겼어요. 계획은 그대로예요.')}

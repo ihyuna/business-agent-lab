@@ -123,6 +123,7 @@ V.summary=r=>{
        <div style="margin-top:4px">${btn(UI.open['freeT']?'글 접기':'다음 목표를 글로 남기기 ▾','toggle',{t:'freeT'},'small ghost')}</div>${UI.open['freeT']?free:''}</div>
      <div class="card"><h2><span class="n">5</span>다음 PT</h2><div class="row" style="margin-bottom:6px">${chips([['1','잡기'],['0','나중에']],np.on?'1':'0','npOn',{sid:s.id})}</div>
        ${np.on?`<div class="row">${bIn('np',np.date,{sid:s.id,f:'date'},{type:'date',w:160})}${bIn('np',np.time,{sid:s.id,f:'time'},{type:'time',w:120})}${bSel('np',m.templates.map(t=>[t.id,t.name]),np.tid,{sid:s.id,f:'tid'},{w:120})}</div><div class="tiny muted" style="margin-top:4px">분할은 순서대로 다음 것을 골라 뒀어요. 끝내면 그 분할의 수업 준비를 미리 채워요.</div>`:''}</div>
+     <div class="card"><h2>오늘 변화와 쓴 근육 <span class="tiny muted">지난번과 비교</span></h2><div class="sumviz"><div>${deltaChart(m,s)}</div><div>${muscleBlock([s],170,'오늘')}</div></div></div>
      ${cands.length?`<div class="card"><h2><span class="n">7</span>주의사항으로 올릴 것 <span class="tiny muted">올릴지는 트레이너가 정해요</span></h2><div class="list">${candRows}</div></div>`:''}
     </div></div></div>`+
    actBar(btn('‹ 수업으로','go',{to:'live',sid:s.id}),'<span class="tiny muted" style="margin-right:8px">아무것도 안 눌러도 수업 기록은 저장돼요.</span>'+btn('끝내기','finish',{sid:s.id},'primary'));
@@ -189,6 +190,7 @@ V.detail=r=>{
    `<div class="scroll" data-sk="main">
     ${s.cond||s.goal||s.memo||nt.length?`<div class="card" style="margin-bottom:10px"><dl class="kv">${s.goal?`<dt>오늘 목표</dt><dd>${esc(s.goal)}</dd>`:''}${s.cond?`<dt>컨디션</dt><dd>${condLine(s.cond)}</dd>`:''}${s.memo?`<dt>수업 메모</dt><dd>${esc(s.memo)}</dd>`:''}${(s.observations||[]).length?`<dt>관찰</dt><dd>${s.observations.map(o=>lab(OBS,o.kind)+(o.dir==='up'?' 좋아짐':' 나빠짐')).join(', ')}</dd>`:''}${nt.length?`<dt>다음 목표</dt><dd>${esc(nt.join(' / '))}</dd>`:''}</dl></div>`:''}
     <div class="card"><table><tr><th>#</th><th>종목</th><th>계획</th><th>실제</th><th>메모 · 수첩 원문</th></tr>${rows}</table>
+    ${s.status==='completed'?`<div class="sumviz" style="margin-top:10px;border-top:1px solid var(--line);padding-top:10px"><div><div class="small" style="font-weight:700;margin-bottom:6px">지난번과 비교</div>${deltaChart(m,s)}</div><div><div class="small" style="font-weight:700;margin-bottom:6px">쓴 근육</div>${muscleBlock([s],190,'이 수업')}</div></div>`:''}
     ${Object.keys(parts).length?`<div class="tiny muted" style="margin-top:6px">부위별 본세트 수: ${Object.entries(parts).map(([p,n])=>`${p} ${n}`).join(', ')} · 볼륨 ${sessionVolume(s).toLocaleString()}</div>`:''}</div></div>`;
 };
 

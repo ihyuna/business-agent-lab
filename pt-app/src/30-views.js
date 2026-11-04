@@ -85,12 +85,13 @@ function miniCal(d){
 }
 function tlBlock(s,top,h){
   const m=M(s.memberId); const l=prevDone(m,s.date)[0]; const cn=openCautions(m).length;
-  const st=s.status==='in_progress'?pill('진행 중','green'):s.status==='completed'?pill('끝남','gray'):s.status!=='planned'?pill(statusLabel[s.status],'gray'):'';
+  const st=s.status==='in_progress'?pill('진행 중','green'):s.status==='completed'?'<span class="pill gray">✓ 끝남</span>':s.status!=='planned'?pill(statusLabel[s.status],'gray'):'';
   const [hh,mm]=(s.time||'0:0').split(':').map(Number); const end=`${String(hh+1).padStart(2,'0')}:${String(mm).padStart(2,'0')}`;
   if(s.status==='cancelled'||s.status==='no_show'){const c=changes().filter(c=>c.sid===s.id&&c.kind===s.status).slice(-1)[0];
     return `<div class="blk cx" style="top:${top}px;height:${h}px"><div style="flex:1;min-width:0"><div class="bt">${esc(s.time)}-${end} ${s.status==='cancelled'?pill('취소','red'):pill('안 옴','orange')}${s.example?' '+EXAMPLE('예시'):''}${c&&c.reason?' <span class="muted">'+esc(c.reason)+'</span>':''}</div>
       <div><span class="bn">${esc(m.code)}</span> <span class="bs">· ${esc(splitName(s))}</span></div><div class="bd">계획은 다음 같은 분할로 넘어가요</div></div>${btn('되돌리기','markSession',{sid:s.id,v:'planned'},'small')}</div>`}
-  return `<div class="blk srow ${memberHue(m)}" style="top:${top}px;height:${h}px" data-act="openSession" data-sid="${s.id}">
+  const fin=s.status==='completed';
+  return `<div class="blk srow ${fin?'fin':memberHue(m)}" style="top:${top}px;height:${h}px" data-act="openSession" data-sid="${s.id}">
     <div style="flex:1;min-width:0"><div class="bt">${esc(s.time)}-${end} ${EXAMPLE('예시')}</div>
       <div><span class="bn">${esc(m.code)}</span> <span class="bs">· ${esc(splitName(s))}</span> ${cn?pill('주의 '+cn,'red'):''} ${st}</div>
       <div class="bd">${s.goal?'오늘 목표: '+esc(s.goal)+' · ':''}${l?`마지막 수업 <b>${daysBetween(l.date,s.date)}일 전</b> (${md(l.date)} ${esc(splitName(l))})`:'첫 수업'}</div>
@@ -126,11 +127,11 @@ V.today=()=>{
   return topBar(`플래너 <span class="muted" style="font-weight:500;font-size:14px;margin-left:6px">${dt.getFullYear()}년 ${dt.getMonth()+1}월 ${dt.getDate()}일 ${DOW[dt.getDay()]}요일</span>`,`오늘 수업 ${list.length}`,nav,{noBack:true})+
    `<div class="planner" style="flex:1;min-height:0">
      <div class="pl-left">${miniCal(d)}
-       <div class="pl-sec">회원 ${S.members.length}</div><div class="legend2">${legend}</div><div class="tiny faint" style="margin-top:4px">못 함 = 오늘까지 취소·안 옴 횟수</div>
+       <div class="pl-sec">회원 ${S.members.length}</div><div class="legend2">${legend}</div><div class="tiny faint" style="margin-top:4px">못 함 = 오늘까지 취소·안 옴 횟수</div><div class="pl-key"><span><i class="k-todo"></i>남은 수업</span><span><i class="k-fin"></i>끝난 수업</span><span><i class="k-cx"></i>취소·안 옴</span></div>
        ${up.length?`<div class="pl-sec">다가오는 수업</div>${up.map(s=>`<div class="li click srow small" data-act="openSession" data-sid="${s.id}" style="padding:6px 0"><div style="flex:1"><b>${md(s.date)}</b> ${esc(M(s.memberId).code)} <span class="muted">${esc(splitName(s))}</span></div><button class="btn ghost more" data-act="modal" data-type="sessMenu" data-sid="${s.id}" aria-label="수업 메뉴">…</button></div>`).join('')}`:''}
        <div class="tiny faint" style="margin-top:12px">시간은 예시예요. 다른 회원 기록은 수첩 날짜 그대로예요.</div></div>
      <div class="pl-mid" data-sk="main"><div class="pl-colhd">PT 수업 <span class="n">${list.length}</span></div>
-       ${untimed.length?`<div class="untimed">${untimed.map(s=>`<div class="li click srow" data-act="openSession" data-sid="${s.id}"><span class="pill gray">시간 미정</span><b>${esc(M(s.memberId).code)}</b> ${esc(splitName(s))}<span class="sp"></span>${s.status==='planned'?`<button class="btn ghost more" data-act="modal" data-type="sessMenu" data-sid="${s.id}" aria-label="수업 메뉴">…</button>`:''}</div>`).join('')}</div>`:''}
+       ${untimed.length?`<div class="untimed">${untimed.map(s=>`<div class="li click srow ${s.status==='completed'?'fin':'todo'}" data-act="openSession" data-sid="${s.id}"><span class="pill gray">시간 미정</span><b>${esc(M(s.memberId).code)}</b> ${esc(splitName(s))}<span class="sp"></span>${s.status==='completed'?'<span class="pill gray">✓ 끝남</span>':s.status==='planned'?'<span class="pill blue">남음</span>':''}${s.status==='planned'?`<button class="btn ghost more" data-act="modal" data-type="sessMenu" data-sid="${s.id}" aria-label="수업 메뉴">…</button>`:''}</div>`).join('')}</div>`:''}
        <div class="tl" style="height:${(h1-h0)*HH+10}px">${grid}${blocks}</div>
        ${list.length?'':'<div class="empty" style="padding:14px">오늘 잡힌 수업이 없어요.</div>'}</div>
      <div class="pl-right"><div style="font-weight:700;font-size:13px">최근 기록 <span class="tiny muted" style="font-weight:500">최근 30일</span></div>${stat}<div class="row" style="gap:4px;margin:8px 0 2px">${tabs}</div><div class="recent">${recHTML}</div></div>
@@ -256,12 +257,15 @@ V.member=r=>{
       <div class="cl-mid" data-sk="main">
         <div class="box"><div class="bh">다음 PT</div><div class="bb">${next}</div></div>
         <div class="box"><div class="sec3">${cautionSec(m)}${checkSec(m)}${goalSec(m)}</div></div>
+        ${last?`<div class="box"><div class="bh">지난 PT 변화 <span class="muted" style="font-weight:500">${mdw(last.date)} · ${esc(splitName(last))}</span><span class="sp"></span>${btn('수업 상세','go',{to:'detail',sid:last.id},'ghost small')}</div><div class="bb">${deltaChart(m,last)}</div></div>`:''}
         <div class="box"><div class="bh">최근 수업 ${recent.length}회<span class="sp"></span>${done.length>5?btn(`전체 ${done.length}회`,'go',{to:'history',mid:m.id},'ghost small'):''}</div>
           ${rec?`<table class="dtable" style="table-layout:fixed"><colgroup><col style="width:84px"><col style="width:120px"><col style="width:210px"><col></colgroup><tr><th>날짜</th><th>분할</th><th>메인 종목 최고</th><th>메모</th></tr>${rec}</table>`:'<div class="empty" style="padding:10px 12px">아직 수업 기록이 없어요.</div>'}</div>
       </div>
       <div class="cl-right">
         <h3>월별 수업 횟수</h3>${monthBars(m,262,130)}
         <h3>메인 종목 최고 무게 ${mt.ex?`<span class="tiny muted" style="font-weight:500">${esc(EX(mt.ex).name)}</span>`:''}</h3>${mt.svg}
+        <h3>쓴 근육 <span class="sp"></span>${chips([['last','지난 PT'],['d30','최근 30일']],UI.cur['mus-'+m.id]||'last','musRange',{mid:m.id})}</h3>
+        ${(()=>{const rg=UI.cur['mus-'+m.id]||'last';const ss=rg==='last'?(last?[last]:[]):done.filter(s=>daysBetween(s.date,t)>=0&&daysBetween(s.date,t)<30);return muscleBlock(ss,238,rg==='last'?'지난 PT':'최근 30일')})()}
         <h3>메모</h3>${notes.map(n=>`<div class="li small" style="align-items:flex-start">${pill(NOTE_KINDS[n.kind],'gray')}<div style="flex:1">${esc(n.text)}</div>${btn('지우기','delNote',{mid:m.id,id:n.id},'small ghost')}</div>`).join('')||'<div class="empty">없어요.</div>'}
         <div class="row" style="margin-top:6px;flex-wrap:nowrap">${dSel('nKind-'+m.id,['general','lifestyle','diet','self_train','personality'].map(k=>[k,NOTE_KINDS[k]]),'general',{w:84})}${dIn('nText-'+m.id,'메모',{grow:1})}${btn('넣기','addNote',{mid:m.id},'small')}</div>
       </div></div>`;
