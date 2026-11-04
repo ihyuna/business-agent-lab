@@ -256,7 +256,7 @@ input,select,textarea{border-radius:6px;border-color:#dfe2e7}
 .tl .blk .more{margin-left:auto;color:var(--muted)}
 .tl .now{position:absolute;left:52px;right:0;border-top:1.5px solid var(--now);z-index:1}
 .tl .now::before{content:'';position:absolute;left:-4px;top:-4.5px;width:7px;height:7px;border-radius:50%;background:var(--now)}
-.tl .blk.cx{color:var(--faint);background:repeating-linear-gradient(135deg,var(--soft) 0 6px,var(--panel) 6px 12px);border:1px dashed var(--line);border-left:3px solid var(--faint);cursor:default}
+.tl .blk.cx{color:var(--faint);background:var(--bad-soft);border:1px solid var(--line);border-left:3px solid var(--bad);cursor:default}
 .tl .blk.cx .bn,.tl .blk.cx .bs{color:var(--faint);text-decoration:line-through}
 .rstat{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border:1px solid var(--line);border-radius:8px;margin-top:8px;overflow:hidden}
 .rstat div{padding:6px 4px;text-align:center;border-right:1px solid var(--line)} .rstat div:last-child{border-right:0}
@@ -266,6 +266,10 @@ input,select,textarea{border-radius:6px;border-color:#dfe2e7}
 .untimed{padding:8px 14px;border-bottom:1px solid var(--line)}
 .recent .ri{display:flex;align-items:center;gap:8px;padding:7px 0;font-size:12.5px;cursor:pointer}
 .recent .ri:hover b{color:var(--accent)}
+.recent .ri.fin{background:var(--soft);border-radius:6px;padding:7px 8px;margin:2px 0;color:var(--faint)}
+.recent .ri.fin b{color:var(--muted);font-weight:600}
+.recent .ri.fin .muted{color:var(--faint)}
+.recent .ri .muted{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
 .recent .ri .ago{margin-left:auto;color:var(--faint);font-size:11.5px;white-space:nowrap}
 .recent .dhd{font-size:11.5px;color:var(--faint);margin:10px 0 2px}
 /* 회원 = 차트 화면 */
@@ -334,7 +338,7 @@ input,select,textarea{border-radius:6px;border-color:#dfe2e7}
 .pl-key i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:4px;vertical-align:-1px}
 .pl-key .k-todo{background:var(--accent-soft);border-left:3px solid var(--accent)}
 .pl-key .k-fin{background:var(--soft);border-left:3px solid var(--line)}
-.pl-key .k-cx{background:repeating-linear-gradient(135deg,var(--soft) 0 3px,var(--panel) 3px 6px);border:1px dashed var(--line)}
+.pl-key .k-cx{background:var(--bad-soft);border-left:3px solid var(--bad)}
 :root{--mus0:#e3e7eb;--mus1:#f6d3c9;--mus2:#eda38f;--mus3:#dd6b4f;--mus4:#b8432a;--musbase:#cfd5db;--musline:#ffffff}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--mus0:#2c333b;--mus1:#4a2c25;--mus2:#7a3a2a;--mus3:#b5523a;--mus4:#ec7a5c;--musbase:#3a424b;--musline:#1b2026}}
 :root[data-theme="dark"]{--mus0:#2c333b;--mus1:#4a2c25;--mus2:#7a3a2a;--mus3:#b5523a;--mus4:#ec7a5c;--musbase:#3a424b;--musline:#1b2026}
@@ -2021,10 +2025,10 @@ V.today=()=>{
   const rate=n30.done+n30.cx+n30.ns?Math.round((n30.cx+n30.ns)/(n30.done+n30.cx+n30.ns)*100):0;
   const pool=tab==='done'?evDone:tab==='cx'?evCx:tab==='moved'?evMv:[...evDone,...evCx,...evMv];
   const rec=pool.sort((a,b)=>a.date<b.date?1:a.date>b.date?-1:(a.k==='done')-(b.k==='done')).slice(0,30);
-  const pillOf=e=>e.k==='done'?pill('완료','green'):e.k==='cancelled'?pill('취소','red'):e.k==='no_show'?pill('안 옴','orange'):pill('옮김','blue');
+  const pillOf=e=>e.k==='done'?'<span class="pill gray">✓ 완료</span>':e.k==='cancelled'?pill('취소','red'):e.k==='no_show'?pill('안 옴','orange'):pill('옮김','blue');
   const sub=e=>e.k==='moved'?`${md(e.c.from)}${e.c.fromTime?' '+esc(e.c.fromTime):''} → ${md(e.s.date)}${e.s.time?' '+esc(e.s.time):''}`:e.c&&e.c.reason?esc(e.c.reason):esc(splitName(e.s));
   let lastD='';const recHTML=rec.map(e=>{const m=M(e.s.memberId);const hd=e.date!==lastD?`<div class="dhd">${mdw(e.date)}</div>`:'';lastD=e.date;const ago=daysBetween(e.date,d);
-    return hd+`<div class="ri${e.k!=='done'?' alt':''}" data-act="${e.k==='done'?'go':'go'}" data-to="${e.k==='done'?'detail':'member'}" data-sid="${e.s.id}" data-mid="${m.id}">${pillOf(e)}<b>${esc(m.code)}</b>${e.s.example?EXAMPLE('예시'):''}<span class="muted">${sub(e)}</span><span class="ago">${ago>0?ago+'일 전':ago===0?'오늘':-ago+'일 뒤'}</span></div>`}).join('')
+    return hd+`<div class="ri${e.k!=='done'?' alt':' fin'}" data-act="${e.k==='done'?'go':'go'}" data-to="${e.k==='done'?'detail':'member'}" data-sid="${e.s.id}" data-mid="${m.id}">${pillOf(e)}<b>${esc(m.code)}</b>${e.s.example?EXAMPLE('예시'):''}<span class="muted">${sub(e)}</span><span class="ago">${ago>0?ago+'일 전':ago===0?'오늘':-ago+'일 뒤'}</span></div>`}).join('')
     ||`<div class="empty">${tab==='cx'?"취소·안 옴이 아직 없어요. 수업 '…'에서 취소나 안 옴을 누르면 여기에 쌓여요. 예시는 설정에서 다시 켤 수 있어요.":tab==='moved'?"옮긴 수업이 아직 없어요. 수업 '…' → 옮기기를 하면 여기에 남아요.":'기록이 없어요.'}</div>`;
   const tabs=[['all','전체'],['done','완료'],['cx','취소·안 옴',evCx.length],['moved','옮김',evMv.length]].map(([v,l,n])=>`<button class="chip${tab===v?' on':''}" data-act="recentTab" data-v="${v}">${l}${n?` <b>${n}</b>`:''}</button>`).join('');
   const stat=`<div class="rstat"><div><span>완료</span><b>${n30.done}</b></div><div><span>취소</span><b class="r">${n30.cx}</b></div><div><span>안 옴</span><b class="o">${n30.ns}</b></div><div><span>못 한 %</span><b>${rate}%</b></div></div>`;

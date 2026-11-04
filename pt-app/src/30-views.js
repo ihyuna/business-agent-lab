@@ -115,10 +115,10 @@ V.today=()=>{
   const rate=n30.done+n30.cx+n30.ns?Math.round((n30.cx+n30.ns)/(n30.done+n30.cx+n30.ns)*100):0;
   const pool=tab==='done'?evDone:tab==='cx'?evCx:tab==='moved'?evMv:[...evDone,...evCx,...evMv];
   const rec=pool.sort((a,b)=>a.date<b.date?1:a.date>b.date?-1:(a.k==='done')-(b.k==='done')).slice(0,30);
-  const pillOf=e=>e.k==='done'?pill('완료','green'):e.k==='cancelled'?pill('취소','red'):e.k==='no_show'?pill('안 옴','orange'):pill('옮김','blue');
+  const pillOf=e=>e.k==='done'?'<span class="pill gray">✓ 완료</span>':e.k==='cancelled'?pill('취소','red'):e.k==='no_show'?pill('안 옴','orange'):pill('옮김','blue');
   const sub=e=>e.k==='moved'?`${md(e.c.from)}${e.c.fromTime?' '+esc(e.c.fromTime):''} → ${md(e.s.date)}${e.s.time?' '+esc(e.s.time):''}`:e.c&&e.c.reason?esc(e.c.reason):esc(splitName(e.s));
   let lastD='';const recHTML=rec.map(e=>{const m=M(e.s.memberId);const hd=e.date!==lastD?`<div class="dhd">${mdw(e.date)}</div>`:'';lastD=e.date;const ago=daysBetween(e.date,d);
-    return hd+`<div class="ri${e.k!=='done'?' alt':''}" data-act="${e.k==='done'?'go':'go'}" data-to="${e.k==='done'?'detail':'member'}" data-sid="${e.s.id}" data-mid="${m.id}">${pillOf(e)}<b>${esc(m.code)}</b>${e.s.example?EXAMPLE('예시'):''}<span class="muted">${sub(e)}</span><span class="ago">${ago>0?ago+'일 전':ago===0?'오늘':-ago+'일 뒤'}</span></div>`}).join('')
+    return hd+`<div class="ri${e.k!=='done'?' alt':' fin'}" data-act="${e.k==='done'?'go':'go'}" data-to="${e.k==='done'?'detail':'member'}" data-sid="${e.s.id}" data-mid="${m.id}">${pillOf(e)}<b>${esc(m.code)}</b>${e.s.example?EXAMPLE('예시'):''}<span class="muted">${sub(e)}</span><span class="ago">${ago>0?ago+'일 전':ago===0?'오늘':-ago+'일 뒤'}</span></div>`}).join('')
     ||`<div class="empty">${tab==='cx'?"취소·안 옴이 아직 없어요. 수업 '…'에서 취소나 안 옴을 누르면 여기에 쌓여요. 예시는 설정에서 다시 켤 수 있어요.":tab==='moved'?"옮긴 수업이 아직 없어요. 수업 '…' → 옮기기를 하면 여기에 남아요.":'기록이 없어요.'}</div>`;
   const tabs=[['all','전체'],['done','완료'],['cx','취소·안 옴',evCx.length],['moved','옮김',evMv.length]].map(([v,l,n])=>`<button class="chip${tab===v?' on':''}" data-act="recentTab" data-v="${v}">${l}${n?` <b>${n}</b>`:''}</button>`).join('');
   const stat=`<div class="rstat"><div><span>완료</span><b>${n30.done}</b></div><div><span>취소</span><b class="r">${n30.cx}</b></div><div><span>안 옴</span><b class="o">${n30.ns}</b></div><div><span>못 한 %</span><b>${rate}%</b></div></div>`;
