@@ -48,3 +48,7 @@ node test/check.js   # 장면 1~7을 한 단계씩 돌리며 시간 띠·색 표
 ```
 
 테스트는 Playwright와 Chromium이 필요합니다. `check.js`는 `smoke.js`가 만든 `test/page.html`을 쓰므로 `smoke.js`를 먼저 돌립니다.
+
+## 사용한 외부 자료
+
+- 근육 지도의 사람 그림 좌표(`src/15-body.js`)는 [react-body-highlighter](https://github.com/giavinh79/react-body-highlighter) v2.0.5 (MIT License, Copyright (c) 2020 GV79)의 그림 데이터에서 숫자만 옮겼습니다.

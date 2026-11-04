@@ -24,30 +24,20 @@ function muscleLoad(sessions){const load={},by={},none=new Set();
     if(!mm){none.add(EX(x.exId).name);continue}
     for(const [k,w] of Object.entries(mm)){load[k]=(load[k]||0)+n*w;(by[k]=by[k]||{})[EX(x.exId).name]=((by[k]||{})[EX(x.exId).name]||0)+n}}
   return {load,by,none:[...none]}}
-/* 사람 그림: 앞·뒤. 원래 그린 단순 도형이다 */
-const BODY_BASE=x=>`<g transform="translate(${x},0)" class="bbase"><circle cx="60" cy="18" r="11"/><rect x="54" y="27" width="12" height="10" rx="3"/><rect x="36" y="38" width="48" height="86" rx="16"/>
- <rect x="22" y="44" width="16" height="74" rx="8"/><rect x="82" y="44" width="16" height="74" rx="8"/><rect x="40" y="118" width="19" height="118" rx="9"/><rect x="61" y="118" width="19" height="118" rx="9"/></g>`;
-const FRONT_PARTS=[['traps','M50 38 L60 34 L70 38 L66 44 L54 44 Z'],['frontdelt','','ell',33,52,8,8],['frontdelt','','ell',87,52,8,8],
- ['sidedelt','','ell',26,56,4.5,9],['sidedelt','','ell',94,56,4.5,9],['chest','','ell',49,61,11,9],['chest','','ell',71,61,11,9],
- ['biceps','','ell',30,78,6,12],['biceps','','ell',90,78,6,12],['abs','','rect',52,73,16,40,5],['abs','','ell',42,96,4,13],['abs','','ell',78,96,4,13],
- ['quads','','ell',49,158,9,27],['quads','','ell',71,158,9,27],['adductor','','ell',57,146,3.5,16],['adductor','','ell',63,146,3.5,16],
- ['calves','','ell',49,210,6,17],['calves','','ell',71,210,6,17]];
-const BACK_PARTS=[['traps','M60 34 L78 46 L68 60 L60 84 L52 60 L42 46 Z'],['reardelt','','ell',33,52,8,8],['reardelt','','ell',87,52,8,8],
- ['lats','M44 60 L56 66 L57 98 L46 92 L40 74 Z'],['lats','M76 60 L64 66 L63 98 L74 92 L80 74 Z'],['lowback','','rect',53,96,14,24,5],
- ['triceps','','ell',30,80,6,13],['triceps','','ell',90,80,6,13],['glutes','','ell',50,132,10,11],['glutes','','ell',70,132,10,11],
- ['hams','','ell',50,166,9,24],['hams','','ell',70,166,9,24],['calves','','ell',50,208,7.5,18],['calves','','ell',70,208,7.5,18]];
-function partSVG(p,ox,fill,title){const [k,d,t,a,b,c,e,r]=p;const ttl=`<title>${esc(title)}</title>`;
-  if(t==='ell')return `<ellipse cx="${a+ox}" cy="${b}" rx="${c}" ry="${e}" style="fill:${fill}" data-m="${k}">${ttl}</ellipse>`;
-  if(t==='rect')return `<rect x="${a+ox}" y="${b}" width="${c}" height="${e}" rx="${r||0}" style="fill:${fill}" data-m="${k}">${ttl}</rect>`;
-  return `<path d="${d}" transform="translate(${ox},0)" style="fill:${fill}" data-m="${k}">${ttl}</path>`}
+/* 사람 그림: 그림 영역(15-body.js) → 우리 근육 값. 어깨 옆은 앞·뒤 어깨에 반씩, 승모는 등 위에도 반 */
+const REGION={CHEST:{chest:1},OBLIQUES:{abs:1},ABS:{abs:1},BICEPS:{biceps:1},TRICEPS:{triceps:1},FRONT_DELTOIDS:{frontdelt:1,sidedelt:.5},BACK_DELTOIDS:{reardelt:1,sidedelt:.5},
+  ABDUCTORS:{adductor:1},QUADRICEPS:{quads:1},CALVES:{calves:1},LEFT_SOLEUS:{calves:1},RIGHT_SOLEUS:{calves:1},TRAPEZIUS:{traps:1},UPPER_BACK:{lats:1,traps:.5},
+  LOWER_BACK:{lowback:1},GLUTEAL:{glutes:1},ABDUCTOR:{glutes:1},HAMSTRING:{hams:1}};
 function muscleMapSVG(ml,W){
-  const max=Math.max(0,...Object.values(ml.load));const lvl=v=>!v||!max?0:Math.min(4,Math.ceil(v/max*4));
-  const fill=k=>{const l=lvl(ml.load[k]);return l?`var(--mus${l})`:'var(--mus0)'};
-  const tip=k=>`${MUSCLES[k]} ${ml.load[k]?Math.round(ml.load[k]*10)/10+'세트':'안 씀'}${ml.by[k]?' · '+Object.entries(ml.by[k]).map(([n,c])=>`${n} ${c}`).join(', '):''}`;
-  const draw=(parts,ox)=>parts.map(p=>partSVG(p,ox,fill(p[0]),tip(p[0]))).join('');
-  const H=Math.round(W*244/250);
-  return `<svg class="musmap" viewBox="0 0 250 244" width="${W}" height="${H}" role="img" aria-label="근육별로 쓴 세트 수">${BODY_BASE(0)}${BODY_BASE(130)}${draw(FRONT_PARTS,0)}${draw(BACK_PARTS,130)}
-    <text x="60" y="243" text-anchor="middle" class="ml">앞</text><text x="190" y="243" text-anchor="middle" class="ml">뒤</text></svg>`}
+  const rv=r=>{const m=REGION[r];if(!m)return 0;let v=0;for(const [k,w] of Object.entries(m))v+=(ml.load[k]||0)*w;return v};
+  const all=[...BODY_FRONT,...BODY_BACK].map(([r])=>rv(r));const max=Math.max(0,...all);
+  const lvl=v=>!v||!max?0:Math.min(4,Math.ceil(v/max*4));
+  const tip=r=>{const m=REGION[r];if(!m)return '';return Object.keys(m).map(k=>`${MUSCLES[k]} ${ml.load[k]?Math.round(ml.load[k]*10)/10+'세트':'안 씀'}${ml.by[k]?' ('+Object.entries(ml.by[k]).map(([n,c])=>`${n} ${c}`).join(', ')+')':''}`).join(' / ')};
+  const draw=(data,ox)=>`<g transform="translate(${ox},0)">${data.map(([r,ps])=>{const l=REGION[r]?lvl(rv(r)):-1;const t=tip(r);
+    return ps.map(pt=>`<polygon points="${pt}" class="${l<0?'mb':'mu'}" style="fill:var(${l<0?'--musbase':'--mus'+l})">${t?`<title>${esc(t)}</title>`:''}</polygon>`).join('')}).join('')}</g>`;
+  const H=Math.round(W*212/210);
+  return `<svg class="musmap" viewBox="0 0 210 212" width="${W}" height="${H}" role="img" aria-label="근육별로 쓴 세트 수">${draw(BODY_FRONT,0)}${draw(BODY_BACK,110)}
+    <text x="50" y="210" text-anchor="middle" class="ml">앞</text><text x="160" y="210" text-anchor="middle" class="ml">뒤</text></svg>`}
 function muscleBlock(sessions,W,label){const ml=muscleLoad(sessions);const top=Object.entries(ml.load).sort((a,b)=>b[1]-a[1]);
   const max=top.length?top[0][1]:0;
   if(!top.length)return `<div class="empty">${label||'기록'}에 근육으로 셀 종목이 없어요.</div>`;
