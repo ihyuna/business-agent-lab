@@ -88,7 +88,7 @@ function tlBlock(s,top,h){
   const st=s.status==='in_progress'?pill('진행 중','green'):s.status==='completed'?pill('끝남','gray'):s.status!=='planned'?pill(statusLabel[s.status],'gray'):'';
   const [hh,mm]=(s.time||'0:0').split(':').map(Number); const end=`${String(hh+1).padStart(2,'0')}:${String(mm).padStart(2,'0')}`;
   if(s.status==='cancelled'||s.status==='no_show'){const c=changes().filter(c=>c.sid===s.id&&c.kind===s.status).slice(-1)[0];
-    return `<div class="blk cx" style="top:${top}px;height:${h}px"><div style="flex:1;min-width:0"><div class="bt">${esc(s.time)}-${end} ${s.status==='cancelled'?pill('취소','red'):pill('안 옴','orange')}${c&&c.reason?' <span class="muted">'+esc(c.reason)+'</span>':''}</div>
+    return `<div class="blk cx" style="top:${top}px;height:${h}px"><div style="flex:1;min-width:0"><div class="bt">${esc(s.time)}-${end} ${s.status==='cancelled'?pill('취소','red'):pill('안 옴','orange')}${s.example?' '+EXAMPLE('예시'):''}${c&&c.reason?' <span class="muted">'+esc(c.reason)+'</span>':''}</div>
       <div><span class="bn">${esc(m.code)}</span> <span class="bs">· ${esc(splitName(s))}</span></div><div class="bd">계획은 다음 같은 분할로 넘어가요</div></div>${btn('되돌리기','markSession',{sid:s.id,v:'planned'},'small')}</div>`}
   return `<div class="blk srow ${memberHue(m)}" style="top:${top}px;height:${h}px" data-act="openSession" data-sid="${s.id}">
     <div style="flex:1;min-width:0"><div class="bt">${esc(s.time)}-${end} ${EXAMPLE('예시')}</div>
@@ -117,8 +117,8 @@ V.today=()=>{
   const pillOf=e=>e.k==='done'?pill('완료','green'):e.k==='cancelled'?pill('취소','red'):e.k==='no_show'?pill('안 옴','orange'):pill('옮김','blue');
   const sub=e=>e.k==='moved'?`${md(e.c.from)}${e.c.fromTime?' '+esc(e.c.fromTime):''} → ${md(e.s.date)}${e.s.time?' '+esc(e.s.time):''}`:e.c&&e.c.reason?esc(e.c.reason):esc(splitName(e.s));
   let lastD='';const recHTML=rec.map(e=>{const m=M(e.s.memberId);const hd=e.date!==lastD?`<div class="dhd">${mdw(e.date)}</div>`:'';lastD=e.date;const ago=daysBetween(e.date,d);
-    return hd+`<div class="ri${e.k!=='done'?' alt':''}" data-act="${e.k==='done'?'go':'go'}" data-to="${e.k==='done'?'detail':'member'}" data-sid="${e.s.id}" data-mid="${m.id}">${pillOf(e)}<b>${esc(m.code)}</b><span class="muted">${sub(e)}</span><span class="ago">${ago>0?ago+'일 전':ago===0?'오늘':-ago+'일 뒤'}</span></div>`}).join('')
-    ||`<div class="empty">${tab==='cx'?"취소·안 옴이 아직 없어요. 수첩에는 취소 기록이 없어서, 수업 '…'에서 취소나 안 옴을 누르면 여기에 쌓여요.":tab==='moved'?"옮긴 수업이 아직 없어요. 수업 '…' → 옮기기를 하면 여기에 남아요.":'기록이 없어요.'}</div>`;
+    return hd+`<div class="ri${e.k!=='done'?' alt':''}" data-act="${e.k==='done'?'go':'go'}" data-to="${e.k==='done'?'detail':'member'}" data-sid="${e.s.id}" data-mid="${m.id}">${pillOf(e)}<b>${esc(m.code)}</b>${e.s.example?EXAMPLE('예시'):''}<span class="muted">${sub(e)}</span><span class="ago">${ago>0?ago+'일 전':ago===0?'오늘':-ago+'일 뒤'}</span></div>`}).join('')
+    ||`<div class="empty">${tab==='cx'?"취소·안 옴이 아직 없어요. 수업 '…'에서 취소나 안 옴을 누르면 여기에 쌓여요. 예시는 설정에서 다시 켤 수 있어요.":tab==='moved'?"옮긴 수업이 아직 없어요. 수업 '…' → 옮기기를 하면 여기에 남아요.":'기록이 없어요.'}</div>`;
   const tabs=[['all','전체'],['done','완료'],['cx','취소·안 옴',evCx.length],['moved','옮김',evMv.length]].map(([v,l,n])=>`<button class="chip${tab===v?' on':''}" data-act="recentTab" data-v="${v}">${l}${n?` <b>${n}</b>`:''}</button>`).join('');
   const stat=`<div class="rstat"><div><span>완료</span><b>${n30.done}</b></div><div><span>취소</span><b class="r">${n30.cx}</b></div><div><span>안 옴</span><b class="o">${n30.ns}</b></div><div><span>못 한 %</span><b>${rate}%</b></div></div>`;
   const legend=S.members.map(m=>{const nc=msessions(m.id).filter(x=>x.status==='cancelled'||x.status==='no_show').length;return `<div><i class="${memberHue(m)}" style="background:currentColor"></i>${esc(m.code)}${nc?` <span class="pill red" style="margin-left:4px">못 함 ${nc}</span>`:''}</div>`}).join('');
@@ -235,7 +235,7 @@ V.member=r=>{
   const all=msessions(m.id).filter(s=>s.status!=='plan_only'||true).slice().sort((a,b)=>byDate(b,a));
   const open=UI.cur['hx-'+m.id]===undefined?(done[done.length-1]||{}).id:UI.cur['hx-'+m.id];
   const hist=all.map(s=>{const isNext=u&&s.id===u.id;const n=s.exercises.filter(x=>x.status==='done').length;
-    const st=s.status==='completed'?'':s.status==='plan_only'?pill('계획만','gray'):pill(statusLabel[s.status],s.status==='planned'||s.status==='in_progress'?'blue':'gray');
+    const st=s.status==='completed'?'':s.status==='plan_only'?pill('계획만','gray'):pill(statusLabel[s.status],s.status==='planned'||s.status==='in_progress'?'blue':s.status==='cancelled'?'red':s.status==='no_show'?'orange':'gray')+(s.example?' '+EXAMPLE('예시'):'');
     const head=`<button class="hi${isNext?' next':''}${open===s.id?' open':''}" data-act="histOpen" data-mid="${m.id}" data-sid="${s.id}" aria-expanded="${open===s.id}"><div class="row" style="gap:6px"><span class="d">${mdw(s.date)}</span>${pill(splitName(s))}${st}<span class="sp"></span><span class="chev">${open===s.id?'⌃':'⌄'}</span></div>
       ${open===s.id?'':`<div class="x">${s.exercises.filter(x=>x.status==='done'||s.status!=='completed').slice(0,4).map(x=>EX(x.exId).name).join(', ')}${n>4?' 외':''}</div>`}</button>`;
     return head+(open===s.id?visitCard(m,s,u):'')}).join('')||'<div class="empty" style="padding:12px">기록이 없어요.</div>';

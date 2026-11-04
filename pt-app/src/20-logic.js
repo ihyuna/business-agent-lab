@@ -14,7 +14,7 @@ const isNum=v=>typeof v==='number'&&Number.isFinite(v);
 const firstNum=v=>{if(isNum(v))return v;const m=String(v??'').match(/\d+(\.\d+)?/);return m?Number(m[0]):null};
 
 /* ---------- 상태 ---------- */
-const KEY='pt-mvp-proto-v3.2';
+const KEY='pt-mvp-proto-v3.3';
 let S=null;
 const UI={ask:null,route:{name:'today'},stack:[],modal:null,draft:{},toast:null,orient:'land',fit:true,timer:null,cur:{},open:{},search:'',edit:null,flags:{}};
 const todayIso=()=>(S&&S.today)||'2026-10-07';
@@ -58,6 +58,7 @@ function buildSeed(){
     for(const ss of sm.sessions) seedSession(m,ss);
     for(const n of [].concat(sm.next||[])) createPlanned(m,n.d,n.time,n.t);
   }
+  addExampleCx();
   return st;
 }
 /* 다른 회원의 10/7 뒤 수첩 기록: 시연 날짜가 그날을 지나면 넣는다. 같은 날 계획 수업이 있으면 기록으로 바꾼다 */
@@ -87,6 +88,28 @@ function seedSession(m,ss){
       S.sessions.push(s);
       return s;
 }
+
+/* 예시 취소·안 옴 (2026-11-04 이현아님 요청). 수첩에는 취소 기록이 없어 지어낸 예시다.
+   운동 기록은 없고(빈 수업), 화면마다 '예시' 표시. 설정에서 숨길 수 있다. 실제 날짜를 알면 이 목록을 바꾼다 */
+const EXAMPLE_CX=[
+  ['m3','2026-10-02','19:00','cancelled','회원 사정'],
+  ['m1','2026-09-24','20:00','cancelled','일·학교'],
+  ['m1','2026-10-10','20:00','no_show','연락 없음'],
+  ['m2','2026-09-09','18:00','cancelled','회원 사정'],
+  ['m2','2026-10-01','18:00','no_show','연락 없음'],
+  ['m2','2026-10-14','18:00','cancelled','아픔·컨디션'],
+  ['m4','2026-09-23','15:00','cancelled','트레이너 사정'],
+  ['m4','2026-09-30','15:00','no_show','연락 없음'],
+  ['m5','2026-09-22','11:00','cancelled','일·학교'],
+  ['m6','2026-10-01','17:00','cancelled','기타']];
+function addExampleCx(){
+  if(S.settings.exampleCx===false) return;
+  for(const [mid,d,t,kind,reason] of EXAMPLE_CX){const m=M(mid);if(!m||S.sessions.some(s=>s.memberId===mid&&s.date===d))continue;
+    const prev=prevDone(m,d)[0];
+    const s={id:uid('s'),memberId:mid,date:d,time:t,templateId:prev?prev.templateId:(m.templates[0]||{}).id,status:kind,cond:null,cautionChecks:{},goal:'',memo:'',observations:[],nextTargets:{},example:true,exercises:[]};
+    S.sessions.push(s);logChange({kind,sid:s.id,mid,date:d,reason,example:true});S.changes[S.changes.length-1].at=d}
+}
+function removeExampleCx(){S.sessions=S.sessions.filter(s=>!s.example);S.changes=(S.changes||[]).filter(c=>!c.example)}
 
 /* ---------- 숫자 채우기 (D52, D57, D59, 워크플로우 v2 6단계) ---------- */
 function prevDone(m,beforeDate){return completed(m.id).filter(s=>s.date<beforeDate).reverse()}
