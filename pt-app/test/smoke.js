@@ -10,7 +10,7 @@ fs.writeFileSync(__dirname+'/page.html','<!doctype html><html lang="ko"><head><m
   const shot=async n=>{await p.screenshot({path:__dirname+'/'+n+'.png'})};
   await shot('s0-today');
   // 장면을 차례로 대신 하며 각 장면 끝 상태를 확인
-  for(let k=0;k<5;k++){
+  for(let k=0;k<8;k++){
     const r=await p.evaluate(k=>{const {G,SCENES,gotoScene}=__pt;if(k!==G.scene)gotoScene(k);const sc=SCENES[k];const res=[];
       for(let i=G.step;i<sc.steps.length;i++){let at='';try{at=sc.steps[i].at()}catch(e){at='ERR '+e.message}
         const found=at?!!document.querySelector('#app '+at.split(',')[0]):null;

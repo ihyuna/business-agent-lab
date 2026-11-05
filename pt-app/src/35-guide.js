@@ -147,7 +147,7 @@ const OLD=[
     done:()=>isSet(gex(GD.s107(),'hacksq').sets[3],60,12),
     auto:()=>{const s=GD.s107();liveSet(s,gex(s,'hacksq'),3,60,12);render()}},
    {say:"판단 B: 수첩에서 레그프레스는 지우고 원레그 핵프레스를 했어요. '다음 종목: 레그프레스' → '…' → '바꾸기' → '원레그 핵프레스' → '오늘만'인 채로 '바꾸기'.",
-    at:()=>{const s=GD.s107(),x=gex(s,'legpress');return atMenu(s,x,'swap',()=>UI.modal.to==='olhack'?(UI.modal.scope==='template'?'.modal [data-act="pickScope"][data-v="today"]':'.modal [data-act="doSwap"]'):'.modal [data-act="pickSwap"][data-v="olhack"]')},
+    at:()=>{const s=GD.s107(),x=gex(s,'legpress');return atMenu(s,x,'swap',()=>UI.modal.to==='olhack'?'.modal [data-act="doSwap"][data-v="today"]':'.modal [data-act="pickSwap"][data-v="olhack"]')},
     done:()=>GD.s107().exercises.find(e=>e.exId==='legpress').status==='swapped',
     auto:()=>{const s=GD.s107();ensureR('live',s);const x=s.exercises.find(e=>e.exId==='legpress');if(x.status!=='swapped'){const y=swapExercise(s,x,'olhack','today');UI.cur[s.id]=y.uid}UI.modal=null;showAsk({sid:s.id,uid:x.uid,kind:'swap'})}},
    {say:"아래에 이유 칩이 5초 떠요. 수첩에 이유는 없어서 예로 '컨디션'을 눌러요. 안 누르면 '이유 없음'으로 남고 그냥 사라져요.",
@@ -220,7 +220,7 @@ const OLD=[
     done:()=>{const x=gex(GD.sLeg(),'inner');return x.status==='removed'&&(x.reason==='기타'||!UI.ask)},
     auto:()=>{const s=GD.sLeg(),x=gex(s,'inner');ensureR('prep',s);removeExercise(s,x,'기타');UI.ask=null;UI.modal=null;save();render()}},
    {say:"레그프레스 줄 '…' → '바꾸기' → '원레그 핵프레스' → 이번에는 '루틴 틀에도' → '바꾸기'. 숫자는 10/7에 한 20 × 10으로 채워져요.",
-    at:()=>{const s=GD.sLeg();return atMenu(s,s.exercises.find(e=>e.exId==='legpress'),'swap',()=>UI.modal.to!=='olhack'?'.modal [data-act="pickSwap"][data-v="olhack"]':UI.modal.scope!=='template'?'.modal [data-act="pickScope"][data-v="template"]':'.modal [data-act="doSwap"]')},
+    at:()=>{const s=GD.sLeg();return atMenu(s,s.exercises.find(e=>e.exId==='legpress'),'swap',()=>UI.modal.to!=='olhack'?'.modal [data-act="pickSwap"][data-v="olhack"]':'.modal [data-act="doSwap"][data-v="template"]')},
     done:()=>{const x=GD.sLeg().exercises.find(e=>e.exId==='legpress');return x.status==='swapped'&&x.scope==='template'},
     auto:()=>{const s=GD.sLeg();ensureR('prep',s);const x=s.exercises.find(e=>e.exId==='legpress');if(x.status!=='swapped')swapExercise(s,x,'olhack','template');UI.modal=null;UI.ask=null;render()}},
    {say:"'수업 시작 ›'을 누르고, 컨디션은 그대로 두고 '시작'.",
@@ -277,64 +277,118 @@ const OLD=[
 ];
 
 
-/* ---------- v4 시나리오 (2026-11-05, D78): 장면 다섯, 장면마다 상황·왜·할 일 1~4개. 숫자 판단(세트·무게·횟수)에만 집중 ---------- */
+/* ---------- v4.1 시나리오 (2026-11-05, D78): 수첩 10/7·10/14 흐름 8장면 전부. 장면마다 목표·상황·왜, 단계마다 할 일과 왜.
+   시연에만 필요한 조작(시연 시계, 날짜 넘기기)은 안내 칸의 버튼 하나로 대신한다 ---------- */
 function runOld(k,from,to){const sc=OLD[k];for(let i=from;i<(to??sc.steps.length);i++){const st=sc.steps[i];let ok=false;try{ok=st.done()}catch(e){}if(!ok)st.auto()}}
-const reuse=(k,i,say)=>({...OLD[k].steps[i],say});
+const R_=(k,i,say,why)=>({...OLD[k].steps[i],say,why});
+const ACK=(say,why,label,done,auto)=>({say,why,ack:label,at:()=>'#guide [data-g="ack"]',done,auto});
+const basisStep=(sGet,ex,say,why)=>({say,why,
+  at:()=>UI.modal&&UI.modal.type==='basis'?'.modal [data-act="closeModal"]':`.linkbtn[data-uid="${gex(sGet(),ex).uid}"]`,
+  done:()=>UI.flags.basisLast===gex(sGet(),ex).uid&&!UI.modal,
+  auto:()=>{ensureR('prep',sGet());UI.flags.basisLast=gex(sGet(),ex).uid;UI.modal=null;render()}});
 const SCENES=[
- {t:'1. 수업 전: 오늘 숫자 정하기',sub:'10/7 (수) 18:30 · 화면: 오늘 숫자 정하기',
-  sit:"19시에 이00_3 회원 하체 수업이 있어요. 지난 수업은 13일 전이에요. 지난 하체(9/22)에 핵스쿼트 40kg으로 16회를 해서 수첩에 \"60kg 도전 예정\"이라고 적어 뒀어요.",
-  why:"오늘 몇 kg로 몇 회, 몇 세트 할지를 기억이 아니라 지난 기록으로 정하려고요. 앱이 근거를 붙여 숫자를 먼저 채우고, 정하는 건 트레이너예요.",
+ {t:'1. 출근: 오늘 수업 훑기',sub:'10/7 (수) 14:30 · 화면: 오늘',
+  goal:'오늘 누구를 몇 시에 무슨 분할로 하는지 보고, 회원이 미리 한 말을 그 수업에 붙여 둬요.',
+  sit:"출근해서 앱을 열었어요. 오늘은 15:00 김00 상체, 17:00 최00 당기기, 19:00 이00_3 하체 수업이 있어요. 이00_3 회원이 카톡으로 \"2주 만이라 살살 해 주세요\"라고 보냈어요(가정).",
+  why:"수업 직전에 카톡을 다시 뒤지지 않으려고요. 수업에 붙여 둔 메모는 수업 준비와 수업 시작 화면에 다시 떠요.",
   enter(){S.today='2026-10-07';save();home('today')},
   steps:[
-   reuse(0,1,"'오늘' 화면에서 '19:00 · 이00_3 · 하체' 줄을 눌러요."),
-   {say:"핵스쿼트 줄을 봐요. 지난번 40kg × 16, 12 → 판단 '무게 ↑' → 오늘 60kg. 아래 근거 줄의 '계산 보기 ›'를 눌러 왜 이 숫자인지 읽고 '닫기'.",
-    at:()=>UI.modal&&UI.modal.type==='basis'?'.modal [data-act="closeModal"]':`.linkbtn[data-uid="${gex(GD.s107(),'hacksq').uid}"]`,
-    done:()=>UI.flags.basisLast===gex(GD.s107(),'hacksq').uid&&!UI.modal,
-    auto:()=>{ensureR('prep',GD.s107());UI.flags.basisLast=gex(GD.s107(),'hacksq').uid;UI.modal=null;render()}},
-   reuse(2,0,"트레이너 판단: 40kg에서 16회를 했으니 60kg도 12회를 노려요. 본세트 첫 칸 '60kg × 8'을 눌러 횟수를 12로 바꾸고 '아래 세트에도'를 눌러요."),
-   {say:"나머지는 앱이 채운 숫자 그대로 둬요. 워밍업은 수첩대로 40kg × 8 한 세트로 맞춰 둘게요. '수업 시작 ›'을 눌러요.",
-    at:()=>'.actbar [data-to="live"]',
-    done:()=>onR('live',GD.s107())||GD.s107().status!=='planned',
-    auto:()=>{runOld(2,1,3);go('live',{sid:GD.s107().id})}}]},
- {t:'2. 회원 도착: 컨디션 반영',sub:'19:00 · 화면: 수업 시작',
-  sit:"회원이 와서 \"어제 야근해서 좀 피곤해요\"라고 해요. (가정: 수첩에는 없는 말이에요.)",
-  why:"같은 계획이라도 피곤한 날은 여유를 더 남겨야 해요. 앱이 어느 숫자를 얼마나, 왜 줄였는지 보여 주고, 받을지는 트레이너가 정해요.",
-  enter(){const s=GD.s107();runOld(2,1,3);UI.edit=null;ensureR('live',s)},
+   R_(0,0,"'19:00 · 이00_3 · 하체' 칸의 '…'을 눌러 오늘 메모 칸에 \"2주 만이라 살살 해 주세요\"를 적고 '넣기'.","회원이 한 말을 그 수업에 붙여 두면 잊지 않아요."),
+   R_(0,1,"수업 30분 전이 됐다고 치고 그 칸을 눌러요.","칸을 누르면 그 수업의 '오늘 숫자 정하기'가 열려요.")]},
+ {t:'2. 수업 30분 전: 지난 기록 읽기',sub:'18:30 · 화면: 오늘 숫자 정하기',
+  goal:'오늘 숫자를 정하기 전에, 이 회원이 지난번에 실제로 몇 kg로 몇 회 했는지 확인해요.',
+  sit:"지난 수업은 13일 전 9/24 당기기, 지난 하체는 9/22예요. 9/22 핵스쿼트는 40kg × 16, 12였고 수첩에 \"60kg 도전 예정\"이라고 적어 뒀어요.",
+  why:"무게·횟수·세트를 기억이 아니라 기록으로 정하려고요. 앱이 근거를 붙여 숫자를 먼저 채워 두고, 정하는 건 트레이너예요.",
   steps:[
-   reuse(3,0,"피로 '나쁨'을 눌러요."),
-   reuse(3,1,"오른쪽 숫자가 주황색으로 바뀌었어요(핵스쿼트 60kg × 12 → × 11). 주황색 핵스쿼트 칸을 눌러 까닭을 읽고 '닫기'."),
-   reuse(3,2,"수첩 10/7에는 평소 숫자로 했으니 피로를 '평소'로 되돌려요. 숫자가 원래대로 돌아와요."),
-   reuse(3,3,"'시작'을 눌러요.")]},
- {t:'3. 수업 중: 남은 세트 다시 정하기',sub:'19:15 · 화면: 수업 중',
-  sit:"이너타이는 끝났어요(수첩대로 채워 뒀어요). 지금은 시티드 레그컬이에요. 계획은 50kg × 20회인데, 수첩을 보면 1세트는 40kg × 20, 2세트는 50kg으로 25회를 했어요.",
-  why:"계획보다 잘되거나 안 되면 남은 세트 숫자를 그 자리에서 다시 맞춰야 해요. 앱이 근거와 함께 바꿔 보여 주고, 트레이너는 그대로 하거나 고쳐요.",
-  enter(){const s=GD.s107();if(s.status==='planned')ACT.startSession({sid:s.id});runOld(4,0,2);UI.edit=null;UI.cur[s.id]=gex(s,'scurl').uid;render()},
+   {say:"맨 위 한 줄에 지난 수업, 주의사항, 물어볼 것, 오늘 메모 수가 있어요. '브리핑 펼치기'를 눌러요.",why:"수업 전에 꼭 알아야 할 것(통증, 지난 컨디션, 지난 메모, 오늘 메모)을 한 번에 보려고요.",
+    at:()=>`[data-act="toggle"][data-t="brief-${GD.s107().id}"]`,
+    done:()=>!!UI.open['brief-'+GD.s107().id],
+    auto:()=>{ensureR('prep',GD.s107());UI.open['brief-'+GD.s107().id]=true;render()}},
+   R_(1,0,"핵스쿼트 줄 '지난번' 칸(9/22 40kg × 16, 40kg × 12)을 눌러 최근 4회를 펼쳐요.","한 번 기록만 보면 우연일 수 있어서, 몇 주 흐름(8/24 20kg → 9/22 40kg)을 같이 봐요."),
+   basisStep(GD.s107,'hacksq',"판단 칸이 '무게 ↑', 오늘 숫자가 60kg이에요. 근거 줄 '계산 보기 ›'를 눌러 읽고 '닫기'.","60kg이 어디서 나왔는지(9/22에 남긴 목표) 보고, 오늘 그대로 써도 될지 판단하려고요.")]},
+ {t:'3. 같은 화면: 숫자 고치기',sub:'18:40 · 화면: 오늘 숫자 정하기',
+  goal:'앱이 채운 숫자를 트레이너 판단으로 고쳐요.',
+  sit:"앱은 핵스쿼트를 워밍업 30kg·45kg × 12, 본세트 60kg × 8 × 3으로 채웠어요. 수첩을 보면 이날 실제로는 워밍업 40kg × 8 한 세트, 60kg × 12 × 3을 했어요.",
+  why:"앱 숫자는 출발점이에요. 트레이너가 고친 숫자는 '고침'으로 남아서, 나중에 앱 추천과 트레이너 판단을 비교할 수 있어요.",
   steps:[
-   reuse(4,2,"시티드 레그컬 1세트 무게를 40으로(40 × 20), 2세트 횟수를 25로(50 × 25) 넣어요."),
-   reuse(4,3,"계획보다 5개 더 해서 3세트가 보라색 25회로 바뀌었어요. 보라색 꼬리표를 눌러 까닭을 읽고 '닫기'."),
-   reuse(4,4,"3세트 '그대로'를 눌러요. 바뀐 숫자 50 × 25로 끝나요.")]},
- {t:'4. 수업 끝: 다음 수업 숫자',sub:'19:55 · 화면: 마무리',
-  sit:"나머지 종목도 수첩대로 끝났어요. 핵스쿼트는 2세트에서 1개를 실패했고, 레그프레스는 원레그 핵프레스로 바꿨고, 레그 익스텐션은 시간이 없어 뺐어요.",
-  why:"오늘 결과가 다음 수업의 출발 숫자가 돼요. 목표를 넘은 종목은 앱이 '목표 넘음'으로 알려 주고, 올릴지는 트레이너가 정해요.",
-  enter(){runOld(4,5);UI.ask=null;const s=GD.s107();ensureR('summary',s);OLD[5].steps[3].auto();render()},
+   R_(2,0,"본세트 첫 칸 '60kg × 8'을 눌러 횟수를 12로 바꾸고 '아래 세트에도'.","40kg에서 16회를 했으니 60kg에서도 12회는 된다고 본 거예요. '아래 세트에도'는 세 세트를 한 번에 바꿔요."),
+   R_(2,1,"워밍업 '45kg × 12'를 눌러 '이 세트 빼기'.","워밍업은 한 세트로 몸만 풀고 힘은 본세트에 쓰려고요(수첩대로)."),
+   R_(2,2,"남은 워밍업 '30kg × 12'를 눌러 무게 40, 횟수 8로 고쳐요. 숫자를 바로 써도 되고 −, +를 눌러도 돼요.","본세트 60kg에 가까운 무게로 적게 해서 준비만 하려고요."),
+   R_(2,3,"아래 '계획 약 N분 / 수업 60분'으로 시간이 맞는지 보고, 회원이 오면 '수업 시작 ›'.","저장 버튼은 없어요. 고친 숫자는 바로 남아요. 계획이 60분을 넘으면 지금 종목을 줄여요.")]},
+ {t:'4. 회원 도착: 컨디션 확인',sub:'19:00 · 화면: 수업 시작',
+  goal:'오늘 컨디션에 맞춰 숫자를 바꿀지 정해요.',
+  sit:"회원이 왔어요. 말로 잠, 피로, 근육통, 통증을 물어봐요. 예로 \"어제 야근해서 좀 피곤해요\"라고 했다고 해 봐요(가정).",
+  why:"피곤한 날 계획 숫자를 그대로 하면 무리할 수 있어요. 앱이 어느 숫자를 얼마나, 왜 줄이는지 보여 주고, 받을지는 트레이너가 정해요.",
   steps:[
-   reuse(5,0,"'다음 하체 초안'에서 시티드 레그컬에 '목표 넘음'이 붙었어요(세 세트 모두 계획 20회 이상). '올리기 +2.5'를 눌러요."),
-   reuse(5,1,"다음 목표 52.5 × 25가 들어왔어요. 수첩에서는 다음 하체에 60kg으로 올렸으니 무게 칸을 60으로 고쳐요."),
-   {say:"다음 PT는 10/8 밀기로 잡아 뒀어요. '끝내기'를 눌러요.",at:OLD[5].steps[4].at,done:OLD[5].steps[4].done,auto:OLD[5].steps[4].auto}]},
- {t:'5. 다음 하체: 숫자가 이어져요',sub:'10/14 (수) · 화면: 오늘 숫자 정하기',
-  sit:"일주일 뒤 10/14 (수) 하체예요. 그 사이 밀기·후면사슬 수업은 수첩 기록으로 채워 뒀어요.",
-  why:"지난번 끝에 정한 다음 목표가 오늘 숫자로 그대로 들어와요. 트레이너는 근거 줄에서 어디서 온 숫자인지만 확인하면 돼요.",
-  enter(){OLD[6].enter();runOld(6,0,3);UI.modal=null;home('today');go('prep',{sid:GD.sLeg().id})},
+   R_(3,0,"피로 '나쁨'을 눌러요.","모두 '평소'로 골라져 있어서, 다른 것만 누르면 돼요."),
+   R_(3,1,"오른쪽 '오늘 숫자'가 주황색으로 바뀌었어요(핵스쿼트 60kg × 12 → × 11). 주황색 핵스쿼트 칸을 눌러 까닭을 읽고 '닫기'.","여유 1개를 더 남기려고 횟수를 줄였다는 까닭을 보고, 받아들일지 정하려고요."),
+   R_(3,2,"피로를 '평소'로 되돌려요. 주황색이 사라져요.","수첩 10/7에는 계획 숫자로 했어요. 실제 기록과 맞추려고 되돌려요."),
+   R_(3,3,"오른쪽 아래 '시작'.","수업 중 화면으로 넘어가고 시계가 가기 시작해요.")]},
+ {t:'5. 수업 1시간: 세트마다 남기고 다시 맞추기',sub:'19:04~19:55 · 화면: 수업 중 · 수첩 10/7 칸 그대로',
+  goal:'세트가 끝날 때마다 실제 숫자를 남기고, 계획과 다르면 남은 세트를 다시 정해요.',
+  sit:"트레이너는 회원 옆에 있어서 앱은 세트가 끝날 때 한 번만 봐요. 아래 숫자는 모두 수첩 10/7 칸 그대로예요. 중간에 판단이 세 번 있어요: A 오래 쉬기, B 종목 바꾸기, C 종목 빼기.",
+  why:"계획대로 됐으면 '그대로' 한 번이면 끝나고, 달랐을 때만 숫자를 고쳐요. 다르면 앱이 남은 세트를 다시 계산해 보라색으로 보여 줘요.",
   steps:[
-   {say:"시티드 레그컬 근거가 '10/7 수업 끝에 정한 다음 목표'예요(60kg × 25). '계산 보기 ›'를 눌러 확인하고 '닫기'.",
-    at:()=>UI.modal&&UI.modal.type==='basis'?'.modal [data-act="closeModal"]':`.linkbtn[data-uid="${gex(GD.sLeg(),'scurl').uid}"]`,
-    done:()=>UI.flags.basisLast===gex(GD.sLeg(),'scurl').uid&&!UI.modal,
-    auto:()=>{ensureR('prep',GD.sLeg());UI.flags.basisLast=gex(GD.sLeg(),'scurl').uid;UI.modal=null;render()}},
-   {say:"핵스쿼트는 10/7 실제값 60kg × 12, 11, 12에서 왔어요. 판단 칸이 '유지'예요. 올릴지 말지는 트레이너가 숫자를 눌러 정해요. 여기서는 그대로 두고 '확인했어요'를 눌러요.",
-    at:()=>'#guide [data-g="ack"]',
-    done:()=>!!UI.flags.ack5,
-    auto:()=>{UI.flags.ack5=true;render()}}],
-  end:"한 바퀴 끝이에요: 지난 기록 → 오늘 숫자(근거) → 컨디션·세트 결과로 다시 맞추기 → 다음 수업 숫자."}
+   R_(4,0,"이너타이 1세트는 수첩에 30 × 20이에요. 무게 '45'를 눌러 30, 횟수 '20-25'를 눌러 20을 넣어요.","가볍게 몸을 풀며 한 세트예요. 1세트만 가볍게 한 거라 남은 세트는 그대로 둬요."),
+   R_(4,1,"2세트 횟수를 20으로 넣고, '+ 세트' → '그대로'로 한 세트 더(수첩 45 × 20 × 2).","'20-25'처럼 범위로 잡힌 횟수는 실제로 몇 개 했는지 숫자로 남겨야 다음 판단에 써요. 쉰 시간은 저절로 남아요."),
+   R_(4,2,"'다음 종목: 시티드 레그컬'을 누르고, 1세트 무게를 40으로(40 × 20), 2세트 횟수를 25로(50 × 25) 넣어요.","2세트에서 계획 20회보다 5개 더 했어요. 이게 남은 세트와 다음 수업 숫자의 근거가 돼요."),
+   R_(4,3,"3세트 횟수가 보라색 25회로 바뀌었어요. 보라색 꼬리표를 눌러 까닭을 읽고 '닫기'.","10회가 넘는 세트라 무게 대신 횟수를 맞췄다는 까닭을 확인해요."),
+   R_(4,4,"3세트 '그대로'.","앱이 바꾼 숫자를 트레이너가 받아들인 거예요."),
+   R_(4,5,"'다음 종목: 핵스쿼트'. 수첩은 \"40kg x 8, 60kg. x 12 x 3\", \"2set에서 1개를 실패\". 워밍업 '그대로', 1세트 '그대로', 2세트는 횟수 11.","1개 차이는 그날 범위 안이라 앱이 남은 세트를 바꾸지 않아요."),
+   ACK("판단 A: 회원이 힘들어해 3세트 전에 5분 넘게 쉬어요. 앱에서 할 일은 없어요. 아래 '5분 지나기'를 눌러 시간만 넘겨요.","쉰 시간은 세트 사이 간격으로 저절로 남아요. 따로 적지 않아도 돼요.",'5분 지나기',OLD[4].steps[6].done,OLD[4].steps[6].auto),
+   R_(4,7,"3세트 '그대로'. 세트 줄에 '쉼 7:30'이 노랗게 남고, 위 띠가 빨개져요. 뒤쪽 레그 익스텐션에 '뺄 수 있음'이 붙어요.","오래 쉰 만큼 남은 시간이 빠듯해졌다는 걸 앱이 알려 줘요. 무엇을 뺄지는 트레이너가 정해요."),
+   R_(4,8,"판단 B: '다음 종목: 레그프레스' → '…' → '바꾸기' → '원레그 핵프레스' → '오늘만 바꾸기'.","수첩에서 레그프레스를 지우고 한쪽씩 하는 원레그 핵프레스를 했어요. 오늘만 바꾸면 루틴 틀은 그대로예요."),
+   R_(4,9,"아래에 이유 칩이 5초 떠요. 예로 '컨디션'을 눌러요. 안 눌러도 돼요.","이유를 남겨 두면 나중에 왜 바꿨는지 찾을 수 있어요. 수첩에는 이유가 없어서 예시예요."),
+   R_(4,10,"원레그 핵프레스는 처음이라 무게가 비어 있어요. 1세트 무게를 눌러 20을 넣어요(예시).","기록이 없는 종목은 1세트로 무게를 찾아요. 찾은 무게가 남은 세트에 보라색으로 채워져요."),
+   ACK("한쪽씩 하느라 오래 걸렸어요. 아래 '5분 지나기'를 눌러요(예시).","남은 시간이 더 줄어서, 마지막 종목을 할 수 있을지 판단해야 해요.",'5분 지나기',()=>{const s=GD.s107(),x=gex(s,'olhack');return (s.extraRest||0)>=5||!!(x&&x.sets[1]&&x.sets[1].done)},()=>ACT.plusFive({sid:GD.s107().id})),
+   {say:"원레그 핵프레스 2세트와 3세트 '그대로'.",why:"1세트에서 찾은 무게로 이어 가요.",
+    at:()=>{const s=GD.s107(),x=gex(s,'olhack');return atSets(s,x,[[20,10,'w'],[20,10,'same'],[20,10,'same']])},
+    done:OLD[4].steps[11].done,
+    auto:()=>{const s=GD.s107(),x=gex(s,'olhack');liveSet(s,x,1,20,10);liveSet(s,x,2,20,10);UI.edit=null;render()}},
+   R_(4,12,"판단 C: 남은 시간이 10분이에요. 레그 익스텐션으로 가서 '…' → '빼기'.","앱은 '뺄 수 있음'만 알려 주고 빼지는 않아요. 빼는 건 트레이너예요."),
+   R_(4,13,"이유는 '시간'이 미리 골라져 있어요. 카드 아래 '수업 메모'에 \"쉬는 시간이 너무 필요하다.\"를 적어요(수첩 그대로).","특이하게 튄 날만 적는 관찰이에요. 다음 수업 준비 브리핑에 다시 떠요."),
+   R_(4,14,"위쪽 '마무리'.","오늘 기록을 확인하고 다음 숫자를 정하러 가요.")]},
+ {t:'6. 수업 직후 1분: 다음 수업 숫자 정하기',sub:'19:55 · 화면: 마무리',
+  goal:'오늘 결과로 다음 하체의 출발 숫자를 정하고 다음 PT를 잡아요.',
+  sit:"회원이 막 갔어요. 마무리 화면에 1 오늘 결과, 2 계획과 달라진 곳, 3 넘은 개인 기록, 4 다음 하체 초안, 5 다음 PT가 있어요.",
+  why:"수첩에서는 다음 목표를 따로 적어 둬야 했어요. 여기서 정해 두면 다음 수업 '오늘 숫자 정하기'에 근거와 함께 들어가요.",
+  steps:[
+   R_(5,0,"4번 '다음 하체 초안'에서 시티드 레그컬에 '목표 넘음'이 붙었어요. '올리기 +2.5'를 눌러요.","세 세트 모두 계획 20회 이상이라 '목표 넘음'이에요. 앱은 표시만 하고, 올리는 건 트레이너예요."),
+   R_(5,1,"다음 목표가 52.5 × 25로 들어왔어요. 무게 칸을 60으로 고쳐요.","앱은 한 칸(2.5kg)만 올려요. 수첩에서는 다음 하체에 60kg으로 올렸어요."),
+   R_(5,2,"6번 '다음에 확인할 것'에 \"원레그 핵프레스 시작 무게 다시 보기\"를 적고 '넣기'(예시).","다음 수업 브리핑에 떠서 잊지 않아요."),
+   R_(5,3,"5번 다음 PT 날짜를 10/8 (목)로 바꿔요. 분할은 순서상 다음인 밀기예요.","수첩에서도 다음 날 밀기를 했어요."),
+   R_(5,4,"'끝내기'.","오늘 화면으로 돌아가고, 10/8 밀기 수업의 숫자가 미리 채워져요.")]},
+ {t:'7. 다음 하체: 숫자가 이어지는지 보기',sub:'10/12 (월) → 10/14 (수) · 수첩 10/14 칸 그대로',
+  goal:'일정이 바뀌어도 계획이 따라가고, 10/7에 정한 목표가 오늘 숫자로 들어오는지 봐요.',
+  sit:"10/12 (월)이에요. 10/8 밀기와 10/9 후면사슬은 수첩 기록으로 채워 뒀어요. 회원이 하체를 10/14로 미루자고 해요(예시).",
+  why:"날짜가 바뀌어도 숫자는 그대로 따라와야 해요. 그리고 지난번 판단이 실제로 오늘 숫자가 되는지 확인해요.",
+  enter:OLD[6].enter,
+  steps:[
+   R_(6,0,"이00_3 칸 '…' → '옮기기'.","수업을 지우지 않고 날짜만 바꿔요. 옮긴 기록도 남아요."),
+   R_(6,1,"날짜를 10/14로 고르고 '옮기기'.","날짜만 바뀌고 계획 숫자는 그대로예요."),
+   ACK("10/14 (수)가 됐다고 치고 아래 '10/14로 넘어가기'를 눌러요.","시연용 날짜를 넘기는 거예요. 실제 앱에서는 하지 않아요.",'10/14로 넘어가기',OLD[6].steps[2].done,OLD[6].steps[2].auto),
+   R_(6,3,"이00_3 칸을 눌러 '오늘 숫자 정하기'를 열어요.","10/7에 정한 숫자가 들어왔는지 보려고요."),
+   basisStep(GD.sLeg,'scurl',"시티드 레그컬 판단이 '무게 ↑', 근거가 '10/7 수업 끝에 정한 다음 목표'(60kg × 25)예요. '계산 보기 ›'로 확인하고 '닫기'.","지난번 마무리에서 정한 숫자가 오늘 숫자가 된 거예요. 핵스쿼트는 10/7 실제값에서 왔어요."),
+   R_(6,4,"수첩 10/14에는 이너타이가 없어요. 이너타이 줄 '…' → '빼기', 이유 칩 '기타'.","'기타'는 이유가 따로 없을 때 골라요."),
+   R_(6,5,"레그프레스 줄 '…' → '바꾸기' → '원레그 핵프레스' → 이번에는 '루틴 틀에도 바꾸기'.","두 번째로 바꾸는 거라 루틴 틀에도 넣어요. 다음 하체부터는 처음부터 원레그 핵프레스로 채워져요."),
+   R_(6,6,"'수업 시작 ›', 컨디션은 그대로 두고 '시작'.","오늘은 컨디션이 평소라 숫자가 그대로예요."),
+   R_(6,7,"시티드 레그컬은 수첩에 50x20, 60x25x2예요. 1세트를 50 × 20으로 고치고, 2·3세트는 '그대로'.","60kg은 10/7에 올린 목표예요. 1세트만 가볍게 해서 남은 세트는 그대로예요."),
+   R_(6,8,"핵스쿼트는 수첩에 \"40 x 23reps, 60kg.\"이에요. 워밍업 횟수를 23으로 고치고, 본세트는 '그대로' 세 번(본세트 횟수는 수첩에 없어 예시).","워밍업만 다르게 했고 본세트는 계획대로예요."),
+   R_(6,9,"원레그 핵프레스 1세트 횟수를 20으로 넣으면 남은 세트가 보라색 22.5 × 10으로 바뀌어요. 수첩대로 2세트를 20 × 20으로 고쳐요.","계획보다 10개 더 해서 앱이 무게를 올려 보자고 제안해요. 트레이너는 수첩대로 무게를 유지했어요. 제안은 안 받아도 돼요."),
+   R_(6,10,"3세트도 20 × 20으로 고치고, '+ 세트' → '그대로'로 4세트를 채워요.","수첩 \"20 x 4\"를 20회 × 4세트로 읽었어요(해석)."),
+   R_(6,11,"레그 익스텐션은 수첩에 30x25x2예요. 횟수를 25로 고치고 '+ 세트' → '그대로'.","10/7에 시간 때문에 뺀 종목이라 오늘 다시 들어와 있어요."),
+   R_(6,12,"'마무리'. '루틴 틀도 고칠까요?'에 '예, 오늘 것으로'.","'기타'로 뺀 이너타이를 루틴 틀에서도 뺄지 물어요. 시간·컨디션 때문에 뺀 건 묻지 않아요."),
+   R_(6,13,"다음 PT를 10/15 (목) 밀기로 두고 '끝내기'.","다음 밀기 숫자가 미리 채워져요.")]},
+ {t:'8. 몇 주 흐름 보고 훈련 방향 정하기',sub:'10/16 (금) · 화면: 회원 한눈에 → 추이',
+  goal:'한 회원의 몇 주 흐름을 보고 다음 몇 주의 큰 방향을 정해요.',
+  sit:"몇 주에 한 번은 회원별로 흐름을 봐요. 10/15 밀기와 10/16 당기기는 수첩 기록으로 채워 뒀어요. 10/16 메모에 \"라잉 레그컬과 워킹 런지를 통한 심박수 + 체중감량 고려.\"가 있어요.",
+  why:"매 수업 숫자는 이 큰 방향 안에서 정해요. 앱은 데이터만 보여 주고 원인은 판단하지 않아요.",
+  enter:OLD[7].enter,
+  steps:[
+   R_(7,0,"왼쪽 '회원' 메뉴를 누르고 이00_3을 눌러요.","회원 한 명의 기록을 한 화면에서 보려고요."),
+   R_(7,1,"회원 한눈에서 위쪽 '추이'를 눌러요.","병원 차트처럼 요약, 이력, 다음 PT, 그래프가 한 장에 있어요. 추이는 종목 하나의 숫자 흐름이에요."),
+   R_(7,2,"핵스쿼트 그래프 점을 눌러 그날 숫자와 수첩 원문을 봐요.","8/24 20kg → 9/22 40kg → 10/7·10/14 60kg으로 올랐는지 확인해요."),
+   R_(7,3,"위 '훈련 방향 바꾸기'에서 방향 하나와 시작일을 골라 저장해요('대신 하기'는 예시로 조절).","무엇을 고를지는 수첩에 없어 트레이너가 정해요.")]}
 ];
 /* ---------- 장면 옮기기 ---------- */
 function runAuto(st){try{st.auto();return true}catch(e){console.error(e);return false}}
@@ -351,7 +405,7 @@ function gotoScene(k){
 }
 function guideClick(ev){
   const el=ev.target.closest('[data-g]'); if(!el) return; const a=el.dataset.g;
-  if(a==='ack'){UI.flags.ack5=true;render();return}
+  if(a==='ack'){const st=SCENES[G.scene].steps[G.step];if(st){G.busy=true;runAuto(st);G.busy=false;render()}return}
   if(a==='close'){G.open=false;saveView();fit();render();return}
   if(a==='scene'){gotoScene(+el.dataset.k);return}
   if(a==='restart'){gotoScene(G.scene);return}
@@ -380,10 +434,11 @@ function guideAfter(){
   box.innerHTML=`<div class="g-head"><b>시나리오 따라 하기</b><span class="sp"></span><button class="btn small ghost" data-g="close">닫기</button></div>
    <div class="g-scenes">${SCENES.map((x,k)=>`<button class="chip${k===G.scene?' on':''}" data-g="scene" data-k="${k}" title="${esc(x.t)}">${k+1}</button>`).join('')}</div>
    <div class="g-title">${esc(sc.t)}</div><div class="tiny muted">${esc(sc.sub)}</div>
-   ${sc.sit?`<div class="g-box"><b>상황</b> ${esc(sc.sit)}</div><div class="g-box why"><b>왜 하나요</b> ${esc(sc.why)}</div>`:''}
-   <div class="tiny muted" style="margin-top:8px"><b>할 일</b></div><ol class="g-steps">${sc.steps.map((st,i)=>`<li class="${i<G.step?'done':i===G.step?'cur':''}">${esc(st.say)}${i===G.step&&/확인했어요/.test(st.say)?` <button class="btn small primary" data-g="ack">확인했어요</button>`:''}</li>`).join('')}</ol>
+   ${sc.goal?`<div class="g-box goal"><b>이 장면에서 하는 일</b> ${esc(sc.goal)}</div>`:''}${sc.sit?`<div class="g-box"><b>상황</b> ${esc(sc.sit)}</div><div class="g-box why"><b>왜 하나요</b> ${esc(sc.why)}</div>`:''}
+   <div class="tiny muted" style="margin-top:8px"><b>할 일</b></div><ol class="g-steps">${sc.steps.map((st,i)=>`<li class="${i<G.step?'done':i===G.step?'cur':''}">${esc(st.say)}${st.why&&i>=G.step?`<div class="g-why">왜: ${esc(st.why)}</div>`:''}${i===G.step&&st.ack?`<div style="margin-top:4px"><button class="btn small primary" data-g="ack">${esc(st.ack)}</button></div>`:''}</li>`).join('')}</ol>
    ${cur?`<div class="row"><span class="tiny muted">노란 테두리를 눌러요.</span><span class="sp"></span><button class="btn small" data-g="auto">이 단계 대신 하기</button></div>`
      :`<div class="g-done">${sc.end?esc(sc.end):last?'시나리오 끝이에요.':'이 장면은 끝났어요.'}</div>`}
    <div class="row" style="margin-top:10px">${last?'':`<button class="btn${cur?'':' primary'}" data-g="next">다음 장면 ›</button>`}<span class="sp"></span><button class="btn small ghost" data-g="restart">이 장면 처음부터</button></div>
    <div class="g-foot">숫자는 트레이너 수첩 그대로이고, 수첩에 없는 말·값은 (가정)·(예시)로 적었어요. 장면 번호를 누르면 그 장면부터 할 수 있어요.</div>`;
+  const li=box.querySelector('.g-steps li.cur');if(li&&G.gKey!==G.scene+'.'+G.step){G.gKey=G.scene+'.'+G.step;try{li.scrollIntoView({block:'nearest'})}catch(e){}}
 }

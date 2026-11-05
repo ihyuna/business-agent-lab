@@ -113,7 +113,7 @@ const ACT={
   doRemove:d=>{const {s,x}=gx(UI.modal);removeExercise(s,x,d.v);if(UI.cur[s.id]===x.uid)delete UI.cur[s.id];UI.modal=null;save();toast(`${EX(x.exId).name} 뺐어요 (${d.v})`)},
   pickSwap:d=>{UI.modal.to=d.v;render()},
   pickScope:d=>{UI.modal.scope=d.v;render()},
-  doSwap:()=>{const o=UI.modal;const {s,x}=gx(o);const to=o.to;if(!to)return;const y=swapExercise(s,x,to,o.scope||'today');
+  doSwap:d=>{const o=UI.modal;const {s,x}=gx(o);const to=o.to;if(!to)return;const y=swapExercise(s,x,to,(d&&d.v)||o.scope||'today');
     UI.cur[s.id]=y.uid;UI.modal=null;save();showAsk({sid:s.id,uid:x.uid,kind:'swap'})},
   removeNow:d=>{const {s,x}=gx(d);const pre=canDrop(s,x)?'시간':'';removeExercise(s,x,pre);if(UI.cur[s.id]===x.uid)delete UI.cur[s.id];UI.modal=null;save();showAsk({sid:s.id,uid:x.uid,kind:'remove'})},
   askPick:d=>{const a=UI.ask;if(!a)return;const {x}=gx(a);x.reason=x.reason===d.v?'':d.v;save();showAsk(a)},

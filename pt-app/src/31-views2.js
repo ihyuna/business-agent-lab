@@ -259,8 +259,8 @@ MOD.kind=o=>{const s=SES(o.sid),x=s.exercises.find(e=>e.uid===o.uid),st=x.sets[+
   return `<h3>${+o.i+1}세트 종류</h3><div class="row">${chips(Object.entries(KINDS),st.kind,'setKindPick',{sid:s.id,uid:x.uid,i:o.i})}</div><div class="row" style="justify-content:space-between;margin-top:12px">${btn('이 세트 지우기','delSet',{sid:s.id,uid:x.uid,i:o.i},'small danger')}${btn('닫기','closeModal')}</div>`};
 MOD.swap=o=>{const s=SES(o.sid),x=s.exercises.find(e=>e.uid===o.uid);const to=UI.modal.to;const scope=UI.modal.scope||'today';
   return `<h3>${esc(EX(x.exId).name)} 바꾸기</h3>${exPicker(EX(x.exId).part,to,'pickSwap',liveEx(s).map(e=>e.exId))}
-   <div class="row" style="margin-top:12px">${chips([['today','오늘만'],['template','루틴 틀에도']],scope,'pickScope')}</div>
-   <div class="row" style="justify-content:flex-end;margin-top:12px">${btn('닫기','closeModal')}${btn('바꾸기','doSwap',null,'primary',!to||to===x.exId)}</div>`};
+   <div class="tiny muted" style="margin-top:12px">오늘만 바꾸면 루틴 틀은 그대로예요. 루틴 틀에도 바꾸면 다음 수업부터 새 종목으로 채워요.</div>
+   <div class="row" style="justify-content:flex-end;margin-top:8px">${btn('닫기','closeModal')}${btn('루틴 틀에도 바꾸기','doSwap',{v:'template'},'',!to||to===x.exId)}${btn('오늘만 바꾸기','doSwap',{v:'today'},'primary',!to||to===x.exId)}</div>`};
 MOD.adj=o=>{const s=SES(o.sid),x=s.exercises.find(e=>e.uid===o.uid),st=x.sets[+o.i];const A=st.adj||{lines:[]};const by=A.by;
   const title=by==='cond'?'컨디션 때문에 바뀐 숫자':by==='live'?'앞 세트 결과로 바뀐 숫자':'원래 숫자로 되돌린 세트';
   return `<h3>${esc(EX(x.exId).name)} ${setNo(x,+o.i)}${setNo(x,+o.i)==='워밍업'?'':'세트'} · ${title}</h3>
