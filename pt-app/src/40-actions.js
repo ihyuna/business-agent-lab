@@ -25,7 +25,7 @@ function go(name,params){
   if(params&&params.sid){const s=SES(params.sid); if(s){
     if(name==='start') name='live';
     if(name==='briefing'||name==='plan') name='prep';
-    if((name==='live'||name==='start'||name==='summary')&&s.status!=='planned'&&s.status!=='in_progress') name='detail';}}
+    if((name==='live'||name==='start'||name==='summary'||name==='show'||name==='nextplan')&&s.status!=='planned'&&s.status!=='in_progress') name='detail';}}
   UI.stack.push(UI.route); if(UI.stack.length>60) UI.stack.shift();
   UI.route={name,...(params||{})}; UI.modal=null; UI.edit=null; UI.ask=null; UI.confirmReset=false; render({noSave:true});
 }
@@ -122,6 +122,7 @@ const ACT={
   undoAdj:d=>{const {x,st}=gx(d);undoAdj(x,st);UI.modal=null;save();render()},
   plusFive:d=>{const s=SES(d.sid);s.clock=(s.clock??START_MIN)+5;s.extraRest=(s.extraRest||0)+5;save();render()},
   todayMemo:d=>{const s=SES(d.sid),m=M(s.memberId);const k='tm-'+s.id;const text=fv(k).trim();if(!text)return toast('메모를 적어 주세요');m.notes.push({id:uid('n'),kind:'check',text,created:todayIso(),due:s.id,done:false});clearDraft(k);UI.modal=null;save();toast('오늘 메모를 남겼어요')},
+  pickShow:d=>{UI.cur['show-'+d.sid]=d.v;render()},
   raiseNext:d=>{const s=SES(d.sid);const x=s.exercises.find(e=>e.exId===d.ex&&e.status==='done');const top=x&&topDone(x);if(!top)return;const inc=+EX(d.ex).inc||2.5;ensureNext(s).targets[d.ex]={w:Math.round((top.w+inc)*100)/100,r:top.r,text:'',raised:true};save();render()},
   keepNext:d=>{delete ensureNext(SES(d.sid)).targets[d.ex];save();render()},
   doAddEx:()=>{const o=UI.modal;const s=SES(o.sid);const m=M(s.memberId);if(!o.to)return;const y=planExercise(m,{exId:o.to,role:fv('addRole')||'보조',structure:'스트레이트'},s.date,s.templateId,s.exercises.map(e=>({role:e.role})));
