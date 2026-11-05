@@ -243,7 +243,7 @@ V.member=r=>{
   let next;
   if(u){const ip=u.status==='in_progress';
     next=`<div class="row"><div style="flex:1"><div style="font-size:16px;font-weight:700">${mdw(u.date)} ${esc(u.time||'')}</div><div class="muted small">${esc(splitName(u))}${u.goal?' · 오늘 목표: '+esc(u.goal):''}</div></div>${ip?pill('진행 중','green'):''}
-      ${ip?btn('이어서 하기','openSession',{sid:u.id},'primary'):btn('수업 준비','openSession',{sid:u.id},'primary')+`<button class="btn ghost more" data-act="modal" data-type="sessMenu" data-sid="${u.id}" aria-label="수업 메뉴">…</button>`}</div>`;
+      ${ip?btn('이어서 하기','openSession',{sid:u.id},'primary'):btn('숫자 정하기','openSession',{sid:u.id},'primary')+`<button class="btn ghost more" data-act="modal" data-type="sessMenu" data-sid="${u.id}" aria-label="수업 메뉴">…</button>`}</div>`;
   } else next=`<div class="row"><span class="muted">잡힌 수업이 없어요.</span><span class="sp"></span>${btn('다음 PT 잡기','modal',{type:'schedule',mid:m.id},'primary')}</div>`;
   const recent=done.slice(-5).reverse();
   const mainOf=s=>{const x=s.exercises.find(e=>e.status==='done'&&e.role==='메인')||s.exercises.find(e=>e.status==='done');const tt=x&&topSet(x);return x?`${esc(EX(x.exId).name)}${tt?` <b class="num">${ftop(tt,x.exId)}</b>`:''}`:'—'};
@@ -340,6 +340,34 @@ function prepStrip(s,m){
     ${m.notes.filter(n=>['self_train','diet','lifestyle'].includes(n.kind)).map(n=>`<div class="tiny"><span class="tag">${NOTE_KINDS[n.kind]}</span> ${esc(n.text)}</div>`).join('')}`:'<div class="small">첫 수업이에요.</div>'}</div>`;
   return `${gap!=null&&gap>=14?`<div class="banner" style="margin-bottom:8px">${gap}일 만이에요. 무게를 낮출지는 트레이너가 정해요.</div>`:''}<div class="strip">${a}${b}${c}</div>`;
 }
+/* v4 (2026-11-05, D78): 수업 준비 = '오늘 숫자 정하기'. 종목마다 지난번 → 판단(올림·유지·내림) → 오늘 숫자 → 근거 한 줄. 브리핑은 한 줄로 접어 둔다 */
+function planTop(x){let b=null,n=0;for(const st of x.sets){if(st.kind==='warmup')continue;n++;if(!isNum(st.pw))continue;const r=isNum(st.pr)?st.pr:firstNum(st.pr)||0;if(!b||st.pw>b.w||(st.pw===b.w&&r>b.r))b={w:st.pw,r}}return b?{...b,n}:{w:null,r:null,n}}
+function actTop(x){const t=topSet(x);const n=x.sets.filter(st=>st.kind!=='warmup'&&(st.aw!=null||st.ar!=null)).length;return t?{...t,n}:null}
+function judge(x,sm){
+  const p=planTop(x); if(p.w==null) return ['무게 찾기','j-find'];
+  const l=sm&&actTop(sm.x); if(!l) return ['처음','j-new'];
+  if(p.w>l.w) return ['무게 ↑','j-up']; if(p.w<l.w) return ['무게 ↓','j-down'];
+  if(p.r>l.r) return ['횟수 ↑','j-up']; if(p.r<l.r) return ['횟수 ↓','j-down'];
+  if(p.n>l.n) return ['세트 ↑','j-up']; if(p.n<l.n) return ['세트 ↓','j-down'];
+  return ['유지','j-keep'];
+}
+function whyShort(s,x){
+  const B=x.basis; if(!B) return '';
+  if(x.edited) return '트레이너가 고친 숫자';
+  const R=S.settings.roles[x.role]||S.settings.roles['보조'];
+  if(B.mode==='target') return `${md(B.date)} 수업 끝에 정한 다음 목표`;
+  if(B.mode==='same') return `지난 같은 분할(${md(B.date)}) 실제값 그대로${B.tag==='무게 찾기'?', 무게 기록 없음':''}`;
+  if(B.mode==='recent') return `최근 수업(${md(B.date)}) 실제값 그대로`;
+  if(B.e1) return `추정 1RM ${Math.round(B.e1.e*10)/10} → ${R.target}회·여유 ${R.rir}회 무게`;
+  return `기록이 없어 역할(${x.role}) 기준 ${R.target}회, 무게는 수업 중 찾기`;
+}
+function briefLine(s,m){
+  const prev=prevDone(m,s.date); const last=prev[0]; const gap=last?daysBetween(last.date,s.date):null;
+  const nC=openCautions(m).length, nK=checks(m).filter(n=>n.due!==s.id).length, nM=todayMemos(m,s).length;
+  const open=UI.open['brief-'+s.id];
+  const bits=[gap!=null?`지난 수업 <b>${gap}일 전</b>`:'첫 수업',`주의사항 <b>${nC}</b>`,`물어볼 것 <b>${nK}</b>`,nM?`오늘 메모 <b>${nM}</b>`:'',s.goal?`오늘 목표 <b>${esc(s.goal)}</b>`:''].filter(Boolean).join(' · ');
+  return `<div class="brief"><span class="small">${bits}</span><span class="sp"></span><button class="btn ghost small" data-act="toggle" data-t="brief-${s.id}">${open?'접기 ▴':'브리핑 펼치기 ▾'}</button></div>${open?prepStrip(s,m):(gap!=null&&gap>=14?`<div class="banner" style="margin-bottom:8px">${gap}일 만이에요. 무게를 낮출지는 트레이너가 정해요.</div>`:'')}`;
+}
 V.prep=r=>{
   const s=SES(r.sid), m=M(s.memberId); const ro=s.status!=='planned'; let n=0;
   const rows=s.exercises.map(x=>{
@@ -347,19 +375,21 @@ V.prep=r=>{
     if(x.status==='swapped'){const to=s.exercises.find(e=>e.uid===x.replacedBy);return `<div class="plan-ex off"><span class="pe-n"></span><div><span class="st-swapped">${esc(EX(x.exId).name)}</span> <span class="tiny muted">→ ${to?esc(EX(to.exId).name):''} (${x.scope==='template'?'루틴 틀에도':'오늘만'}${x.reason?', '+esc(x.reason):''})</span></div></div>`;}
     n++; const ed=UI.edit&&UI.edit.uid===x.uid&&x.sets[+UI.edit.i];
     const h=exHistory(m,x.exId,s.date,4); const sm=h.find(o=>o.s.templateId===s.templateId)||h[0]; const memo=m.exMemos[x.exId];
-    const key='br-'+x.uid; const open=UI.open[key];
-    const lastTxt=sm?`<span class="tiny muted">${md(sm.s.date)}${sm.s.templateId!==s.templateId?' '+esc(splitName(sm.s)):''}</span> ${esc(fsets(sm.x.sets,x.exId,'a'))}`:'<span class="faint">기록 없음</span>';
-    return `<div class="plan-ex"><div class="prep-row"><span class="pe-n">${n}</span><div><b>${esc(EX(x.exId).name)}</b><div class="tiny muted">${x.role}${x.structure!=='스트레이트'?' · '+x.structure:''}${(x.setting||memo?.setting)?' · '+esc(x.setting||memo.setting):''}</div></div>
-      <button class="btn ghost small" style="text-align:left;white-space:normal;color:var(--ink)" data-act="toggle" data-t="${key}" title="지난 기록 펼치기"><span class="small">${lastTxt}</span> <span class="faint">${open?'▴':'▾'}</span></button>
-      <div>${basisTag(s,x)}</div><div class="pe-sets">${x.sets.map((st,i)=>ro?roChip(s,x,i):setChip(s,x,i)).join('')||'<span class="faint small">세트 없음</span>'}${ro?'':btn('+','addSet',{sid:s.id,uid:x.uid},'small ghost')}</div>
+    const key='br-'+x.uid; const open=UI.open[key]; const [jt,jc]=judge(x,sm);
+    const lastTxt=sm?`<span class="tiny muted">${md(sm.s.date)}${sm.s.templateId!==s.templateId?' '+esc(splitName(sm.s)):''}</span><br>${esc(fsets(sm.x.sets,x.exId,'a'))}`:'<span class="faint">기록 없음</span>';
+    return `<div class="plan-ex"><div class="prep-row"><span class="pe-n">${n}</span><div><b>${esc(EX(x.exId).name)}</b><div class="tiny muted">${x.role}${x.structure!=='스트레이트'?' · '+x.structure:''}</div></div>
+      <button class="btn ghost small lastbtn" data-act="toggle" data-t="${key}" title="지난 기록 펼치기"><span class="small">${lastTxt}</span> <span class="faint">${open?'▴':'▾'}</span></button>
+      <span class="judge ${jc}">${jt}</span><div class="pe-sets">${x.sets.map((st,i)=>ro?roChip(s,x,i):setChip(s,x,i)).join('')||'<span class="faint small">세트 없음</span>'}${ro?'':btn('+','addSet',{sid:s.id,uid:x.uid},'small ghost')}</div>
       ${ro?'':`<button class="btn ghost more" data-act="modal" data-type="exMenu" data-sid="${s.id}" data-uid="${x.uid}" aria-label="종목 메뉴">…</button>`}</div>
+      <div class="pe-why"><span class="tiny muted">근거</span> <span class="small">${esc(whyShort(s,x))}</span> <button class="linkbtn" data-act="basis" data-sid="${s.id}" data-uid="${x.uid}">계산 보기 ›</button></div>
       ${open?`<div class="prep-hist">${h.slice().reverse().map(o=>`<div>${mdw(o.s.date)} ${esc(splitName(o.s))} · <b>${esc(fsets(o.x.sets,x.exId,'a'))}</b>${o.x.setting?` <span class="tiny muted">세팅 ${esc(o.x.setting)}</span>`:''}${o.x.raw?`<div class="dimline">수첩: ${esc(o.x.raw)}</div>`:''}</div>`).join('')||'기록 없음'}${memo&&memo.memo?`<div class="tiny muted">종목 메모 ${memo.date?md(memo.date):''}: ${esc(memo.memo)}</div>`:''}</div>`:''}
       ${ed&&!ro?editorHTML(s,x,+UI.edit.i):''}</div>`}).join('');
   const pm=planMinutes(s);
-  return topBar(esc(m.code)+' 수업 준비',`${mdw(s.date)} ${esc(s.time||'')} · ${esc(splitName(s))}${ro?' · 수업이 시작돼 고칠 수 없어요':''}`,ro?'':btn('+ 종목','modal',{type:'addEx',sid:s.id},'small'))+
-   `<div class="scroll" data-sk="main">${prepStrip(s,m)}
-    <div class="small muted" style="margin:0 2px 8px">오늘 계획은 <b>다음 목표 → 지난 같은 분할 실제값 → 규칙</b> 순서로 미리 채웠어요. 기본 숫자는 컨디션이 모두 <b>'보통'</b>일 때 기준이에요. 가운데 지난 기록을 누르면 최근 4회가 펼쳐지고, 세트를 누르면 고쳐요. 꼬리표를 누르면 숫자 근거가 보여요.</div>
-    <div class="card" style="padding:4px 12px">${rows}</div>${ro?`<div style="margin-top:8px">${legendHTML()}</div>`:''}</div>`+
-   actBar(`<span class="small">계획 약 <b class="${pm>CLASS_MIN-SPARE_MIN?'a-cond':''}">${pm}분</b> / 수업 ${CLASS_MIN}분 <span class="tiny muted">(세트 ${SET_MIN}분 + 계획 쉬는 시간, 종목 옮기기 ${SWITCH_MIN}분, 시작 ${START_MIN}분·마무리 ${WRAP_MIN}분, 예시)</span></span>`,ro?btn('수업 화면으로','openSession',{sid:s.id},'primary'):btn('수업 시작 ›','go',{to:'live',sid:s.id},'primary'));
+  return topBar(esc(m.code)+' 오늘 숫자 정하기',`${mdw(s.date)} ${esc(s.time||'')} · ${esc(splitName(s))}${ro?' · 수업이 시작돼 고칠 수 없어요':''}`,ro?'':btn('+ 종목','modal',{type:'addEx',sid:s.id},'small'))+
+   `<div class="scroll" data-sk="main">${briefLine(s,m)}
+    <div class="card" style="padding:4px 12px"><div class="prep-row prep-head"><span></span><span>종목</span><span>지난번 (실제)</span><span>판단</span><span>오늘 세트 · 무게 × 횟수</span><span></span></div>${rows}</div>
+    <div class="tiny muted" style="margin:8px 2px">앱이 근거를 붙여 먼저 채우고, 정하는 건 트레이너예요. 숫자를 누르면 고칠 수 있어요. 컨디션 '보통' 기준이에요.</div>
+    ${ro?`<div style="margin-top:8px">${legendHTML()}</div>`:''}</div>`+
+   actBar(`<span class="small">계획 약 <b class="${pm>CLASS_MIN-SPARE_MIN?'a-cond':''}">${pm}분</b> / 수업 ${CLASS_MIN}분</span>`,ro?btn('수업 화면으로','openSession',{sid:s.id},'primary'):btn('수업 시작 ›','go',{to:'live',sid:s.id},'primary'));
 };
 V.briefing=V.prep; V.plan=V.prep;

@@ -96,7 +96,7 @@ const ACT={
     if(o.sid){const s=SES(o.sid);if(s.date!==date||(s.time||'')!==fv('sc-t'))logChange({kind:'moved',sid:s.id,mid:s.memberId,date,from:s.date,fromTime:s.time||'',toTime:fv('sc-t')||'',reason:fv('mv-r')||''});s.date=date;s.time=fv('sc-t');UI.modal=null;clearDraft('sc-d','sc-t');save();toast('날짜만 옮겼어요. 계획은 그대로예요.')}
     else{const tid=fv('sc-s');if(!tid)return toast('루틴 틀에서 분할을 먼저 만들어 주세요');createPlanned(m,date,fv('sc-t'),tid);UI.modal=null;clearDraft('sc-d','sc-t','sc-s');save();toast('잡았어요. 수업 준비를 미리 채워 뒀어요.')}},
   // 예정 루틴
-  basis:d=>{UI.modal={type:'basis',sid:d.sid,uid:d.uid};UI.flags.basisSeen=true;UI.edit=null;render()},
+  basis:d=>{UI.modal={type:'basis',sid:d.sid,uid:d.uid};UI.flags.basisSeen=true;UI.flags.basisLast=d.uid;UI.edit=null;render()},
   rebasis:d=>{const {s,x}=gx(d);refill(s,x,d.v);if(s.cond)applyCondition(s);save();render()},
   refillAll:d=>{const s=SES(d.sid);let n=0;for(const x of liveEx(s)){if(x.edited)continue;refill(s,x,x.force);n++}save();toast(`직접 고치지 않은 ${n}종목을 다시 채웠어요`)},
   edit:d=>{const {s,x}=gx(d);if(!s||!x)return;if(UI.edit&&UI.edit.uid===d.uid&&+UI.edit.i===+d.i){UI.edit=null}else{UI.edit={sid:d.sid,uid:d.uid,i:+d.i,f:d.f||'r'};if(isLive(s))UI.cur[s.id]=x.uid}render()},
@@ -199,7 +199,7 @@ function flushRender(){if(soonT){cancelSoon();render()}}
 
 /* ---------- 시작 ---------- */
 (function boot(){
-  try{const v=JSON.parse(localStorage.getItem(KEY+'-view')||'null');if(v){UI.orient=v.orient==='port'?'port':'land';UI.fit=v.fit!==false;if(v.guide){G.open=v.guide.open!==false;G.scene=+v.guide.scene||0;G.step=+v.guide.step||0}}}catch(e){}
+  try{const v=JSON.parse(localStorage.getItem(KEY+'-view')||'null');if(v){UI.orient=v.orient==='port'?'port':'land';UI.fit=v.fit!==false;if(v.guide){G.open=v.guide.open!==false;G.scene=Math.min(+v.guide.scene||0,SCENES.length-1);G.step=+v.guide.step||0}}}catch(e){}
   S=load(); save();
   const app=document.getElementById('app');
   app.addEventListener('click',ev=>{const el=ev.target.closest('[data-act]');if(!el||el.disabled||!app.contains(el)){flushRender();return}cancelSoon();const f=ACT[el.dataset.act];if(f)f(el.dataset,el,ev)});

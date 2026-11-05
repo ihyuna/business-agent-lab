@@ -14,7 +14,7 @@ const isNum=v=>typeof v==='number'&&Number.isFinite(v);
 const firstNum=v=>{if(isNum(v))return v;const m=String(v??'').match(/\d+(\.\d+)?/);return m?Number(m[0]):null};
 
 /* ---------- 상태 ---------- */
-const KEY='pt-mvp-proto-v3.3';
+const KEY='pt-mvp-proto-v4';
 let S=null;
 const UI={ask:null,route:{name:'today'},stack:[],modal:null,draft:{},toast:null,orient:'land',fit:true,timer:null,cur:{},open:{},search:'',edit:null,flags:{}};
 const todayIso=()=>(S&&S.today)||'2026-10-07';

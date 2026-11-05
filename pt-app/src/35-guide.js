@@ -53,7 +53,8 @@ function seedLater(d){
   seedSession(m,M3_LATER[d]);
 }
 
-const SCENES=[
+/* v3 장면 1~8 (수첩 10/7·10/14 칸 그대로 따라 하는 단계들). v4 시나리오는 이 단계들을 되쓰고, 화면에 보여 줄 단계만 골라 다시 쓴다 */
+const OLD=[
  {t:'장면 1. 출근, 오늘',sub:'10/7 (수) 14:30 · 화면: 오늘',
   enter(){S.today='2026-10-07';save();home('today')},
   steps:[
@@ -275,6 +276,66 @@ const SCENES=[
     auto:()=>{GD.m().blocks.push({dir:'조절',focus:'심박수·체중감량 (예시)',start:'2026-10-19'});UI.modal=null;save();render()}}]}
 ];
 
+
+/* ---------- v4 시나리오 (2026-11-05, D78): 장면 다섯, 장면마다 상황·왜·할 일 1~4개. 숫자 판단(세트·무게·횟수)에만 집중 ---------- */
+function runOld(k,from,to){const sc=OLD[k];for(let i=from;i<(to??sc.steps.length);i++){const st=sc.steps[i];let ok=false;try{ok=st.done()}catch(e){}if(!ok)st.auto()}}
+const reuse=(k,i,say)=>({...OLD[k].steps[i],say});
+const SCENES=[
+ {t:'1. 수업 전: 오늘 숫자 정하기',sub:'10/7 (수) 18:30 · 화면: 오늘 숫자 정하기',
+  sit:"19시에 이00_3 회원 하체 수업이 있어요. 지난 수업은 13일 전이에요. 지난 하체(9/22)에 핵스쿼트 40kg으로 16회를 해서 수첩에 \"60kg 도전 예정\"이라고 적어 뒀어요.",
+  why:"오늘 몇 kg로 몇 회, 몇 세트 할지를 기억이 아니라 지난 기록으로 정하려고요. 앱이 근거를 붙여 숫자를 먼저 채우고, 정하는 건 트레이너예요.",
+  enter(){S.today='2026-10-07';save();home('today')},
+  steps:[
+   reuse(0,1,"'오늘' 화면에서 '19:00 · 이00_3 · 하체' 줄을 눌러요."),
+   {say:"핵스쿼트 줄을 봐요. 지난번 40kg × 16, 12 → 판단 '무게 ↑' → 오늘 60kg. 아래 근거 줄의 '계산 보기 ›'를 눌러 왜 이 숫자인지 읽고 '닫기'.",
+    at:()=>UI.modal&&UI.modal.type==='basis'?'.modal [data-act="closeModal"]':`.linkbtn[data-uid="${gex(GD.s107(),'hacksq').uid}"]`,
+    done:()=>UI.flags.basisLast===gex(GD.s107(),'hacksq').uid&&!UI.modal,
+    auto:()=>{ensureR('prep',GD.s107());UI.flags.basisLast=gex(GD.s107(),'hacksq').uid;UI.modal=null;render()}},
+   reuse(2,0,"트레이너 판단: 40kg에서 16회를 했으니 60kg도 12회를 노려요. 본세트 첫 칸 '60kg × 8'을 눌러 횟수를 12로 바꾸고 '아래 세트에도'를 눌러요."),
+   {say:"나머지는 앱이 채운 숫자 그대로 둬요. 워밍업은 수첩대로 40kg × 8 한 세트로 맞춰 둘게요. '수업 시작 ›'을 눌러요.",
+    at:()=>'.actbar [data-to="live"]',
+    done:()=>onR('live',GD.s107())||GD.s107().status!=='planned',
+    auto:()=>{runOld(2,1,3);go('live',{sid:GD.s107().id})}}]},
+ {t:'2. 회원 도착: 컨디션 반영',sub:'19:00 · 화면: 수업 시작',
+  sit:"회원이 와서 \"어제 야근해서 좀 피곤해요\"라고 해요. (가정: 수첩에는 없는 말이에요.)",
+  why:"같은 계획이라도 피곤한 날은 여유를 더 남겨야 해요. 앱이 어느 숫자를 얼마나, 왜 줄였는지 보여 주고, 받을지는 트레이너가 정해요.",
+  enter(){const s=GD.s107();runOld(2,1,3);UI.edit=null;ensureR('live',s)},
+  steps:[
+   reuse(3,0,"피로 '나쁨'을 눌러요."),
+   reuse(3,1,"오른쪽 숫자가 주황색으로 바뀌었어요(핵스쿼트 60kg × 12 → × 11). 주황색 핵스쿼트 칸을 눌러 까닭을 읽고 '닫기'."),
+   reuse(3,2,"수첩 10/7에는 평소 숫자로 했으니 피로를 '평소'로 되돌려요. 숫자가 원래대로 돌아와요."),
+   reuse(3,3,"'시작'을 눌러요.")]},
+ {t:'3. 수업 중: 남은 세트 다시 정하기',sub:'19:15 · 화면: 수업 중',
+  sit:"이너타이는 끝났어요(수첩대로 채워 뒀어요). 지금은 시티드 레그컬이에요. 계획은 50kg × 20회인데, 수첩을 보면 1세트는 40kg × 20, 2세트는 50kg으로 25회를 했어요.",
+  why:"계획보다 잘되거나 안 되면 남은 세트 숫자를 그 자리에서 다시 맞춰야 해요. 앱이 근거와 함께 바꿔 보여 주고, 트레이너는 그대로 하거나 고쳐요.",
+  enter(){const s=GD.s107();if(s.status==='planned')ACT.startSession({sid:s.id});runOld(4,0,2);UI.edit=null;UI.cur[s.id]=gex(s,'scurl').uid;render()},
+  steps:[
+   reuse(4,2,"시티드 레그컬 1세트 무게를 40으로(40 × 20), 2세트 횟수를 25로(50 × 25) 넣어요."),
+   reuse(4,3,"계획보다 5개 더 해서 3세트가 보라색 25회로 바뀌었어요. 보라색 꼬리표를 눌러 까닭을 읽고 '닫기'."),
+   reuse(4,4,"3세트 '그대로'를 눌러요. 바뀐 숫자 50 × 25로 끝나요.")]},
+ {t:'4. 수업 끝: 다음 수업 숫자',sub:'19:55 · 화면: 마무리',
+  sit:"나머지 종목도 수첩대로 끝났어요. 핵스쿼트는 2세트에서 1개를 실패했고, 레그프레스는 원레그 핵프레스로 바꿨고, 레그 익스텐션은 시간이 없어 뺐어요.",
+  why:"오늘 결과가 다음 수업의 출발 숫자가 돼요. 목표를 넘은 종목은 앱이 '목표 넘음'으로 알려 주고, 올릴지는 트레이너가 정해요.",
+  enter(){runOld(4,5);UI.ask=null;const s=GD.s107();ensureR('summary',s);OLD[5].steps[3].auto();render()},
+  steps:[
+   reuse(5,0,"'다음 하체 초안'에서 시티드 레그컬에 '목표 넘음'이 붙었어요(세 세트 모두 계획 20회 이상). '올리기 +2.5'를 눌러요."),
+   reuse(5,1,"다음 목표 52.5 × 25가 들어왔어요. 수첩에서는 다음 하체에 60kg으로 올렸으니 무게 칸을 60으로 고쳐요."),
+   {say:"다음 PT는 10/8 밀기로 잡아 뒀어요. '끝내기'를 눌러요.",at:OLD[5].steps[4].at,done:OLD[5].steps[4].done,auto:OLD[5].steps[4].auto}]},
+ {t:'5. 다음 하체: 숫자가 이어져요',sub:'10/14 (수) · 화면: 오늘 숫자 정하기',
+  sit:"일주일 뒤 10/14 (수) 하체예요. 그 사이 밀기·후면사슬 수업은 수첩 기록으로 채워 뒀어요.",
+  why:"지난번 끝에 정한 다음 목표가 오늘 숫자로 그대로 들어와요. 트레이너는 근거 줄에서 어디서 온 숫자인지만 확인하면 돼요.",
+  enter(){OLD[6].enter();runOld(6,0,3);UI.modal=null;home('today');go('prep',{sid:GD.sLeg().id})},
+  steps:[
+   {say:"시티드 레그컬 근거가 '10/7 수업 끝에 정한 다음 목표'예요(60kg × 25). '계산 보기 ›'를 눌러 확인하고 '닫기'.",
+    at:()=>UI.modal&&UI.modal.type==='basis'?'.modal [data-act="closeModal"]':`.linkbtn[data-uid="${gex(GD.sLeg(),'scurl').uid}"]`,
+    done:()=>UI.flags.basisLast===gex(GD.sLeg(),'scurl').uid&&!UI.modal,
+    auto:()=>{ensureR('prep',GD.sLeg());UI.flags.basisLast=gex(GD.sLeg(),'scurl').uid;UI.modal=null;render()}},
+   {say:"핵스쿼트는 10/7 실제값 60kg × 12, 11, 12에서 왔어요. 판단 칸이 '유지'예요. 올릴지 말지는 트레이너가 숫자를 눌러 정해요. 여기서는 그대로 두고 '확인했어요'를 눌러요.",
+    at:()=>'#guide [data-g="ack"]',
+    done:()=>!!UI.flags.ack5,
+    auto:()=>{UI.flags.ack5=true;render()}}],
+  end:"한 바퀴 끝이에요: 지난 기록 → 오늘 숫자(근거) → 컨디션·세트 결과로 다시 맞추기 → 다음 수업 숫자."}
+];
 /* ---------- 장면 옮기기 ---------- */
 function runAuto(st){try{st.auto();return true}catch(e){console.error(e);return false}}
 function finishScene(k){const sc=SCENES[k];for(let i=(k===G.scene?G.step:0);i<sc.steps.length;i++){const st=sc.steps[i];let ok=false;try{ok=st.done()}catch(e){}if(!ok&&!runAuto(st))return false}return true}
@@ -290,6 +351,7 @@ function gotoScene(k){
 }
 function guideClick(ev){
   const el=ev.target.closest('[data-g]'); if(!el) return; const a=el.dataset.g;
+  if(a==='ack'){UI.flags.ack5=true;render();return}
   if(a==='close'){G.open=false;saveView();fit();render();return}
   if(a==='scene'){gotoScene(+el.dataset.k);return}
   if(a==='restart'){gotoScene(G.scene);return}
@@ -318,9 +380,10 @@ function guideAfter(){
   box.innerHTML=`<div class="g-head"><b>시나리오 따라 하기</b><span class="sp"></span><button class="btn small ghost" data-g="close">닫기</button></div>
    <div class="g-scenes">${SCENES.map((x,k)=>`<button class="chip${k===G.scene?' on':''}" data-g="scene" data-k="${k}" title="${esc(x.t)}">${k+1}</button>`).join('')}</div>
    <div class="g-title">${esc(sc.t)}</div><div class="tiny muted">${esc(sc.sub)}</div>
-   <ol class="g-steps">${sc.steps.map((st,i)=>`<li class="${i<G.step?'done':i===G.step?'cur':''}">${esc(st.say)}</li>`).join('')}</ol>
+   ${sc.sit?`<div class="g-box"><b>상황</b> ${esc(sc.sit)}</div><div class="g-box why"><b>왜 하나요</b> ${esc(sc.why)}</div>`:''}
+   <div class="tiny muted" style="margin-top:8px"><b>할 일</b></div><ol class="g-steps">${sc.steps.map((st,i)=>`<li class="${i<G.step?'done':i===G.step?'cur':''}">${esc(st.say)}${i===G.step&&/확인했어요/.test(st.say)?` <button class="btn small primary" data-g="ack">확인했어요</button>`:''}</li>`).join('')}</ol>
    ${cur?`<div class="row"><span class="tiny muted">노란 테두리를 눌러요.</span><span class="sp"></span><button class="btn small" data-g="auto">이 단계 대신 하기</button></div>`
-     :`<div class="g-done">${last?'시나리오 끝이에요.':'이 장면은 끝났어요.'}</div>`}
+     :`<div class="g-done">${sc.end?esc(sc.end):last?'시나리오 끝이에요.':'이 장면은 끝났어요.'}</div>`}
    <div class="row" style="margin-top:10px">${last?'':`<button class="btn${cur?'':' primary'}" data-g="next">다음 장면 ›</button>`}<span class="sp"></span><button class="btn small ghost" data-g="restart">이 장면 처음부터</button></div>
-   <div class="g-foot">숫자는 트레이너 수첩 그대로이고, 수첩에 없는 값은 (예시)로 적었어요. 뒤 장면을 고르면 앞 장면을 자동으로 채우고, 앞 장면을 고르면 처음 상태로 되돌린 뒤 그 장면까지 채워요.</div>`;
+   <div class="g-foot">숫자는 트레이너 수첩 그대로이고, 수첩에 없는 말·값은 (가정)·(예시)로 적었어요. 장면 번호를 누르면 그 장면부터 할 수 있어요.</div>`;
 }

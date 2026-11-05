@@ -16,7 +16,7 @@ function startSheet(s,m){
      ${memo.length?`<div class="card"><h2>오늘 메모</h2>${memo.map(n=>`<div class="small">${esc(n.text)}</div>`).join('')}<div class="tiny muted">메모를 보고 앱이 숫자를 바꾸지는 않아요.</div></div>`:''}</div>
     <div class="col"><div class="card"><h2>오늘 목표</h2>${bIn('sGoal',s.goal,{sid:s.id},{full:1,ph:'예: 핵스쿼트 60kg 도전'})}</div>
      <div class="card"><h2>오늘 숫자 ${bad.length?`<span class="tag t-cond">${esc(bad.join('·'))} 나쁨 → ${nAdj}세트 바뀜</span>`:'<span class="tiny muted">컨디션 보통 기준 그대로</span>'}</h2>${exRows}<div style="margin-top:8px">${legendHTML()}</div></div></div></div></div>`+
-   actBar(btn('‹ 수업 준비','go',{to:'prep',sid:s.id}),btn('시작','startSession',{sid:s.id},'primary'));
+   actBar(btn('‹ 숫자 정하기','go',{to:'prep',sid:s.id}),btn('시작','startSession',{sid:s.id},'primary'));
 }
 
 /* ---------- 수업 진행: 남은 시간 띠 + 지금 종목 카드 하나 + 다음 종목 한 줄 ---------- */
