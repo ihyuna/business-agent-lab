@@ -36,11 +36,11 @@ function clearDraft(...keys){for(const k of keys) delete UI.draft[k]}
 function gx(d){const s=SES(d.sid);const x=s&&s.exercises.find(e=>e.uid===d.uid);return {s,x,st:x&&d.i!=null?x.sets[+d.i]:null,m:s&&M(s.memberId)}}
 function startTimer(x){if(!S.settings.restTimer)return;UI.timer={end:Date.now()+(x.rest||60)*1000,name:EX(x.exId).name}}
 function openSessionRoute(s){return s.status==='in_progress'?'live':s.status==='planned'?'prep':'detail'}
-/* 바꾸기·빼기 바로 뒤 이유 칩: 5초 뜨고 사라진다. 안 누르면 미리 고른 이유(남은 시간이 모자라면 '시간')나 '이유 없음' */
+/* 바꾸기·빼기 바로 뒤 이유 칩: 다른 버튼을 누르거나 화면을 옮길 때까지 떠 있다 (2026-11-05 이현아님). 안 누르면 미리 고른 이유(남은 시간이 모자라면 '시간')나 '이유 없음' */
 let askT=null;
-function showAsk(o){UI.ask=o;clearTimeout(askT);askT=setTimeout(()=>{UI.ask=null;askT=null;render()},5000);render()}
+function showAsk(o){UI.ask=o;clearTimeout(askT);render()}
 function askHTML(){const a=UI.ask;const {x}=gx(a);if(!x)return '';const cur=x.reason;
-  return `<div class="askbar" role="status"><span class="small"><b>${esc(EX(x.exId).name)}</b> ${a.kind==='remove'?'뺐어요':'바꿨어요'}. 이유</span>${REMOVE_REASONS.map(r=>`<button class="chip${cur===r?' on':''}" data-act="askPick" data-v="${r}">${r}</button>`).join('')}<span class="tiny muted">안 누르면 '${esc(cur||'이유 없음')}'으로 남아요 · 5초 뒤 사라져요</span>${a.kind==='remove'?btn('되돌리기','askUndo',null,'small ghost'):''}</div>`}
+  return `<div class="askbar" role="status"><span class="small"><b>${esc(EX(x.exId).name)}</b> ${a.kind==='remove'?'뺐어요':'바꿨어요'}. 이유</span>${REMOVE_REASONS.map(r=>`<button class="chip${cur===r?' on':''}" data-act="askPick" data-v="${r}">${r}</button>`).join('')}<span class="tiny muted">안 누르면 '${esc(cur||'이유 없음')}'으로 남아요 · 다른 곳을 누르면 닫혀요</span>${a.kind==='remove'?btn('되돌리기','askUndo',null,'small ghost'):''}</div>`}
 
 /* ---------- 누르기 ---------- */
 function resetAll(){try{localStorage.removeItem(KEY)}catch(e){}S=buildSeed();save();clearTimeout(askT);Object.assign(UI,{ask:null,stack:[],route:{name:'today'},modal:null,draft:{},cur:{},open:{},search:'',timer:null,confirmReset:false,scrolls:{},edit:null,flags:{}})}
@@ -202,7 +202,7 @@ function flushRender(){if(soonT){cancelSoon();render()}}
   try{const v=JSON.parse(localStorage.getItem(KEY+'-view')||'null');if(v){UI.orient=v.orient==='port'?'port':'land';UI.fit=v.fit!==false;if(v.guide){G.open=v.guide.open!==false;G.scene=Math.min(+v.guide.scene||0,SCENES.length-1);G.step=+v.guide.step||0}}}catch(e){}
   S=load(); save();
   const app=document.getElementById('app');
-  app.addEventListener('click',ev=>{const el=ev.target.closest('[data-act]');if(!el||el.disabled||!app.contains(el)){flushRender();return}cancelSoon();const f=ACT[el.dataset.act];if(f)f(el.dataset,el,ev)});
+  app.addEventListener('click',ev=>{const el=ev.target.closest('[data-act]');if(!el||el.disabled||!app.contains(el)){flushRender();return}cancelSoon();if(UI.ask&&!/^ask/.test(el.dataset.act))UI.ask=null;const f=ACT[el.dataset.act];if(f)f(el.dataset,el,ev)});
   app.addEventListener('change',ev=>{const el=ev.target.closest('[data-on]');if(!el)return;const f=ON[el.dataset.on];if(f)f(el.value,el.dataset,el)});
   app.addEventListener('input',ev=>{const el=ev.target;if(el.dataset&&el.dataset.d!=null)UI.draft[el.dataset.d]=el.value});
   app.addEventListener('keydown',ev=>{if(ev.key==='Escape'&&UI.modal){UI.modal=null;render()}});
