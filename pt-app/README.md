@@ -52,3 +52,7 @@ node test/check.js   # 장면 1~7을 한 단계씩 돌리며 시간 띠·색 표
 ## 사용한 외부 자료
 
 - 근육 지도의 사람 그림 좌표(`src/15-body.js`)는 [react-body-highlighter](https://github.com/giavinh79/react-body-highlighter) v2.0.5 (MIT License, Copyright (c) 2020 GV79)의 그림 데이터에서 숫자만 옮겼습니다.
+
+## 문서
+
+기획·결정·시나리오 문서는 [docs/](docs/INDEX.md)에 있습니다(회원은 코드로만 씀).
