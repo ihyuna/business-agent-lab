@@ -90,6 +90,20 @@ textarea{width:100%;min-height:70px;resize:vertical}
 .pe-n{color:var(--faint);font-variant-numeric:tabular-nums;width:24px}
 .pe-sets{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
 .editor{background:var(--soft);border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin:6px 0 4px}
+.numwrap{display:inline-flex;align-items:baseline;gap:3px}
+.numin{width:64px;border:0;border-bottom:1px dashed var(--faint);background:transparent;font:inherit;font-size:17px;font-variant-numeric:tabular-nums;padding:3px 4px;border-radius:6px 6px 0 0;color:var(--ink)}
+.numin.plan{color:var(--muted)}
+.numin:focus{outline:2px solid var(--accent);background:var(--panel);color:var(--ink)}
+.numin.a-cond{border-bottom:2px solid var(--cond);background:var(--cond-soft)} .numin.a-live{border-bottom:2px solid var(--live);background:var(--live-soft)}
+.numwrap .unit{font-size:12px;color:var(--muted)}
+.setmore{margin-left:4px;padding:4px 8px}
+.chipedit{display:inline-flex;align-items:center;gap:4px;border:1px solid var(--accent);background:var(--accent-soft);border-radius:8px;padding:3px 6px;flex-wrap:wrap}
+.chipedit .ci{width:54px;border:1px solid var(--line);border-radius:6px;padding:4px 6px;font:inherit;font-size:14px;background:var(--panel);color:var(--ink)}
+.card.fold{padding-top:8px;padding-bottom:8px}
+.foldhead{display:flex;align-items:center;width:100%;border:0;background:none;padding:2px 0;cursor:pointer;text-align:left;color:inherit;font:inherit}
+.foldhead h2{flex:1;margin:0}
+.foldhead .cnt{display:inline-block;min-width:18px;text-align:center;font-size:12px;border-radius:999px;background:var(--soft);color:var(--muted);padding:0 6px;margin-left:4px}
+.card.fold>.foldhead+*{margin-top:8px}
 .numbtn{border:0;background:none;padding:3px 6px;border-radius:6px;font-size:17px;font-variant-numeric:tabular-nums;border-bottom:1px dashed var(--faint)}
 .numbtn.plan{color:var(--muted)}
 .numbtn:hover{background:var(--soft)}
@@ -136,7 +150,7 @@ th{font-size:12px;color:var(--muted);font-weight:500}
 .note-box{background:var(--soft);border-radius:8px;padding:6px 10px;font-size:13px}
 .step{border:1px solid var(--line);background:var(--panel);border-radius:8px;min-width:30px;height:30px;padding:0 6px}
 .val{width:70px;text-align:center;padding-inline:4px}
-.set-row{display:grid;grid-template-columns:64px 130px 120px minmax(0,1fr) 110px;gap:8px;align-items:center;padding:7px 6px;border-bottom:1px solid var(--line);border-radius:6px}
+.set-row{display:grid;grid-template-columns:64px 130px 130px minmax(0,1fr) 140px;gap:8px;align-items:center;padding:7px 6px;border-bottom:1px solid var(--line);border-radius:6px}
 .set-row.done{background:var(--good-soft)}
 .set-row.sel{box-shadow:inset 0 0 0 2px var(--accent)}
 .set-row .kind{border:1px solid var(--line);background:var(--panel);border-radius:8px;height:32px;font-size:13px}
@@ -157,7 +171,7 @@ th{font-size:12px;color:var(--muted);font-weight:500}
 hr.sep{border:0;border-top:1px solid var(--line);margin:10px 0}
 mark{background:var(--warn-soft);color:var(--ink);border-radius:3px;padding:0 1px}
 #device.port .side{width:190px}
-#device.port .set-row{grid-template-columns:56px 110px 100px minmax(0,1fr) 100px;gap:6px}
+#device.port .set-row{grid-template-columns:52px 110px 112px minmax(0,1fr) 128px;gap:6px}
 #device.port .pe-row{grid-template-columns:22px 150px 110px minmax(0,1fr) 36px}
 #device.port .val{width:58px}
 #device.port .grid3{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
@@ -1981,10 +1995,12 @@ function basisTag(s,x){
 const fwr=(w,r,exId)=>`${w!=null?fw(w,exId):'—'} × ${r??'—'}`;
 function setNo(x,i){const st=x.sets[i];if(st.kind==='warmup')return '워밍업';let n=0;for(let j=0;j<=i;j++)if(x.sets[j].kind!=='warmup')n++;return String(n)}
 const lastSession=m=>completed(m.id).slice(-1)[0];
+/* 접는 카드: 제목 줄을 누르면 펼친다. n은 제목 옆 개수 */
+function foldCard(key,title,n,body){const o=UI.open[key];return `<div class="card fold"><button class="foldhead" data-act="toggle" data-t="${key}"><h2>${title}${n!=null?` <span class="cnt">${n}</span>`:''}</h2><span class="faint">${o?'접기 ▴':'펼치기 ▾'}</span></button>${o?body:''}</div>`}
 const isEdit=(x,i)=>UI.edit&&UI.edit.uid===x.uid&&+UI.edit.i===i;
 
 /* 세트 고치는 칸: 세트를 눌렀을 때만 열린다 */
-function editorHTML(s,x,i){
+function editorHTML(s,x,i,o={}){
   const st=x.sets[i]; const live=isLive(s); const e=EX(x.exId); const d={sid:s.id,uid:x.uid,i};
   const w=live?(st.aw??st.pw):st.pw, r=live?(st.ar??st.pr):st.pr;
   const range=live&&!st.done&&st.pr!=null&&!isNum(st.pr);
@@ -1992,7 +2008,7 @@ function editorHTML(s,x,i){
   const later=x.sets.some((t,j)=>j>i&&sameGroup(t,st)&&!(live&&t.done));
   return `<div class="editor"><div class="row" style="margin-bottom:8px"><b>${setNo(x,i)==='워밍업'?'워밍업 세트':setNo(x,i)+'세트'}</b>${live?`<span class="tiny muted">계획 ${esc(fwr(st.pw,st.pr,x.exId))}</span>`:''}${range?`<span class="tag warn">계획 횟수가 범위(${esc(st.pr)})라 한 횟수를 넣어요</span>`:''}<span class="sp"></span>${btn('닫기','closeEdit',null,'small')}</div>
     ${adjCls(st)?`<div class="row small" style="margin:-2px 0 8px"><button class="tag t-${st.adj.by} adjbtn" data-act="adj" data-sid="${s.id}" data-uid="${x.uid}" data-i="${i}">${ADJ_NAME[st.adj.by]} 때문에 바뀐 숫자 · 원래 ${esc(fwr(st.adj.from.w,st.adj.from.r,x.exId))} !</button><span class="tiny muted">고치면 고친 숫자가 남아요</span></div>`:''}
-    <div class="row" style="gap:20px">${field('w',w,(e.unit||'')+(e.side?' 한쪽':''),'무게')}${field('r',r,S.settings.roles[x.role]?.rounds?'라운드':'회','횟수')}</div>
+    ${o.noFields?'':`<div class="row" style="gap:20px">${field('w',w,(e.unit||'')+(e.side?' 한쪽':''),'무게')}${field('r',r,S.settings.roles[x.role]?.rounds?'라운드':'회','횟수')}</div>`}
     <div class="row" style="margin-top:8px">${later?btn('아래 세트에도','below',d,'small'):''}${btn('세트 종류: '+KINDS[st.kind],'modal',{type:'kind',...d},'small')}${live?btn(st.pain?'통증 있음 ✓':'이 세트에서 통증','pain',d,'small'+(st.pain?' danger':'')):''}<span class="sp"></span>${btn('이 세트 빼기','delSet',d,'small danger')}</div></div>`;
 }
 
@@ -2252,6 +2268,9 @@ const ADJ_NAME={cond:'컨디션',live:'수업 중'};
 function legendHTML(){return `<div class="legend"><span><i style="background:var(--cond)"></i>컨디션 때문에 바뀐 숫자</span><span><i style="background:var(--live)"></i>앞 세트 결과로 바뀐 숫자</span><span>숫자를 누르면 까닭이 보여요</span></div>`}
 function setChip(s,x,i){
   const st=x.sets[i]; const k=st.kind==='working'?'':`<span class="k">${KINDS[st.kind]}</span>`; const a=adjCls(st);
+  if(isEdit(x,i)&&s.status==='planned'){const d={sid:s.id,uid:x.uid,i};const e=EX(x.exId);const later=x.sets.some((t,j)=>j>i&&sameGroup(t,st));
+    const inp=(f,v)=>`<input class="ci" inputmode="${f==='w'?'decimal':'text'}" data-on="ev" data-k="ev-${x.uid}-${i}-${f}"${attrs({...d,f})} value="${esc(v??'')}" placeholder="${f==='w'?'무게':'횟수'}" aria-label="${f==='w'?'무게':'횟수'}">`;
+    return `<span class="chipedit" data-uid="${x.uid}" data-i="${i}">${k}${inp('w',st.pw)}<span class="tiny muted">${esc(e.unit||'')}${e.side?' 한쪽':''} ×</span>${inp('r',st.pr)}${later?btn('아래 세트에도','below',d,'small'):''}${btn('종류','modal',{type:'kind',...d},'small ghost')}${btn('빼기','delSet',d,'small ghost danger')}${btn('✓','closeEdit',null,'small primary')}</span>`}
   return `<button class="setchip${isEdit(x,i)?' sel':''}${a?' '+a:''}" data-act="${a&&s.status!=='planned'?'adj':'edit'}" data-sid="${s.id}" data-uid="${x.uid}" data-i="${i}">${k}${esc(fwr(st.pw,st.pr,x.exId))}</button>`;
 }
 function roChip(s,x,i){const st=x.sets[i];const a=adjCls(st);return `<button class="setchip ro${a?' '+a:''}"${a?` data-act="adj" data-sid="${s.id}" data-uid="${x.uid}" data-i="${i}" style="cursor:pointer"`:''}>${st.kind==='working'?'':`<span class="k">${KINDS[st.kind]}</span>`}${esc(fwr(st.pw,st.pr,x.exId))}</button>`}
@@ -2316,7 +2335,7 @@ V.prep=r=>{
       ${ro?'':`<button class="btn ghost more" data-act="modal" data-type="exMenu" data-sid="${s.id}" data-uid="${x.uid}" aria-label="종목 메뉴">…</button>`}</div>
       <div class="pe-why"><span class="tiny muted">근거</span> <span class="small">${esc(whyShort(s,x))}</span> <button class="linkbtn" data-act="basis" data-sid="${s.id}" data-uid="${x.uid}">계산 보기 ›</button></div>
       ${open?`<div class="prep-hist">${h.slice().reverse().map(o=>`<div>${mdw(o.s.date)} ${esc(splitName(o.s))} · <b>${esc(fsets(o.x.sets,x.exId,'a'))}</b>${o.x.setting?` <span class="tiny muted">세팅 ${esc(o.x.setting)}</span>`:''}${o.x.raw?`<div class="dimline">수첩: ${esc(o.x.raw)}</div>`:''}</div>`).join('')||'기록 없음'}${memo&&memo.memo?`<div class="tiny muted">종목 메모 ${memo.date?md(memo.date):''}: ${esc(memo.memo)}</div>`:''}</div>`:''}
-      ${ed&&!ro?editorHTML(s,x,+UI.edit.i):''}</div>`}).join('');
+      </div>`}).join('');
   const pm=planMinutes(s);
   return topBar(esc(m.code)+' 오늘 숫자 정하기',`${mdw(s.date)} ${esc(s.time||'')} · ${esc(splitName(s))}${ro?' · 수업이 시작돼 고칠 수 없어요':''}`,ro?'':btn('+ 종목','modal',{type:'addEx',sid:s.id},'small'))+
    `<div class="scroll" data-sk="main">${briefLine(s,m)}
@@ -2355,6 +2374,8 @@ function curEx(s){
   if(x) UI.cur[s.id]=x.uid; return x;
 }
 function numBtn(s,x,i,f,label,cls){return `<button class="numbtn ${cls||''}" data-act="edit" data-sid="${s.id}" data-uid="${x.uid}" data-i="${i}" data-f="${f}">${label}</button>`}
+/* v4.2 (2026-11-05): 숫자는 세트 줄 안에서 바로 고친다. 칸을 누르면 그 자리에서 입력, 다른 곳을 누르면 저장 */
+function numIn(s,x,i,f,val,unit,cls){return `<span class="numwrap"><input class="numin ${cls||''}" inputmode="${f==='w'?'decimal':'text'}" data-on="ev" data-k="ev-${x.uid}-${i}-${f}" data-sid="${s.id}" data-uid="${x.uid}" data-i="${i}" data-f="${f}" value="${esc(val??'')}" placeholder="${f==='w'?'무게':'횟수'}" aria-label="${f==='w'?'무게':'횟수'}"><span class="unit">${unit}</span></span>`}
 function adjTag(s,x,i){const st=x.sets[i];if(!adjCls(st))return '';return `<button class="tag t-${st.adj.by} adjbtn" data-act="adj" data-sid="${s.id}" data-uid="${x.uid}" data-i="${i}" title="바뀐 까닭">${ADJ_NAME[st.adj.by]} · 원래 ${esc(fwr(st.adj.from.w,st.adj.from.r,x.exId))} !</button>`}
 function timeBar(s){
   const T=timeState(s);
@@ -2376,22 +2397,22 @@ V.live=r=>{
       const longRest=st.restMin!=null&&st.restMin>2*((x.rest||60)/60);
       const info=st.done?[changed?`계획 ${esc(fwr(st.pw,st.pr,x.exId))}`:'계획대로',st.restMin!=null?`<span${longRest?' style="color:var(--warn);font-weight:600"':''}>쉼 ${restText(st.restMin)}</span>`:''].filter(Boolean).join(' · '):'';
       return `<div class="set-row${st.done?' done':''}${isEdit(x,i)?' sel':''}"><div class="small"><b>${setNo(x,i)}</b>${st.added?' <span class="tiny muted">추가</span>':''}</div>
-        <div>${numBtn(s,x,i,'w',w!=null?esc(fw(w,x.exId)):'무게 —',(st.done?'':'plan ')+aw)}</div>
-        <div>${numBtn(s,x,i,'r','× '+(rp!=null?esc(rp)+(isNum(rp)?'회':''):'—'),(st.done?'':'plan ')+ar)}</div>
+        <div>${numIn(s,x,i,'w',w,(e.unit||'')+(e.side?' 한쪽':''),(st.done?'':'plan ')+aw)}</div>
+        <div><span class="tiny muted">×</span> ${numIn(s,x,i,'r',rp,S.settings.roles[x.role]?.rounds?'라운드':'회',(st.done?'':'plan ')+ar)}</div>
         <div class="tiny muted">${info}${st.pain?' · <span style="color:var(--bad)">통증</span>':''} ${adjTag(s,x,i)}</div>
-        <div style="text-align:right">${st.done?btn(st.src==='confirmed'?'✓ 그대로':'✓ 고침','undoSet',{sid:s.id,uid:x.uid,i},'small'):btn('그대로','same',{sid:s.id,uid:x.uid,i},'primary',st.pw==null&&st.pr==null)}</div></div>
-        ${isEdit(x,i)?editorHTML(s,x,i):''}
+        <div style="text-align:right;white-space:nowrap">${st.done?btn(st.src==='confirmed'?'✓ 그대로':'✓ 고침','undoSet',{sid:s.id,uid:x.uid,i},'small'):btn('그대로','same',{sid:s.id,uid:x.uid,i},'primary',st.pw==null&&st.pr==null)}<button class="btn ghost small setmore" data-act="edit" data-sid="${s.id}" data-uid="${x.uid}" data-i="${i}" aria-label="세트 더보기" title="아래 세트에도 · 세트 종류 · 통증 · 빼기">⋯</button></div></div>
+        ${isEdit(x,i)?editorHTML(s,x,i,{noFields:1}):''}
         ${i===ri?`<div class="row small" style="padding:6px 0 4px 8px"><span class="muted">여유 횟수 (선택)</span>${chips([[0,'0'],[1,'1'],[2,'2'],[3,'3'],[4,'4'],[5,'5+']],st.rir,'rir',{sid:s.id,uid:x.uid,i})}</div>`:''}`}).join('');
     const nxt=lives[lives.indexOf(x)+1]; const allDone=x.sets.length&&x.sets.every(st=>st.done);
     const drop=canDrop(s,x);
     main=`<div class="card excard"><div class="row"><b style="font-size:21px">${esc(e.name)}</b><span class="tag">${x.role}</span>${x.structure!=='스트레이트'?`<span class="tag">${x.structure}</span>`:''}${basisTag(s,x)}${drop?`<span class="tag bad">뺄 수 있음</span>`:''}
         <span class="sp"></span><button class="btn ghost more" data-act="modal" data-type="exMenu" data-sid="${s.id}" data-uid="${x.uid}" aria-label="종목 메뉴">…</button></div>
-      <div class="row small" style="margin:6px 0 2px"><span class="muted">세팅</span>${bIn('exSetting',x.setting,{sid:s.id,uid:x.uid},{w:190,ph:'예: 발판:1, 밴드o'})}
-        <span class="muted" style="margin-left:8px">지난번</span><span>${ls?`${md(ls.s.date)} <b>${esc(fsets(ls.x.sets,x.exId,'a'))}</b>`:'기록 없음'}</span></div>
+      <div class="row small" style="margin:6px 0 2px"><span class="muted">지난번</span><span>${ls?`${md(ls.s.date)} <b>${esc(fsets(ls.x.sets,x.exId,'a'))}</b>`:'기록 없음'}</span>${x.setting?`<span class="muted" style="margin-left:8px">세팅</span><span>${esc(x.setting)}</span>`:''}</div>
       ${memo&&memo.memo?`<div class="note-box" style="margin:4px 0">종목 메모 (${memo.date?md(memo.date):''}): ${esc(memo.memo)}</div>`:''}
       <div class="sets">${rows||'<div class="empty">세트가 없어요.</div>'}</div>
-      <div class="row" style="margin-top:8px">${btn('+ 세트','addSet',{sid:s.id,uid:x.uid},'small')}${bIn('exNote',x.note,{sid:s.id,uid:x.uid},{grow:1,ph:'종목 메모 (다음 수업 준비에 다시 떠요)'})}</div>
-      <div style="margin-top:8px">${legendHTML()}</div></div>`;
+      <div class="row" style="margin-top:8px">${btn('+ 세트','addSet',{sid:s.id,uid:x.uid},'small')}<span class="sp"></span>${btn(UI.open['exx-'+x.uid]?'세팅·종목 메모 접기 ▴':'세팅·종목 메모 ▾','toggle',{t:'exx-'+x.uid},'small ghost')}</div>
+      ${UI.open['exx-'+x.uid]?`<div class="row small" style="margin-top:6px"><span class="muted">세팅</span>${bIn('exSetting',x.setting,{sid:s.id,uid:x.uid},{w:190,ph:'예: 발판:1, 밴드o'})}${bIn('exNote',x.note,{sid:s.id,uid:x.uid},{grow:1,ph:'종목 메모 (다음 수업 준비에 다시 떠요)'})}</div>`:''}
+      ${x.sets.some(st=>adjCls(st))?`<div style="margin-top:8px">${legendHTML()}</div>`:''}</div>`;
     nextLine=nxt?`<div class="next${allDone?' ready':''}" data-act="pickEx" data-sid="${s.id}" data-uid="${nxt.uid}"><span class="muted">다음</span> <b>${esc(EX(nxt.exId).name)}</b> <span class="small muted">${esc(fsets(nxt.sets,nxt.exId,'p'))}</span>${canDrop(s,nxt)?' <span class="tag bad">뺄 수 있음</span>':''}<span class="sp"></span>${allDone?'<span class="btn primary">다음 종목: '+esc(EX(nxt.exId).name)+' ›</span>':'<span class="faint">›</span>'}</div>`
       :`<div class="next"><span class="muted">마지막 종목이에요.</span>${allDone?' <span class="small">다 했으면 위의 \'마무리\'를 눌러요.</span>':''}</div>`;
   }
@@ -2442,8 +2463,8 @@ V.summary=r=>{
   return topBar(esc(m.code)+' 마무리',`${mdw(s.date)} · ${esc(splitName(s))} · 회원이 간 뒤 1분`,'',{noBack:true})+
    `<div class="scroll" data-sk="main"><div class="grid2"><div class="col">
      <div class="card"><h2><span class="n">1</span>오늘 결과 <span class="tiny muted">줄을 누르면 고칠 수 있어요</span></h2><table><tr><th>종목</th><th>오늘</th><th>지난 같은 분할</th></tr>${res||'<tr><td colspan="3" class="empty">기록한 세트가 없어요.</td></tr>'}</table></div>
-     <div class="card"><h2><span class="n">2</span>계획과 달라진 곳</h2>${ch.map(c=>`<div class="small">· ${esc(c)}</div>`).join('')||'<div class="empty">계획대로 했어요.</div>'}${longs.map(c=>`<div class="small" style="color:var(--warn)">· ${esc(c)}</div>`).join('')}</div>
-     <div class="card"><h2><span class="n">3</span>넘은 개인 기록</h2>${prs.map(p=>`<div class="small">· ${esc(p)}</div>`).join('')||'<div class="empty">없어요.</div>'}</div>
+     ${foldCard('sum2-'+s.id,'<span class="n">2</span>계획과 달라진 곳',ch.length+longs.length,ch.map(c=>`<div class="small">· ${esc(c)}</div>`).join('')+longs.map(c=>`<div class="small" style="color:var(--warn)">· ${esc(c)}</div>`).join('')||'<div class="empty">계획대로 했어요.</div>')}
+     ${foldCard('sum3-'+s.id,'<span class="n">3</span>넘은 개인 기록',prs.length,prs.map(p=>`<div class="small">· ${esc(p)}</div>`).join('')||'<div class="empty">없어요.</div>')}
      ${tplQ}${checkCard(m,6)}</div>
     <div class="col">
      <div class="card"><h2><span class="n">4</span>다음 ${esc(splitName(s))} 초안 <span class="tiny muted">올릴 종목만 눌러요</span></h2>${draft||'<div class="empty">기록한 종목이 없어요.</div>'}${back}
@@ -2451,8 +2472,8 @@ V.summary=r=>{
        <div style="margin-top:4px">${btn(UI.open['freeT']?'글 접기':'다음 목표를 글로 남기기 ▾','toggle',{t:'freeT'},'small ghost')}</div>${UI.open['freeT']?free:''}</div>
      <div class="card"><h2><span class="n">5</span>다음 PT</h2><div class="row" style="margin-bottom:6px">${chips([['1','잡기'],['0','나중에']],np.on?'1':'0','npOn',{sid:s.id})}</div>
        ${np.on?`<div class="row">${bIn('np',np.date,{sid:s.id,f:'date'},{type:'date',w:160})}${bIn('np',np.time,{sid:s.id,f:'time'},{type:'time',w:120})}${bSel('np',m.templates.map(t=>[t.id,t.name]),np.tid,{sid:s.id,f:'tid'},{w:120})}</div><div class="tiny muted" style="margin-top:4px">분할은 순서대로 다음 것을 골라 뒀어요. 끝내면 그 분할의 수업 준비를 미리 채워요.</div>`:''}</div>
-     <div class="card"><h2>오늘 변화와 쓴 근육 <span class="tiny muted">지난번과 비교</span></h2><div class="sumviz"><div>${deltaChart(m,s)}</div><div>${muscleBlock([s],170,'오늘')}</div></div></div>
-     ${cands.length?`<div class="card"><h2><span class="n">7</span>주의사항으로 올릴 것 <span class="tiny muted">올릴지는 트레이너가 정해요</span></h2><div class="list">${candRows}</div></div>`:''}
+     ${foldCard('sumviz-'+s.id,'오늘 변화와 쓴 근육 <span class="tiny muted">지난번과 비교</span>',null,`<div class="sumviz"><div>${deltaChart(m,s)}</div><div>${muscleBlock([s],170,'오늘')}</div></div>`)}
+     ${cands.length?foldCard('sum7-'+s.id,'<span class="n">7</span>주의사항으로 올릴 것 <span class="tiny muted">올릴지는 트레이너가 정해요</span>',cands.length,`<div class="list">${candRows}</div>`):''}
     </div></div></div>`+
    actBar(btn('‹ 수업으로','go',{to:'live',sid:s.id}),'<span class="tiny muted" style="margin-right:8px">아무것도 안 눌러도 수업 기록은 저장돼요.</span>'+btn('끝내기','finish',{sid:s.id},'primary'));
 };
@@ -2715,8 +2736,7 @@ function liveSet(s,x,i,w,r){ensureR('live',s);UI.cur[s.id]=x.uid;while(x.sets.le
 /* 수업 중 세트 칸 짚기: 그 종목 카드가 아니면 '다음' 줄, 고치는 칸이 열려 있으면 그 칸 */
 function atLive(s,x,i,f){
   if(UI.cur[s.id]!==x.uid) return `.next[data-uid="${x.uid}"]`;
-  if(isEdit(x,i)) return `.editor [data-on="ev"][data-f="${f}"]`;
-  return `[data-act="edit"][data-uid="${x.uid}"][data-i="${i}"][data-f="${f}"]`;
+  return `input.numin[data-uid="${x.uid}"][data-i="${i}"][data-f="${f}"]`;
 }
 function atSame(s,x,i){if(UI.cur[s.id]!==x.uid)return `.next[data-uid="${x.uid}"]`;return `[data-act="same"][data-uid="${x.uid}"][data-i="${i}"]`}
 function atMenu(s,x,type,pick){
@@ -2778,15 +2798,15 @@ const OLD=[
  {t:'장면 3. 같은 화면에서 계획 고치기',sub:'18:40 · 화면: 수업 준비 (오늘 계획)',
   steps:[
    {say:"40kg에서 16회를 했으니 60kg도 12회를 노려요. 핵스쿼트 본세트 첫 칸 '60kg × 8'을 눌러 횟수를 12로 바꾸고 '아래 세트에도'를 눌러요.",
-    at:()=>{const x=gex(GD.s107(),'hacksq');const i=x.sets.findIndex(st=>st.kind!=='warmup');if(isEdit(x,i))return x.sets[i].pr===12?'.editor [data-act="below"]':'.editor [data-on="ev"][data-f="r"]';return `.setchip[data-uid="${x.uid}"][data-i="${i}"]`},
+    at:()=>{const x=gex(GD.s107(),'hacksq');const i=x.sets.findIndex(st=>st.kind!=='warmup');if(isEdit(x,i))return x.sets[i].pr===12?'.chipedit [data-act="below"]':'.chipedit [data-on="ev"][data-f="r"]';return `.setchip[data-uid="${x.uid}"][data-i="${i}"]`},
     done:()=>{const w=gex(GD.s107(),'hacksq').sets.filter(st=>st.kind!=='warmup');return w.length>0&&w.every(st=>st.pr===12)},
     auto:()=>{const s=GD.s107(),x=gex(s,'hacksq');const i=x.sets.findIndex(st=>st.kind!=='warmup');setField(s,x,i,'r',12);applyBelow(s,x,i);UI.edit=null;ensureR('prep',s);render()}},
    {say:"워밍업은 한 세트면 된다고 봐요. 워밍업 '45kg × 12'를 눌러 '이 세트 빼기'를 눌러요.",
-    at:()=>{const x=gex(GD.s107(),'hacksq');const i=x.sets.findIndex(st=>st.kind==='warmup'&&st.pw===45);if(i<0)return '';return isEdit(x,i)?'.editor [data-act="delSet"]':`.setchip[data-uid="${x.uid}"][data-i="${i}"]`},
+    at:()=>{const x=gex(GD.s107(),'hacksq');const i=x.sets.findIndex(st=>st.kind==='warmup'&&st.pw===45);if(i<0)return '';return isEdit(x,i)?'.chipedit [data-act="delSet"]':`.setchip[data-uid="${x.uid}"][data-i="${i}"]`},
     done:()=>!gex(GD.s107(),'hacksq').sets.some(st=>st.kind==='warmup'&&st.pw===45),
     auto:()=>{const x=gex(GD.s107(),'hacksq');const i=x.sets.findIndex(st=>st.kind==='warmup'&&st.pw===45);if(i>=0){x.sets.splice(i,1);x.edited=true}UI.edit=null;render()}},
    {say:"남은 워밍업 '30kg × 12'를 눌러 무게 40, 횟수 8로 고쳐요. 숫자 칸에 바로 써도 되고 −, +를 눌러도 돼요.",
-    at:()=>{const x=gex(GD.s107(),'hacksq');const i=x.sets.findIndex(st=>st.kind==='warmup');if(i<0)return '';if(!isEdit(x,i))return `.setchip[data-uid="${x.uid}"][data-i="${i}"]`;return x.sets[i].pw!==40?'.editor [data-on="ev"][data-f="w"]':x.sets[i].pr!==8?'.editor [data-on="ev"][data-f="r"]':'.editor [data-act="closeEdit"]'},
+    at:()=>{const x=gex(GD.s107(),'hacksq');const i=x.sets.findIndex(st=>st.kind==='warmup');if(i<0)return '';if(!isEdit(x,i))return `.setchip[data-uid="${x.uid}"][data-i="${i}"]`;return x.sets[i].pw!==40?'.chipedit [data-on="ev"][data-f="w"]':x.sets[i].pr!==8?'.chipedit [data-on="ev"][data-f="r"]':'.chipedit [data-act="closeEdit"]'},
     done:()=>{const w=gex(GD.s107(),'hacksq').sets.filter(st=>st.kind==='warmup');return w.length===1&&w[0].pw===40&&w[0].pr===8},
     auto:()=>{const s=GD.s107(),x=gex(s,'hacksq');const i=x.sets.findIndex(st=>st.kind==='warmup');if(i>=0){setField(s,x,i,'w',40);setField(s,x,i,'r',8)}UI.edit=null;render()}},
    {say:"나머지 종목은 그대로 둬요. 저장 버튼은 없어요. 아래 왼쪽 '계획 약 N분 / 수업 60분'으로 시간이 맞는지 보고, 회원이 오면 '수업 시작 ›'을 눌러요.",
@@ -2813,7 +2833,7 @@ const OLD=[
     auto:()=>ACT.startSession({sid:GD.s107().id})}]},
  {t:'장면 5. 수업 1시간, 세트마다 한 번',sub:'19:04~19:55 · 화면: 수업 · 수첩 10/7 칸 그대로',
   steps:[
-   {say:"위 띠에 지금 시각, 끝까지 남은 분, 남은 종목 예상 분이 있어요(시연 시계는 세트를 누를 때마다 가요). 이너타이 1세트는 수첩에 30 × 20이에요. 무게 '45'를 눌러 30, 횟수 '20-25'를 눌러 20을 넣어요. 가볍게 시작한 세트라 남은 세트는 그대로예요.",
+   {say:"위 띠에 지금 시각, 끝까지 남은 분, 남은 종목 예상 분이 있어요(시연 시계는 세트를 누를 때마다 가요). 이너타이 1세트는 수첩에 30 × 20이에요. 무게 칸 '45'를 눌러 그 자리에서 30, 횟수 칸 '20-25'를 눌러 20을 넣어요. 가볍게 시작한 세트라 남은 세트는 그대로예요.",
     at:()=>{const s=GD.s107(),x=gex(s,'inner');return atSets(s,x,[[30,20,'w']])},
     done:()=>isSet(gex(GD.s107(),'inner').sets[0],30,20),
     auto:()=>{const s=GD.s107();liveSet(s,gex(s,'inner'),0,30,20);UI.edit=null;render()}},
@@ -3012,7 +3032,7 @@ const SCENES=[
   steps:[
    R_(2,0,"본세트 첫 칸 '60kg × 8'을 눌러 횟수를 12로 바꾸고 '아래 세트에도'.","40kg에서 16회를 했으니 60kg에서도 12회는 된다고 본 거예요. '아래 세트에도'는 세 세트를 한 번에 바꿔요."),
    R_(2,1,"워밍업 '45kg × 12'를 눌러 '이 세트 빼기'.","워밍업은 한 세트로 몸만 풀고 힘은 본세트에 쓰려고요(수첩대로)."),
-   R_(2,2,"남은 워밍업 '30kg × 12'를 눌러 무게 40, 횟수 8로 고쳐요. 숫자를 바로 써도 되고 −, +를 눌러도 돼요.","본세트 60kg에 가까운 무게로 적게 해서 준비만 하려고요."),
+   R_(2,2,"남은 워밍업 '30kg × 12'를 눌러 무게 40, 횟수 8로 고쳐요. 칩이 그 자리에서 입력 칸으로 바뀌어요.","본세트 60kg에 가까운 무게로 적게 해서 준비만 하려고요."),
    R_(2,3,"아래 '계획 약 N분 / 수업 60분'으로 시간이 맞는지 보고, 회원이 오면 '수업 시작 ›'.","저장 버튼은 없어요. 고친 숫자는 바로 남아요. 계획이 60분을 넘으면 지금 종목을 줄여요.")]},
  {t:'4. 회원 도착: 컨디션 확인',sub:'19:00 · 화면: 수업 시작',
   goal:'오늘 컨디션에 맞춰 숫자를 바꿀지 정해요.',
@@ -3028,7 +3048,7 @@ const SCENES=[
   sit:"트레이너는 회원 옆에 있어서 앱은 세트가 끝날 때 한 번만 봐요. 아래 숫자는 모두 수첩 10/7 칸 그대로예요. 중간에 판단이 세 번 있어요: A 오래 쉬기, B 종목 바꾸기, C 종목 빼기.",
   why:"계획대로 됐으면 '그대로' 한 번이면 끝나고, 달랐을 때만 숫자를 고쳐요. 다르면 앱이 남은 세트를 다시 계산해 보라색으로 보여 줘요.",
   steps:[
-   R_(4,0,"이너타이 1세트는 수첩에 30 × 20이에요. 무게 '45'를 눌러 30, 횟수 '20-25'를 눌러 20을 넣어요.","가볍게 몸을 풀며 한 세트예요. 1세트만 가볍게 한 거라 남은 세트는 그대로 둬요."),
+   R_(4,0,"이너타이 1세트는 수첩에 30 × 20이에요. 무게 칸 '45'를 눌러 그 자리에서 30, 횟수 칸 '20-25'를 눌러 20을 넣어요.","가볍게 몸을 풀며 한 세트예요. 1세트만 가볍게 한 거라 남은 세트는 그대로 둬요."),
    R_(4,1,"2세트 횟수를 20으로 넣고, '+ 세트' → '그대로'로 한 세트 더(수첩 45 × 20 × 2).","'20-25'처럼 범위로 잡힌 횟수는 실제로 몇 개 했는지 숫자로 남겨야 다음 판단에 써요. 쉰 시간은 저절로 남아요."),
    R_(4,2,"'다음 종목: 시티드 레그컬'을 누르고, 1세트 무게를 40으로(40 × 20), 2세트 횟수를 25로(50 × 25) 넣어요.","2세트에서 계획 20회보다 5개 더 했어요. 이게 남은 세트와 다음 수업 숫자의 근거가 돼요."),
    R_(4,3,"3세트 횟수가 보라색 25회로 바뀌었어요. 보라색 꼬리표를 눌러 까닭을 읽고 '닫기'.","10회가 넘는 세트라 무게 대신 횟수를 맞췄다는 까닭을 확인해요."),
@@ -3242,7 +3262,7 @@ const ACT={
   basis:d=>{UI.modal={type:'basis',sid:d.sid,uid:d.uid};UI.flags.basisSeen=true;UI.flags.basisLast=d.uid;UI.edit=null;render()},
   rebasis:d=>{const {s,x}=gx(d);refill(s,x,d.v);if(s.cond)applyCondition(s);save();render()},
   refillAll:d=>{const s=SES(d.sid);let n=0;for(const x of liveEx(s)){if(x.edited)continue;refill(s,x,x.force);n++}save();toast(`직접 고치지 않은 ${n}종목을 다시 채웠어요`)},
-  edit:d=>{const {s,x}=gx(d);if(!s||!x)return;if(UI.edit&&UI.edit.uid===d.uid&&+UI.edit.i===+d.i){UI.edit=null}else{UI.edit={sid:d.sid,uid:d.uid,i:+d.i,f:d.f||'r'};if(isLive(s))UI.cur[s.id]=x.uid}render()},
+  edit:d=>{const {s,x}=gx(d);if(!s||!x)return;if(UI.edit&&UI.edit.uid===d.uid&&+UI.edit.i===+d.i){UI.edit=null}else{UI.edit={sid:d.sid,uid:d.uid,i:+d.i,f:d.f||'r'};if(isLive(s))UI.cur[s.id]=x.uid}render();if(UI.edit&&!isLive(s)){const el=document.querySelector(`#app .chipedit input[data-f="${d.f||'w'}"]`);if(el){el.focus();try{el.select()}catch(e){}}}},
   closeEdit:()=>{UI.edit=null;render()},
   estep:d=>{const {s,x,st}=gx(d);const live=isLive(s);const isW=d.f==='w';const inc=isW?(+EX(x.exId).inc||2.5):1;
     let base=firstNum(isW?(live?st.aw??st.pw:st.pw):(live?st.ar??st.pr:st.pr));if(base==null)base=0;setField(s,x,+d.i,d.f,Math.max(0,Math.round((base+(+d.dir)*inc)*100)/100));if(live&&st.done)startTimer(x);save();render()},
@@ -3347,6 +3367,9 @@ function flushRender(){if(soonT){cancelSoon();render()}}
   const app=document.getElementById('app');
   app.addEventListener('click',ev=>{const el=ev.target.closest('[data-act]');if(!el||el.disabled||!app.contains(el)){flushRender();return}cancelSoon();if(UI.ask&&!/^ask/.test(el.dataset.act))UI.ask=null;const f=ACT[el.dataset.act];if(f)f(el.dataset,el,ev)});
   app.addEventListener('change',ev=>{const el=ev.target.closest('[data-on]');if(!el)return;const f=ON[el.dataset.on];if(f)f(el.value,el.dataset,el)});
+  let selNext=null;app.addEventListener('focusin',ev=>{const el=ev.target;if(el.matches&&el.matches('input.numin,input.ci')){try{el.select()}catch(e){}selNext=el}});
+  app.addEventListener('mouseup',ev=>{if(selNext&&ev.target===selNext){ev.preventDefault()}selNext=null});
+  app.addEventListener('keydown',ev=>{const el=ev.target;if(ev.key==='Enter'&&el.matches&&el.matches('input.numin,input.ci'))el.blur()});
   app.addEventListener('input',ev=>{const el=ev.target;if(el.dataset&&el.dataset.d!=null)UI.draft[el.dataset.d]=el.value});
   app.addEventListener('keydown',ev=>{if(ev.key==='Escape'&&UI.modal){UI.modal=null;render()}});
   document.getElementById('b-orient').addEventListener('click',()=>{UI.orient=UI.orient==='land'?'port':'land';saveView();fit();render()});

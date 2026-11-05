@@ -99,7 +99,7 @@ const ACT={
   basis:d=>{UI.modal={type:'basis',sid:d.sid,uid:d.uid};UI.flags.basisSeen=true;UI.flags.basisLast=d.uid;UI.edit=null;render()},
   rebasis:d=>{const {s,x}=gx(d);refill(s,x,d.v);if(s.cond)applyCondition(s);save();render()},
   refillAll:d=>{const s=SES(d.sid);let n=0;for(const x of liveEx(s)){if(x.edited)continue;refill(s,x,x.force);n++}save();toast(`직접 고치지 않은 ${n}종목을 다시 채웠어요`)},
-  edit:d=>{const {s,x}=gx(d);if(!s||!x)return;if(UI.edit&&UI.edit.uid===d.uid&&+UI.edit.i===+d.i){UI.edit=null}else{UI.edit={sid:d.sid,uid:d.uid,i:+d.i,f:d.f||'r'};if(isLive(s))UI.cur[s.id]=x.uid}render()},
+  edit:d=>{const {s,x}=gx(d);if(!s||!x)return;if(UI.edit&&UI.edit.uid===d.uid&&+UI.edit.i===+d.i){UI.edit=null}else{UI.edit={sid:d.sid,uid:d.uid,i:+d.i,f:d.f||'r'};if(isLive(s))UI.cur[s.id]=x.uid}render();if(UI.edit&&!isLive(s)){const el=document.querySelector(`#app .chipedit input[data-f="${d.f||'w'}"]`);if(el){el.focus();try{el.select()}catch(e){}}}},
   closeEdit:()=>{UI.edit=null;render()},
   estep:d=>{const {s,x,st}=gx(d);const live=isLive(s);const isW=d.f==='w';const inc=isW?(+EX(x.exId).inc||2.5):1;
     let base=firstNum(isW?(live?st.aw??st.pw:st.pw):(live?st.ar??st.pr:st.pr));if(base==null)base=0;setField(s,x,+d.i,d.f,Math.max(0,Math.round((base+(+d.dir)*inc)*100)/100));if(live&&st.done)startTimer(x);save();render()},
@@ -204,6 +204,9 @@ function flushRender(){if(soonT){cancelSoon();render()}}
   const app=document.getElementById('app');
   app.addEventListener('click',ev=>{const el=ev.target.closest('[data-act]');if(!el||el.disabled||!app.contains(el)){flushRender();return}cancelSoon();if(UI.ask&&!/^ask/.test(el.dataset.act))UI.ask=null;const f=ACT[el.dataset.act];if(f)f(el.dataset,el,ev)});
   app.addEventListener('change',ev=>{const el=ev.target.closest('[data-on]');if(!el)return;const f=ON[el.dataset.on];if(f)f(el.value,el.dataset,el)});
+  let selNext=null;app.addEventListener('focusin',ev=>{const el=ev.target;if(el.matches&&el.matches('input.numin,input.ci')){try{el.select()}catch(e){}selNext=el}});
+  app.addEventListener('mouseup',ev=>{if(selNext&&ev.target===selNext){ev.preventDefault()}selNext=null});
+  app.addEventListener('keydown',ev=>{const el=ev.target;if(ev.key==='Enter'&&el.matches&&el.matches('input.numin,input.ci'))el.blur()});
   app.addEventListener('input',ev=>{const el=ev.target;if(el.dataset&&el.dataset.d!=null)UI.draft[el.dataset.d]=el.value});
   app.addEventListener('keydown',ev=>{if(ev.key==='Escape'&&UI.modal){UI.modal=null;render()}});
   document.getElementById('b-orient').addEventListener('click',()=>{UI.orient=UI.orient==='land'?'port':'land';saveView();fit();render()});

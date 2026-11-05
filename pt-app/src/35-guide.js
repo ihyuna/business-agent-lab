@@ -16,8 +16,7 @@ function liveSet(s,x,i,w,r){ensureR('live',s);UI.cur[s.id]=x.uid;while(x.sets.le
 /* 수업 중 세트 칸 짚기: 그 종목 카드가 아니면 '다음' 줄, 고치는 칸이 열려 있으면 그 칸 */
 function atLive(s,x,i,f){
   if(UI.cur[s.id]!==x.uid) return `.next[data-uid="${x.uid}"]`;
-  if(isEdit(x,i)) return `.editor [data-on="ev"][data-f="${f}"]`;
-  return `[data-act="edit"][data-uid="${x.uid}"][data-i="${i}"][data-f="${f}"]`;
+  return `input.numin[data-uid="${x.uid}"][data-i="${i}"][data-f="${f}"]`;
 }
 function atSame(s,x,i){if(UI.cur[s.id]!==x.uid)return `.next[data-uid="${x.uid}"]`;return `[data-act="same"][data-uid="${x.uid}"][data-i="${i}"]`}
 function atMenu(s,x,type,pick){
@@ -79,15 +78,15 @@ const OLD=[
  {t:'장면 3. 같은 화면에서 계획 고치기',sub:'18:40 · 화면: 수업 준비 (오늘 계획)',
   steps:[
    {say:"40kg에서 16회를 했으니 60kg도 12회를 노려요. 핵스쿼트 본세트 첫 칸 '60kg × 8'을 눌러 횟수를 12로 바꾸고 '아래 세트에도'를 눌러요.",
-    at:()=>{const x=gex(GD.s107(),'hacksq');const i=x.sets.findIndex(st=>st.kind!=='warmup');if(isEdit(x,i))return x.sets[i].pr===12?'.editor [data-act="below"]':'.editor [data-on="ev"][data-f="r"]';return `.setchip[data-uid="${x.uid}"][data-i="${i}"]`},
+    at:()=>{const x=gex(GD.s107(),'hacksq');const i=x.sets.findIndex(st=>st.kind!=='warmup');if(isEdit(x,i))return x.sets[i].pr===12?'.chipedit [data-act="below"]':'.chipedit [data-on="ev"][data-f="r"]';return `.setchip[data-uid="${x.uid}"][data-i="${i}"]`},
     done:()=>{const w=gex(GD.s107(),'hacksq').sets.filter(st=>st.kind!=='warmup');return w.length>0&&w.every(st=>st.pr===12)},
     auto:()=>{const s=GD.s107(),x=gex(s,'hacksq');const i=x.sets.findIndex(st=>st.kind!=='warmup');setField(s,x,i,'r',12);applyBelow(s,x,i);UI.edit=null;ensureR('prep',s);render()}},
    {say:"워밍업은 한 세트면 된다고 봐요. 워밍업 '45kg × 12'를 눌러 '이 세트 빼기'를 눌러요.",
-    at:()=>{const x=gex(GD.s107(),'hacksq');const i=x.sets.findIndex(st=>st.kind==='warmup'&&st.pw===45);if(i<0)return '';return isEdit(x,i)?'.editor [data-act="delSet"]':`.setchip[data-uid="${x.uid}"][data-i="${i}"]`},
+    at:()=>{const x=gex(GD.s107(),'hacksq');const i=x.sets.findIndex(st=>st.kind==='warmup'&&st.pw===45);if(i<0)return '';return isEdit(x,i)?'.chipedit [data-act="delSet"]':`.setchip[data-uid="${x.uid}"][data-i="${i}"]`},
     done:()=>!gex(GD.s107(),'hacksq').sets.some(st=>st.kind==='warmup'&&st.pw===45),
     auto:()=>{const x=gex(GD.s107(),'hacksq');const i=x.sets.findIndex(st=>st.kind==='warmup'&&st.pw===45);if(i>=0){x.sets.splice(i,1);x.edited=true}UI.edit=null;render()}},
    {say:"남은 워밍업 '30kg × 12'를 눌러 무게 40, 횟수 8로 고쳐요. 숫자 칸에 바로 써도 되고 −, +를 눌러도 돼요.",
-    at:()=>{const x=gex(GD.s107(),'hacksq');const i=x.sets.findIndex(st=>st.kind==='warmup');if(i<0)return '';if(!isEdit(x,i))return `.setchip[data-uid="${x.uid}"][data-i="${i}"]`;return x.sets[i].pw!==40?'.editor [data-on="ev"][data-f="w"]':x.sets[i].pr!==8?'.editor [data-on="ev"][data-f="r"]':'.editor [data-act="closeEdit"]'},
+    at:()=>{const x=gex(GD.s107(),'hacksq');const i=x.sets.findIndex(st=>st.kind==='warmup');if(i<0)return '';if(!isEdit(x,i))return `.setchip[data-uid="${x.uid}"][data-i="${i}"]`;return x.sets[i].pw!==40?'.chipedit [data-on="ev"][data-f="w"]':x.sets[i].pr!==8?'.chipedit [data-on="ev"][data-f="r"]':'.chipedit [data-act="closeEdit"]'},
     done:()=>{const w=gex(GD.s107(),'hacksq').sets.filter(st=>st.kind==='warmup');return w.length===1&&w[0].pw===40&&w[0].pr===8},
     auto:()=>{const s=GD.s107(),x=gex(s,'hacksq');const i=x.sets.findIndex(st=>st.kind==='warmup');if(i>=0){setField(s,x,i,'w',40);setField(s,x,i,'r',8)}UI.edit=null;render()}},
    {say:"나머지 종목은 그대로 둬요. 저장 버튼은 없어요. 아래 왼쪽 '계획 약 N분 / 수업 60분'으로 시간이 맞는지 보고, 회원이 오면 '수업 시작 ›'을 눌러요.",
@@ -114,7 +113,7 @@ const OLD=[
     auto:()=>ACT.startSession({sid:GD.s107().id})}]},
  {t:'장면 5. 수업 1시간, 세트마다 한 번',sub:'19:04~19:55 · 화면: 수업 · 수첩 10/7 칸 그대로',
   steps:[
-   {say:"위 띠에 지금 시각, 끝까지 남은 분, 남은 종목 예상 분이 있어요(시연 시계는 세트를 누를 때마다 가요). 이너타이 1세트는 수첩에 30 × 20이에요. 무게 '45'를 눌러 30, 횟수 '20-25'를 눌러 20을 넣어요. 가볍게 시작한 세트라 남은 세트는 그대로예요.",
+   {say:"위 띠에 지금 시각, 끝까지 남은 분, 남은 종목 예상 분이 있어요(시연 시계는 세트를 누를 때마다 가요). 이너타이 1세트는 수첩에 30 × 20이에요. 무게 칸 '45'를 눌러 그 자리에서 30, 횟수 칸 '20-25'를 눌러 20을 넣어요. 가볍게 시작한 세트라 남은 세트는 그대로예요.",
     at:()=>{const s=GD.s107(),x=gex(s,'inner');return atSets(s,x,[[30,20,'w']])},
     done:()=>isSet(gex(GD.s107(),'inner').sets[0],30,20),
     auto:()=>{const s=GD.s107();liveSet(s,gex(s,'inner'),0,30,20);UI.edit=null;render()}},
@@ -313,7 +312,7 @@ const SCENES=[
   steps:[
    R_(2,0,"본세트 첫 칸 '60kg × 8'을 눌러 횟수를 12로 바꾸고 '아래 세트에도'.","40kg에서 16회를 했으니 60kg에서도 12회는 된다고 본 거예요. '아래 세트에도'는 세 세트를 한 번에 바꿔요."),
    R_(2,1,"워밍업 '45kg × 12'를 눌러 '이 세트 빼기'.","워밍업은 한 세트로 몸만 풀고 힘은 본세트에 쓰려고요(수첩대로)."),
-   R_(2,2,"남은 워밍업 '30kg × 12'를 눌러 무게 40, 횟수 8로 고쳐요. 숫자를 바로 써도 되고 −, +를 눌러도 돼요.","본세트 60kg에 가까운 무게로 적게 해서 준비만 하려고요."),
+   R_(2,2,"남은 워밍업 '30kg × 12'를 눌러 무게 40, 횟수 8로 고쳐요. 칩이 그 자리에서 입력 칸으로 바뀌어요.","본세트 60kg에 가까운 무게로 적게 해서 준비만 하려고요."),
    R_(2,3,"아래 '계획 약 N분 / 수업 60분'으로 시간이 맞는지 보고, 회원이 오면 '수업 시작 ›'.","저장 버튼은 없어요. 고친 숫자는 바로 남아요. 계획이 60분을 넘으면 지금 종목을 줄여요.")]},
  {t:'4. 회원 도착: 컨디션 확인',sub:'19:00 · 화면: 수업 시작',
   goal:'오늘 컨디션에 맞춰 숫자를 바꿀지 정해요.',
@@ -329,7 +328,7 @@ const SCENES=[
   sit:"트레이너는 회원 옆에 있어서 앱은 세트가 끝날 때 한 번만 봐요. 아래 숫자는 모두 수첩 10/7 칸 그대로예요. 중간에 판단이 세 번 있어요: A 오래 쉬기, B 종목 바꾸기, C 종목 빼기.",
   why:"계획대로 됐으면 '그대로' 한 번이면 끝나고, 달랐을 때만 숫자를 고쳐요. 다르면 앱이 남은 세트를 다시 계산해 보라색으로 보여 줘요.",
   steps:[
-   R_(4,0,"이너타이 1세트는 수첩에 30 × 20이에요. 무게 '45'를 눌러 30, 횟수 '20-25'를 눌러 20을 넣어요.","가볍게 몸을 풀며 한 세트예요. 1세트만 가볍게 한 거라 남은 세트는 그대로 둬요."),
+   R_(4,0,"이너타이 1세트는 수첩에 30 × 20이에요. 무게 칸 '45'를 눌러 그 자리에서 30, 횟수 칸 '20-25'를 눌러 20을 넣어요.","가볍게 몸을 풀며 한 세트예요. 1세트만 가볍게 한 거라 남은 세트는 그대로 둬요."),
    R_(4,1,"2세트 횟수를 20으로 넣고, '+ 세트' → '그대로'로 한 세트 더(수첩 45 × 20 × 2).","'20-25'처럼 범위로 잡힌 횟수는 실제로 몇 개 했는지 숫자로 남겨야 다음 판단에 써요. 쉰 시간은 저절로 남아요."),
    R_(4,2,"'다음 종목: 시티드 레그컬'을 누르고, 1세트 무게를 40으로(40 × 20), 2세트 횟수를 25로(50 × 25) 넣어요.","2세트에서 계획 20회보다 5개 더 했어요. 이게 남은 세트와 다음 수업 숫자의 근거가 돼요."),
    R_(4,3,"3세트 횟수가 보라색 25회로 바뀌었어요. 보라색 꼬리표를 눌러 까닭을 읽고 '닫기'.","10회가 넘는 세트라 무게 대신 횟수를 맞췄다는 까닭을 확인해요."),

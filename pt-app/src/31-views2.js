@@ -27,6 +27,8 @@ function curEx(s){
   if(x) UI.cur[s.id]=x.uid; return x;
 }
 function numBtn(s,x,i,f,label,cls){return `<button class="numbtn ${cls||''}" data-act="edit" data-sid="${s.id}" data-uid="${x.uid}" data-i="${i}" data-f="${f}">${label}</button>`}
+/* v4.2 (2026-11-05): 숫자는 세트 줄 안에서 바로 고친다. 칸을 누르면 그 자리에서 입력, 다른 곳을 누르면 저장 */
+function numIn(s,x,i,f,val,unit,cls){return `<span class="numwrap"><input class="numin ${cls||''}" inputmode="${f==='w'?'decimal':'text'}" data-on="ev" data-k="ev-${x.uid}-${i}-${f}" data-sid="${s.id}" data-uid="${x.uid}" data-i="${i}" data-f="${f}" value="${esc(val??'')}" placeholder="${f==='w'?'무게':'횟수'}" aria-label="${f==='w'?'무게':'횟수'}"><span class="unit">${unit}</span></span>`}
 function adjTag(s,x,i){const st=x.sets[i];if(!adjCls(st))return '';return `<button class="tag t-${st.adj.by} adjbtn" data-act="adj" data-sid="${s.id}" data-uid="${x.uid}" data-i="${i}" title="바뀐 까닭">${ADJ_NAME[st.adj.by]} · 원래 ${esc(fwr(st.adj.from.w,st.adj.from.r,x.exId))} !</button>`}
 function timeBar(s){
   const T=timeState(s);
@@ -48,22 +50,22 @@ V.live=r=>{
       const longRest=st.restMin!=null&&st.restMin>2*((x.rest||60)/60);
       const info=st.done?[changed?`계획 ${esc(fwr(st.pw,st.pr,x.exId))}`:'계획대로',st.restMin!=null?`<span${longRest?' style="color:var(--warn);font-weight:600"':''}>쉼 ${restText(st.restMin)}</span>`:''].filter(Boolean).join(' · '):'';
       return `<div class="set-row${st.done?' done':''}${isEdit(x,i)?' sel':''}"><div class="small"><b>${setNo(x,i)}</b>${st.added?' <span class="tiny muted">추가</span>':''}</div>
-        <div>${numBtn(s,x,i,'w',w!=null?esc(fw(w,x.exId)):'무게 —',(st.done?'':'plan ')+aw)}</div>
-        <div>${numBtn(s,x,i,'r','× '+(rp!=null?esc(rp)+(isNum(rp)?'회':''):'—'),(st.done?'':'plan ')+ar)}</div>
+        <div>${numIn(s,x,i,'w',w,(e.unit||'')+(e.side?' 한쪽':''),(st.done?'':'plan ')+aw)}</div>
+        <div><span class="tiny muted">×</span> ${numIn(s,x,i,'r',rp,S.settings.roles[x.role]?.rounds?'라운드':'회',(st.done?'':'plan ')+ar)}</div>
         <div class="tiny muted">${info}${st.pain?' · <span style="color:var(--bad)">통증</span>':''} ${adjTag(s,x,i)}</div>
-        <div style="text-align:right">${st.done?btn(st.src==='confirmed'?'✓ 그대로':'✓ 고침','undoSet',{sid:s.id,uid:x.uid,i},'small'):btn('그대로','same',{sid:s.id,uid:x.uid,i},'primary',st.pw==null&&st.pr==null)}</div></div>
-        ${isEdit(x,i)?editorHTML(s,x,i):''}
+        <div style="text-align:right;white-space:nowrap">${st.done?btn(st.src==='confirmed'?'✓ 그대로':'✓ 고침','undoSet',{sid:s.id,uid:x.uid,i},'small'):btn('그대로','same',{sid:s.id,uid:x.uid,i},'primary',st.pw==null&&st.pr==null)}<button class="btn ghost small setmore" data-act="edit" data-sid="${s.id}" data-uid="${x.uid}" data-i="${i}" aria-label="세트 더보기" title="아래 세트에도 · 세트 종류 · 통증 · 빼기">⋯</button></div></div>
+        ${isEdit(x,i)?editorHTML(s,x,i,{noFields:1}):''}
         ${i===ri?`<div class="row small" style="padding:6px 0 4px 8px"><span class="muted">여유 횟수 (선택)</span>${chips([[0,'0'],[1,'1'],[2,'2'],[3,'3'],[4,'4'],[5,'5+']],st.rir,'rir',{sid:s.id,uid:x.uid,i})}</div>`:''}`}).join('');
     const nxt=lives[lives.indexOf(x)+1]; const allDone=x.sets.length&&x.sets.every(st=>st.done);
     const drop=canDrop(s,x);
     main=`<div class="card excard"><div class="row"><b style="font-size:21px">${esc(e.name)}</b><span class="tag">${x.role}</span>${x.structure!=='스트레이트'?`<span class="tag">${x.structure}</span>`:''}${basisTag(s,x)}${drop?`<span class="tag bad">뺄 수 있음</span>`:''}
         <span class="sp"></span><button class="btn ghost more" data-act="modal" data-type="exMenu" data-sid="${s.id}" data-uid="${x.uid}" aria-label="종목 메뉴">…</button></div>
-      <div class="row small" style="margin:6px 0 2px"><span class="muted">세팅</span>${bIn('exSetting',x.setting,{sid:s.id,uid:x.uid},{w:190,ph:'예: 발판:1, 밴드o'})}
-        <span class="muted" style="margin-left:8px">지난번</span><span>${ls?`${md(ls.s.date)} <b>${esc(fsets(ls.x.sets,x.exId,'a'))}</b>`:'기록 없음'}</span></div>
+      <div class="row small" style="margin:6px 0 2px"><span class="muted">지난번</span><span>${ls?`${md(ls.s.date)} <b>${esc(fsets(ls.x.sets,x.exId,'a'))}</b>`:'기록 없음'}</span>${x.setting?`<span class="muted" style="margin-left:8px">세팅</span><span>${esc(x.setting)}</span>`:''}</div>
       ${memo&&memo.memo?`<div class="note-box" style="margin:4px 0">종목 메모 (${memo.date?md(memo.date):''}): ${esc(memo.memo)}</div>`:''}
       <div class="sets">${rows||'<div class="empty">세트가 없어요.</div>'}</div>
-      <div class="row" style="margin-top:8px">${btn('+ 세트','addSet',{sid:s.id,uid:x.uid},'small')}${bIn('exNote',x.note,{sid:s.id,uid:x.uid},{grow:1,ph:'종목 메모 (다음 수업 준비에 다시 떠요)'})}</div>
-      <div style="margin-top:8px">${legendHTML()}</div></div>`;
+      <div class="row" style="margin-top:8px">${btn('+ 세트','addSet',{sid:s.id,uid:x.uid},'small')}<span class="sp"></span>${btn(UI.open['exx-'+x.uid]?'세팅·종목 메모 접기 ▴':'세팅·종목 메모 ▾','toggle',{t:'exx-'+x.uid},'small ghost')}</div>
+      ${UI.open['exx-'+x.uid]?`<div class="row small" style="margin-top:6px"><span class="muted">세팅</span>${bIn('exSetting',x.setting,{sid:s.id,uid:x.uid},{w:190,ph:'예: 발판:1, 밴드o'})}${bIn('exNote',x.note,{sid:s.id,uid:x.uid},{grow:1,ph:'종목 메모 (다음 수업 준비에 다시 떠요)'})}</div>`:''}
+      ${x.sets.some(st=>adjCls(st))?`<div style="margin-top:8px">${legendHTML()}</div>`:''}</div>`;
     nextLine=nxt?`<div class="next${allDone?' ready':''}" data-act="pickEx" data-sid="${s.id}" data-uid="${nxt.uid}"><span class="muted">다음</span> <b>${esc(EX(nxt.exId).name)}</b> <span class="small muted">${esc(fsets(nxt.sets,nxt.exId,'p'))}</span>${canDrop(s,nxt)?' <span class="tag bad">뺄 수 있음</span>':''}<span class="sp"></span>${allDone?'<span class="btn primary">다음 종목: '+esc(EX(nxt.exId).name)+' ›</span>':'<span class="faint">›</span>'}</div>`
       :`<div class="next"><span class="muted">마지막 종목이에요.</span>${allDone?' <span class="small">다 했으면 위의 \'마무리\'를 눌러요.</span>':''}</div>`;
   }
@@ -114,8 +116,8 @@ V.summary=r=>{
   return topBar(esc(m.code)+' 마무리',`${mdw(s.date)} · ${esc(splitName(s))} · 회원이 간 뒤 1분`,'',{noBack:true})+
    `<div class="scroll" data-sk="main"><div class="grid2"><div class="col">
      <div class="card"><h2><span class="n">1</span>오늘 결과 <span class="tiny muted">줄을 누르면 고칠 수 있어요</span></h2><table><tr><th>종목</th><th>오늘</th><th>지난 같은 분할</th></tr>${res||'<tr><td colspan="3" class="empty">기록한 세트가 없어요.</td></tr>'}</table></div>
-     <div class="card"><h2><span class="n">2</span>계획과 달라진 곳</h2>${ch.map(c=>`<div class="small">· ${esc(c)}</div>`).join('')||'<div class="empty">계획대로 했어요.</div>'}${longs.map(c=>`<div class="small" style="color:var(--warn)">· ${esc(c)}</div>`).join('')}</div>
-     <div class="card"><h2><span class="n">3</span>넘은 개인 기록</h2>${prs.map(p=>`<div class="small">· ${esc(p)}</div>`).join('')||'<div class="empty">없어요.</div>'}</div>
+     ${foldCard('sum2-'+s.id,'<span class="n">2</span>계획과 달라진 곳',ch.length+longs.length,ch.map(c=>`<div class="small">· ${esc(c)}</div>`).join('')+longs.map(c=>`<div class="small" style="color:var(--warn)">· ${esc(c)}</div>`).join('')||'<div class="empty">계획대로 했어요.</div>')}
+     ${foldCard('sum3-'+s.id,'<span class="n">3</span>넘은 개인 기록',prs.length,prs.map(p=>`<div class="small">· ${esc(p)}</div>`).join('')||'<div class="empty">없어요.</div>')}
      ${tplQ}${checkCard(m,6)}</div>
     <div class="col">
      <div class="card"><h2><span class="n">4</span>다음 ${esc(splitName(s))} 초안 <span class="tiny muted">올릴 종목만 눌러요</span></h2>${draft||'<div class="empty">기록한 종목이 없어요.</div>'}${back}
@@ -123,8 +125,8 @@ V.summary=r=>{
        <div style="margin-top:4px">${btn(UI.open['freeT']?'글 접기':'다음 목표를 글로 남기기 ▾','toggle',{t:'freeT'},'small ghost')}</div>${UI.open['freeT']?free:''}</div>
      <div class="card"><h2><span class="n">5</span>다음 PT</h2><div class="row" style="margin-bottom:6px">${chips([['1','잡기'],['0','나중에']],np.on?'1':'0','npOn',{sid:s.id})}</div>
        ${np.on?`<div class="row">${bIn('np',np.date,{sid:s.id,f:'date'},{type:'date',w:160})}${bIn('np',np.time,{sid:s.id,f:'time'},{type:'time',w:120})}${bSel('np',m.templates.map(t=>[t.id,t.name]),np.tid,{sid:s.id,f:'tid'},{w:120})}</div><div class="tiny muted" style="margin-top:4px">분할은 순서대로 다음 것을 골라 뒀어요. 끝내면 그 분할의 수업 준비를 미리 채워요.</div>`:''}</div>
-     <div class="card"><h2>오늘 변화와 쓴 근육 <span class="tiny muted">지난번과 비교</span></h2><div class="sumviz"><div>${deltaChart(m,s)}</div><div>${muscleBlock([s],170,'오늘')}</div></div></div>
-     ${cands.length?`<div class="card"><h2><span class="n">7</span>주의사항으로 올릴 것 <span class="tiny muted">올릴지는 트레이너가 정해요</span></h2><div class="list">${candRows}</div></div>`:''}
+     ${foldCard('sumviz-'+s.id,'오늘 변화와 쓴 근육 <span class="tiny muted">지난번과 비교</span>',null,`<div class="sumviz"><div>${deltaChart(m,s)}</div><div>${muscleBlock([s],170,'오늘')}</div></div>`)}
+     ${cands.length?foldCard('sum7-'+s.id,'<span class="n">7</span>주의사항으로 올릴 것 <span class="tiny muted">올릴지는 트레이너가 정해요</span>',cands.length,`<div class="list">${candRows}</div>`):''}
     </div></div></div>`+
    actBar(btn('‹ 수업으로','go',{to:'live',sid:s.id}),'<span class="tiny muted" style="margin-right:8px">아무것도 안 눌러도 수업 기록은 저장돼요.</span>'+btn('끝내기','finish',{sid:s.id},'primary'));
 };

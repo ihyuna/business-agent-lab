@@ -48,10 +48,12 @@ function basisTag(s,x){
 const fwr=(w,r,exId)=>`${w!=null?fw(w,exId):'—'} × ${r??'—'}`;
 function setNo(x,i){const st=x.sets[i];if(st.kind==='warmup')return '워밍업';let n=0;for(let j=0;j<=i;j++)if(x.sets[j].kind!=='warmup')n++;return String(n)}
 const lastSession=m=>completed(m.id).slice(-1)[0];
+/* 접는 카드: 제목 줄을 누르면 펼친다. n은 제목 옆 개수 */
+function foldCard(key,title,n,body){const o=UI.open[key];return `<div class="card fold"><button class="foldhead" data-act="toggle" data-t="${key}"><h2>${title}${n!=null?` <span class="cnt">${n}</span>`:''}</h2><span class="faint">${o?'접기 ▴':'펼치기 ▾'}</span></button>${o?body:''}</div>`}
 const isEdit=(x,i)=>UI.edit&&UI.edit.uid===x.uid&&+UI.edit.i===i;
 
 /* 세트 고치는 칸: 세트를 눌렀을 때만 열린다 */
-function editorHTML(s,x,i){
+function editorHTML(s,x,i,o={}){
   const st=x.sets[i]; const live=isLive(s); const e=EX(x.exId); const d={sid:s.id,uid:x.uid,i};
   const w=live?(st.aw??st.pw):st.pw, r=live?(st.ar??st.pr):st.pr;
   const range=live&&!st.done&&st.pr!=null&&!isNum(st.pr);
@@ -59,7 +61,7 @@ function editorHTML(s,x,i){
   const later=x.sets.some((t,j)=>j>i&&sameGroup(t,st)&&!(live&&t.done));
   return `<div class="editor"><div class="row" style="margin-bottom:8px"><b>${setNo(x,i)==='워밍업'?'워밍업 세트':setNo(x,i)+'세트'}</b>${live?`<span class="tiny muted">계획 ${esc(fwr(st.pw,st.pr,x.exId))}</span>`:''}${range?`<span class="tag warn">계획 횟수가 범위(${esc(st.pr)})라 한 횟수를 넣어요</span>`:''}<span class="sp"></span>${btn('닫기','closeEdit',null,'small')}</div>
     ${adjCls(st)?`<div class="row small" style="margin:-2px 0 8px"><button class="tag t-${st.adj.by} adjbtn" data-act="adj" data-sid="${s.id}" data-uid="${x.uid}" data-i="${i}">${ADJ_NAME[st.adj.by]} 때문에 바뀐 숫자 · 원래 ${esc(fwr(st.adj.from.w,st.adj.from.r,x.exId))} !</button><span class="tiny muted">고치면 고친 숫자가 남아요</span></div>`:''}
-    <div class="row" style="gap:20px">${field('w',w,(e.unit||'')+(e.side?' 한쪽':''),'무게')}${field('r',r,S.settings.roles[x.role]?.rounds?'라운드':'회','횟수')}</div>
+    ${o.noFields?'':`<div class="row" style="gap:20px">${field('w',w,(e.unit||'')+(e.side?' 한쪽':''),'무게')}${field('r',r,S.settings.roles[x.role]?.rounds?'라운드':'회','횟수')}</div>`}
     <div class="row" style="margin-top:8px">${later?btn('아래 세트에도','below',d,'small'):''}${btn('세트 종류: '+KINDS[st.kind],'modal',{type:'kind',...d},'small')}${live?btn(st.pain?'통증 있음 ✓':'이 세트에서 통증','pain',d,'small'+(st.pain?' danger':'')):''}<span class="sp"></span>${btn('이 세트 빼기','delSet',d,'small danger')}</div></div>`;
 }
 
@@ -319,6 +321,9 @@ const ADJ_NAME={cond:'컨디션',live:'수업 중'};
 function legendHTML(){return `<div class="legend"><span><i style="background:var(--cond)"></i>컨디션 때문에 바뀐 숫자</span><span><i style="background:var(--live)"></i>앞 세트 결과로 바뀐 숫자</span><span>숫자를 누르면 까닭이 보여요</span></div>`}
 function setChip(s,x,i){
   const st=x.sets[i]; const k=st.kind==='working'?'':`<span class="k">${KINDS[st.kind]}</span>`; const a=adjCls(st);
+  if(isEdit(x,i)&&s.status==='planned'){const d={sid:s.id,uid:x.uid,i};const e=EX(x.exId);const later=x.sets.some((t,j)=>j>i&&sameGroup(t,st));
+    const inp=(f,v)=>`<input class="ci" inputmode="${f==='w'?'decimal':'text'}" data-on="ev" data-k="ev-${x.uid}-${i}-${f}"${attrs({...d,f})} value="${esc(v??'')}" placeholder="${f==='w'?'무게':'횟수'}" aria-label="${f==='w'?'무게':'횟수'}">`;
+    return `<span class="chipedit" data-uid="${x.uid}" data-i="${i}">${k}${inp('w',st.pw)}<span class="tiny muted">${esc(e.unit||'')}${e.side?' 한쪽':''} ×</span>${inp('r',st.pr)}${later?btn('아래 세트에도','below',d,'small'):''}${btn('종류','modal',{type:'kind',...d},'small ghost')}${btn('빼기','delSet',d,'small ghost danger')}${btn('✓','closeEdit',null,'small primary')}</span>`}
   return `<button class="setchip${isEdit(x,i)?' sel':''}${a?' '+a:''}" data-act="${a&&s.status!=='planned'?'adj':'edit'}" data-sid="${s.id}" data-uid="${x.uid}" data-i="${i}">${k}${esc(fwr(st.pw,st.pr,x.exId))}</button>`;
 }
 function roChip(s,x,i){const st=x.sets[i];const a=adjCls(st);return `<button class="setchip ro${a?' '+a:''}"${a?` data-act="adj" data-sid="${s.id}" data-uid="${x.uid}" data-i="${i}" style="cursor:pointer"`:''}>${st.kind==='working'?'':`<span class="k">${KINDS[st.kind]}</span>`}${esc(fwr(st.pw,st.pr,x.exId))}</button>`}
@@ -383,7 +388,7 @@ V.prep=r=>{
       ${ro?'':`<button class="btn ghost more" data-act="modal" data-type="exMenu" data-sid="${s.id}" data-uid="${x.uid}" aria-label="종목 메뉴">…</button>`}</div>
       <div class="pe-why"><span class="tiny muted">근거</span> <span class="small">${esc(whyShort(s,x))}</span> <button class="linkbtn" data-act="basis" data-sid="${s.id}" data-uid="${x.uid}">계산 보기 ›</button></div>
       ${open?`<div class="prep-hist">${h.slice().reverse().map(o=>`<div>${mdw(o.s.date)} ${esc(splitName(o.s))} · <b>${esc(fsets(o.x.sets,x.exId,'a'))}</b>${o.x.setting?` <span class="tiny muted">세팅 ${esc(o.x.setting)}</span>`:''}${o.x.raw?`<div class="dimline">수첩: ${esc(o.x.raw)}</div>`:''}</div>`).join('')||'기록 없음'}${memo&&memo.memo?`<div class="tiny muted">종목 메모 ${memo.date?md(memo.date):''}: ${esc(memo.memo)}</div>`:''}</div>`:''}
-      ${ed&&!ro?editorHTML(s,x,+UI.edit.i):''}</div>`}).join('');
+      </div>`}).join('');
   const pm=planMinutes(s);
   return topBar(esc(m.code)+' 오늘 숫자 정하기',`${mdw(s.date)} ${esc(s.time||'')} · ${esc(splitName(s))}${ro?' · 수업이 시작돼 고칠 수 없어요':''}`,ro?'':btn('+ 종목','modal',{type:'addEx',sid:s.id},'small'))+
    `<div class="scroll" data-sk="main">${briefLine(s,m)}
