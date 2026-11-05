@@ -1,3 +1,18 @@
+# PT 기록 앱
+
+| 무엇 | 어디 |
+|---|---|
+| 앱 정의 | [docs/앱-정의.md](docs/앱-정의.md) |
+| 워크플로우 | [docs/워크플로우.md](docs/워크플로우.md) |
+| 시나리오 | [docs/시나리오.md](docs/시나리오.md) |
+| 데이터 구조 | [docs/데이터-구조.md](docs/데이터-구조.md) |
+| PT 기록 앱 MVP | [app.html](app.html) (크롬에서 열기), 코드는 [src/](src/) |
+| 가명 처리한 실제 데이터 기록 | [data/](data/README.md) |
+
+회원은 성+00 코드로만 씁니다. 기록은 트레이너 수첩 그대로입니다.
+
+---
+
 # PT 기록 앱 MVP (웹 프로토타입 v3)
 
 PT 트레이너가 회원 수업을 준비하고, 진행하고, 마무리하는 흐름을 눌러 볼 수 있는 웹 프로토타입입니다. 실제 앱은 iPad 앱으로 만들 예정이고, 이 프로토타입은 화면 흐름을 확인하기 위한 것입니다. 화면 크기는 iPad 9세대 가로(1080×810)에 맞췄고, 디자인은 아직 다듬지 않았습니다.
@@ -52,7 +67,3 @@ node test/check.js   # 장면 1~7을 한 단계씩 돌리며 시간 띠·색 표
 ## 사용한 외부 자료
 
 - 근육 지도의 사람 그림 좌표(`src/15-body.js`)는 [react-body-highlighter](https://github.com/giavinh79/react-body-highlighter) v2.0.5 (MIT License, Copyright (c) 2020 GV79)의 그림 데이터에서 숫자만 옮겼습니다.
-
-## 문서
-
-기획·결정·시나리오 문서는 [docs/](docs/INDEX.md)에 있습니다(회원은 코드로만 씀).
