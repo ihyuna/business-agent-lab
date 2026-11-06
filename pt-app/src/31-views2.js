@@ -76,8 +76,25 @@ V.live=r=>{
   return topBar(`${esc(m.code)} · ${esc(splitName(s))}`,(s.goal?'목표 '+esc(s.goal):'수업 중')+(bad.length?` · 컨디션 ${esc(bad.join('·'))} 나쁨`:''),btn(`${idx}/${lives.length} 종목 ▾`,'modal',{type:'exList',sid:s.id})+btn('마무리','go',{to:'summary',sid:s.id},'primary'),{noBack:true})+timeBar(s)+timer+
    `<div class="scroll" data-sk="main">${main}${nextLine}
      <div class="card" style="margin-top:12px"><h2>수업 메모 <span class="tiny muted">이 수업에만 남아요</span></h2>${bArea('sMemo',s.memo,{sid:s.id},'예: 쉬는 시간이 너무 필요하다.')}
-       <div style="margin-top:6px">${btn(UI.open['obs']?'관찰 접기':'튀는 날만 관찰 남기기 ▾','toggle',{t:'obs'},'small ghost')}</div>${UI.open['obs']?`<div class="row" style="margin-top:6px">${obs}</div>`:''}</div></div>`;
+       <div style="margin-top:6px">${btn(UI.open['obs']?'관찰 접기':'튀는 날만 관찰 남기기 ▾','toggle',{t:'obs'},'small ghost')}</div>${UI.open['obs']?`<div class="row" style="margin-top:6px">${obs}</div>`:''}</div></div>`+swHTML();
 };
+/* ---------- 스톱워치 (아이폰 스톱워치처럼: 시작/중단 · 랩/재설정) ---------- */
+const SW={on:false,t0:0,acc:0,lapAcc:0,laps:[],fold:false};
+const swNow=()=>SW.acc+(SW.on?Date.now()-SW.t0:0);
+function swFmt(ms){const cs=Math.floor(ms/10)%100,sec=Math.floor(ms/1000)%60,min=Math.floor(ms/60000);return `${String(min).padStart(2,'0')}:${String(sec).padStart(2,'0')}.${String(cs).padStart(2,'0')}`}
+function swHTML(){
+  const t=swNow(), cur=t-SW.lapAcc, n=SW.laps.length, started=t>0;
+  const left=SW.on?`<button class="swb lap" data-act="swLap">랩</button>`:`<button class="swb lap" data-act="swReset"${started?'':' disabled'}>재설정</button>`;
+  const right=SW.on?`<button class="swb stop" data-act="swStop">중단</button>`:`<button class="swb go" data-act="swStart">시작</button>`;
+  let min=-1,max=-1; if(n>=2){min=SW.laps.indexOf(Math.min(...SW.laps));max=SW.laps.indexOf(Math.max(...SW.laps))}
+  const rows=(started?`<div class="swl"><span>랩 ${n+1}</span><span id="sw-cur">${swFmt(cur)}</span></div>`:'')+
+    SW.laps.map((v,i)=>[v,i]).reverse().map(([v,i])=>`<div class="swl${i===min?' fast':i===max?' slow':''}"><span>랩 ${i+1}</span><span>${swFmt(v)}</span></div>`).join('');
+  return `<div class="sw${SW.fold?' fold':''}"><span class="sw-lbl">스톱워치</span><button class="btn ghost small sw-fold" data-act="swFold" aria-label="${SW.fold?'랩 펼치기':'랩 접기'}">${SW.fold?'랩 '+n+'개 보기 ▴':'랩 접기 ▾'}</button>
+    <div class="sw-top">${left}<span id="sw-time" class="sw-time">${swFmt(t)}</span>${right}</div>
+    ${SW.fold?'':`<div class="sw-laps" data-sk="laps">${rows||'<div class="swl empty"><span>시작을 누르면 시간이 가고, 랩을 누르면 여기 쌓여요.</span></div>'}</div>`}</div>`;
+}
+function swTick(){if(SW.on){const a=document.getElementById('sw-time'),b=document.getElementById('sw-cur');const t=swNow();if(a)a.textContent=swFmt(t);if(b)b.textContent=swFmt(t-SW.lapAcc)}requestAnimationFrame(swTick)}
+requestAnimationFrame(swTick);
 V.start=V.live;
 function timerText(){if(!UI.timer)return '';const left=Math.max(0,Math.round((UI.timer.end-Date.now())/1000));return left?`${Math.floor(left/60)}:${String(left%60).padStart(2,'0')} · ${esc(UI.timer.name)}`:`끝 · ${esc(UI.timer.name)}`}
 

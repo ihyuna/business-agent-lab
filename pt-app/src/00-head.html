@@ -399,6 +399,22 @@ input,select,textarea{border-radius:6px;border-color:#dfe2e7}
 .untimed .srow.fin{background:var(--soft);color:var(--faint);border-left:3px solid var(--line);padding-left:8px}
 .untimed .srow.fin b{color:var(--muted)}
 .untimed .srow.todo{border-left:3px solid var(--accent);padding-left:8px;background:var(--accent-soft)}
+
+/* 스톱워치 */
+.sw{position:relative;border-top:1px solid var(--line);background:var(--panel);padding:28px 24px 10px;flex:none}
+.sw-top{display:flex;align-items:center;gap:12px;justify-content:space-between}
+.sw-lbl{position:absolute;left:16px;top:8px;font-size:12px;color:var(--muted);font-weight:600}
+.sw-time{font-size:40px;font-weight:300;font-variant-numeric:tabular-nums;letter-spacing:.5px;line-height:1;flex:1;text-align:center;font-size:52px}
+.swb{width:64px;height:64px;border-radius:50%;border:0;font:inherit;font-size:15px;font-weight:500;cursor:pointer;--ring:var(--line);box-shadow:0 0 0 2px var(--panel),0 0 0 3.5px var(--ring)}
+.swb.lap{background:var(--soft);color:var(--ink)}
+.swb.lap:disabled{color:var(--faint);cursor:default}
+.swb.go{background:var(--good-soft);color:var(--good);--ring:var(--good-soft)}
+.swb.stop{background:var(--bad-soft);color:var(--bad);--ring:var(--bad-soft)}
+.sw-fold{position:absolute;right:10px;top:4px}
+.sw-laps{max-height:96px;overflow:auto;margin-top:8px;border-top:1px solid var(--line)}
+.swl{display:flex;justify-content:space-between;padding:6px 4px;border-bottom:1px solid var(--line);font-size:15px;font-variant-numeric:tabular-nums}
+.swl.fast{color:var(--good)} .swl.slow{color:var(--bad)}
+.swl.empty{color:var(--muted);font-size:13px;border-bottom:0}
 </style>
 <div id="shell">
   <div id="bar">

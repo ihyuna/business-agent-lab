@@ -399,6 +399,22 @@ input,select,textarea{border-radius:6px;border-color:#dfe2e7}
 .untimed .srow.fin{background:var(--soft);color:var(--faint);border-left:3px solid var(--line);padding-left:8px}
 .untimed .srow.fin b{color:var(--muted)}
 .untimed .srow.todo{border-left:3px solid var(--accent);padding-left:8px;background:var(--accent-soft)}
+
+/* 스톱워치 */
+.sw{position:relative;border-top:1px solid var(--line);background:var(--panel);padding:28px 24px 10px;flex:none}
+.sw-top{display:flex;align-items:center;gap:12px;justify-content:space-between}
+.sw-lbl{position:absolute;left:16px;top:8px;font-size:12px;color:var(--muted);font-weight:600}
+.sw-time{font-size:40px;font-weight:300;font-variant-numeric:tabular-nums;letter-spacing:.5px;line-height:1;flex:1;text-align:center;font-size:52px}
+.swb{width:64px;height:64px;border-radius:50%;border:0;font:inherit;font-size:15px;font-weight:500;cursor:pointer;--ring:var(--line);box-shadow:0 0 0 2px var(--panel),0 0 0 3.5px var(--ring)}
+.swb.lap{background:var(--soft);color:var(--ink)}
+.swb.lap:disabled{color:var(--faint);cursor:default}
+.swb.go{background:var(--good-soft);color:var(--good);--ring:var(--good-soft)}
+.swb.stop{background:var(--bad-soft);color:var(--bad);--ring:var(--bad-soft)}
+.sw-fold{position:absolute;right:10px;top:4px}
+.sw-laps{max-height:96px;overflow:auto;margin-top:8px;border-top:1px solid var(--line)}
+.swl{display:flex;justify-content:space-between;padding:6px 4px;border-bottom:1px solid var(--line);font-size:15px;font-variant-numeric:tabular-nums}
+.swl.fast{color:var(--good)} .swl.slow{color:var(--bad)}
+.swl.empty{color:var(--muted);font-size:13px;border-bottom:0}
 </style>
 <div id="shell">
   <div id="bar">
@@ -2416,8 +2432,25 @@ V.live=r=>{
   return topBar(`${esc(m.code)} · ${esc(splitName(s))}`,(s.goal?'목표 '+esc(s.goal):'수업 중')+(bad.length?` · 컨디션 ${esc(bad.join('·'))} 나쁨`:''),btn(`${idx}/${lives.length} 종목 ▾`,'modal',{type:'exList',sid:s.id})+btn('마무리','go',{to:'summary',sid:s.id},'primary'),{noBack:true})+timeBar(s)+timer+
    `<div class="scroll" data-sk="main">${main}${nextLine}
      <div class="card" style="margin-top:12px"><h2>수업 메모 <span class="tiny muted">이 수업에만 남아요</span></h2>${bArea('sMemo',s.memo,{sid:s.id},'예: 쉬는 시간이 너무 필요하다.')}
-       <div style="margin-top:6px">${btn(UI.open['obs']?'관찰 접기':'튀는 날만 관찰 남기기 ▾','toggle',{t:'obs'},'small ghost')}</div>${UI.open['obs']?`<div class="row" style="margin-top:6px">${obs}</div>`:''}</div></div>`;
+       <div style="margin-top:6px">${btn(UI.open['obs']?'관찰 접기':'튀는 날만 관찰 남기기 ▾','toggle',{t:'obs'},'small ghost')}</div>${UI.open['obs']?`<div class="row" style="margin-top:6px">${obs}</div>`:''}</div></div>`+swHTML();
 };
+/* ---------- 스톱워치 (아이폰 스톱워치처럼: 시작/중단 · 랩/재설정) ---------- */
+const SW={on:false,t0:0,acc:0,lapAcc:0,laps:[],fold:false};
+const swNow=()=>SW.acc+(SW.on?Date.now()-SW.t0:0);
+function swFmt(ms){const cs=Math.floor(ms/10)%100,sec=Math.floor(ms/1000)%60,min=Math.floor(ms/60000);return `${String(min).padStart(2,'0')}:${String(sec).padStart(2,'0')}.${String(cs).padStart(2,'0')}`}
+function swHTML(){
+  const t=swNow(), cur=t-SW.lapAcc, n=SW.laps.length, started=t>0;
+  const left=SW.on?`<button class="swb lap" data-act="swLap">랩</button>`:`<button class="swb lap" data-act="swReset"${started?'':' disabled'}>재설정</button>`;
+  const right=SW.on?`<button class="swb stop" data-act="swStop">중단</button>`:`<button class="swb go" data-act="swStart">시작</button>`;
+  let min=-1,max=-1; if(n>=2){min=SW.laps.indexOf(Math.min(...SW.laps));max=SW.laps.indexOf(Math.max(...SW.laps))}
+  const rows=(started?`<div class="swl"><span>랩 ${n+1}</span><span id="sw-cur">${swFmt(cur)}</span></div>`:'')+
+    SW.laps.map((v,i)=>[v,i]).reverse().map(([v,i])=>`<div class="swl${i===min?' fast':i===max?' slow':''}"><span>랩 ${i+1}</span><span>${swFmt(v)}</span></div>`).join('');
+  return `<div class="sw${SW.fold?' fold':''}"><span class="sw-lbl">스톱워치</span><button class="btn ghost small sw-fold" data-act="swFold" aria-label="${SW.fold?'랩 펼치기':'랩 접기'}">${SW.fold?'랩 '+n+'개 보기 ▴':'랩 접기 ▾'}</button>
+    <div class="sw-top">${left}<span id="sw-time" class="sw-time">${swFmt(t)}</span>${right}</div>
+    ${SW.fold?'':`<div class="sw-laps" data-sk="laps">${rows||'<div class="swl empty"><span>시작을 누르면 시간이 가고, 랩을 누르면 여기 쌓여요.</span></div>'}</div>`}</div>`;
+}
+function swTick(){if(SW.on){const a=document.getElementById('sw-time'),b=document.getElementById('sw-cur');const t=swNow();if(a)a.textContent=swFmt(t);if(b)b.textContent=swFmt(t-SW.lapAcc)}requestAnimationFrame(swTick)}
+requestAnimationFrame(swTick);
 V.start=V.live;
 function timerText(){if(!UI.timer)return '';const left=Math.max(0,Math.round((UI.timer.end-Date.now())/1000));return left?`${Math.floor(left/60)}:${String(left%60).padStart(2,'0')} · ${esc(UI.timer.name)}`:`끝 · ${esc(UI.timer.name)}`}
 
@@ -3333,6 +3366,11 @@ const ACT={
   rir:d=>{const {st}=gx(d);st.rir=st.rir===+d.v?null:+d.v;save();render()},
   obs:d=>{const s=SES(d.sid);s.observations=s.observations||[];const o=s.observations.find(v=>v.kind===d.item);if(o&&o.dir===d.v)s.observations=s.observations.filter(v=>v!==o);else if(o)o.dir=d.v;else s.observations.push({kind:d.item,dir:d.v});save();render()},
   timerOff:()=>{UI.timer=null;render()},
+  swStart:()=>{SW.on=true;SW.t0=Date.now();render()},
+  swStop:()=>{SW.acc+=Date.now()-SW.t0;SW.on=false;render()},
+  swLap:()=>{const t=swNow();SW.laps.push(t-SW.lapAcc);SW.lapAcc=t;render()},
+  swReset:()=>{Object.assign(SW,{on:false,acc:0,lapAcc:0,laps:[]});render()},
+  swFold:()=>{SW.fold=!SW.fold;render()},
   // 요약
   promote:d=>{const s=SES(d.sid),m=M(s.memberId);m.cautions.push({id:uid('c'),part:'기타',text:d.text,since:s.date,status:'open',from:s.id});s.promoted=(s.promoted||[]).concat(d.text);save();render()},
   tplAnswer:d=>{answerTemplate(SES(d.sid),d.v);save();render()},

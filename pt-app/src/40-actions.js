@@ -142,6 +142,11 @@ const ACT={
   rir:d=>{const {st}=gx(d);st.rir=st.rir===+d.v?null:+d.v;save();render()},
   obs:d=>{const s=SES(d.sid);s.observations=s.observations||[];const o=s.observations.find(v=>v.kind===d.item);if(o&&o.dir===d.v)s.observations=s.observations.filter(v=>v!==o);else if(o)o.dir=d.v;else s.observations.push({kind:d.item,dir:d.v});save();render()},
   timerOff:()=>{UI.timer=null;render()},
+  swStart:()=>{SW.on=true;SW.t0=Date.now();render()},
+  swStop:()=>{SW.acc+=Date.now()-SW.t0;SW.on=false;render()},
+  swLap:()=>{const t=swNow();SW.laps.push(t-SW.lapAcc);SW.lapAcc=t;render()},
+  swReset:()=>{Object.assign(SW,{on:false,acc:0,lapAcc:0,laps:[]});render()},
+  swFold:()=>{SW.fold=!SW.fold;render()},
   // 요약
   promote:d=>{const s=SES(d.sid),m=M(s.memberId);m.cautions.push({id:uid('c'),part:'기타',text:d.text,since:s.date,status:'open',from:s.id});s.promoted=(s.promoted||[]).concat(d.text);save();render()},
   tplAnswer:d=>{answerTemplate(SES(d.sid),d.v);save();render()},
