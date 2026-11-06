@@ -427,6 +427,78 @@ input,select,textarea{border-radius:6px;border-color:#dfe2e7}
 .swl{display:flex;justify-content:space-between;padding:6px 4px;border-bottom:1px solid var(--line);font-size:15px;font-variant-numeric:tabular-nums}
 .swl.fast{color:var(--good)} .swl.slow{color:var(--bad)}
 .swl.empty{color:var(--muted);font-size:13px;border-bottom:0}
+
+/* ===== 테마 v3 (2026-11-06, 인투씨엔에스 클라우드 EMR 느낌: 회색 바탕 위 흰 패널 여러 개, 머리줄 있는 패널, 촘촘한 표, 위쪽 메뉴, 진한 파랑) ===== */
+:root{
+  --bg:#dfe4eb; --device:#eef1f5; --panel:#ffffff; --ink:#1b2130; --muted:#5f6b7c; --faint:#97a1ae;
+  --line:#dce1e8; --line2:#cdd4de; --soft:#f4f6f9; --hd:#f3f5f8; --phd:#fafbfc; --accent:#1f66f2; --accent-soft:#e8f0ff; --accent-ink:#ffffff;
+  --side:#ffffff; --zebra:#fafbfd; --bar:#a9c4f7}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--device:#101318; --line2:#323843; --phd:#1b1f26; --accent:#5c95ff}}
+:root[data-theme="dark"]{--device:#101318; --line2:#323843; --phd:#1b1f26; --accent:#5c95ff}
+#device{font-size:13px;border-radius:12px;background:var(--device)}
+/* 위쪽 메뉴 (왼쪽 메뉴를 위로) */
+#app:has(> .sidenav){padding-left:0;padding-top:44px}
+.tabbar.sidenav{left:0;right:0;top:0;bottom:auto;width:auto;height:44px;flex-direction:row;align-items:stretch;border-right:0;border-bottom:1px solid var(--line2);padding:0 10px;gap:2px;background:var(--panel)}
+.sidenav .logo{margin:auto 14px auto 4px;width:auto;height:auto;border:0;border-radius:0;font-size:14px;font-weight:800;letter-spacing:-.02em;color:var(--ink);gap:6px}
+.sidenav .logo::before{content:'';width:9px;height:18px;border-radius:5px;background:linear-gradient(var(--accent),#7a5cff)}
+.sidenav .logo::after{content:'PT 기록';margin-left:0}
+.tabbar.sidenav button{flex-direction:row;gap:6px;padding:0 14px;border-radius:0;font-size:13px;color:var(--muted)}
+.tabbar.sidenav button svg{width:16px;height:16px}
+.tabbar.sidenav button:hover{background:var(--soft)}
+.tabbar.sidenav button.on{background:none;color:var(--accent);font-weight:700;box-shadow:inset 0 -2px 0 var(--accent)}
+/* 머리줄과 버튼 */
+.top{min-height:48px;padding:7px 14px;border-bottom:1px solid var(--line2)}
+.top h1{font-size:15px}
+.btn{border-radius:4px;border-color:var(--line2);padding:5px 10px;font-size:12.5px}
+.btn.primary{border-radius:4px;background:var(--accent);border-color:var(--accent)}
+.btn.small{border-radius:3px;font-size:12px;padding:3px 8px}
+.btn.ghost{border-color:transparent}
+.actbar{border-top:1px solid var(--line2);min-height:56px}
+.actbar .btn.primary{border-radius:6px;padding:9px 22px;font-size:15px}
+input,select,textarea{border-radius:4px;border-color:var(--line2)}
+.chip{border-radius:4px}
+.tag{border-radius:3px;border:1px solid currentColor;background:transparent;opacity:.95}
+.pill{border-radius:3px}
+/* 패널 */
+.scroll{background:var(--device);padding:8px 8px 16px}
+.card,.box{border-radius:5px;border:1px solid var(--line2);box-shadow:0 1px 2px rgba(20,30,50,.04)}
+.card{margin-bottom:8px}
+.box{margin-bottom:8px}
+.card>h2:first-child{margin:-10px -12px 10px;padding:8px 12px;background:var(--phd);border-bottom:1px solid var(--line);border-radius:5px 5px 0 0;font-size:12.5px}
+.box>.bh{background:var(--phd);padding:8px 12px;font-size:12.5px;border-radius:5px 5px 0 0}
+.box>.bh::before,.card>h2:first-child::before{content:'';width:3px;height:12px;border-radius:2px;background:var(--accent);display:inline-block;margin-right:7px;vertical-align:-1px}
+/* 표: 칸 선이 보이는 촘촘한 표 */
+th{background:var(--hd);font-size:11.5px;color:var(--muted);border-bottom:1px solid var(--line2);padding:5px 8px}
+td{padding:5px 8px;font-size:12.5px}
+th+th,td+td{border-left:1px solid var(--line)}
+tr.click:hover td{background:var(--accent-soft)}
+/* 오늘·회원 화면: 회색 바탕 위 패널 여러 개 */
+.planner{gap:6px;padding:6px;box-sizing:border-box;background:var(--device)}
+.planner>div{background:var(--panel);border:1px solid var(--line2);border-radius:5px}
+.pl-left,.pl-right{border-left:1px solid var(--line2)!important;border-right:1px solid var(--line2)!important}
+.pl-colhd{background:var(--phd);font-size:12.5px;padding:8px 12px}
+.chartlay{gap:6px;padding:6px;box-sizing:border-box;background:var(--device)}
+.chartlay>div{background:var(--panel);border:1px solid var(--line2)!important;border-radius:5px}
+.cl-mid{background:var(--device)!important;border:0!important;padding:0!important}
+.pbar{border-bottom:1px solid var(--line2)}
+.pbar .nm{font-size:15px}
+.hist .hi.next,.hist .hi.open{box-shadow:inset 3px 0 0 var(--accent)}
+.mcal button.today{border-radius:4px}
+.tl .blk{border-radius:4px}
+.rstat{border-radius:4px;border-color:var(--line2)}
+.excard{border-top:2px solid var(--accent)}
+.sidenav .logo{font-size:0;display:flex;align-items:center}
+.sidenav .logo::after{font-size:14px}
+.card.fold{padding:0}
+.card.fold>.foldhead{padding:8px 12px;background:var(--phd);border-radius:5px}
+.card.fold>.foldhead h2{font-size:12.5px;margin:0!important;padding:0!important;background:none!important;border:0!important}
+.card.fold>.foldhead{align-items:center}
+.card.fold>.foldhead h2::before{content:'';width:3px;height:12px;border-radius:2px;background:var(--accent);display:inline-block;margin-right:7px;vertical-align:-1px}
+.card.fold>.foldhead+*{margin:0}
+.card.fold>:not(.foldhead){padding:10px 12px}
+.card.fold:has(>.foldhead+*)>.foldhead{border-bottom:1px solid var(--line);border-radius:5px 5px 0 0}
+.prep-head{background:var(--hd);margin:-4px -12px 0;padding:6px 12px;border-bottom:1px solid var(--line2);border-radius:5px 5px 0 0;font-size:11.5px;font-weight:600;color:var(--muted)}
+.sw{border-top:1px solid var(--line2)}
 </style>
 <div id="shell">
   <div id="bar">
