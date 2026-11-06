@@ -89,9 +89,8 @@ function swHTML(){
   let min=-1,max=-1; if(n>=2){min=SW.laps.indexOf(Math.min(...SW.laps));max=SW.laps.indexOf(Math.max(...SW.laps))}
   const rows=(started?`<div class="swl"><span>랩 ${n+1}</span><span id="sw-cur">${swFmt(cur)}</span></div>`:'')+
     SW.laps.map((v,i)=>[v,i]).reverse().map(([v,i])=>`<div class="swl${i===min?' fast':i===max?' slow':''}"><span>랩 ${i+1}</span><span>${swFmt(v)}</span></div>`).join('');
-  return `<div class="sw${SW.fold?' fold':''}"><span class="sw-lbl">스톱워치</span><button class="btn ghost small sw-fold" data-act="swFold" aria-label="${SW.fold?'랩 펼치기':'랩 접기'}">${SW.fold?'랩 '+n+'개 보기 ▴':'랩 접기 ▾'}</button>
-    <div class="sw-top">${left}<span id="sw-time" class="sw-time">${swFmt(t)}</span>${right}</div>
-    ${SW.fold?'':`<div class="sw-laps" data-sk="laps">${rows||'<div class="swl empty"><span>시작을 누르면 시간이 가고, 랩을 누르면 여기 쌓여요.</span></div>'}</div>`}</div>`;
+  return `<div class="sw"><div class="sw-l"><span class="sw-lbl">스톱워치</span><span id="sw-time" class="sw-time">${swFmt(t)}</span><div class="sw-btns">${left}${right}</div></div>
+    <div class="sw-r"><div class="sw-rh"><span>랩</span><span class="muted">${n?n+'개':''}</span></div><div class="sw-laps" data-sk="laps">${rows||'<div class="swl empty"><span>시작을 누르면 시간이 가고, 랩을 누르면 여기 쌓여요.</span></div>'}</div></div></div>`;
 }
 function swTick(){if(SW.on){const a=document.getElementById('sw-time'),b=document.getElementById('sw-cur');const t=swNow();if(a)a.textContent=swFmt(t);if(b)b.textContent=swFmt(t-SW.lapAcc)}requestAnimationFrame(swTick)}
 requestAnimationFrame(swTick);
