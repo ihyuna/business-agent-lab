@@ -326,6 +326,12 @@ MOD.block=o=>{const m=M(o.mid);const b=curBlock(m);const dir=UI.modal.dir||b?.di
    <div class="row" style="margin-bottom:8px">${dIn('bl-f','집중이면 부위나 종목 (예: 하체)',{grow:1,v:b?.focus||''})}${dIn('bl-s','',{type:'date',w:150,v:iso(new Date())})}</div>
    <div class="tiny muted" style="margin-bottom:10px">방향은 기간으로 쌓여요. '다이어트면 볼륨 유지' 같은 규칙은 넣지 않아요(D19). 몇 주 단위로 잡을지는 아직 모름(O29).</div>
    <div class="row" style="justify-content:flex-end">${btn('닫기','closeModal')}${btn('저장','saveBlock',null,'primary')}</div>`};
+MOD.addPkg=o=>{const m=M(o.mid);const k='pkn-'+m.id;const pick=UI.draft[k]||'';
+  const list=(m.packages||[]).map(p=>`<div class="li small"><span class="num">${p.date?md(p.date):''}</span><b>${p.n}회</b>${p.example?EXAMPLE('예시 · 수첩에 등록 횟수가 없어 30회 단위로 넣음'):''}<span class="sp"></span>${btn('지우기','delPkg',{mid:m.id,id:p.id},'small ghost')}</div>`).join('');
+  return `<h3>${esc(m.code)} 수업 추가 (연장)</h3>
+   <div class="field"><label>추가할 횟수</label><div class="row">${['10','20','30'].map(v=>`<button class="chip${pick===v?' on':''}" data-act="draftSet" data-key="${k}" data-v="${v}">${v}회</button>`).join('')}${dIn('pk-'+m.id,'직접 (예: 12)',{w:110,im:'numeric'})}</div></div>
+   <div class="field" style="margin-top:10px"><label>지금까지 등록 · 전체 ${pkgTotal(m)}회 · 받은 수업 ${usedCount(m)}회</label>${list||'<div class="empty">없어요.</div>'}</div>
+   <div class="row" style="justify-content:flex-end;margin-top:12px">${btn('닫기','closeModal')}${btn('넣기','addPkg',{mid:m.id},'primary')}</div>`};
 MOD.sessMenu=o=>{const s=SES(o.sid),m=M(s.memberId);
   return `<h3>${esc(m.code)} · ${mdw(s.date)} ${esc(splitName(s))}</h3><div class="col" style="gap:8px">
    <div class="field"><label>오늘 메모 (카톡에서 들은 말 등, 수업 준비와 수업 시작에 다시 떠요)</label><div class="row" style="flex-wrap:nowrap">${dIn('tm-'+s.id,'예: 2주 만이라 살살 해 주세요',{grow:1})}${btn('넣기','todayMemo',{sid:s.id},'small')}</div>
@@ -333,6 +339,7 @@ MOD.sessMenu=o=>{const s=SES(o.sid),m=M(s.memberId);
    <div class="row">${btn('옮기기','modal',{type:'schedule',mid:m.id,sid:s.id})}${btn('회원 한눈에','go',{to:'member',mid:m.id})}</div>
    <div class="field" style="border-top:1px solid var(--line);padding-top:10px"><label>못 하게 됐을 때 · 사유를 고르고 누르면 오른쪽 '최근 기록'에 남아요</label>
      <div class="row">${CX_REASONS.map(r=>`<button class="chip${(UI.draft['cx-'+s.id]||'')===r?' on':''}" data-act="draftSet" data-key="cx-${s.id}" data-v="${r}">${r}</button>`).join('')}</div>
+     <div class="row" style="margin-top:6px"><span class="small muted">회차에서</span>${[['0','차감 안 함'],['1','차감']].map(([v,l])=>`<button class="chip${(UI.draft['cxd-'+s.id]||'0')===v?' on':''}" data-act="draftSet" data-key="cxd-${s.id}" data-v="${v}">${l}</button>`).join('')}<span class="tiny muted">차감이면 회차에 1회 들어가요</span></div>
      <div class="row" style="margin-top:4px">${btn('취소','markSession',{sid:s.id,v:'cancelled'},'danger')}${btn('안 옴','markSession',{sid:s.id,v:'no_show'},'danger')}</div></div></div>
    <div class="row" style="justify-content:flex-end;margin-top:12px">${btn('닫기','closeModal')}</div>`};
 MOD.exMenu=o=>{const s=SES(o.sid),x=s.exercises.find(e=>e.uid===o.uid);const d={sid:s.id,uid:x.uid};

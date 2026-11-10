@@ -499,6 +499,23 @@ tr.click:hover td{background:var(--accent-soft)}
 .card.fold:has(>.foldhead+*)>.foldhead{border-bottom:1px solid var(--line);border-radius:5px 5px 0 0}
 .prep-head{background:var(--hd);margin:-4px -12px 0;padding:6px 12px;border-bottom:1px solid var(--line2);border-radius:5px 5px 0 0;font-size:11.5px;font-weight:600;color:var(--muted)}
 .sw{border-top:1px solid var(--line2)}
+/* 회차 (2026-11-10) */
+.nob{display:inline-block;font-size:11px;font-weight:700;font-variant-numeric:tabular-nums;padding:0 6px;border-radius:3px;line-height:18px;color:var(--muted);background:var(--soft);border:1px solid var(--line);vertical-align:1px}
+.nob.l3{color:#8a6a00;background:#fff6c7;border-color:#f3dc77}
+.nob.l2{color:#c2410c;background:#ffedd8;border-color:#fbc38c}
+.nob.l1{color:#fff;background:var(--bad);border-color:var(--bad)}
+.nob.over{color:#fff;background:#9b1c22;border-color:#9b1c22}
+.pkg{padding:10px 12px;border-bottom:1px solid var(--line2);background:var(--panel)}
+.pkg-n{font-size:20px;font-variant-numeric:tabular-nums;letter-spacing:-.01em}
+.pkg-n span{font-size:14px;color:var(--muted);font-weight:600}
+.pkg-st{display:grid;grid-template-columns:repeat(3,1fr);border:1px solid var(--line2);border-radius:4px;margin-top:8px;text-align:center}
+.pkg-st div{padding:4px 0;border-right:1px solid var(--line)} .pkg-st div:last-child{border-right:0}
+.pkg-st span{display:block;font-size:10.5px;color:var(--muted)} .pkg-st b{font-size:14px;font-variant-numeric:tabular-nums} .pkg-st b.r{color:var(--bad)}
+.hist .hi.moved{color:var(--faint);background:var(--soft);cursor:default}
+.hist .hi.moved .d{color:var(--faint);text-decoration:line-through;font-weight:600}
+.hist .hi.moved .x{color:var(--faint)}
+.hist .hi.cx .d{color:var(--faint)}
+.hist .hi.cx .x{color:var(--faint)}
 </style>
 <div id="shell">
   <div id="bar">
@@ -1638,6 +1655,7 @@ function buildSeed(){
     for(const n of [].concat(sm.next||[])) createPlanned(m,n.d,n.time,n.t);
   }
   addExampleCx();
+  ensurePackages();
   return st;
 }
 /* 다른 회원의 10/7 뒤 수첩 기록: 시연 날짜가 그날을 지나면 넣는다. 같은 날 계획 수업이 있으면 기록으로 바꾼다 */
@@ -1686,8 +1704,22 @@ function addExampleCx(){
   for(const [mid,d,t,kind,reason] of EXAMPLE_CX){const m=M(mid);if(!m||S.sessions.some(s=>s.memberId===mid&&s.date===d))continue;
     const prev=prevDone(m,d)[0];
     const s={id:uid('s'),memberId:mid,date:d,time:t,templateId:prev?prev.templateId:(m.templates[0]||{}).id,status:kind,cond:null,cautionChecks:{},goal:'',memo:'',observations:[],nextTargets:{},example:true,exercises:[]};
-    S.sessions.push(s);logChange({kind,sid:s.id,mid,date:d,reason,example:true});S.changes[S.changes.length-1].at=d}
+    s.deduct=kind==='no_show';S.sessions.push(s);logChange({kind,sid:s.id,mid,date:d,reason,example:true});S.changes[S.changes.length-1].at=d}
 }
+/* 등록 횟수(회차) · 차감 (2026-11-10 이현아님 요청). 수첩에는 등록 횟수가 없어서 처음 값은 30회 단위로 올린 '예시'다.
+   회차에 세는 것: 끝난 수업, 진행 중·예정 수업, 트레이너가 '차감'으로 정한 취소·안 옴 */
+const deducted=s=>(s.status==='cancelled'||s.status==='no_show')&&!!s.deduct;
+const counted=s=>s.status==='completed'||s.status==='in_progress'||s.status==='planned'||deducted(s);
+function ensurePackages(){
+  for(const s of S.sessions) if(s.example&&s.deduct===undefined) s.deduct=s.status==='no_show';
+  for(const m of S.members){if(m.packages)continue;const n=msessions(m.id).filter(counted).length;const f=msessions(m.id)[0];
+    m.packages=[{id:uid('k'),n:Math.max(30,Math.ceil(n/30)*30),date:f?f.date:todayIso(),example:true}]}
+}
+const pkgTotal=m=>(m.packages||[]).reduce((a,p)=>a+(+p.n||0),0);
+function sessNo(s){const i=msessions(s.memberId).filter(counted).indexOf(s);return i<0?null:i+1}
+const usedCount=m=>msessions(m.id).filter(s=>s.status==='completed'||s.status==='in_progress'||deducted(s)).length;
+/* 남은 횟수(이 수업 포함): 3 노랑 · 2 주황 · 1 빨강 · 0 이하 넘음 (기준은 트레이너에게 물어볼 예정) */
+const leftCls=left=>left<=0?'over':left===1?'l1':left===2?'l2':left===3?'l3':'';
 function removeExampleCx(){S.sessions=S.sessions.filter(s=>!s.example);S.changes=(S.changes||[]).filter(c=>!c.example)}
 
 /* ---------- 숫자 채우기 (D52, D57, D59, 워크플로우 v2 6단계) ---------- */
@@ -2125,17 +2157,21 @@ function miniCal(d){
     rows+=`<td><button class="${c.getMonth()!==mo?'other ':''}${k===0?'sun ':''}${has.has(ci)?'has ':''}${ci===d?'today':''}" data-act="setDay" data-v="${ci}" aria-label="${md(ci)}">${c.getDate()}</button></td>`}rows+='</tr>'}
   return `<div class="mcal"><div class="hd">${y}. ${mo+1}</div><table><tr>${DOW.map(w=>`<th>${w}</th>`).join('')}</tr>${rows}</table></div>`;
 }
+/* 회차 꼬리표: 18/30. 예정·진행 중이면 남은 횟수(이 수업 포함)로 색: 3 노랑 · 2 주황 · 1 빨강 */
+function noBadge(s){const m=M(s.memberId);const n=sessNo(s);if(!n)return '';const T=pkgTotal(m);const live=s.status==='planned'||s.status==='in_progress';
+  const left=T-n+1;const c=live?leftCls(left):'';const ex=(m.packages||[]).some(p=>p.example);
+  return `<span class="nob ${c}" title="${live?`이 수업 포함 남은 횟수 ${Math.max(left,0)}회`:''}${ex?' (등록 횟수는 예시)':''}">${n}/${T}${live&&left<=0?' 넘음':''}</span>`}
 function tlBlock(s,top,h){
   const m=M(s.memberId); const l=prevDone(m,s.date)[0]; const cn=openCautions(m).length;
   const st=s.status==='in_progress'?pill('진행 중','green'):s.status==='completed'?'<span class="pill gray">✓ 끝남</span>':s.status!=='planned'?pill(statusLabel[s.status],'gray'):'';
   const [hh,mm]=(s.time||'0:0').split(':').map(Number); const end=`${String(hh+1).padStart(2,'0')}:${String(mm).padStart(2,'0')}`;
   if(s.status==='cancelled'||s.status==='no_show'){const c=changes().filter(c=>c.sid===s.id&&c.kind===s.status).slice(-1)[0];
-    return `<div class="blk cx" style="top:${top}px;height:${h}px"><div style="flex:1;min-width:0"><div class="bt">${esc(s.time)}-${end} ${s.status==='cancelled'?pill('취소','red'):pill('안 옴','orange')}${s.example?' '+EXAMPLE('예시'):''}${c&&c.reason?' <span class="muted">'+esc(c.reason)+'</span>':''}</div>
+    return `<div class="blk cx" style="top:${top}px;height:${h}px"><div style="flex:1;min-width:0"><div class="bt">${esc(s.time)}-${end} ${s.status==='cancelled'?pill('취소','red'):pill('안 옴','orange')}${s.deduct?' '+pill('차감','gray')+' '+noBadge(s):''}${s.example?' '+EXAMPLE('예시'):''}${c&&c.reason?' <span class="muted">'+esc(c.reason)+'</span>':''}</div>
       <div><span class="bn">${esc(m.code)}</span> <span class="bs">· ${esc(splitName(s))}</span></div><div class="bd">계획은 다음 같은 분할로 넘어가요</div></div>${btn('되돌리기','markSession',{sid:s.id,v:'planned'},'small')}</div>`}
   const fin=s.status==='completed';
   return `<div class="blk srow ${fin?'fin':memberHue(m)}" style="top:${top}px;height:${h}px" data-act="openSession" data-sid="${s.id}">
     <div style="flex:1;min-width:0"><div class="bt">${esc(s.time)}-${end} ${EXAMPLE('예시')}</div>
-      <div><span class="bn">${esc(m.code)}</span> <span class="bs">· ${esc(splitName(s))}</span> ${cn?pill('주의 '+cn,'red'):''} ${st}</div>
+      <div><span class="bn">${esc(m.code)}</span> <span class="bs">· ${esc(splitName(s))}</span> ${noBadge(s)} ${cn?pill('주의 '+cn,'red'):''} ${st}</div>
       <div class="bd">${s.goal?'오늘 목표: '+esc(s.goal)+' · ':''}${l?`마지막 수업 <b>${daysBetween(l.date,s.date)}일 전</b> (${md(l.date)} ${esc(splitName(l))})`:'첫 수업'}</div>
       ${todayMemos(m,s).map(n=>`<div class="bd" style="color:var(--accent)">오늘 메모: ${esc(n.text)}</div>`).join('')}</div>
     ${s.status==='planned'?`<button class="btn ghost more" data-act="modal" data-type="sessMenu" data-sid="${s.id}" aria-label="수업 메뉴">…</button>`:''}</div>`;
@@ -2264,11 +2300,21 @@ function visitCard(m,s,u){
   const notes=[s.memo?`<div class="vl">${IC_MEMO}<div>${esc(s.memo)}</div></div>`:'',...s.exercises.filter(x=>x.note||x.setting).slice(0,4).map(x=>`<div class="vl">${IC_PEN}<div><b>${esc(EX(x.exId).name)}</b> ${esc([x.setting,x.note].filter(Boolean).join(' · '))}</div></div>`)].join('');
   return `<div class="visit"><div class="vh"><span class="vd">${s.date} <span class="vago">(${ago>0?ago+'일 전':ago===0?'오늘':-ago+'일 뒤'})</span></span>${s.status==='completed'?'<span class="vok">✓</span>':''}<span class="sp"></span>${btn('자세히','go',{to:s.status==='planned'||s.status==='in_progress'?'prep':'detail',sid:s.id},'ghost small')}</div>
     <div class="row" style="gap:5px;margin:6px 0 8px"><span class="pill gray" style="border:1px solid var(--line);background:var(--panel)">${esc(splitName(s))}</span>${s.status==='completed'?pill(s.seeded?'수첩 기록':'앱 기록','blue'):pill(statusLabel[s.status],'gray')}</div>
+    ${s.status==='cancelled'||s.status==='no_show'?`<div class="row small" style="margin:2px 0 8px"><span class="muted">회차에서</span>${chips([['0','차감 안 함'],['1','차감']],s.deduct?'1':'0','setDeduct',{sid:s.id})}</div>`:''}
     ${notes}
     <div class="vsec"><span>종목 ${s.exercises.length}</span><span class="sp"></span>${can&&s.status==='completed'?`<button class="lnk" data-act="copyAll" data-sid="${s.id}">전체 복사</button>`:''}</div>
     ${exs||'<div class="empty">종목이 없어요.</div>'}
     ${can&&s.status==='completed'?`<div class="tiny faint" style="margin-top:6px">종목을 누르면 ${md(u.date)} 수업 계획에 그 숫자 그대로 들어가요.</div>`:''}</div>`;
 }
+/* 수업 이력 위: 회차(받은 횟수/전체) + 완료·변동·차감 + 수업 추가 */
+function pkgHead(m){const ss=msessions(m.id);const T=pkgTotal(m);const used=usedCount(m);const u=upcoming(m.id);
+  const nx=u&&sessNo(u);const left=nx?T-nx+1:T-used;const c=u?leftCls(left):leftCls(T-used);
+  const done=ss.filter(s=>s.status==='completed').length;const cx=ss.filter(s=>s.status==='cancelled'||s.status==='no_show');
+  const mvN=new Set(changes().filter(c=>c.kind==='moved'&&c.mid===m.id).map(c=>c.sid)).size;const ded=cx.filter(s=>s.deduct).length;
+  const ex=(m.packages||[]).some(p=>p.example);
+  return `<div class="pkg"><div class="row" style="gap:8px"><span class="muted small">회차</span><b class="pkg-n">${used}<span>/${T}</span></b>${ex?EXAMPLE('예시'):''}<span class="sp"></span>${btn('+ 수업 추가','modal',{type:'addPkg',mid:m.id},'small')}</div>
+    ${u?`<div class="tiny" style="margin-top:2px"><span class="muted">다음 수업 ${md(u.date)}은</span> <span class="nob ${c}">${nx}/${T}${left<=0?' 넘음':''}</span> <span class="muted">${left>0?`이 수업 포함 ${left}회 남음`:'등록 횟수를 넘었어요'}</span></div>`:''}
+    <div class="pkg-st"><div><span>완료</span><b>${done}</b></div><div><span>변동</span><b>${cx.length+mvN}</b></div><div><span>차감</span><b class="${ded?'r':''}">${ded}</b></div></div></div>`}
 V.member=r=>{
   const m=M(r.mid); const u=upcoming(m.id); const done=completed(m.id); const t=todayIso(); const last=done[done.length-1];
   const d30=done.filter(s=>daysBetween(s.date,t)>=0&&daysBetween(s.date,t)<30).length;
@@ -2277,31 +2323,31 @@ V.member=r=>{
     <div class="vit"><span>누적 <b>${done.length}</b>회</span><span>최근 30일 <b>${d30}</b>회</span>${(()=>{const c=msessions(m.id).filter(x=>x.status==='cancelled'&&x.date<=t).length,n=msessions(m.id).filter(x=>x.status==='no_show'&&x.date<=t).length;return `<span>취소 <b style="color:${c?'var(--bad)':'inherit'}">${c}</b> · 안 옴 <b style="color:${n?'var(--warn)':'inherit'}">${n}</b></span>`})()}<span>첫 기록 <b>${done[0]?md(done[0].date):'—'}</b></span><span>마지막 <b>${last?md(last.date):'—'}</b>${last?` (${daysBetween(last.date,t)}일 전)`:''}</span><span>다음 PT <b>${u?mdw(u.date):'없음'}</b>${u?' '+esc(splitName(u)):''}</span></div></div>`;
   const all=msessions(m.id).filter(s=>!(s.example&&s.date>t)).slice().sort((a,b)=>byDate(b,a));
   const open=UI.cur['hx-'+m.id]===undefined?(done[done.length-1]||{}).id:UI.cur['hx-'+m.id];
-  const hist=all.map(s=>{const isNext=u&&s.id===u.id;const n=s.exercises.filter(x=>x.status==='done').length;
-    const st=s.status==='completed'?'':s.status==='plan_only'?pill('계획만','gray'):pill(statusLabel[s.status],s.status==='planned'||s.status==='in_progress'?'blue':s.status==='cancelled'?'red':s.status==='no_show'?'orange':'gray')+(s.example?' '+EXAMPLE('예시'):'');
-    const head=`<button class="hi${isNext?' next':''}${open===s.id?' open':''}" data-act="histOpen" data-mid="${m.id}" data-sid="${s.id}" aria-expanded="${open===s.id}"><div class="row" style="gap:6px"><span class="d">${mdw(s.date)}</span>${pill(splitName(s))}${st}<span class="sp"></span><span class="chev">${open===s.id?'⌃':'⌄'}</span></div>
+  const mv=changes().filter(c=>c.kind==='moved'&&c.mid===m.id&&SES(c.sid)).map(c=>({moved:1,date:c.from,time:c.fromTime||'',c,s:SES(c.sid)}));
+  const rows=[...all,...mv].sort((a,b)=>byDate(b,a));
+  const histRow=s=>{if(s.moved)return `<div class="hi moved" title="옮긴 일정"><div class="row" style="gap:6px"><span class="d">${mdw(s.date)}</span>${pill(splitName(s.s),'gray')}<span class="pill gray">옮김</span></div><div class="x">${s.c.reason?esc(s.c.reason):'날짜를 옮겼어요'}</div></div>`;
+  const isNext=u&&s.id===u.id;const n=s.exercises.filter(x=>x.status==='done').length;
+    const st=s.status==='completed'?'':s.status==='plan_only'?pill('계획만','gray'):pill(statusLabel[s.status],s.status==='planned'||s.status==='in_progress'?'blue':s.status==='cancelled'?'red':s.status==='no_show'?'orange':'gray')+(deducted(s)?' '+pill('차감','gray'):'')+(s.example?' '+EXAMPLE('예시'):'');
+    const head=`<button class="hi${isNext?' next':''}${s.status==='cancelled'||s.status==='no_show'?' cx':''}${open===s.id?' open':''}" data-act="histOpen" data-mid="${m.id}" data-sid="${s.id}" aria-expanded="${open===s.id}"><div class="row" style="gap:6px"><span class="d">${mdw(s.date)}</span>${pill(splitName(s))}${st}<span class="sp"></span><span class="chev">${open===s.id?'⌃':'⌄'}</span></div>
       ${open===s.id?'':`<div class="x">${s.exercises.filter(x=>x.status==='done'||s.status!=='completed').slice(0,4).map(x=>EX(x.exId).name).join(', ')}${n>4?' 외':''}</div>`}</button>`;
-    return head+(open===s.id?visitCard(m,s,u):'')}).join('')||'<div class="empty" style="padding:12px">기록이 없어요.</div>';
+    return head+(open===s.id?visitCard(m,s,u):'')};
+  const hist=rows.map(histRow).join('')||'<div class="empty" style="padding:12px">기록이 없어요.</div>';
   let next;
   if(u){const ip=u.status==='in_progress';
     next=`<div class="row"><div style="flex:1"><div style="font-size:16px;font-weight:700">${mdw(u.date)} ${esc(u.time||'')}</div><div class="muted small">${esc(splitName(u))}${u.goal?' · 오늘 목표: '+esc(u.goal):''}</div></div>${ip?pill('진행 중','green'):''}
       ${ip?btn('이어서 하기','openSession',{sid:u.id},'primary'):btn('숫자 정하기','openSession',{sid:u.id},'primary')+`<button class="btn ghost more" data-act="modal" data-type="sessMenu" data-sid="${u.id}" aria-label="수업 메뉴">…</button>`}</div>`;
   } else next=`<div class="row"><span class="muted">잡힌 수업이 없어요.</span><span class="sp"></span>${btn('다음 PT 잡기','modal',{type:'schedule',mid:m.id},'primary')}</div>`;
-  const recent=done.slice(-5).reverse();
   const mainOf=s=>{const x=s.exercises.find(e=>e.status==='done'&&e.role==='메인')||s.exercises.find(e=>e.status==='done');const tt=x&&topSet(x);return x?`${esc(EX(x.exId).name)}${tt?` <b class="num">${ftop(tt,x.exId)}</b>`:''}`:'—'};
-  const rec=recent.map(s=>`<tr class="click" data-act="go" data-to="detail" data-sid="${s.id}"><td class="num">${mdw(s.date)}</td><td>${pill(splitName(s))}</td><td>${mainOf(s)}</td><td class="memo" title="${esc(s.memo||'')}">${esc(s.memo||'')}</td></tr>`).join('');
   const mt=mainTrend(m,262,130);
   const notes=m.notes.filter(n=>['general','lifestyle','diet','self_train','personality'].includes(n.kind));
   return topBar(esc(m.code),'회원 한눈에',
       btn('추이','go',{to:'trend',mid:m.id})+btn('수업 기록','go',{to:'history',mid:m.id})+btn('루틴 틀','go',{to:'templates',mid:m.id})+btn('회원 정보','go',{to:'memberEdit',mid:m.id}))+pbar+
     `<div class="chartlay">
-      <div class="cl-left"><div class="pl-colhd">수업 이력 <span class="n">${all.length}</span></div><div class="hist">${hist}</div></div>
+      <div class="cl-left">${pkgHead(m)}<div class="pl-colhd">수업 이력 <span class="n">${all.length}</span></div><div class="hist">${hist}</div></div>
       <div class="cl-mid" data-sk="main">
         <div class="box"><div class="bh">다음 PT</div><div class="bb">${next}</div></div>
         <div class="box"><div class="sec3">${cautionSec(m)}${checkSec(m)}${goalSec(m)}</div></div>
         ${last?`<div class="box"><div class="bh">지난 PT 변화 <span class="muted" style="font-weight:500">${mdw(last.date)} · ${esc(splitName(last))}</span><span class="sp"></span>${btn('수업 상세','go',{to:'detail',sid:last.id},'ghost small')}</div><div class="bb">${deltaChart(m,last)}</div></div>`:''}
-        <div class="box"><div class="bh">최근 수업 ${recent.length}회<span class="sp"></span>${done.length>5?btn(`전체 ${done.length}회`,'go',{to:'history',mid:m.id},'ghost small'):''}</div>
-          ${rec?`<table class="dtable" style="table-layout:fixed"><colgroup><col style="width:84px"><col style="width:120px"><col style="width:210px"><col></colgroup><tr><th>날짜</th><th>분할</th><th>메인 종목 최고</th><th>메모</th></tr>${rec}</table>`:'<div class="empty" style="padding:10px 12px">아직 수업 기록이 없어요.</div>'}</div>
       </div>
       <div class="cl-right">
         <h3>월별 수업 횟수</h3>${monthBars(m,262,130)}
@@ -2766,6 +2812,12 @@ MOD.block=o=>{const m=M(o.mid);const b=curBlock(m);const dir=UI.modal.dir||b?.di
    <div class="row" style="margin-bottom:8px">${dIn('bl-f','집중이면 부위나 종목 (예: 하체)',{grow:1,v:b?.focus||''})}${dIn('bl-s','',{type:'date',w:150,v:iso(new Date())})}</div>
    <div class="tiny muted" style="margin-bottom:10px">방향은 기간으로 쌓여요. '다이어트면 볼륨 유지' 같은 규칙은 넣지 않아요(D19). 몇 주 단위로 잡을지는 아직 모름(O29).</div>
    <div class="row" style="justify-content:flex-end">${btn('닫기','closeModal')}${btn('저장','saveBlock',null,'primary')}</div>`};
+MOD.addPkg=o=>{const m=M(o.mid);const k='pkn-'+m.id;const pick=UI.draft[k]||'';
+  const list=(m.packages||[]).map(p=>`<div class="li small"><span class="num">${p.date?md(p.date):''}</span><b>${p.n}회</b>${p.example?EXAMPLE('예시 · 수첩에 등록 횟수가 없어 30회 단위로 넣음'):''}<span class="sp"></span>${btn('지우기','delPkg',{mid:m.id,id:p.id},'small ghost')}</div>`).join('');
+  return `<h3>${esc(m.code)} 수업 추가 (연장)</h3>
+   <div class="field"><label>추가할 횟수</label><div class="row">${['10','20','30'].map(v=>`<button class="chip${pick===v?' on':''}" data-act="draftSet" data-key="${k}" data-v="${v}">${v}회</button>`).join('')}${dIn('pk-'+m.id,'직접 (예: 12)',{w:110,im:'numeric'})}</div></div>
+   <div class="field" style="margin-top:10px"><label>지금까지 등록 · 전체 ${pkgTotal(m)}회 · 받은 수업 ${usedCount(m)}회</label>${list||'<div class="empty">없어요.</div>'}</div>
+   <div class="row" style="justify-content:flex-end;margin-top:12px">${btn('닫기','closeModal')}${btn('넣기','addPkg',{mid:m.id},'primary')}</div>`};
 MOD.sessMenu=o=>{const s=SES(o.sid),m=M(s.memberId);
   return `<h3>${esc(m.code)} · ${mdw(s.date)} ${esc(splitName(s))}</h3><div class="col" style="gap:8px">
    <div class="field"><label>오늘 메모 (카톡에서 들은 말 등, 수업 준비와 수업 시작에 다시 떠요)</label><div class="row" style="flex-wrap:nowrap">${dIn('tm-'+s.id,'예: 2주 만이라 살살 해 주세요',{grow:1})}${btn('넣기','todayMemo',{sid:s.id},'small')}</div>
@@ -2773,6 +2825,7 @@ MOD.sessMenu=o=>{const s=SES(o.sid),m=M(s.memberId);
    <div class="row">${btn('옮기기','modal',{type:'schedule',mid:m.id,sid:s.id})}${btn('회원 한눈에','go',{to:'member',mid:m.id})}</div>
    <div class="field" style="border-top:1px solid var(--line);padding-top:10px"><label>못 하게 됐을 때 · 사유를 고르고 누르면 오른쪽 '최근 기록'에 남아요</label>
      <div class="row">${CX_REASONS.map(r=>`<button class="chip${(UI.draft['cx-'+s.id]||'')===r?' on':''}" data-act="draftSet" data-key="cx-${s.id}" data-v="${r}">${r}</button>`).join('')}</div>
+     <div class="row" style="margin-top:6px"><span class="small muted">회차에서</span>${[['0','차감 안 함'],['1','차감']].map(([v,l])=>`<button class="chip${(UI.draft['cxd-'+s.id]||'0')===v?' on':''}" data-act="draftSet" data-key="cxd-${s.id}" data-v="${v}">${l}</button>`).join('')}<span class="tiny muted">차감이면 회차에 1회 들어가요</span></div>
      <div class="row" style="margin-top:4px">${btn('취소','markSession',{sid:s.id,v:'cancelled'},'danger')}${btn('안 옴','markSession',{sid:s.id,v:'no_show'},'danger')}</div></div></div>
    <div class="row" style="justify-content:flex-end;margin-top:12px">${btn('닫기','closeModal')}</div>`};
 MOD.exMenu=o=>{const s=SES(o.sid),x=s.exercises.find(e=>e.uid===o.uid);const d={sid:s.id,uid:x.uid};
@@ -3394,8 +3447,12 @@ const ACT={
   // 일정
   markSession:d=>{const s=SES(d.sid);const prev=s.status;s.status=d.v;UI.modal=null;
     if(d.v==='planned'&&s.example){S.sessions=S.sessions.filter(x=>x!==s);S.changes=(S.changes||[]).filter(c=>c.sid!==s.id);save();return toast('예시 칸을 지웠어요.')}
-    if(d.v==='planned'){S.changes=(S.changes||[]).filter(c=>!(c.sid===s.id&&(c.kind==='cancelled'||c.kind==='no_show')));save();return toast('되돌렸어요. 다시 예정 수업이에요.')}
-    logChange({kind:d.v,sid:s.id,mid:s.memberId,date:s.date,reason:fv('cx-'+s.id)||''});clearDraft('cx-'+s.id);save();toast(`${statusLabel[d.v]}으로 남겼어요. 다음 목표와 확인할 것은 다음 수업으로 넘어가요.`)},
+    if(d.v==='planned'){delete s.deduct;S.changes=(S.changes||[]).filter(c=>!(c.sid===s.id&&(c.kind==='cancelled'||c.kind==='no_show')));save();return toast('되돌렸어요. 다시 예정 수업이에요.')}
+    s.deduct=UI.draft['cxd-'+s.id]==='1';logChange({kind:d.v,sid:s.id,mid:s.memberId,date:s.date,reason:fv('cx-'+s.id)||'',deduct:s.deduct});clearDraft('cx-'+s.id,'cxd-'+s.id);save();toast(`${statusLabel[d.v]}으로 남겼어요. 다음 목표와 확인할 것은 다음 수업으로 넘어가요.`)},
+  setDeduct:d=>{const s=SES(d.sid);s.deduct=d.v==='1';save();toast(s.deduct?'차감으로 바꿨어요. 회차에 1회 들어가요.':'차감 안 함으로 바꿨어요.')},
+  addPkg:d=>{const m=M(d.mid);const n=parseInt(fv('pk-'+m.id)||UI.draft['pkn-'+m.id]||'',10);if(!(n>0))return toast('추가할 횟수를 골라 주세요');
+    m.packages=m.packages||[];m.packages.push({id:uid('k'),n,date:todayIso()});clearDraft('pk-'+m.id,'pkn-'+m.id);UI.modal=null;save();toast(`${n}회를 추가했어요. 이제 전체 ${pkgTotal(m)}회예요.`)},
+  delPkg:d=>{const m=M(d.mid);m.packages=(m.packages||[]).filter(p=>p.id!==d.id);save();render()},
   setExampleCx:d=>{S.settings.exampleCx=d.v==='1';if(S.settings.exampleCx)addExampleCx();else removeExampleCx();save();render()},
   musRange:d=>{UI.cur['mus-'+d.mid]=d.v;render()},
   recentTab:d=>{UI.cur.recentTab=d.v;render()},
@@ -3512,7 +3569,7 @@ function flushRender(){if(soonT){cancelSoon();render()}}
 /* ---------- 시작 ---------- */
 (function boot(){
   try{const v=JSON.parse(localStorage.getItem(KEY+'-view')||'null');if(v){UI.orient=v.orient==='port'?'port':'land';UI.fit=v.fit!==false;if(v.guide){G.open=v.guide.open!==false;G.scene=Math.min(+v.guide.scene||0,SCENES.length-1);G.step=+v.guide.step||0}}}catch(e){}
-  S=load(); save();
+  S=load(); ensurePackages(); save();
   const app=document.getElementById('app');
   app.addEventListener('click',ev=>{const el=ev.target.closest('[data-act]');if(!el||el.disabled||!app.contains(el)){flushRender();return}cancelSoon();if(UI.ask&&!/^ask/.test(el.dataset.act))UI.ask=null;const f=ACT[el.dataset.act];if(f)f(el.dataset,el,ev)});
   app.addEventListener('change',ev=>{const el=ev.target.closest('[data-on]');if(!el)return;const f=ON[el.dataset.on];if(f)f(el.value,el.dataset,el)});

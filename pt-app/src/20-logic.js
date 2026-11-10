@@ -59,6 +59,7 @@ function buildSeed(){
     for(const n of [].concat(sm.next||[])) createPlanned(m,n.d,n.time,n.t);
   }
   addExampleCx();
+  ensurePackages();
   return st;
 }
 /* 다른 회원의 10/7 뒤 수첩 기록: 시연 날짜가 그날을 지나면 넣는다. 같은 날 계획 수업이 있으면 기록으로 바꾼다 */
@@ -107,8 +108,22 @@ function addExampleCx(){
   for(const [mid,d,t,kind,reason] of EXAMPLE_CX){const m=M(mid);if(!m||S.sessions.some(s=>s.memberId===mid&&s.date===d))continue;
     const prev=prevDone(m,d)[0];
     const s={id:uid('s'),memberId:mid,date:d,time:t,templateId:prev?prev.templateId:(m.templates[0]||{}).id,status:kind,cond:null,cautionChecks:{},goal:'',memo:'',observations:[],nextTargets:{},example:true,exercises:[]};
-    S.sessions.push(s);logChange({kind,sid:s.id,mid,date:d,reason,example:true});S.changes[S.changes.length-1].at=d}
+    s.deduct=kind==='no_show';S.sessions.push(s);logChange({kind,sid:s.id,mid,date:d,reason,example:true});S.changes[S.changes.length-1].at=d}
 }
+/* 등록 횟수(회차) · 차감 (2026-11-10 이현아님 요청). 수첩에는 등록 횟수가 없어서 처음 값은 30회 단위로 올린 '예시'다.
+   회차에 세는 것: 끝난 수업, 진행 중·예정 수업, 트레이너가 '차감'으로 정한 취소·안 옴 */
+const deducted=s=>(s.status==='cancelled'||s.status==='no_show')&&!!s.deduct;
+const counted=s=>s.status==='completed'||s.status==='in_progress'||s.status==='planned'||deducted(s);
+function ensurePackages(){
+  for(const s of S.sessions) if(s.example&&s.deduct===undefined) s.deduct=s.status==='no_show';
+  for(const m of S.members){if(m.packages)continue;const n=msessions(m.id).filter(counted).length;const f=msessions(m.id)[0];
+    m.packages=[{id:uid('k'),n:Math.max(30,Math.ceil(n/30)*30),date:f?f.date:todayIso(),example:true}]}
+}
+const pkgTotal=m=>(m.packages||[]).reduce((a,p)=>a+(+p.n||0),0);
+function sessNo(s){const i=msessions(s.memberId).filter(counted).indexOf(s);return i<0?null:i+1}
+const usedCount=m=>msessions(m.id).filter(s=>s.status==='completed'||s.status==='in_progress'||deducted(s)).length;
+/* 남은 횟수(이 수업 포함): 3 노랑 · 2 주황 · 1 빨강 · 0 이하 넘음 (기준은 트레이너에게 물어볼 예정) */
+const leftCls=left=>left<=0?'over':left===1?'l1':left===2?'l2':left===3?'l3':'';
 function removeExampleCx(){S.sessions=S.sessions.filter(s=>!s.example);S.changes=(S.changes||[]).filter(c=>!c.example)}
 
 /* ---------- 숫자 채우기 (D52, D57, D59, 워크플로우 v2 6단계) ---------- */

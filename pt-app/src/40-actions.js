@@ -87,8 +87,12 @@ const ACT={
   // 일정
   markSession:d=>{const s=SES(d.sid);const prev=s.status;s.status=d.v;UI.modal=null;
     if(d.v==='planned'&&s.example){S.sessions=S.sessions.filter(x=>x!==s);S.changes=(S.changes||[]).filter(c=>c.sid!==s.id);save();return toast('예시 칸을 지웠어요.')}
-    if(d.v==='planned'){S.changes=(S.changes||[]).filter(c=>!(c.sid===s.id&&(c.kind==='cancelled'||c.kind==='no_show')));save();return toast('되돌렸어요. 다시 예정 수업이에요.')}
-    logChange({kind:d.v,sid:s.id,mid:s.memberId,date:s.date,reason:fv('cx-'+s.id)||''});clearDraft('cx-'+s.id);save();toast(`${statusLabel[d.v]}으로 남겼어요. 다음 목표와 확인할 것은 다음 수업으로 넘어가요.`)},
+    if(d.v==='planned'){delete s.deduct;S.changes=(S.changes||[]).filter(c=>!(c.sid===s.id&&(c.kind==='cancelled'||c.kind==='no_show')));save();return toast('되돌렸어요. 다시 예정 수업이에요.')}
+    s.deduct=UI.draft['cxd-'+s.id]==='1';logChange({kind:d.v,sid:s.id,mid:s.memberId,date:s.date,reason:fv('cx-'+s.id)||'',deduct:s.deduct});clearDraft('cx-'+s.id,'cxd-'+s.id);save();toast(`${statusLabel[d.v]}으로 남겼어요. 다음 목표와 확인할 것은 다음 수업으로 넘어가요.`)},
+  setDeduct:d=>{const s=SES(d.sid);s.deduct=d.v==='1';save();toast(s.deduct?'차감으로 바꿨어요. 회차에 1회 들어가요.':'차감 안 함으로 바꿨어요.')},
+  addPkg:d=>{const m=M(d.mid);const n=parseInt(fv('pk-'+m.id)||UI.draft['pkn-'+m.id]||'',10);if(!(n>0))return toast('추가할 횟수를 골라 주세요');
+    m.packages=m.packages||[];m.packages.push({id:uid('k'),n,date:todayIso()});clearDraft('pk-'+m.id,'pkn-'+m.id);UI.modal=null;save();toast(`${n}회를 추가했어요. 이제 전체 ${pkgTotal(m)}회예요.`)},
+  delPkg:d=>{const m=M(d.mid);m.packages=(m.packages||[]).filter(p=>p.id!==d.id);save();render()},
   setExampleCx:d=>{S.settings.exampleCx=d.v==='1';if(S.settings.exampleCx)addExampleCx();else removeExampleCx();save();render()},
   musRange:d=>{UI.cur['mus-'+d.mid]=d.v;render()},
   recentTab:d=>{UI.cur.recentTab=d.v;render()},
@@ -205,7 +209,7 @@ function flushRender(){if(soonT){cancelSoon();render()}}
 /* ---------- 시작 ---------- */
 (function boot(){
   try{const v=JSON.parse(localStorage.getItem(KEY+'-view')||'null');if(v){UI.orient=v.orient==='port'?'port':'land';UI.fit=v.fit!==false;if(v.guide){G.open=v.guide.open!==false;G.scene=Math.min(+v.guide.scene||0,SCENES.length-1);G.step=+v.guide.step||0}}}catch(e){}
-  S=load(); save();
+  S=load(); ensurePackages(); save();
   const app=document.getElementById('app');
   app.addEventListener('click',ev=>{const el=ev.target.closest('[data-act]');if(!el||el.disabled||!app.contains(el)){flushRender();return}cancelSoon();if(UI.ask&&!/^ask/.test(el.dataset.act))UI.ask=null;const f=ACT[el.dataset.act];if(f)f(el.dataset,el,ev)});
   app.addEventListener('change',ev=>{const el=ev.target.closest('[data-on]');if(!el)return;const f=ON[el.dataset.on];if(f)f(el.value,el.dataset,el)});

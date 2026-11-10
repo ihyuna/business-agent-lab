@@ -85,17 +85,21 @@ function miniCal(d){
     rows+=`<td><button class="${c.getMonth()!==mo?'other ':''}${k===0?'sun ':''}${has.has(ci)?'has ':''}${ci===d?'today':''}" data-act="setDay" data-v="${ci}" aria-label="${md(ci)}">${c.getDate()}</button></td>`}rows+='</tr>'}
   return `<div class="mcal"><div class="hd">${y}. ${mo+1}</div><table><tr>${DOW.map(w=>`<th>${w}</th>`).join('')}</tr>${rows}</table></div>`;
 }
+/* 회차 꼬리표: 18/30. 예정·진행 중이면 남은 횟수(이 수업 포함)로 색: 3 노랑 · 2 주황 · 1 빨강 */
+function noBadge(s){const m=M(s.memberId);const n=sessNo(s);if(!n)return '';const T=pkgTotal(m);const live=s.status==='planned'||s.status==='in_progress';
+  const left=T-n+1;const c=live?leftCls(left):'';const ex=(m.packages||[]).some(p=>p.example);
+  return `<span class="nob ${c}" title="${live?`이 수업 포함 남은 횟수 ${Math.max(left,0)}회`:''}${ex?' (등록 횟수는 예시)':''}">${n}/${T}${live&&left<=0?' 넘음':''}</span>`}
 function tlBlock(s,top,h){
   const m=M(s.memberId); const l=prevDone(m,s.date)[0]; const cn=openCautions(m).length;
   const st=s.status==='in_progress'?pill('진행 중','green'):s.status==='completed'?'<span class="pill gray">✓ 끝남</span>':s.status!=='planned'?pill(statusLabel[s.status],'gray'):'';
   const [hh,mm]=(s.time||'0:0').split(':').map(Number); const end=`${String(hh+1).padStart(2,'0')}:${String(mm).padStart(2,'0')}`;
   if(s.status==='cancelled'||s.status==='no_show'){const c=changes().filter(c=>c.sid===s.id&&c.kind===s.status).slice(-1)[0];
-    return `<div class="blk cx" style="top:${top}px;height:${h}px"><div style="flex:1;min-width:0"><div class="bt">${esc(s.time)}-${end} ${s.status==='cancelled'?pill('취소','red'):pill('안 옴','orange')}${s.example?' '+EXAMPLE('예시'):''}${c&&c.reason?' <span class="muted">'+esc(c.reason)+'</span>':''}</div>
+    return `<div class="blk cx" style="top:${top}px;height:${h}px"><div style="flex:1;min-width:0"><div class="bt">${esc(s.time)}-${end} ${s.status==='cancelled'?pill('취소','red'):pill('안 옴','orange')}${s.deduct?' '+pill('차감','gray')+' '+noBadge(s):''}${s.example?' '+EXAMPLE('예시'):''}${c&&c.reason?' <span class="muted">'+esc(c.reason)+'</span>':''}</div>
       <div><span class="bn">${esc(m.code)}</span> <span class="bs">· ${esc(splitName(s))}</span></div><div class="bd">계획은 다음 같은 분할로 넘어가요</div></div>${btn('되돌리기','markSession',{sid:s.id,v:'planned'},'small')}</div>`}
   const fin=s.status==='completed';
   return `<div class="blk srow ${fin?'fin':memberHue(m)}" style="top:${top}px;height:${h}px" data-act="openSession" data-sid="${s.id}">
     <div style="flex:1;min-width:0"><div class="bt">${esc(s.time)}-${end} ${EXAMPLE('예시')}</div>
-      <div><span class="bn">${esc(m.code)}</span> <span class="bs">· ${esc(splitName(s))}</span> ${cn?pill('주의 '+cn,'red'):''} ${st}</div>
+      <div><span class="bn">${esc(m.code)}</span> <span class="bs">· ${esc(splitName(s))}</span> ${noBadge(s)} ${cn?pill('주의 '+cn,'red'):''} ${st}</div>
       <div class="bd">${s.goal?'오늘 목표: '+esc(s.goal)+' · ':''}${l?`마지막 수업 <b>${daysBetween(l.date,s.date)}일 전</b> (${md(l.date)} ${esc(splitName(l))})`:'첫 수업'}</div>
       ${todayMemos(m,s).map(n=>`<div class="bd" style="color:var(--accent)">오늘 메모: ${esc(n.text)}</div>`).join('')}</div>
     ${s.status==='planned'?`<button class="btn ghost more" data-act="modal" data-type="sessMenu" data-sid="${s.id}" aria-label="수업 메뉴">…</button>`:''}</div>`;
@@ -224,11 +228,21 @@ function visitCard(m,s,u){
   const notes=[s.memo?`<div class="vl">${IC_MEMO}<div>${esc(s.memo)}</div></div>`:'',...s.exercises.filter(x=>x.note||x.setting).slice(0,4).map(x=>`<div class="vl">${IC_PEN}<div><b>${esc(EX(x.exId).name)}</b> ${esc([x.setting,x.note].filter(Boolean).join(' · '))}</div></div>`)].join('');
   return `<div class="visit"><div class="vh"><span class="vd">${s.date} <span class="vago">(${ago>0?ago+'일 전':ago===0?'오늘':-ago+'일 뒤'})</span></span>${s.status==='completed'?'<span class="vok">✓</span>':''}<span class="sp"></span>${btn('자세히','go',{to:s.status==='planned'||s.status==='in_progress'?'prep':'detail',sid:s.id},'ghost small')}</div>
     <div class="row" style="gap:5px;margin:6px 0 8px"><span class="pill gray" style="border:1px solid var(--line);background:var(--panel)">${esc(splitName(s))}</span>${s.status==='completed'?pill(s.seeded?'수첩 기록':'앱 기록','blue'):pill(statusLabel[s.status],'gray')}</div>
+    ${s.status==='cancelled'||s.status==='no_show'?`<div class="row small" style="margin:2px 0 8px"><span class="muted">회차에서</span>${chips([['0','차감 안 함'],['1','차감']],s.deduct?'1':'0','setDeduct',{sid:s.id})}</div>`:''}
     ${notes}
     <div class="vsec"><span>종목 ${s.exercises.length}</span><span class="sp"></span>${can&&s.status==='completed'?`<button class="lnk" data-act="copyAll" data-sid="${s.id}">전체 복사</button>`:''}</div>
     ${exs||'<div class="empty">종목이 없어요.</div>'}
     ${can&&s.status==='completed'?`<div class="tiny faint" style="margin-top:6px">종목을 누르면 ${md(u.date)} 수업 계획에 그 숫자 그대로 들어가요.</div>`:''}</div>`;
 }
+/* 수업 이력 위: 회차(받은 횟수/전체) + 완료·변동·차감 + 수업 추가 */
+function pkgHead(m){const ss=msessions(m.id);const T=pkgTotal(m);const used=usedCount(m);const u=upcoming(m.id);
+  const nx=u&&sessNo(u);const left=nx?T-nx+1:T-used;const c=u?leftCls(left):leftCls(T-used);
+  const done=ss.filter(s=>s.status==='completed').length;const cx=ss.filter(s=>s.status==='cancelled'||s.status==='no_show');
+  const mvN=new Set(changes().filter(c=>c.kind==='moved'&&c.mid===m.id).map(c=>c.sid)).size;const ded=cx.filter(s=>s.deduct).length;
+  const ex=(m.packages||[]).some(p=>p.example);
+  return `<div class="pkg"><div class="row" style="gap:8px"><span class="muted small">회차</span><b class="pkg-n">${used}<span>/${T}</span></b>${ex?EXAMPLE('예시'):''}<span class="sp"></span>${btn('+ 수업 추가','modal',{type:'addPkg',mid:m.id},'small')}</div>
+    ${u?`<div class="tiny" style="margin-top:2px"><span class="muted">다음 수업 ${md(u.date)}은</span> <span class="nob ${c}">${nx}/${T}${left<=0?' 넘음':''}</span> <span class="muted">${left>0?`이 수업 포함 ${left}회 남음`:'등록 횟수를 넘었어요'}</span></div>`:''}
+    <div class="pkg-st"><div><span>완료</span><b>${done}</b></div><div><span>변동</span><b>${cx.length+mvN}</b></div><div><span>차감</span><b class="${ded?'r':''}">${ded}</b></div></div></div>`}
 V.member=r=>{
   const m=M(r.mid); const u=upcoming(m.id); const done=completed(m.id); const t=todayIso(); const last=done[done.length-1];
   const d30=done.filter(s=>daysBetween(s.date,t)>=0&&daysBetween(s.date,t)<30).length;
@@ -237,31 +251,31 @@ V.member=r=>{
     <div class="vit"><span>누적 <b>${done.length}</b>회</span><span>최근 30일 <b>${d30}</b>회</span>${(()=>{const c=msessions(m.id).filter(x=>x.status==='cancelled'&&x.date<=t).length,n=msessions(m.id).filter(x=>x.status==='no_show'&&x.date<=t).length;return `<span>취소 <b style="color:${c?'var(--bad)':'inherit'}">${c}</b> · 안 옴 <b style="color:${n?'var(--warn)':'inherit'}">${n}</b></span>`})()}<span>첫 기록 <b>${done[0]?md(done[0].date):'—'}</b></span><span>마지막 <b>${last?md(last.date):'—'}</b>${last?` (${daysBetween(last.date,t)}일 전)`:''}</span><span>다음 PT <b>${u?mdw(u.date):'없음'}</b>${u?' '+esc(splitName(u)):''}</span></div></div>`;
   const all=msessions(m.id).filter(s=>!(s.example&&s.date>t)).slice().sort((a,b)=>byDate(b,a));
   const open=UI.cur['hx-'+m.id]===undefined?(done[done.length-1]||{}).id:UI.cur['hx-'+m.id];
-  const hist=all.map(s=>{const isNext=u&&s.id===u.id;const n=s.exercises.filter(x=>x.status==='done').length;
-    const st=s.status==='completed'?'':s.status==='plan_only'?pill('계획만','gray'):pill(statusLabel[s.status],s.status==='planned'||s.status==='in_progress'?'blue':s.status==='cancelled'?'red':s.status==='no_show'?'orange':'gray')+(s.example?' '+EXAMPLE('예시'):'');
-    const head=`<button class="hi${isNext?' next':''}${open===s.id?' open':''}" data-act="histOpen" data-mid="${m.id}" data-sid="${s.id}" aria-expanded="${open===s.id}"><div class="row" style="gap:6px"><span class="d">${mdw(s.date)}</span>${pill(splitName(s))}${st}<span class="sp"></span><span class="chev">${open===s.id?'⌃':'⌄'}</span></div>
+  const mv=changes().filter(c=>c.kind==='moved'&&c.mid===m.id&&SES(c.sid)).map(c=>({moved:1,date:c.from,time:c.fromTime||'',c,s:SES(c.sid)}));
+  const rows=[...all,...mv].sort((a,b)=>byDate(b,a));
+  const histRow=s=>{if(s.moved)return `<div class="hi moved" title="옮긴 일정"><div class="row" style="gap:6px"><span class="d">${mdw(s.date)}</span>${pill(splitName(s.s),'gray')}<span class="pill gray">옮김</span></div><div class="x">${s.c.reason?esc(s.c.reason):'날짜를 옮겼어요'}</div></div>`;
+  const isNext=u&&s.id===u.id;const n=s.exercises.filter(x=>x.status==='done').length;
+    const st=s.status==='completed'?'':s.status==='plan_only'?pill('계획만','gray'):pill(statusLabel[s.status],s.status==='planned'||s.status==='in_progress'?'blue':s.status==='cancelled'?'red':s.status==='no_show'?'orange':'gray')+(deducted(s)?' '+pill('차감','gray'):'')+(s.example?' '+EXAMPLE('예시'):'');
+    const head=`<button class="hi${isNext?' next':''}${s.status==='cancelled'||s.status==='no_show'?' cx':''}${open===s.id?' open':''}" data-act="histOpen" data-mid="${m.id}" data-sid="${s.id}" aria-expanded="${open===s.id}"><div class="row" style="gap:6px"><span class="d">${mdw(s.date)}</span>${pill(splitName(s))}${st}<span class="sp"></span><span class="chev">${open===s.id?'⌃':'⌄'}</span></div>
       ${open===s.id?'':`<div class="x">${s.exercises.filter(x=>x.status==='done'||s.status!=='completed').slice(0,4).map(x=>EX(x.exId).name).join(', ')}${n>4?' 외':''}</div>`}</button>`;
-    return head+(open===s.id?visitCard(m,s,u):'')}).join('')||'<div class="empty" style="padding:12px">기록이 없어요.</div>';
+    return head+(open===s.id?visitCard(m,s,u):'')};
+  const hist=rows.map(histRow).join('')||'<div class="empty" style="padding:12px">기록이 없어요.</div>';
   let next;
   if(u){const ip=u.status==='in_progress';
     next=`<div class="row"><div style="flex:1"><div style="font-size:16px;font-weight:700">${mdw(u.date)} ${esc(u.time||'')}</div><div class="muted small">${esc(splitName(u))}${u.goal?' · 오늘 목표: '+esc(u.goal):''}</div></div>${ip?pill('진행 중','green'):''}
       ${ip?btn('이어서 하기','openSession',{sid:u.id},'primary'):btn('숫자 정하기','openSession',{sid:u.id},'primary')+`<button class="btn ghost more" data-act="modal" data-type="sessMenu" data-sid="${u.id}" aria-label="수업 메뉴">…</button>`}</div>`;
   } else next=`<div class="row"><span class="muted">잡힌 수업이 없어요.</span><span class="sp"></span>${btn('다음 PT 잡기','modal',{type:'schedule',mid:m.id},'primary')}</div>`;
-  const recent=done.slice(-5).reverse();
   const mainOf=s=>{const x=s.exercises.find(e=>e.status==='done'&&e.role==='메인')||s.exercises.find(e=>e.status==='done');const tt=x&&topSet(x);return x?`${esc(EX(x.exId).name)}${tt?` <b class="num">${ftop(tt,x.exId)}</b>`:''}`:'—'};
-  const rec=recent.map(s=>`<tr class="click" data-act="go" data-to="detail" data-sid="${s.id}"><td class="num">${mdw(s.date)}</td><td>${pill(splitName(s))}</td><td>${mainOf(s)}</td><td class="memo" title="${esc(s.memo||'')}">${esc(s.memo||'')}</td></tr>`).join('');
   const mt=mainTrend(m,262,130);
   const notes=m.notes.filter(n=>['general','lifestyle','diet','self_train','personality'].includes(n.kind));
   return topBar(esc(m.code),'회원 한눈에',
       btn('추이','go',{to:'trend',mid:m.id})+btn('수업 기록','go',{to:'history',mid:m.id})+btn('루틴 틀','go',{to:'templates',mid:m.id})+btn('회원 정보','go',{to:'memberEdit',mid:m.id}))+pbar+
     `<div class="chartlay">
-      <div class="cl-left"><div class="pl-colhd">수업 이력 <span class="n">${all.length}</span></div><div class="hist">${hist}</div></div>
+      <div class="cl-left">${pkgHead(m)}<div class="pl-colhd">수업 이력 <span class="n">${all.length}</span></div><div class="hist">${hist}</div></div>
       <div class="cl-mid" data-sk="main">
         <div class="box"><div class="bh">다음 PT</div><div class="bb">${next}</div></div>
         <div class="box"><div class="sec3">${cautionSec(m)}${checkSec(m)}${goalSec(m)}</div></div>
         ${last?`<div class="box"><div class="bh">지난 PT 변화 <span class="muted" style="font-weight:500">${mdw(last.date)} · ${esc(splitName(last))}</span><span class="sp"></span>${btn('수업 상세','go',{to:'detail',sid:last.id},'ghost small')}</div><div class="bb">${deltaChart(m,last)}</div></div>`:''}
-        <div class="box"><div class="bh">최근 수업 ${recent.length}회<span class="sp"></span>${done.length>5?btn(`전체 ${done.length}회`,'go',{to:'history',mid:m.id},'ghost small'):''}</div>
-          ${rec?`<table class="dtable" style="table-layout:fixed"><colgroup><col style="width:84px"><col style="width:120px"><col style="width:210px"><col></colgroup><tr><th>날짜</th><th>분할</th><th>메인 종목 최고</th><th>메모</th></tr>${rec}</table>`:'<div class="empty" style="padding:10px 12px">아직 수업 기록이 없어요.</div>'}</div>
       </div>
       <div class="cl-right">
         <h3>월별 수업 횟수</h3>${monthBars(m,262,130)}
