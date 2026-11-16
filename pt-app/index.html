@@ -507,15 +507,47 @@ tr.click:hover td{background:var(--accent-soft)}
 .hist .hi.cx .d{color:var(--faint)}
 .hist .hi.cx .x{color:var(--faint)}
 .pkg-n.l3{color:#b08900}.pkg-n.l2{color:#c2410c}.pkg-n.l1,.pkg-n.over{color:var(--bad)}
+
+/* 앱 화면만 (D82: 웹앱, 아이패드 사파리 기준). 주소 끝에 #full 이어도 이 모드로 열림 */
+#b-unfull{display:none}
+body.full #bar,body.full #guide{display:none!important}
+body.full #shell{padding:0;gap:0}
+body.full #device{border-radius:0;border:0;box-shadow:none}
+body.full #b-unfull{display:block;position:fixed;right:10px;bottom:10px;z-index:50;opacity:.45}
+body.full #b-unfull:hover{opacity:1}
+body.full #app .hl{outline:0!important;box-shadow:none!important;animation:none!important}
+/* 0. 처음 화면 (2026-11-16) */
+.landing{flex:1;display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);background:var(--device)}
+.ld-left{padding:64px 56px 32px;display:flex;flex-direction:column;gap:22px}
+.ld-brand{display:flex;align-items:center;gap:10px}
+.ld-brand .logo{width:34px;height:34px;border-radius:8px;background:var(--accent);color:var(--accent-ink);display:grid;place-items:center;font-weight:800;font-size:18px}
+.ld-brand b{font-size:20px;letter-spacing:-.01em}
+.ld-h{font-size:30px;line-height:1.3;margin:18px 0 4px;font-weight:700;letter-spacing:-.02em}
+.ld-pts{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:14px}
+.ld-pts li{border-left:3px solid var(--accent);padding:2px 0 2px 12px}
+.ld-pts b{display:block;font-size:15px} .ld-pts span{color:var(--muted);font-size:13px}
+.ld-foot{margin-top:auto}
+.ld-right{display:flex;align-items:center;justify-content:center;padding:32px 48px;background:var(--soft);border-left:1px solid var(--line)}
+.ld-card{width:100%;max-width:360px;padding:24px}
+.ld-card h2{font-size:18px;margin:0 0 14px}
+.ld-f{display:block;margin-bottom:10px} .ld-f span{display:block;font-size:12px;color:var(--muted);margin-bottom:4px}
+.ld-f input{width:100%;box-sizing:border-box;height:44px;font-size:15px;padding:0 12px;border:1px solid var(--line2,var(--line));border-radius:6px;background:var(--panel);color:var(--ink);font-family:inherit}
+.btn.ld-go{width:100%;height:46px;font-size:15px;justify-content:center;margin-top:4px}
+.ld-or{display:flex;align-items:center;gap:8px;margin:12px 0 8px;color:var(--faint);font-size:12px}
+.ld-or:before,.ld-or:after{content:"";flex:1;border-top:1px solid var(--line)}
+#device.port .landing{grid-template-columns:minmax(0,1fr);grid-template-rows:auto 1fr}
+#device.port .ld-left{padding:48px 40px 16px} #device.port .ld-right{border-left:0;border-top:1px solid var(--line)}
 </style>
 <div id="shell">
   <div id="bar">
-    <b>PT 기록 앱 MVP v4</b><span>아이패드 9세대 화면(1080×810) · 세트·무게·횟수를 근거로 정하기: 오늘 숫자 정하기 → 컨디션 → 수업 중 다시 맞추기 → 다음 숫자</span>
+    <b>PT 기록 앱 MVP v5 (웹앱)</b><span>아이패드 9세대 화면(1080×810) 기준 · 처음 화면(로그인) → 세트·무게·횟수를 근거로 정하기: 오늘 숫자 정하기 → 컨디션 → 수업 중 다시 맞추기 → 다음 숫자</span>
     <span class="sp"></span>
     <button class="btn small" id="b-orient">세로로 보기</button>
     <button class="btn small" id="b-fit">실제 크기</button>
     <button class="btn small" id="b-guide">시나리오 닫기</button>
+    <button class="btn small" id="b-full" title="아이패드 사파리에서 앱처럼 쓰기">앱 화면만</button>
   </div>
+  <button class="btn small" id="b-unfull">도구 보기</button>
   <div id="main"><div id="stage"><div id="frame"><div id="device"><div id="app"></div></div></div></div><aside id="guide" aria-label="시나리오 따라 하기"></aside></div>
 </div>
 <script>
@@ -2750,6 +2782,7 @@ V.settings=()=>{
      <div class="card"><h2>지난 실제값 기준</h2><div class="row">${chips([['same','같은 분할'],['recent','가장 최근']],S.settings.basis,'setBasis')}</div><div class="tiny muted" style="margin-top:4px">다음 목표가 없을 때 어느 수업의 실제값으로 채울지예요. 같은 분할에 없는 종목은 가장 최근으로 채워요. 바꾸면 앞으로 만드는 수업 준비부터 적용돼요.</div></div>
      <div class="card"><h2>역할별 기준 <span class="tag warn">논문 기준 임시값 (D59)</span></h2><table><tr><th>역할</th><th>횟수 범위</th><th>목표 횟수</th><th>여유 횟수</th><th>세트</th><th>쉬는 초</th></tr>${roleRows}</table><div class="tiny muted" style="margin-top:4px">트레이너 답(O02)이 오면 바꿀 값이에요. 유산소성 순환은 횟수 칸을 라운드로 써요.</div></div>
      <div class="card"><h2>예시 취소·안 옴 <span class="tag warn">예시</span></h2><div class="row">${chips([['1','보임'],['0','숨김']],S.settings.exampleCx===false?'0':'1','setExampleCx')}</div><div class="tiny muted" style="margin-top:4px">수첩에는 취소·안 옴 기록이 없어요. 화면을 보여 주려고 넣은 예시 ${EXAMPLE_CX.length}건이고, 운동 기록은 없어요. 실제 날짜를 알면 바꿔요.</div></div>
+     <div class="card"><h2>처음 화면</h2>${btn('로그아웃 (처음 화면으로)','logout',null,'small')}<div class="tiny muted" style="margin-top:4px">입력한 기록은 그대로 두고 로그인 화면으로 돌아가요.</div></div>
      <div class="card"><h2>처음 상태로</h2>${UI.confirmReset?`<div class="row"><span class="small">입력한 것을 모두 지울까요?</span>${btn('되돌리기','reset',null,'danger')}${btn('아니요','confirmReset',{v:0})}</div>`:btn('처음 상태로 되돌리기','confirmReset',{v:1},'small')}</div></div>
     <div class="card"><h2>종목 사전 <span class="tag warn">단위·눈금은 예시 (O36)</span></h2><div class="tiny muted" style="margin-bottom:4px">눈금은 +/− 한 칸과 계산한 무게를 내릴 때 써요. '한쪽'은 40/40kg처럼 한쪽 무게로 적는 기구예요.</div>
      <table><tr><th>이름</th><th>부위</th><th>단위</th><th>눈금</th><th>한쪽</th></tr>${exRows}</table>
@@ -2828,6 +2861,29 @@ MOD.exList=o=>{const s=SES(o.sid);const cur=UI.cur[s.id];
   const rows=s.exercises.map((e,i)=>{const dn=e.sets.filter(st=>st.done).length;const off=e.status==='removed'||e.status==='swapped';
     return `<div class="li${off?'':' click'}${e.uid===cur?' cur':''}"${off?'':` data-act="pickEx" data-sid="${s.id}" data-uid="${e.uid}"`}><div style="flex:1"><span class="${e.status==='removed'?'st-removed':e.status==='swapped'?'st-swapped':dn&&dn>=e.sets.length?'st-done':''}">${esc(EX(e.exId).name)}</span> <span class="tiny muted">${e.status==='removed'?'뺌 · '+esc(e.reason||'이유 없음'):e.status==='swapped'?'바꿈':`${dn}/${e.sets.length}세트`}${e.origin==='swap'?' · 바꿔 넣음':e.origin==='added'?' · 새로 넣음':''}</span></div>${e.status==='removed'?btn('되살리기','restoreEx',{sid:s.id,uid:e.uid},'small ghost'):''}</div>`}).join('');
   return `<h3>오늘 종목</h3><div class="list">${rows}</div><div class="row" style="justify-content:space-between;margin-top:12px">${btn('+ 종목 넣기','modal',{type:'addEx',sid:s.id},'small')}${btn('닫기','closeModal')}</div>`};
+
+/* ---------- 0. 처음 화면(랜딩·로그인) ---------- 2026-11-11 지도교수님 "웹사이트에 들어왔을 때 첫 페이지가 있어야", D82 */
+V.landing=()=>`<div class="landing">
+  <div class="ld-left">
+    <div class="ld-brand"><div class="logo">P</div><b>PT 기록</b><span class="tag">트레이너용 · 시연판</span></div>
+    <h1 class="ld-h">지난 기록을 근거로<br>오늘의 세트·무게·횟수를 정해요</h1>
+    <ul class="ld-pts">
+      <li><b>기록이 다음 계획이 돼요</b><span>수첩에 적던 수업 기록이 쌓이면 다음 수업 숫자의 바탕이 돼요.</span></li>
+      <li><b>숫자마다 근거가 붙어요</b><span>지난번 실제값, 컨디션, 수업 중 바뀐 것을 색과 한 줄 설명으로 보여 줘요.</span></li>
+      <li><b>정하는 건 트레이너예요</b><span>앱은 숫자를 제안하고, 고치고 정하는 건 트레이너가 해요.</span></li>
+    </ul>
+    <div class="tiny muted ld-foot">아이패드 9세대 가로 화면 기준 · 회원 이름은 성+00 코드로 바꿨어요</div>
+  </div>
+  <div class="ld-right"><div class="card ld-card">
+    <h2>로그인</h2>
+    <label class="ld-f"><span>아이디</span><input type="text" autocomplete="off" placeholder="트레이너 아이디" aria-label="아이디"></label>
+    <label class="ld-f"><span>비밀번호</span><input type="password" autocomplete="off" placeholder="비밀번호" aria-label="비밀번호"></label>
+    ${btn('로그인','enter',null,'primary ld-go')}
+    <div class="ld-or"><span>또는</span></div>
+    ${btn('로그인 없이 둘러보기','enter',{guest:1},'ld-go')}
+    <div class="tiny muted" style="margin-top:10px">시연판이라 아이디·비밀번호는 확인하지도, 저장하거나 보내지도 않아요. 어느 버튼을 눌러도 같은 트레이너 기록으로 들어가요. 계정은 실제 앱에서 붙여요.</div>
+  </div></div>
+</div>`;
 /* ---------- 변화 그래프와 근육 지도 (2026-11-04 이현아님 요청, D76) ---------- */
 /* 종목 → 근육 짝은 일반적인 운동 지식으로 정한 예시값이다. 수첩 기록이 아니다. 1 = 주로 쓰는 근육, 0.5 = 같이 쓰는 근육. 트레이너 확인 필요 */
 const MUSCLES={quads:'대퇴사두',hams:'햄스트링',glutes:'둔근',adductor:'내전근',calves:'종아리',chest:'가슴',lats:'광배',traps:'등 위·승모',lowback:'허리',frontdelt:'어깨 앞',sidedelt:'어깨 옆',reardelt:'어깨 뒤',biceps:'이두',triceps:'삼두',abs:'복근'};
@@ -3311,6 +3367,7 @@ function gotoScene(k){
 }
 function guideClick(ev){
   const el=ev.target.closest('[data-g]'); if(!el) return; const a=el.dataset.g;
+  if(UI.route.name==='landing'&&a!=='close'){enterApp();render({noSave:true})}
   if(a==='ack'){const st=SCENES[G.scene].steps[G.step];if(st){G.busy=true;runAuto(st);G.busy=false;render()}return}
   if(a==='close'){G.open=false;saveView();fit();render();return}
   if(a==='scene'){gotoScene(+el.dataset.k);return}
@@ -3331,7 +3388,8 @@ function guideAfter(){
   const app=document.getElementById('app');
   app.querySelectorAll('.hl').forEach(e=>e.classList.remove('hl'));
   const cur=sc.steps[G.step];
-  if(G.open&&cur){let sel='';try{sel=cur.at()}catch(e){}
+  if(UI.route.name==='landing'){const el=app.querySelector('[data-act="enter"]');if(G.open&&el)el.classList.add('hl')}
+  else if(G.open&&cur){let sel='';try{sel=cur.at()}catch(e){}
     if(sel){const el=app.querySelector(sel);if(el){el.classList.add('hl');const key=G.scene+'.'+G.step+'.'+sel;if(key!==G.lastAt){G.lastAt=key;try{el.scrollIntoView({block:'nearest'})}catch(e){}}}}}
   document.getElementById('b-guide').textContent=G.open?'시나리오 닫기':'시나리오 열기';
   box.classList.toggle('open',G.open);
@@ -3341,6 +3399,7 @@ function guideAfter(){
    <div class="g-scenes">${SCENES.map((x,k)=>`<button class="chip${k===G.scene?' on':''}" data-g="scene" data-k="${k}" title="${esc(x.t)}">${k+1}</button>`).join('')}</div>
    <div class="g-title">${esc(sc.t)}</div><div class="tiny muted">${esc(sc.sub)}</div>
    ${sc.goal?`<div class="g-box goal"><b>이 장면에서 하는 일</b> ${esc(sc.goal)}</div>`:''}${sc.sit?`<div class="g-box"><b>상황</b> ${esc(sc.sit)}</div><div class="g-box why"><b>왜 하나요</b> ${esc(sc.why)}</div>`:''}
+   ${UI.route.name==='landing'?`<div class="g-box goal"><b>먼저</b> 처음 화면에서 '로그인'을 눌러 앱에 들어가요. '이 단계 대신 하기'를 눌러도 들어가요.</div>`:''}
    <div class="tiny muted" style="margin-top:8px"><b>할 일</b></div><ol class="g-steps">${sc.steps.map((st,i)=>`<li class="${i<G.step?'done':i===G.step?'cur':''}">${esc(st.say)}${st.why&&i>=G.step?`<div class="g-why">왜: ${esc(st.why)}</div>`:''}${i===G.step&&st.ack?`<div style="margin-top:4px"><button class="btn small primary" data-g="ack">${esc(st.ack)}</button></div>`:''}</li>`).join('')}</ol>
    ${cur?`<div class="row"><span class="tiny muted">노란 테두리를 눌러요.</span><span class="sp"></span><button class="btn small" data-g="auto">이 단계 대신 하기</button></div>`
      :`<div class="g-done">${sc.end?esc(sc.end):last?'시나리오 끝이에요.':'이 장면은 끝났어요.'}</div>`}
@@ -3543,6 +3602,7 @@ const ON={
 
 /* ---------- 화면 크기: 아이패드 9세대 1080×810pt ---------- */
 function fit(){
+  if(document.body.classList.contains('full')){const o=innerWidth>=innerHeight?'land':'port';if(o!==UI.orient){UI.orient=o;render()}UI.fit=true}
   const st=document.getElementById('stage'),fr=document.getElementById('frame'),dev=document.getElementById('device');
   dev.classList.toggle('port',UI.orient==='port'); st.classList.toggle('actual',!UI.fit);
   const W=(UI.orient==='land'?1080:810)+2,H=(UI.orient==='land'?810:1080)+2;
@@ -3556,10 +3616,18 @@ function renderSoon(){clearTimeout(soonT);soonT=setTimeout(()=>{soonT=null;rende
 function cancelSoon(){clearTimeout(soonT);soonT=null}
 function flushRender(){if(soonT){cancelSoon();render()}}
 
+/* 처음 화면: 들어가기·로그아웃. 탭을 새로 열면 처음 화면부터 (sessionStorage) */
+const ENTER_KEY=KEY+'-entered';
+function enterApp(){try{sessionStorage.setItem(ENTER_KEY,'1')}catch(e){}UI.stack=[];UI.route={name:'today'};UI.modal=null;UI.edit=null}
+ACT.enter=()=>{enterApp();document.querySelectorAll('#app .ld-f input').forEach(i=>i.value='');render({noSave:true})};
+ACT.logout=()=>{try{sessionStorage.removeItem(ENTER_KEY)}catch(e){}UI.stack=[];UI.route={name:'landing'};UI.modal=null;UI.edit=null;render({noSave:true})};
+
 /* ---------- 시작 ---------- */
 (function boot(){
   try{const v=JSON.parse(localStorage.getItem(KEY+'-view')||'null');if(v){UI.orient=v.orient==='port'?'port':'land';UI.fit=v.fit!==false;if(v.guide){G.open=v.guide.open!==false;G.scene=Math.min(+v.guide.scene||0,SCENES.length-1);G.step=+v.guide.step||0}}}catch(e){}
   S=load(); ensurePackages(); save();
+  let entered=false;try{entered=sessionStorage.getItem(ENTER_KEY)==='1'}catch(e){}
+  if(!entered) UI.route={name:'landing'};
   const app=document.getElementById('app');
   app.addEventListener('click',ev=>{const el=ev.target.closest('[data-act]');if(!el||el.disabled||!app.contains(el)){flushRender();return}cancelSoon();if(UI.ask&&!/^ask/.test(el.dataset.act))UI.ask=null;const f=ACT[el.dataset.act];if(f)f(el.dataset,el,ev)});
   app.addEventListener('change',ev=>{const el=ev.target.closest('[data-on]');if(!el)return;const f=ON[el.dataset.on];if(f)f(el.value,el.dataset,el)});
@@ -3572,6 +3640,10 @@ function flushRender(){if(soonT){cancelSoon();render()}}
   document.getElementById('b-fit').addEventListener('click',()=>{UI.fit=!UI.fit;saveView();fit();render()});
   document.getElementById('b-guide').addEventListener('click',()=>{G.open=!G.open;saveView();fit();render()});
   document.getElementById('guide').addEventListener('click',guideClick);
+  const setFull=on=>{document.body.classList.toggle('full',on);try{history.replaceState(null,'',on?'#full':location.pathname+location.search)}catch(e){}fit();render()};
+  document.getElementById('b-full').addEventListener('click',()=>setFull(true));
+  document.getElementById('b-unfull').addEventListener('click',()=>setFull(false));
+  if(/full/.test(location.hash)) document.body.classList.add('full');
   window.addEventListener('resize',fit);
   try{new ResizeObserver(fit).observe(document.getElementById('stage'))}catch(e){}
   setInterval(()=>{const el=document.getElementById('timer-text');if(el&&UI.timer)el.innerHTML=timerText()},1000);

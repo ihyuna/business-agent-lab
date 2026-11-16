@@ -274,6 +274,7 @@ V.settings=()=>{
      <div class="card"><h2>지난 실제값 기준</h2><div class="row">${chips([['same','같은 분할'],['recent','가장 최근']],S.settings.basis,'setBasis')}</div><div class="tiny muted" style="margin-top:4px">다음 목표가 없을 때 어느 수업의 실제값으로 채울지예요. 같은 분할에 없는 종목은 가장 최근으로 채워요. 바꾸면 앞으로 만드는 수업 준비부터 적용돼요.</div></div>
      <div class="card"><h2>역할별 기준 <span class="tag warn">논문 기준 임시값 (D59)</span></h2><table><tr><th>역할</th><th>횟수 범위</th><th>목표 횟수</th><th>여유 횟수</th><th>세트</th><th>쉬는 초</th></tr>${roleRows}</table><div class="tiny muted" style="margin-top:4px">트레이너 답(O02)이 오면 바꿀 값이에요. 유산소성 순환은 횟수 칸을 라운드로 써요.</div></div>
      <div class="card"><h2>예시 취소·안 옴 <span class="tag warn">예시</span></h2><div class="row">${chips([['1','보임'],['0','숨김']],S.settings.exampleCx===false?'0':'1','setExampleCx')}</div><div class="tiny muted" style="margin-top:4px">수첩에는 취소·안 옴 기록이 없어요. 화면을 보여 주려고 넣은 예시 ${EXAMPLE_CX.length}건이고, 운동 기록은 없어요. 실제 날짜를 알면 바꿔요.</div></div>
+     <div class="card"><h2>처음 화면</h2>${btn('로그아웃 (처음 화면으로)','logout',null,'small')}<div class="tiny muted" style="margin-top:4px">입력한 기록은 그대로 두고 로그인 화면으로 돌아가요.</div></div>
      <div class="card"><h2>처음 상태로</h2>${UI.confirmReset?`<div class="row"><span class="small">입력한 것을 모두 지울까요?</span>${btn('되돌리기','reset',null,'danger')}${btn('아니요','confirmReset',{v:0})}</div>`:btn('처음 상태로 되돌리기','confirmReset',{v:1},'small')}</div></div>
     <div class="card"><h2>종목 사전 <span class="tag warn">단위·눈금은 예시 (O36)</span></h2><div class="tiny muted" style="margin-bottom:4px">눈금은 +/− 한 칸과 계산한 무게를 내릴 때 써요. '한쪽'은 40/40kg처럼 한쪽 무게로 적는 기구예요.</div>
      <table><tr><th>이름</th><th>부위</th><th>단위</th><th>눈금</th><th>한쪽</th></tr>${exRows}</table>
@@ -352,3 +353,26 @@ MOD.exList=o=>{const s=SES(o.sid);const cur=UI.cur[s.id];
   const rows=s.exercises.map((e,i)=>{const dn=e.sets.filter(st=>st.done).length;const off=e.status==='removed'||e.status==='swapped';
     return `<div class="li${off?'':' click'}${e.uid===cur?' cur':''}"${off?'':` data-act="pickEx" data-sid="${s.id}" data-uid="${e.uid}"`}><div style="flex:1"><span class="${e.status==='removed'?'st-removed':e.status==='swapped'?'st-swapped':dn&&dn>=e.sets.length?'st-done':''}">${esc(EX(e.exId).name)}</span> <span class="tiny muted">${e.status==='removed'?'뺌 · '+esc(e.reason||'이유 없음'):e.status==='swapped'?'바꿈':`${dn}/${e.sets.length}세트`}${e.origin==='swap'?' · 바꿔 넣음':e.origin==='added'?' · 새로 넣음':''}</span></div>${e.status==='removed'?btn('되살리기','restoreEx',{sid:s.id,uid:e.uid},'small ghost'):''}</div>`}).join('');
   return `<h3>오늘 종목</h3><div class="list">${rows}</div><div class="row" style="justify-content:space-between;margin-top:12px">${btn('+ 종목 넣기','modal',{type:'addEx',sid:s.id},'small')}${btn('닫기','closeModal')}</div>`};
+
+/* ---------- 0. 처음 화면(랜딩·로그인) ---------- 2026-11-11 지도교수님 "웹사이트에 들어왔을 때 첫 페이지가 있어야", D82 */
+V.landing=()=>`<div class="landing">
+  <div class="ld-left">
+    <div class="ld-brand"><div class="logo">P</div><b>PT 기록</b><span class="tag">트레이너용 · 시연판</span></div>
+    <h1 class="ld-h">지난 기록을 근거로<br>오늘의 세트·무게·횟수를 정해요</h1>
+    <ul class="ld-pts">
+      <li><b>기록이 다음 계획이 돼요</b><span>수첩에 적던 수업 기록이 쌓이면 다음 수업 숫자의 바탕이 돼요.</span></li>
+      <li><b>숫자마다 근거가 붙어요</b><span>지난번 실제값, 컨디션, 수업 중 바뀐 것을 색과 한 줄 설명으로 보여 줘요.</span></li>
+      <li><b>정하는 건 트레이너예요</b><span>앱은 숫자를 제안하고, 고치고 정하는 건 트레이너가 해요.</span></li>
+    </ul>
+    <div class="tiny muted ld-foot">아이패드 9세대 가로 화면 기준 · 회원 이름은 성+00 코드로 바꿨어요</div>
+  </div>
+  <div class="ld-right"><div class="card ld-card">
+    <h2>로그인</h2>
+    <label class="ld-f"><span>아이디</span><input type="text" autocomplete="off" placeholder="트레이너 아이디" aria-label="아이디"></label>
+    <label class="ld-f"><span>비밀번호</span><input type="password" autocomplete="off" placeholder="비밀번호" aria-label="비밀번호"></label>
+    ${btn('로그인','enter',null,'primary ld-go')}
+    <div class="ld-or"><span>또는</span></div>
+    ${btn('로그인 없이 둘러보기','enter',{guest:1},'ld-go')}
+    <div class="tiny muted" style="margin-top:10px">시연판이라 아이디·비밀번호는 확인하지도, 저장하거나 보내지도 않아요. 어느 버튼을 눌러도 같은 트레이너 기록으로 들어가요. 계정은 실제 앱에서 붙여요.</div>
+  </div></div>
+</div>`;

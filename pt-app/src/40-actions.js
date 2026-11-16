@@ -193,6 +193,7 @@ const ON={
 
 /* ---------- 화면 크기: 아이패드 9세대 1080×810pt ---------- */
 function fit(){
+  if(document.body.classList.contains('full')){const o=innerWidth>=innerHeight?'land':'port';if(o!==UI.orient){UI.orient=o;render()}UI.fit=true}
   const st=document.getElementById('stage'),fr=document.getElementById('frame'),dev=document.getElementById('device');
   dev.classList.toggle('port',UI.orient==='port'); st.classList.toggle('actual',!UI.fit);
   const W=(UI.orient==='land'?1080:810)+2,H=(UI.orient==='land'?810:1080)+2;
@@ -206,10 +207,18 @@ function renderSoon(){clearTimeout(soonT);soonT=setTimeout(()=>{soonT=null;rende
 function cancelSoon(){clearTimeout(soonT);soonT=null}
 function flushRender(){if(soonT){cancelSoon();render()}}
 
+/* 처음 화면: 들어가기·로그아웃. 탭을 새로 열면 처음 화면부터 (sessionStorage) */
+const ENTER_KEY=KEY+'-entered';
+function enterApp(){try{sessionStorage.setItem(ENTER_KEY,'1')}catch(e){}UI.stack=[];UI.route={name:'today'};UI.modal=null;UI.edit=null}
+ACT.enter=()=>{enterApp();document.querySelectorAll('#app .ld-f input').forEach(i=>i.value='');render({noSave:true})};
+ACT.logout=()=>{try{sessionStorage.removeItem(ENTER_KEY)}catch(e){}UI.stack=[];UI.route={name:'landing'};UI.modal=null;UI.edit=null;render({noSave:true})};
+
 /* ---------- 시작 ---------- */
 (function boot(){
   try{const v=JSON.parse(localStorage.getItem(KEY+'-view')||'null');if(v){UI.orient=v.orient==='port'?'port':'land';UI.fit=v.fit!==false;if(v.guide){G.open=v.guide.open!==false;G.scene=Math.min(+v.guide.scene||0,SCENES.length-1);G.step=+v.guide.step||0}}}catch(e){}
   S=load(); ensurePackages(); save();
+  let entered=false;try{entered=sessionStorage.getItem(ENTER_KEY)==='1'}catch(e){}
+  if(!entered) UI.route={name:'landing'};
   const app=document.getElementById('app');
   app.addEventListener('click',ev=>{const el=ev.target.closest('[data-act]');if(!el||el.disabled||!app.contains(el)){flushRender();return}cancelSoon();if(UI.ask&&!/^ask/.test(el.dataset.act))UI.ask=null;const f=ACT[el.dataset.act];if(f)f(el.dataset,el,ev)});
   app.addEventListener('change',ev=>{const el=ev.target.closest('[data-on]');if(!el)return;const f=ON[el.dataset.on];if(f)f(el.value,el.dataset,el)});
@@ -222,6 +231,10 @@ function flushRender(){if(soonT){cancelSoon();render()}}
   document.getElementById('b-fit').addEventListener('click',()=>{UI.fit=!UI.fit;saveView();fit();render()});
   document.getElementById('b-guide').addEventListener('click',()=>{G.open=!G.open;saveView();fit();render()});
   document.getElementById('guide').addEventListener('click',guideClick);
+  const setFull=on=>{document.body.classList.toggle('full',on);try{history.replaceState(null,'',on?'#full':location.pathname+location.search)}catch(e){}fit();render()};
+  document.getElementById('b-full').addEventListener('click',()=>setFull(true));
+  document.getElementById('b-unfull').addEventListener('click',()=>setFull(false));
+  if(/full/.test(location.hash)) document.body.classList.add('full');
   window.addEventListener('resize',fit);
   try{new ResizeObserver(fit).observe(document.getElementById('stage'))}catch(e){}
   setInterval(()=>{const el=document.getElementById('timer-text');if(el&&UI.timer)el.innerHTML=timerText()},1000);

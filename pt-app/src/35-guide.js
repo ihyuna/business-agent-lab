@@ -410,6 +410,7 @@ function gotoScene(k){
 }
 function guideClick(ev){
   const el=ev.target.closest('[data-g]'); if(!el) return; const a=el.dataset.g;
+  if(UI.route.name==='landing'&&a!=='close'){enterApp();render({noSave:true})}
   if(a==='ack'){const st=SCENES[G.scene].steps[G.step];if(st){G.busy=true;runAuto(st);G.busy=false;render()}return}
   if(a==='close'){G.open=false;saveView();fit();render();return}
   if(a==='scene'){gotoScene(+el.dataset.k);return}
@@ -430,7 +431,8 @@ function guideAfter(){
   const app=document.getElementById('app');
   app.querySelectorAll('.hl').forEach(e=>e.classList.remove('hl'));
   const cur=sc.steps[G.step];
-  if(G.open&&cur){let sel='';try{sel=cur.at()}catch(e){}
+  if(UI.route.name==='landing'){const el=app.querySelector('[data-act="enter"]');if(G.open&&el)el.classList.add('hl')}
+  else if(G.open&&cur){let sel='';try{sel=cur.at()}catch(e){}
     if(sel){const el=app.querySelector(sel);if(el){el.classList.add('hl');const key=G.scene+'.'+G.step+'.'+sel;if(key!==G.lastAt){G.lastAt=key;try{el.scrollIntoView({block:'nearest'})}catch(e){}}}}}
   document.getElementById('b-guide').textContent=G.open?'시나리오 닫기':'시나리오 열기';
   box.classList.toggle('open',G.open);
@@ -440,6 +442,7 @@ function guideAfter(){
    <div class="g-scenes">${SCENES.map((x,k)=>`<button class="chip${k===G.scene?' on':''}" data-g="scene" data-k="${k}" title="${esc(x.t)}">${k+1}</button>`).join('')}</div>
    <div class="g-title">${esc(sc.t)}</div><div class="tiny muted">${esc(sc.sub)}</div>
    ${sc.goal?`<div class="g-box goal"><b>이 장면에서 하는 일</b> ${esc(sc.goal)}</div>`:''}${sc.sit?`<div class="g-box"><b>상황</b> ${esc(sc.sit)}</div><div class="g-box why"><b>왜 하나요</b> ${esc(sc.why)}</div>`:''}
+   ${UI.route.name==='landing'?`<div class="g-box goal"><b>먼저</b> 처음 화면에서 '로그인'을 눌러 앱에 들어가요. '이 단계 대신 하기'를 눌러도 들어가요.</div>`:''}
    <div class="tiny muted" style="margin-top:8px"><b>할 일</b></div><ol class="g-steps">${sc.steps.map((st,i)=>`<li class="${i<G.step?'done':i===G.step?'cur':''}">${esc(st.say)}${st.why&&i>=G.step?`<div class="g-why">왜: ${esc(st.why)}</div>`:''}${i===G.step&&st.ack?`<div style="margin-top:4px"><button class="btn small primary" data-g="ack">${esc(st.ack)}</button></div>`:''}</li>`).join('')}</ol>
    ${cur?`<div class="row"><span class="tiny muted">노란 테두리를 눌러요.</span><span class="sp"></span><button class="btn small" data-g="auto">이 단계 대신 하기</button></div>`
      :`<div class="g-done">${sc.end?esc(sc.end):last?'시나리오 끝이에요.':'이 장면은 끝났어요.'}</div>`}
