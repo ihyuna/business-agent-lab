@@ -1,4 +1,4 @@
-<title>PT 기록 앱 MVP</title>
+<title>짐노트 · PT 기록</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap">
@@ -463,7 +463,7 @@ input,select,textarea{border-radius:6px;border-color:#dfe2e7}
 .tabbar.sidenav{left:0;right:0;top:0;bottom:auto;width:auto;height:44px;flex-direction:row;align-items:stretch;border-right:0;border-bottom:1px solid var(--line2);padding:0 10px;gap:2px;background:var(--panel)}
 .sidenav .logo{margin:auto 14px auto 4px;width:auto;height:auto;border:0;border-radius:0;font-size:14px;font-weight:800;letter-spacing:-.02em;color:var(--ink);gap:6px}
 .sidenav .logo::before{content:'';width:9px;height:18px;border-radius:5px;background:linear-gradient(var(--accent),#7a5cff)}
-.sidenav .logo::after{content:'PT 기록';margin-left:0}
+.sidenav .logo::after{content:'짐노트';margin-left:0}
 .tabbar.sidenav button{flex-direction:row;gap:6px;padding:0 14px;border-radius:0;font-size:13px;color:var(--muted)}
 .tabbar.sidenav button svg{width:16px;height:16px}
 .tabbar.sidenav button:hover{background:var(--soft)}
@@ -560,7 +560,7 @@ tr.click:hover td{background:var(--accent-soft)}
 /* 위쪽 메뉴 = 차트 머리 */
 #device.chart .tabbar.sidenav{background:var(--panel);border-bottom:3px double var(--ink-line)}
 #device.chart .sidenav .logo::before{background:var(--accent);border-radius:0;width:6px}
-#device.chart .sidenav .logo::after{content:'PT 기록부';letter-spacing:.02em}
+#device.chart .sidenav .logo::after{content:'짐노트';letter-spacing:.02em}
 #device.chart .tabbar.sidenav button.on{color:var(--accent);box-shadow:inset 0 -3px 0 var(--accent)}
 #device.chart .top{background:var(--panel);border-bottom:1.5px solid var(--ink-line)}
 #device.chart .top h1{letter-spacing:.01em}
@@ -723,6 +723,9 @@ body.full #app .hl{outline:0!important;box-shadow:none!important;animation:none!
 .f-prog tr.f-wk td{background:var(--soft);font-size:11.5px;font-weight:700;color:var(--muted);padding:4px 6px}
 .f-prog tr.click{cursor:pointer} .f-prog tr.click:hover td{background:var(--accent-soft)}
 .f-prog td.c{text-align:center}
+.sidenav .logo::before,#device.chart .sidenav .logo::before{display:none!important}
+.sidenav .logo .kbicon{display:block;border-radius:6px}
+.ld-brand .kbicon{display:block}
 </style>
 <div id="shell">
   <div id="bar">
@@ -739,6 +742,10 @@ body.full #app .hl{outline:0!important;box-shadow:none!important;animation:none!
 </div>
 <script>
 (()=>{
+/* 앱 아이콘: 케틀벨 캐릭터 D (2026-11-17 이현아님 선택, D96). 이름 짐노트 */
+const APP_NAME='짐노트';
+const KB_SVG='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" shape-rendering="crispEdges"><rect width="16" height="16" rx="3.6" fill="#1f66f2"/><rect x="6" y="2" width="1.02" height="1.02" fill="#fff"/><rect x="7" y="2" width="1.02" height="1.02" fill="#fff"/><rect x="8" y="2" width="1.02" height="1.02" fill="#fff"/><rect x="9" y="2" width="1.02" height="1.02" fill="#fff"/><rect x="5" y="3" width="1.02" height="1.02" fill="#fff"/><rect x="10" y="3" width="1.02" height="1.02" fill="#fff"/><rect x="5" y="4" width="1.02" height="1.02" fill="#fff"/><rect x="10" y="4" width="1.02" height="1.02" fill="#fff"/><rect x="4" y="5" width="1.02" height="1.02" fill="#fff"/><rect x="5" y="5" width="1.02" height="1.02" fill="#fff"/><rect x="6" y="5" width="1.02" height="1.02" fill="#fff"/><rect x="7" y="5" width="1.02" height="1.02" fill="#fff"/><rect x="8" y="5" width="1.02" height="1.02" fill="#fff"/><rect x="9" y="5" width="1.02" height="1.02" fill="#fff"/><rect x="10" y="5" width="1.02" height="1.02" fill="#fff"/><rect x="11" y="5" width="1.02" height="1.02" fill="#fff"/><rect x="3" y="6" width="1.02" height="1.02" fill="#fff"/><rect x="4" y="6" width="1.02" height="1.02" fill="#fff"/><rect x="5" y="6" width="1.02" height="1.02" fill="#fff"/><rect x="6" y="6" width="1.02" height="1.02" fill="#fff"/><rect x="7" y="6" width="1.02" height="1.02" fill="#fff"/><rect x="8" y="6" width="1.02" height="1.02" fill="#fff"/><rect x="9" y="6" width="1.02" height="1.02" fill="#fff"/><rect x="10" y="6" width="1.02" height="1.02" fill="#fff"/><rect x="11" y="6" width="1.02" height="1.02" fill="#fff"/><rect x="12" y="6" width="1.02" height="1.02" fill="#fff"/><rect x="3" y="7" width="1.02" height="1.02" fill="#fff"/><rect x="4" y="7" width="1.02" height="1.02" fill="#fff"/><rect x="5" y="7" width="1.02" height="1.02" fill="#111"/><rect x="6" y="7" width="1.02" height="1.02" fill="#fff"/><rect x="7" y="7" width="1.02" height="1.02" fill="#fff"/><rect x="8" y="7" width="1.02" height="1.02" fill="#fff"/><rect x="9" y="7" width="1.02" height="1.02" fill="#fff"/><rect x="10" y="7" width="1.02" height="1.02" fill="#111"/><rect x="11" y="7" width="1.02" height="1.02" fill="#fff"/><rect x="12" y="7" width="1.02" height="1.02" fill="#fff"/><rect x="3" y="8" width="1.02" height="1.02" fill="#fff"/><rect x="4" y="8" width="1.02" height="1.02" fill="#fff"/><rect x="5" y="8" width="1.02" height="1.02" fill="#111"/><rect x="6" y="8" width="1.02" height="1.02" fill="#fff"/><rect x="7" y="8" width="1.02" height="1.02" fill="#fff"/><rect x="8" y="8" width="1.02" height="1.02" fill="#fff"/><rect x="9" y="8" width="1.02" height="1.02" fill="#fff"/><rect x="10" y="8" width="1.02" height="1.02" fill="#111"/><rect x="11" y="8" width="1.02" height="1.02" fill="#fff"/><rect x="12" y="8" width="1.02" height="1.02" fill="#fff"/><rect x="3" y="9" width="1.02" height="1.02" fill="#fff"/><rect x="4" y="9" width="1.02" height="1.02" fill="#fff"/><rect x="5" y="9" width="1.02" height="1.02" fill="#fff"/><rect x="6" y="9" width="1.02" height="1.02" fill="#fff"/><rect x="7" y="9" width="1.02" height="1.02" fill="#fff"/><rect x="8" y="9" width="1.02" height="1.02" fill="#fff"/><rect x="9" y="9" width="1.02" height="1.02" fill="#fff"/><rect x="10" y="9" width="1.02" height="1.02" fill="#fff"/><rect x="11" y="9" width="1.02" height="1.02" fill="#fff"/><rect x="12" y="9" width="1.02" height="1.02" fill="#fff"/><rect x="3" y="10" width="1.02" height="1.02" fill="#fff"/><rect x="4" y="10" width="1.02" height="1.02" fill="#fff"/><rect x="5" y="10" width="1.02" height="1.02" fill="#fff"/><rect x="6" y="10" width="1.02" height="1.02" fill="#fff"/><rect x="7" y="10" width="1.02" height="1.02" fill="#1f66f2"/><rect x="8" y="10" width="1.02" height="1.02" fill="#1f66f2"/><rect x="9" y="10" width="1.02" height="1.02" fill="#fff"/><rect x="10" y="10" width="1.02" height="1.02" fill="#fff"/><rect x="11" y="10" width="1.02" height="1.02" fill="#fff"/><rect x="12" y="10" width="1.02" height="1.02" fill="#fff"/><rect x="4" y="11" width="1.02" height="1.02" fill="#fff"/><rect x="5" y="11" width="1.02" height="1.02" fill="#fff"/><rect x="6" y="11" width="1.02" height="1.02" fill="#fff"/><rect x="7" y="11" width="1.02" height="1.02" fill="#fff"/><rect x="8" y="11" width="1.02" height="1.02" fill="#fff"/><rect x="9" y="11" width="1.02" height="1.02" fill="#fff"/><rect x="10" y="11" width="1.02" height="1.02" fill="#fff"/><rect x="11" y="11" width="1.02" height="1.02" fill="#fff"/><rect x="4" y="12" width="1.02" height="1.02" fill="#fff"/><rect x="11" y="12" width="1.02" height="1.02" fill="#fff"/><rect x="4" y="13" width="1.02" height="1.02" fill="#fff"/><rect x="11" y="13" width="1.02" height="1.02" fill="#fff"/></svg>';
+const kbIcon=px=>KB_SVG.replace('<svg ',`<svg width="${px}" height="${px}" class="kbicon" aria-hidden="true" `);
 'use strict';
 /* ---------- 상수 ---------- */
 const DOW=['일','월','화','수','목','금','토'];
@@ -2374,7 +2381,7 @@ const NAV_IC={today:`<svg viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" hei
  members:`<svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.8-3.6 3.4-5.5 6.5-5.5s5.7 1.9 6.5 5.5"/><circle cx="17" cy="9" r="2.6"/><path d="M16.5 14.6c2.6.2 4.3 1.9 5 5.4"/></svg>`,
  search:`<svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></svg>`,
  settings:`<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2.8v2.4M12 18.8v2.4M2.8 12h2.4M18.8 12h2.4M5.5 5.5l1.7 1.7M16.8 16.8l1.7 1.7M5.5 18.5l1.7-1.7M16.8 7.2l1.7-1.7"/></svg>`};
-function tabBar(cur){return `<nav class="tabbar sidenav" aria-label="메뉴"><div class="logo">P</div>${[['today','오늘','tab'],['members','회원','tab']].map(([v,l,a])=>`<button class="${cur===v?'on':''}" data-act="${a}" data-v="${v}">${NAV_IC[v]}${l}</button>`).join('')}
+function tabBar(cur){return `<nav class="tabbar sidenav" aria-label="메뉴"><div class="logo">${kbIcon(26)}</div>${[['today','오늘','tab'],['members','회원','tab']].map(([v,l,a])=>`<button class="${cur===v?'on':''}" data-act="${a}" data-v="${v}">${NAV_IC[v]}${l}</button>`).join('')}
   <button data-act="go" data-to="search">${NAV_IC.search}기록 찾기</button><span class="sp"></span><button data-act="go" data-to="settings">${NAV_IC.settings}설정</button></nav>`}
 /* 파스텔 꼬리표: 같은 글자는 늘 같은 색 */
 function hueOf(t){let h=0;for(const c of String(t||''))h=(h*31+c.charCodeAt(0))>>>0;return 'c'+(h%6+1)}
@@ -3136,7 +3143,7 @@ function landingPreview(){
 V.landing=()=>{const nS=S.sessions.filter(s=>s.status==='completed').length, nM=S.members.length;
  return `<div class="landing">
   <div class="ld-left">
-    <div class="ld-brand"><div class="logo">P</div><b>PT 기록</b><span class="ld-badge">트레이너 전용</span></div>
+    <div class="ld-brand">${kbIcon(34)}<b>짐노트</b><span class="ld-badge">트레이너 전용</span></div>
     <div class="ld-main">
       <div class="ld-eyebrow">종이 수첩 대신 쓰는 회원 기록부</div>
       <h1 class="ld-h">지난 기록이<br>다음 수업의 근거가 돼요</h1>
