@@ -205,3 +205,12 @@ function lastPtBrief(m,s,u){
     ${s.memo?`<div class="small lp-note"><b>회원 말·메모</b> ${esc(s.memo)}</div>`:''}
     <div class="tiny faint" style="margin-top:4px">비교는 그 종목을 한 바로 전 수업의 최고 세트와 해요(%가 아니라 kg·회). 다음 PT = 마무리에서 정한 목표 → 잡혀 있는 다음 수업의 계획 → 둘 다 없으면 앱이 지금 채울 숫자(앱 제안, 저장 안 함) 순서예요.</div>`;
 }
+
+/* 월별 수업 횟수 가로 막대 (2026-11-17 이현아님 요청: 경과 기록 맨 아래) */
+function monthHBars(m){const done=completed(m.id);if(!done.length)return '<div class="empty">수업 기록이 없어요.</div>';
+  const by={};for(const s of done){const k=s.date.slice(0,7);by[k]=(by[k]||0)+1}
+  const a=done[0].date.slice(0,7),b=done[done.length-1].date.slice(0,7);const ks=[];let [y,mo]=a.split('-').map(Number);
+  while(true){const k=`${y}-${String(mo).padStart(2,'0')}`;ks.push(k);if(k===b||ks.length>24)break;mo++;if(mo>12){mo=1;y++}}
+  const max=Math.max(...ks.map(k=>by[k]||0))||1;const yrs=new Set(ks.map(k=>k.slice(0,4))).size>1;
+  return `<div class="mh">${ks.map((k,i)=>{const v=by[k]||0;const last=i===ks.length-1;
+    return `<div class="mh-r" title="${k.slice(0,4)}년 ${Number(k.slice(5))}월 · 수업 ${v}회"><span class="mh-m">${yrs?k.slice(2,4)+'.':''}${Number(k.slice(5))}월</span><span class="mh-t"><i class="${last?'last':''}" style="width:${v/max*100}%"></i></span><b class="num">${v}회</b></div>`}).join('')}</div>`}
