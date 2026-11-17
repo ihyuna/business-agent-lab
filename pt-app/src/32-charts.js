@@ -69,3 +69,52 @@ function deltaChart(m,s,o={}){
   return `<div class="dsum"><span class="up">오름 <b>${up}</b></span><span class="dn">내림 <b>${dn}</b></span><span>같음 <b>${eq}</b></span></div>
     <div class="dchart">${rows.map(line).join('')}</div>
     <div class="tiny faint" style="margin-top:4px">종목마다 최고 세트를 그 종목을 한 바로 전 수업과 비교해요. 무게가 같으면 횟수로 비교해요. 수첩 숫자 그대로이고, 오르고 내린 까닭은 판단하지 않아요.</div>`}
+
+/* ---------- 회원별 무게 변화 추이 (D86) ----------
+   종목 하나를 골라, 그날 그 종목이 맡은 역할(워밍업·메인·보조)별로 선을 나눈다.
+   y = 그날 가장 무거운 본세트 무게(워밍업 세트 제외), 점 안 숫자 = 그날 몇 번째로 한 종목, 점 위 = 그 세트 횟수.
+   세트 수는 표에서 역할별 평균으로만 보여 준다. 기록 숫자는 그대로 쓰고 새로 만들지 않는다. */
+const RT_ROLES=[['워밍업','var(--live)'],['메인','var(--accent)'],['보조','var(--good)'],['그 외','var(--faint)']];
+const RT_PER=[['1','1개월'],['3','3개월'],['6','6개월'],['all','전체']];
+const rtGroup=r=>r==='워밍업'||r==='메인'||r==='보조'?r:'그 외';
+function rtData(m){
+  const by={};
+  for(const s of completed(m.id)){const done=s.exercises.filter(e=>e.status==='done');
+    done.forEach((x,i)=>{const t=topSet(x);if(!t)return;(by[x.exId]=by[x.exId]||[]).push({s,x,t,pos:i+1,of:done.length,g:rtGroup(x.role),sets:x.sets.filter(st=>st.kind!=='warmup').length})})}
+  return by;
+}
+function roleTrend(m,W,H){
+  const by=rtData(m); const roles=id=>new Set(by[id].map(p=>p.g)).size;
+  const exs=Object.keys(by).sort((a,b)=>by[b].length-by[a].length||roles(b)-roles(a));
+  if(!exs.length) return '<div class="empty">무게를 적은 기록이 없어요.</div>';
+  let ex=UI.cur['rt-'+m.id]; if(!by[ex]) ex=exs[0];
+  const per=UI.cur['rtp-'+m.id]||'all'; const t=todayIso();
+  const cut=per==='all'?null:(()=>{const d=pd(t);d.setMonth(d.getMonth()-Number(per));return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`})();
+  const pts=by[ex].filter(p=>!cut||p.s.date>=cut);
+  const head=`<div class="rt-hd"><div class="row" style="gap:6px">${exs.slice(0,6).map(id=>`<button class="chip${id===ex?' on':''}" data-act="pickRt" data-mid="${m.id}" data-v="${id}">${esc(EX(id).name)} <span class="tiny">${by[id].length}</span></button>`).join(' ')}</div>
+    <div class="row" style="gap:6px">${chips(RT_PER,per,'pickRtPer',{mid:m.id})}</div></div>`;
+  if(!pts.length) return head+`<div class="empty">이 기간에는 ${esc(EX(ex).name)} 기록이 없어요. 기간을 넓혀 보세요.</div>`;
+  const padL=40,padR=18,padT=24,padB=24;
+  const xs=pts.map(p=>pd(p.s.date).getTime()),x0=Math.min(...xs),x1=Math.max(...xs);
+  const ws=pts.map(p=>p.t.w),lo=Math.min(...ws),hi=Math.max(...ws),span=Math.max(hi-lo,hi*.2,4);
+  const step=span>60?20:span>24?10:span>10?5:span>4?2:1;
+  const y0=Math.max(0,Math.floor((lo-span*.15)/step)*step), y1=Math.ceil((hi+span*.2)/step)*step;
+  const X=v=>x1===x0?padL+(W-padL-padR)/2:padL+10+(v-x0)/(x1-x0)*(W-padL-padR-20), Y=v=>padT+(1-(v-y0)/(y1-y0))*(H-padT-padB);
+  let g='';for(let v=y0;v<=y1+1e-9;v+=step) g+=`<line class="axis" x1="${padL}" x2="${W-padR}" y1="${Y(v)}" y2="${Y(v)}"/><text x="${padL-6}" y="${Y(v)+4}" text-anchor="end">${v}</text>`;
+  const n=pts.length, every=Math.max(1,Math.ceil(n/(W/70)));
+  const xl=pts.map((p,i)=>i%every&&i!==n-1?'':`<text x="${X(xs[i])}" y="${H-6}" text-anchor="middle">${md(p.s.date)}</text>`).join('');
+  const lines=RT_ROLES.map(([r,c])=>{const q=pts.map((p,i)=>({p,i})).filter(o=>o.p.g===r);if(q.length<2)return '';
+    return `<path d="${q.map((o,k)=>`${k?'L':'M'}${X(xs[o.i]).toFixed(1)},${Y(o.p.t.w).toFixed(1)}`).join(' ')}" fill="none" stroke="${c}" stroke-width="2"/>`}).join('');
+  const col=r=>RT_ROLES.find(a=>a[0]===r)[1];
+  const dots=pts.map((p,i)=>{const cx=X(xs[i]),cy=Y(p.t.w);
+    return `<g class="rt-pt" data-act="go" data-to="detail" data-sid="${p.s.id}"><circle cx="${cx}" cy="${cy}" r="9" fill="${col(p.g)}" stroke="var(--panel)" stroke-width="2"/><text class="rt-pos" x="${cx}" y="${cy+3.5}" text-anchor="middle">${p.pos}</text>${p.t.r?`<text class="rt-r" x="${cx}" y="${cy-13}" text-anchor="middle">${p.t.r}회</text>`:''}<title>${mdw(p.s.date)} · ${esc(p.x.role)} · ${p.of}개 중 ${p.pos}번째 · ${esc(ftop(p.t,ex))} · ${p.sets}세트 (누르면 수업 상세)</title></g>`}).join('');
+  const svg=`<svg class="chart rt" width="100%" viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(EX(ex).name)} 역할별 무게 변화">${g}${lines}${dots}${xl}</svg>`;
+  const rows=RT_ROLES.map(([r,c])=>{const q=pts.filter(p=>p.g===r);
+    if(!q.length) return r==='그 외'?'':`<tr class="faint"><td><span class="rt-key" style="background:${c}"></span>${r}</td><td colspan="4">이 기간 기록 없음</td></tr>`;
+    const f=q[0],l=q[q.length-1];const avg=q.reduce((a,p)=>a+p.sets,0)/q.length;
+    const pc={};q.forEach(p=>pc[p.pos]=(pc[p.pos]||0)+1);const mode=Object.keys(pc).sort((a,b)=>pc[b]-pc[a]||a-b)[0];
+    const extra=r==='그 외'?` <span class="tiny muted">(${[...new Set(q.map(p=>p.x.role))].join('·')})</span>`:'';
+    return `<tr><td><span class="rt-key" style="background:${c}"></span>${r}${extra}</td><td class="num">${q.length}회</td><td class="num">${q.length>1?`${esc(fw(f.t.w,ex))} → <b>${esc(fw(l.t.w,ex))}</b>`:`<b>${esc(fw(l.t.w,ex))}</b>`}</td><td class="num">${(Math.round(avg*10)/10)}세트</td><td class="num">주로 ${mode}번째</td></tr>`}).join('');
+  return head+svg+`<table class="rt-tb"><tr><th>역할</th><th>기록</th><th>무게 (처음 → 최근)</th><th>평균 세트</th><th>순서</th></tr>${rows}</table>
+    <div class="tiny muted" style="margin-top:4px">점 = 그날 가장 무거운 본세트(워밍업 세트 빼고) · 점 안 숫자 = 그날 몇 번째로 한 종목 · 점 위 = 그 세트 횟수 · 같은 역할끼리 선으로 이어요 · 점을 누르면 그날 수업 상세</div>`;
+}

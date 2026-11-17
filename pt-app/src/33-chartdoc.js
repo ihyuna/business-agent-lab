@@ -37,9 +37,10 @@ function memberDoc(o){
     <div class="f-cap">Ⅲ. 신체 · 기록 소견</div>
     <div class="f-row3 body3">
       ${fsec('인체도',`<div class="row" style="margin-bottom:4px">${chips([['last','지난 PT'],['d30','최근 30일']],rg,'musRange',{mid:m.id})}</div>${muscleBlock(ss,220,rg==='last'?'지난 PT':'최근 30일')}`)}
-      ${fsec('최고 무게<br><small>추이</small>',`${mt.ex?`<div class="small muted">${esc(EX(mt.ex).name)}</div>`:''}${mt.svg}<div class="small muted" style="margin-top:8px">월별 수업 횟수</div>${monthBars(m,262,110)}`)}
+      ${fsec('월별<br><small>수업 횟수</small>',monthBars(m,262,130))}
       ${fsec('지난 PT<br><small>변화</small>',last?`<div class="small muted" style="margin-bottom:4px">${mdw(last.date)} · ${esc(splitName(last))} ${btn('수업 상세','go',{to:'detail',sid:last.id},'ghost small')}</div>${deltaChart(m,last)}`:'<div class="empty">없어요.</div>')}
     </div>
+    ${fsec('무게 변화<br><small>추이 · 역할별</small>',roleTrend(m,860,250),'rtsec')}
     <div class="f-cap">Ⅳ. 다음 PT 계획 (처방)</div>${fsec('다음 PT',next)}
     <div class="f-cap">Ⅴ. 경과 기록 <span class="muted" style="font-weight:500">최근 ${Math.min(all.length,14)}회 · 줄을 누르면 펼쳐져요</span><span class="sp"></span>${btn('전체 수업 기록','go',{to:'history',mid:m.id},'small ghost')}</div>
     <table class="f-prog"><tr><th style="width:92px">일자</th><th style="width:76px">분할</th><th>실시 내용 (종목 · 최고 세트)</th><th style="width:200px">소견 · 메모</th><th style="width:40px">확인</th></tr>${prog}</table>

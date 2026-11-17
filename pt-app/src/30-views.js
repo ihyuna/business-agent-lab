@@ -265,7 +265,7 @@ V.member=r=>{
       ${ip?btn('이어서 하기','openSession',{sid:u.id},'primary'):btn('숫자 정하기','openSession',{sid:u.id},'primary')+`<button class="btn ghost more" data-act="modal" data-type="sessMenu" data-sid="${u.id}" aria-label="수업 메뉴">…</button>`}</div>`;
   } else next=`<div class="row"><span class="muted">잡힌 수업이 없어요.</span><span class="sp"></span>${btn('다음 PT 잡기','modal',{type:'schedule',mid:m.id},'primary')}</div>`;
   const mainOf=s=>{const x=s.exercises.find(e=>e.status==='done'&&e.role==='메인')||s.exercises.find(e=>e.status==='done');const tt=x&&topSet(x);return x?`${esc(EX(x.exId).name)}${tt?` <b class="num">${ftop(tt,x.exId)}</b>`:''}`:'—'};
-  const mt=mainTrend(m,262,130);
+  const mt=null;
   const notes=m.notes.filter(n=>['general','lifestyle','diet','self_train','personality'].includes(n.kind));
   if(UI.look==='chart') return topBar(esc(m.code),'회원 진료기록부',
       btn('추이','go',{to:'trend',mid:m.id})+btn('수업 기록','go',{to:'history',mid:m.id})+btn('루틴 틀','go',{to:'templates',mid:m.id})+btn('회원 정보','go',{to:'memberEdit',mid:m.id}))+memberDoc({m,u,done,last,d30,all,t,next,mt,notes});
@@ -276,11 +276,11 @@ V.member=r=>{
       <div class="cl-mid" data-sk="main">
         <div class="box"><div class="bh">다음 PT</div><div class="bb">${next}</div></div>
         <div class="box"><div class="sec3">${cautionSec(m)}${checkSec(m)}${goalSec(m)}</div></div>
+        <div class="box"><div class="bh">무게 변화 추이 <span class="muted" style="font-weight:500">역할별</span></div><div class="bb">${roleTrend(m,470,220)}</div></div>
         ${last?`<div class="box"><div class="bh">지난 PT 변화 <span class="muted" style="font-weight:500">${mdw(last.date)} · ${esc(splitName(last))}</span><span class="sp"></span>${btn('수업 상세','go',{to:'detail',sid:last.id},'ghost small')}</div><div class="bb">${deltaChart(m,last)}</div></div>`:''}
       </div>
       <div class="cl-right">
         <h3>월별 수업 횟수</h3>${monthBars(m,262,130)}
-        <h3>메인 종목 최고 무게 ${mt.ex?`<span class="tiny muted" style="font-weight:500">${esc(EX(mt.ex).name)}</span>`:''}</h3>${mt.svg}
         <h3>쓴 근육 <span class="sp"></span>${chips([['last','지난 PT'],['d30','최근 30일']],UI.cur['mus-'+m.id]||'last','musRange',{mid:m.id})}</h3>
         ${(()=>{const rg=UI.cur['mus-'+m.id]||'last';const ss=rg==='last'?(last?[last]:[]):done.filter(s=>daysBetween(s.date,t)>=0&&daysBetween(s.date,t)<30);return muscleBlock(ss,238,rg==='last'?'지난 PT':'최근 30일')})()}
         <h3>메모</h3>${notes.map(n=>`<div class="li small" style="align-items:flex-start">${pill(NOTE_KINDS[n.kind],'gray')}<div style="flex:1">${esc(n.text)}</div>${btn('지우기','delNote',{mid:m.id,id:n.id},'small ghost')}</div>`).join('')||'<div class="empty">없어요.</div>'}

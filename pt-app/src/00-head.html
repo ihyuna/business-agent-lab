@@ -335,6 +335,16 @@ input,select,textarea{border-radius:6px;border-color:#dfe2e7}
 .chart g.hov:hover .bar{fill:var(--accent)}
 .chart .axis{stroke:var(--line)}
 .chart .lbl{fill:var(--ink);font-weight:600;font-size:11px}
+/* D86 무게 변화 추이: 역할별 선, 점 안 순서, 점 위 횟수 */
+.rt-hd{display:flex;flex-wrap:wrap;justify-content:space-between;gap:6px 12px;margin-bottom:6px}
+.chart.rt .rt-pt{cursor:pointer}
+.chart.rt .rt-pt:hover circle{stroke:var(--ink)}
+.chart.rt text.rt-pos{fill:#fff;font-size:10.5px;font-weight:700;pointer-events:none}
+.chart.rt text.rt-r{fill:var(--ink);font-size:11px;font-weight:600}
+.rt-tb{margin-top:6px;font-size:13px}
+.rt-tb td,.rt-tb th{padding:4px 8px}
+.rt-tb tr.faint td{color:var(--faint)}
+.rt-key{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px;vertical-align:-1px}
 .hist .hi.open{background:var(--accent-soft)}
 .hist .chev{color:var(--faint);font-size:12px}
 .visit{padding:10px 12px 12px;border-bottom:1px solid var(--line);background:var(--panel)}
