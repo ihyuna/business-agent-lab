@@ -254,21 +254,17 @@ const OLD=[
     at:()=>ensureNext(GD.sLeg()).np.date!=='2026-10-15'?'[data-on="np"][data-f="date"]':'.actbar [data-act="finish"]',
     done:()=>GD.sLeg().status==='completed',
     auto:()=>{const s=GD.sLeg();Object.assign(ensureNext(s).np,{on:true,date:'2026-10-15',tid:'t3b'});ACT.finish({sid:s.id})}}]},
- {t:'장면 8. 추이 보고 훈련 방향 정하기',sub:'10/16 (금) · 화면: 회원 한눈에 → 추이',
-  enter(){seedLater('2026-10-15');seedLater('2026-10-16');S.today='2026-10-16';seedOthers(S.today);UI.cur['trend-m3']='hacksq';save();home('today')},
+ {t:'장면 8. 흐름 보고 훈련 방향 정하기',sub:'10/16 (금) · 화면: 회원 진료기록부',
+  enter(){seedLater('2026-10-15');seedLater('2026-10-16');S.today='2026-10-16';seedOthers(S.today);save();home('today')},
   steps:[
    {say:"몇 주에 한 번은 회원별로 흐름을 봐요. 10/15 밀기와 10/16 당기기는 수첩 기록으로 채워 뒀어요. 아래 '회원' 탭을 누르고 이00_3을 눌러요.",
     at:()=>UI.route.name==='members'?'[data-to="member"][data-mid="m3"]':'.tabbar [data-v="members"]',
-    done:()=>UI.route.name==='member'&&UI.route.mid==='m3'||UI.route.name==='trend',
+    done:()=>UI.route.name==='member'&&UI.route.mid==='m3',
     auto:()=>{home('members');go('member',{mid:'m3'})}},
-   {say:"회원 한눈에는 병원 차트 화면처럼 위에 요약 줄, 왼쪽에 수업 이력, 가운데에 다음 PT·주의사항·확인할 것·목표와 최근 수업 5회 표(10/16 메모 포함), 오른쪽에 월별 수업 그래프와 메인 종목 무게 그래프가 있어요. 위 '추이'를 눌러요.",
-    at:()=>'.top [data-to="trend"]',
-    done:()=>UI.route.name==='trend',
-    auto:()=>go('trend',{mid:'m3'})},
-   {say:"핵스쿼트가 골라져 있어요. 8/24 20kg, 8/31~9/22 40kg, 10/7·10/14 60kg이에요. 점을 눌러 그날 숫자와 수첩 원문을 봐요.",
-    at:()=>'.chart [data-act="trendPt"]:last-of-type',
-    done:()=>UI.cur['trendPt-m3']!=null,
-    auto:()=>{ensureR('trend');UI.cur['trendPt-m3']=0;render()}},
+   {say:"회원 진료기록부의 '무게 변화' 그래프에서 핵스쿼트를 눌러요. 8/24 20kg, 8/31~9/22 40kg, 10/7·10/14 60kg이에요. 점마다 그날 역할(워밍업·메인·보조)이 적혀 있어요.",
+    at:()=>'[data-act="pickRt"][data-v="hacksq"]',
+    done:()=>UI.cur['rt-m3']==='hacksq',
+    auto:()=>{if(!(UI.route.name==='member'&&UI.route.mid==='m3'))go('member',{mid:'m3'});UI.cur['rt-m3']='hacksq';render()}},
    {say:"10/16 메모 \"라잉 레그컬과 워킹 런지를 통한 심박수 + 체중감량 고려.\"를 보고, 위 '훈련 방향 바꾸기'에서 방향 하나와 시작일을 골라 저장해요. 무엇을 고를지는 수첩에 없어 트레이너가 정해요('대신 하기'는 예시로 조절을 골라요). 앱은 원인을 판단하지 않고 데이터만 보여 줘요.",
     at:()=>UI.modal&&UI.modal.type==='block'?'.modal [data-act="saveBlock"]':'.top [data-type="block"]',
     done:()=>GD.m().blocks.length>0,
@@ -384,16 +380,15 @@ const SCENES=[
    R_(6,11,"레그 익스텐션은 수첩에 30x25x2예요. 횟수를 25로 고치고 '+ 세트' → '그대로'.","10/7에 시간 때문에 뺀 종목이라 오늘 다시 들어와 있어요."),
    R_(6,12,"'마무리'. '루틴 틀도 고칠까요?'에 '예, 오늘 것으로'.","'기타'로 뺀 이너타이를 루틴 틀에서도 뺄지 물어요. 시간·컨디션 때문에 뺀 건 묻지 않아요."),
    {...R_(6,13,"'다음 PT 계획 ›'을 눌러, 다음 PT를 10/15 (목) 밀기로 두고 '끝내기'.","다음 밀기 숫자가 미리 채워져요. 오늘은 회원에게 보여 주기는 건너뛰어요."),at:()=>UI.route.name!=='nextplan'?'.actbar [data-to="nextplan"]':OLD[6].steps[13].at()}]},
- {t:'8. 몇 주 흐름 보고 훈련 방향 정하기',sub:'10/16 (금) · 화면: 회원 한눈에 → 추이',
+ {t:'8. 몇 주 흐름 보고 훈련 방향 정하기',sub:'10/16 (금) · 화면: 회원 진료기록부',
   goal:'한 회원의 몇 주 흐름을 보고 다음 몇 주의 큰 방향을 정해요.',
   sit:"몇 주에 한 번은 회원별로 흐름을 봐요. 10/15 밀기와 10/16 당기기는 수첩 기록으로 채워 뒀어요. 10/16 메모에 \"라잉 레그컬과 워킹 런지를 통한 심박수 + 체중감량 고려.\"가 있어요.",
   why:"매 수업 숫자는 이 큰 방향 안에서 정해요. 앱은 데이터만 보여 주고 원인은 판단하지 않아요.",
   enter:OLD[7].enter,
   steps:[
    R_(7,0,"왼쪽 '회원' 메뉴를 누르고 이00_3을 눌러요.","회원 한 명의 기록을 한 화면에서 보려고요."),
-   R_(7,1,"회원 한눈에서 위쪽 '추이'를 눌러요.","병원 차트처럼 요약, 이력, 다음 PT, 그래프가 한 장에 있어요. 추이는 종목 하나의 숫자 흐름이에요."),
-   R_(7,2,"핵스쿼트 그래프 점을 눌러 그날 숫자와 수첩 원문을 봐요.","8/24 20kg → 9/22 40kg → 10/7·10/14 60kg으로 올랐는지 확인해요."),
-   R_(7,3,"위 '훈련 방향 바꾸기'에서 방향 하나와 시작일을 골라 저장해요('대신 하기'는 예시로 조절).","무엇을 고를지는 수첩에 없어 트레이너가 정해요.")]}
+   R_(7,1,"무게 변화 그래프에서 핵스쿼트를 눌러요.","8/24 20kg → 9/22 40kg → 10/7·10/14 60kg으로 올랐는지, 메인으로 했는지 봐요."),
+   R_(7,2,"위 '훈련 방향 바꾸기'에서 방향 하나와 시작일을 골라 저장해요('대신 하기'는 예시로 조절).","무엇을 고를지는 수첩에 없어 트레이너가 정해요.")]}
 ];
 /* ---------- 장면 옮기기 ---------- */
 function runAuto(st){try{st.auto();return true}catch(e){console.error(e);return false}}

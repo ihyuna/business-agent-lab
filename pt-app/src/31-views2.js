@@ -195,28 +195,7 @@ function chartSVG(pts,W,Hh,fmt,sel,o={}){
   const lastI=pts.length-1;
   return `<svg class="chart" width="${W}" height="${Hh}" role="img" aria-label="최고 무게 추이">${grid}<path d="${path}" fill="none" stroke="var(--accent)" stroke-width="2"/>${dots}${xl}<text x="${X(xs[lastI])}" y="${Y(pts[lastI].v)-12}" text-anchor="middle" style="fill:var(--ink);font-weight:600">${esc(fmt(pts[lastI]))}</text></svg>`;
 }
-V.trend=r=>{
-  const m=M(r.mid); const cnt={};
-  for(const s of completed(m.id)) for(const x of s.exercises) if(x.status==='done'&&topSet(x)) cnt[x.exId]=(cnt[x.exId]||0)+1;
-  const main=new Set();for(const s of completed(m.id))for(const x of s.exercises)if(x.role==='메인')main.add(x.exId);
-  const exs=Object.keys(cnt).sort((a,b)=>cnt[b]-cnt[a]||(main.has(b)-main.has(a))); let ex=UI.cur['trend-'+m.id]; if(!cnt[ex]) ex=exs[0];
-  const ser=ex?trendSeries(m,ex):[]; const sel=UI.cur['trendPt-'+m.id];
-  const pts=ser.map(o=>({date:o.s.date,v:o.t.w,label:`${md(o.s.date)} ${ftop(o.t,ex)}`}));
-  const W=UI.orient==='land'?1000:730;
-  const picked=sel!=null&&ser[sel]?ser[sel]:null;
-  const rows=ser.slice().reverse().map(o=>`<tr><td class="num">${mdw(o.s.date)}</td><td>${esc(splitName(o.s))}</td><td class="small">${esc(fsets(o.x.sets,ex,'a'))}</td><td class="num">${ftop(o.t,ex)}</td></tr>`).join('');
-  const body=m.body.slice().reverse().map(b=>`<tr><td class="num">${md(b.date)}</td><td class="num">${b.weight??''}</td><td class="num">${b.muscle??''}</td></tr>`).join('');
-  const blocks=m.blocks.map(b=>`<span class="tag">${md(b.start)||'?'}부터 ${esc(b.dir)}${b.focus?' · '+esc(b.focus):''}</span>`).join(' ');
-  return topBar(esc(m.code)+' 추이','데이터상 차이만 보여 주고 원인은 판단하지 않아요',btn('훈련 방향 바꾸기','modal',{type:'block',mid:m.id},'primary'))+
-   `<div class="scroll" data-sk="main"><div class="card"><h2>종목별 최고 무게</h2>
-     <div class="row" style="margin-bottom:8px">${exs.map(id=>`<button class="chip${id===ex?' on':''}" data-act="pickTrend" data-mid="${m.id}" data-v="${id}">${esc(EX(id).name)} <span class="tiny">${cnt[id]}</span></button>`).join(' ')||'<span class="empty">기록이 없어요.</span>'}</div>
-     ${ex?`<div class="small muted">${esc(EX(ex).name)} · 수업마다 가장 무거운 본세트 (워밍업 제외). 점을 누르면 그날 숫자가 보여요.</div>${chartSVG(pts,W,230,p=>fw(p.v,ex),sel)}
-     <div class="small" style="min-height:20px">${picked?`<b>${mdw(picked.s.date)}</b> ${esc(splitName(picked.s))} · ${esc(fsets(picked.x.sets,ex,'a'))}${picked.x.raw?` <span class="dimline">수첩: ${esc(picked.x.raw)}</span>`:''}`:''}</div>
-     ${blocks?`<div class="small">훈련 방향: ${blocks}</div>`:''}
-     <table style="margin-top:6px"><tr><th>날짜</th><th>분할</th><th>실제 세트</th><th>최고</th></tr>${rows}</table>`:''}</div>
-    <div class="card" style="margin-top:12px"><h2>체중 <span class="tag good">4a</span></h2><table><tr><th>날짜</th><th>체중</th><th>골격근량</th></tr>${body||'<tr><td colspan="3" class="empty">체중 기록이 없어요. 수첩에도 없었어요.</td></tr>'}</table>
-     <div class="row" style="margin-top:6px">${dIn('bDate-'+m.id,'',{type:'date',w:150})}${dIn('bW-'+m.id,'체중',{w:70,im:'decimal'})}${dIn('bM-'+m.id,'골격근',{w:70,im:'decimal'})}${btn('넣기','addBody',{mid:m.id},'small')}</div></div></div>`;
-};
+/* V.trend(추이 화면, 종목별 최고 무게)는 2026-11-17 이현아님 요청으로 뺐다: 파워리프팅이 아니면 최대 무게 흐름은 필요 없음 (D93) */
 
 /* ---------- 11단계 수업 기록·상세 ---------- */
 function weekKey(d){const x=pd(d);const k=(x.getDay()+6)%7;x.setDate(x.getDate()-k);return iso(x)}
