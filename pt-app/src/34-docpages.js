@@ -26,7 +26,7 @@ function membersDoc(){
       <td class="nowrap">${l?`${md(l.date)} <span class="muted small">(${daysBetween(l.date,t)}일 전)</span>`:'<span class="faint">없음</span>'}</td><td class="num c">${completed(m.id).length}회</td>
       <td class="c">${oc?`<b class="bad">${oc}</b>`:'<span class="faint">0</span>'}</td></tr>`}).join('');
   return `<div class="f-cap">Ⅰ. 회원 ${S.members.length}명 <span class="muted" style="font-weight:500">줄을 누르면 회원 기록부가 열려요</span></div>
-    <table class="f-prog"><tr><th style="width:84px">No.</th><th style="width:76px">회원</th><th>목표</th><th style="width:130px">다음 PT</th><th style="width:130px">지난 수업</th><th style="width:56px">누적</th><th style="width:44px">주의</th></tr>${rows}</table>
+    <table class="f-prog"><tr><th style="width:84px">차트 No.</th><th style="width:76px">회원</th><th>목표</th><th style="width:130px">다음 PT</th><th style="width:130px">지난 수업</th><th style="width:56px">누적</th><th style="width:44px">주의</th></tr>${rows}</table>
     <div class="f-cap">Ⅱ. 이 프로토타입</div>
     ${fsec('알림',`<ul class="small" style="margin:0 0 8px;padding-left:18px">
         <li>회원 기록은 트레이너 수첩의 실제 숫자이고, 이름은 성+00 코드로 바꿨어요(D61).</li>
@@ -59,6 +59,6 @@ function detailDoc(s,m,rows,nt,parts){
     <div class="f-cap">Ⅱ. 실시 내용</div>
     <table class="f-prog"><tr><th style="width:30px">#</th><th style="width:170px">종목</th><th style="width:130px">계획</th><th style="width:150px">실제</th><th>메모 · 수첩 원문</th></tr>${rows}</table>
     ${Object.keys(parts).length?`<div class="tiny muted" style="margin-top:4px">부위별 본세트 수: ${Object.entries(parts).map(([p,c])=>`${p} ${c}`).join(', ')} · 볼륨 ${sessionVolume(s).toLocaleString()}</div>`:''}
-    ${s.status==='completed'?`<div class="f-cap">Ⅲ. 지난번과 비교 · 쓴 근육</div><div class="f-row3 two">${fsec('지난번<br><small>비교</small>',deltaChart(m,s))}${fsec('쓴 근육',muscleBlock([s],260,'이 수업'))}</div>`:''}
+    ${s.status==='completed'?`<div class="f-cap">Ⅲ. 기록 소견</div><div class="f-row3 two">${fsec('지난번<br><small>비교</small>',deltaChart(m,s))}${fsec('쓴 근육',muscleBlock([s],260,'이 수업'))}</div>`:''}
     ${nt.length?`<div class="f-cap">Ⅳ. 다음 계획</div>${fsec('다음<br><small>목표</small>',esc(nt.join(' / ')))}`:''}
     ${signLine('위 기록은 트레이너 수첩과 수업 기록을 옮긴 것이에요.',s.date)}`}
