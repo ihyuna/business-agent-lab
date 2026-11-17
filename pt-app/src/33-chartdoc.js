@@ -39,7 +39,7 @@ function memberDoc(o){
     ${fsec('무게 변화<br><small>추이 · 반복 구간별</small>',roleTrend(m,860,250),'rtsec')}
     <div class="f-row3 body3 two wide1">
       ${fsec('인체도',`<div class="row" style="margin-bottom:4px">${chips([['last','지난 PT'],['d30','최근 30일']],rg,'musRange',{mid:m.id})}</div>${muscleBlock(ss,340,rg==='last'?'지난 PT':'최근 30일')}`)}
-      ${fsec('월별<br><small>수업 횟수</small>',monthBars(m,200,120))}
+      ${fsec('월별 수업 횟수',monthBars(m,150,330),'mstrip')}
     </div>
     ${fsec('기댓값<br><small>소견</small>',devHistory(m,6))}
     <div class="f-cap">Ⅳ. 다음 PT 계획 (처방)</div>${fsec('다음 PT',next)}
