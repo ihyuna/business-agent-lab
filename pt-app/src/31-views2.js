@@ -361,24 +361,50 @@ MOD.exList=o=>{const s=SES(o.sid);const cur=UI.cur[s.id];
   return `<h3>오늘 종목</h3><div class="list">${rows}</div><div class="row" style="justify-content:space-between;margin-top:12px">${btn('+ 종목 넣기','modal',{type:'addEx',sid:s.id},'small')}${btn('닫기','closeModal')}</div>`};
 
 /* ---------- 0. 처음 화면(랜딩·로그인) ---------- 2026-11-11 지도교수님 "웹사이트에 들어왔을 때 첫 페이지가 있어야", D82 */
-V.landing=()=>`<div class="landing">
+/* 랜딩 (D83, 2026-11-17 다시): 경쟁 앱(Trainerize·TrueCoach·Everfit) 첫 화면처럼 짧은 제목 + 제품 화면 미리보기 + 숫자 띠 + 한 칸짜리 로그인.
+   미리보기 숫자는 실제 수첩 기록(이00_3 핵스쿼트)에서 그때그때 읽고, 새로 만들지 않는다 */
+function landingPreview(){
+  const m=M('m3'); const ser=m?trendSeries(m,'hacksq'):[]; if(!ser.length) return '';
+  const pts=ser.slice(-6), W=440,H=120,pl=26,pr=26,pt=22,pb=18; const ws=pts.map(o=>o.t.w),lo=Math.min(...ws)*0.85,hi=Math.max(...ws)*1.08;
+  const X=i=>pl+(pts.length<2?0.5:i/(pts.length-1))*(W-pl-pr), Y=v=>pt+(1-(v-lo)/(hi-lo||1))*(H-pt-pb);
+  const path=pts.map((o,i)=>`${i?'L':'M'}${X(i).toFixed(1)},${Y(o.t.w).toFixed(1)}`).join(' ');
+  const dots=pts.map((o,i)=>`<circle cx="${X(i)}" cy="${Y(o.t.w)}" r="${i===pts.length-1?4.5:3}" fill="${i===pts.length-1?'var(--accent)':'var(--panel)'}" stroke="var(--accent)" stroke-width="2"/>${o.t.r?`<text x="${X(i)}" y="${Y(o.t.w)-8}" text-anchor="middle">${o.t.r}회</text>`:''}<text x="${X(i)}" y="${H-3}" text-anchor="middle" class="d">${md(o.s.date)}</text>`).join('');
+  const a=pts[pts.length-2],b=pts[pts.length-1];
+  return `<div class="ld-mock" aria-hidden="true">
+    <div class="ld-mock-hd"><span class="ld-mock-t">PT 회원 진료기록부</span><span class="ld-mock-no">PT-0001</span></div>
+    <div class="ld-mock-id"><span>회원 <b>${esc(m.code)}</b></span><span>분할 <b>하체</b></span><span>종목 <b>핵스쿼트</b></span></div>
+    <svg class="ld-mock-svg" viewBox="0 0 ${W} ${H}" width="100%" preserveAspectRatio="xMidYMid meet"><path d="${path}" fill="none" stroke="var(--accent)" stroke-width="2"/>${dots}</svg>
+    ${a?`<div class="ld-mock-row"><span>${md(a.s.date)} ${esc(ftop(a.t,'hacksq'))}</span><span class="ar">→</span><span><b>${md(b.s.date)} ${esc(ftop(b.t,'hacksq'))}</b></span><span class="ld-up">▲ 최고 기록</span></div>`:''}
+    <div class="ld-mock-why"><span class="ld-mock-lb">근거</span>지난 같은 분할 실제값 · 앞 종목 · 컨디션 '보통' 기준</div>
+  </div>`;
+}
+V.landing=()=>{const nS=S.sessions.filter(s=>s.status==='completed').length, nM=S.members.length;
+ return `<div class="landing">
   <div class="ld-left">
-    <div class="ld-brand"><div class="logo">P</div><b>PT 기록</b><span class="tag">트레이너용 · 시연판</span></div>
-    <h1 class="ld-h">지난 기록을 근거로<br>오늘의 세트·무게·횟수를 정해요</h1>
-    <ul class="ld-pts">
-      <li><b>기록이 다음 계획이 돼요</b><span>수첩에 적던 수업 기록이 쌓이면 다음 수업 숫자의 바탕이 돼요.</span></li>
-      <li><b>숫자마다 근거가 붙어요</b><span>지난번 실제값, 컨디션, 수업 중 바뀐 것을 색과 한 줄 설명으로 보여 줘요.</span></li>
-      <li><b>정하는 건 트레이너예요</b><span>앱은 숫자를 제안하고, 고치고 정하는 건 트레이너가 해요.</span></li>
-    </ul>
-    <div class="tiny muted ld-foot">아이패드 9세대 가로 화면 기준 · 회원 이름은 성+00 코드로 바꿨어요</div>
+    <div class="ld-brand"><div class="logo">P</div><b>PT 기록</b><span class="ld-badge">트레이너 전용</span></div>
+    <div class="ld-main">
+      <div class="ld-eyebrow">종이 수첩 대신 쓰는 진료기록부</div>
+      <h1 class="ld-h">지난 기록이<br>다음 수업의 근거가 돼요</h1>
+      <p class="ld-sub">세트·무게·횟수를 앱이 근거와 함께 먼저 채우고, 정하는 건 트레이너가 해요.</p>
+      ${landingPreview()}
+    </div>
+    <div class="ld-stats">
+      <div><b>${nS}회</b><span>옮겨 담은 수첩 수업</span></div>
+      <div><b>${nM}명</b><span>회원 기록 (성+00 코드)</span></div>
+      <div><b>숫자마다</b><span>근거 한 줄 · 계산 보기</span></div>
+    </div>
   </div>
-  <div class="ld-right"><div class="card ld-card">
-    <h2>로그인</h2>
-    <label class="ld-f"><span>아이디</span><input type="text" autocomplete="off" placeholder="트레이너 아이디" aria-label="아이디"></label>
-    <label class="ld-f"><span>비밀번호</span><input type="password" autocomplete="off" placeholder="비밀번호" aria-label="비밀번호"></label>
-    ${btn('로그인','enter',null,'primary ld-go')}
-    <div class="ld-or"><span>또는</span></div>
-    ${btn('로그인 없이 둘러보기','enter',{guest:1},'ld-go')}
-    <div class="tiny muted" style="margin-top:10px">시연판이라 아이디·비밀번호는 확인하지도, 저장하거나 보내지도 않아요. 어느 버튼을 눌러도 같은 트레이너 기록으로 들어가요. 계정은 실제 앱에서 붙여요.</div>
-  </div></div>
-</div>`;
+  <div class="ld-right">
+    <div class="ld-card">
+      <h2>로그인</h2>
+      <div class="ld-cap">트레이너 계정으로 들어가요</div>
+      <label class="ld-f"><span>아이디</span><input type="text" autocomplete="off" placeholder="트레이너 아이디" aria-label="아이디"></label>
+      <label class="ld-f"><span>비밀번호</span><input type="password" autocomplete="off" placeholder="비밀번호" aria-label="비밀번호"></label>
+      ${btn('로그인','enter',null,'primary ld-go')}
+      <div class="ld-or"><span>또는</span></div>
+      ${btn('로그인 없이 둘러보기','enter',{guest:1},'ld-go ld-ghost')}
+      <div class="ld-note">시연판이에요. 아이디·비밀번호는 확인하지도, 저장하거나 보내지도 않아요. 어느 버튼이든 같은 트레이너 기록으로 들어가요.</div>
+    </div>
+    <div class="ld-legal">아이패드 9세대 가로 화면 기준 · 회원 이름은 성+00 코드로 바꿨어요</div>
+  </div>
+</div>`};
