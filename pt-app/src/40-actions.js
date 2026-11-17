@@ -162,8 +162,6 @@ const ACT={
   devCause:d=>{const s=SES(d.sid);s.devCause=s.devCause||{};s.devCause[d.k]=s.devCause[d.k]===d.v?null:d.v;save();render()},
   pickRtRole:d=>{UI.cur['rtr-'+d.mid]=d.v;render()},
   pickRtPer:d=>{UI.cur['rtp-'+d.mid]=d.v;render()},
-  pickTrend:d=>{UI.cur['trend-'+d.mid]=d.v;UI.cur['trendPt-'+d.mid]=null;render()},
-  trendPt:d=>{const k='trendPt-'+UI.route.mid;UI.cur[k]=UI.cur[k]===+d.i?null:+d.i;render()},
   pickHist:d=>{UI.cur['hist-'+d.mid]=d.v;render()},
   doSearch:()=>{UI.search=fv('search');render()},
   // 설정
