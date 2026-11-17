@@ -159,3 +159,49 @@ function devHistory(m,n){
   return `<table class="dev-tb"><tr><th>날짜</th><th>종목</th><th>기록</th><th>기댓값</th><th>까닭</th></tr>${out.slice(0,n).map(g=>{const e=g.pick;return `<tr class="click" data-act="go" data-to="detail" data-sid="${g.s.id}"><td class="num">${md(g.s.date)}</td><td>${esc(EX(g.x.exId).name)}</td><td class="num">${esc(fw(e.st.aw,g.x.exId))} × ${e.ar}</td><td class="num">${expTxt(e)} <span class="bad">▼${Math.abs(e.diff)}</span>${e.e1.hi?' <span class="tiny muted">덜 정확</span>':''}</td><td class="small">${esc((g.s.devCause||{})[g.key]||'—')}</td></tr>`}).join('')}</table>
   <div class="tiny muted" style="margin-top:4px">이 회원 기록으로 계산한 기댓값보다 2회 이상 적게 나온 종목, 최근 ${Math.min(n,out.length)}개. 수첩 숫자 그대로이고, 까닭은 마무리에서 트레이너가 고른 것만 보여요. 줄을 누르면 그날 수업 상세.</div>`;
 }
+
+/* ---------- 지난 PT 한눈에 (2026-11-17, '지난 PT 변화' 막대 대신) ----------
+   다음 수업 전에 볼 것만: 지난 수업 종목마다 실제 세트, 그 전 같은 종목과 비교(%가 아닌 kg·회 글자), 다음에 할 숫자, 메모·통증.
+   위에 컨디션·계획과 달라진 곳·넘은 기록·기댓값 ▼ 수. 숫자는 수첩 그대로 */
+function cmpWords(a,b,exId){
+  if(!a) return ['muted','숫자 없음']; if(!b) return ['muted','처음'];
+  if(!isNum(a.w)||!isNum(b.w)) return ['muted','비교 안 됨'];
+  const u=EX(exId).unit||''; const dw=Math.round((a.w-b.w)*10)/10; const both=isNum(a.r)&&a.r>0&&isNum(b.r)&&b.r>0; const dr=both?a.r-b.r:0;
+  if(dw) return [dw>0?'up':'dn',`무게 ${dw>0?'+':''}${dw}${u}${dr?` · 횟수 ${dr>0?'+':''}${dr}`:''}`];
+  if(!both) return ['eq','같은 무게 · 횟수는 한쪽 기록 없음'];
+  if(dr) return [dr>0?'up':'dn',`같은 무게, 횟수 ${dr>0?'+':''}${dr}`];
+  return ['eq','그대로'];
+}
+function lastPtBrief(m,s,u){
+  const c=s.cond; const bad=c?COND_ITEMS.filter(([k])=>k!=='pain'&&c[k]==='poor').map(([,l])=>l):[];
+  const pain=c&&c.pain&&c.pain!=='none'?`통증 ${lab(PAIN3,c.pain)}${c.painWhere?' ('+c.painWhere+')':''}`:'';
+  const condTxt=!c?'기록 없음':(bad.length?bad.join('·')+' 나쁨':'모두 평소')+(pain?' · '+pain:'');
+  const ch=sessionChanges(s).length; const dn=devGroups(m,s,false).filter(g=>g.kind==='under').length;
+  const prs=s.exercises.filter(x=>x.status==='done').map(x=>prFor(m,s,x)).filter(p=>p&&!p.first).length;
+  const chip=(l,v,cls)=>`<span class="lp-chip${cls?' '+cls:''}"><span>${l}</span><b>${v}</b></span>`;
+  /* 다음 계획이 없으면 앱이 지금 채울 숫자(같은 규칙 D52·D59·D90)를 '앱 제안'으로 보여 준다. 저장하지 않는다 */
+  const d0=todayIso()>s.date?todayIso():s.date+'~';
+  const sugg=x=>{try{const i=s.exercises.indexOf(x);const f=fillExercise(m,{exId:x.exId,role:x.role,structure:x.structure||'스트레이트'},d0,s.templateId,null,prevCtx(s.exercises.slice(0,i).filter(e=>e.status==='done')));
+    const w=f.sets.filter(st=>st.kind!=='warmup');if(!w.length||(!isNum(w[0].pw)&&w[0].pr==null))return '<span class="faint">—</span>';
+    return `<span class="muted">앱 제안</span> ${esc(isNum(w[0].pw)?fw(w[0].pw,x.exId):'무게 찾기')} × ${esc(String(w[0].pr??'—'))}${w.length>1?` × ${w.length}세트`:''}${f.basis.tag&&f.basis.tag!=='무게 찾기'?`<div class="tiny faint">${esc(f.basis.tag)}</div>`:''}`}catch(e){return '<span class="faint">—</span>'}};
+  const rows=s.exercises.map(x=>{const nm=esc(EX(x.exId).name);
+    if(x.status==='removed'||x.status==='swapped') return `<tr class="lp-off"><td>${nm}<div class="tiny muted">${x.role}</div></td><td colspan="3" class="small muted">${x.status==='removed'?'뺌':'바꿈'}${x.reason?' · '+esc(x.reason):''}</td></tr>`;
+    if(x.status!=='done') return '';
+    const a=topSet(x); let prev=null; for(const q of prevDone(m,s.date)){const y=q.exercises.find(e=>e.exId===x.exId&&e.status==='done'&&topSet(e));if(y){prev={s:q,x:y};break}}
+    const b=prev&&topSet(prev.x); const seen=prevDone(m,s.date).some(q=>q.exercises.some(e=>e.exId===x.exId&&e.status==='done'));
+    let [cls,txt]=a?cmpWords(a,b||null,x.exId):['muted',b?'이번엔 숫자 없음 · 마지막 숫자':'숫자 없음'];
+    if(a&&!b&&seen) {cls='muted';txt='그 전엔 숫자 없음'}
+    const t=s.nextTargets&&s.nextTargets[x.exId]; const ny=u&&u.exercises.find(e=>e.exId===x.exId&&e.status==='planned');
+    const nyTop=ny&&ny.sets.filter(st=>st.kind!=='warmup'&&(isNum(st.pw)||st.pr!=null))[0];
+    const next=t&&(t.w!=null||t.r!=null||t.text)?`<b>목표</b> ${esc(t.text||[t.w!=null?fw(t.w,x.exId):'',t.r!=null?t.r+'회':''].filter(Boolean).join(' × '))}`
+      :nyTop?`<span class="muted">계획</span> ${esc(fw(nyTop.pw,x.exId))} × ${esc(String(nyTop.pr??'—'))}`:sugg(x);
+    const pn=x.sets.some(st=>st.pain); const memo=[x.note,x.raw&&!x.sets.some(st=>isNum(st.aw))?'수첩: '+x.raw:''].filter(Boolean)[0];
+    return `<tr><td>${nm}<div class="tiny muted">${x.role}${pn?' · <span class="bad">통증</span>':''}</div>${memo?`<div class="tiny lp-memo">${esc(memo)}</div>`:''}</td>
+      <td class="small">${esc(fsets(x.sets.filter(st=>st.kind!=='warmup'),x.exId,'a')||'—')}</td>
+      <td class="small lp-${cls}">${esc(txt)}${prev&&b?`<div class="tiny faint">${md(prev.s.date)} ${esc(ftop(b,x.exId))}</div>`:''}</td>
+      <td class="small">${next}</td></tr>`}).join('');
+  return `<div class="lp-chips">${chip('컨디션',esc(condTxt),bad.length||pain?'warn':'')}${chip('계획과 달라진 곳',ch+'곳')}${chip('넘은 기록',prs+'개',prs?'good':'')}${chip('기댓값 ▼',dn+'개',dn?'warn':'')}</div>
+    <table class="lp-tb"><tr><th>종목</th><th>지난번 (본세트)</th><th>그 전과 비교</th><th>다음 PT</th></tr>${rows||'<tr><td colspan="4" class="empty">기록한 종목이 없어요.</td></tr>'}</table>
+    ${s.memo?`<div class="small lp-note"><b>회원 말·메모</b> ${esc(s.memo)}</div>`:''}
+    <div class="tiny faint" style="margin-top:4px">비교는 그 종목을 한 바로 전 수업의 최고 세트와 해요(%가 아니라 kg·회). 다음 PT = 마무리에서 정한 목표 → 잡혀 있는 다음 수업의 계획 → 둘 다 없으면 앱이 지금 채울 숫자(앱 제안, 저장 안 함) 순서예요.</div>`;
+}
