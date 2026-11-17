@@ -207,6 +207,7 @@ V.history=r=>{
   for(const s of list){const k=weekKey(s.date); if(k!==wk){wk=k;html+=`<div class="small muted" style="padding:10px 4px 2px;font-weight:600">${md(k)} 주 · 수업 ${weekSum[k].n}회 · 볼륨 ${weekSum[k].v.toLocaleString()}</div>`}
     const v=sessionVolume(s);
     html+=`<div class="li click" data-act="go" data-to="detail" data-sid="${s.id}"><div style="width:80px" class="num">${mdw(s.date)}</div><div style="width:80px"><b>${esc(splitName(s))}</b></div><div style="flex:1;min-width:0" class="tiny muted">${s.exercises.filter(x=>x.status==='done'||s.status!=='completed').map(x=>EX(x.exId).name).join(', ')}</div>${s.status!=='completed'?`<span class="tag${s.status==='planned'||s.status==='in_progress'?' good':''}">${statusLabel[s.status]}</span>`:''}<span class="num small" style="width:90px;text-align:right">${v?'볼륨 '+v.toLocaleString():''}</span><span class="faint">›</span></div>`}
+  if(UI.look==='chart') return topBar(esc(m.code)+' 수업 기록','수업 기록 대장',btn('찾기','go',{to:'search',mid:m.id}))+`<div class="scroll" data-sk="main">${historyDoc(m,list,f)}</div>`;
   return topBar(esc(m.code)+' 수업 기록','볼륨 = 무게 × 횟수 합 (워밍업 제외, 한쪽 무게는 두 배) · 단위가 섞여 있어 참고용',btn('찾기','go',{to:'search',mid:m.id}))+
    `<div class="scroll" data-sk="main"><div class="row" style="margin-bottom:6px">${[['all','전체'],...m.templates.map(t=>[t.id,t.name])].map(([v,l])=>`<button class="chip${f===v?' on':''}" data-act="pickHist" data-mid="${m.id}" data-v="${v}">${esc(l)}</button>`).join(' ')}</div><div class="card"><div class="list">${html||'<div class="empty">기록이 없어요.</div>'}</div></div></div>`;
 };
@@ -217,6 +218,8 @@ V.detail=r=>{
      <td class="small">${esc(fsets(x.sets,x.exId,'p'))||'—'}</td><td class="small">${s.status==='plan_only'?'<span class="faint">했는지 모름</span>':esc(fsets(x.sets,x.exId,'a'))||'—'}${x.sets.some(st=>isNum(st.rir))?`<div class="tiny muted">여유 횟수 ${x.sets.filter(st=>isNum(st.rir)).map(st=>st.rir).join(', ')}</div>`:''}</td>
      <td class="small">${x.setting?'세팅 '+esc(x.setting)+'<br>':''}${x.note?esc(x.note)+'<br>':''}${x.raw?`<span class="dimline">수첩: ${esc(x.raw)}</span>`:''}</td></tr>`).join('');
   const nt=Object.entries(s.nextTargets||{}).map(([k,t])=>`${EX(k).name} ${t.w!=null?fw(t.w,k):''}${t.r!=null?' × '+t.r:''}${t.text?' '+t.text:''}`);
+  if(UI.look==='chart') return topBar(esc(m.code)+` ${mdw(s.date)} ${esc(splitName(s))}`,`${statusLabel[s.status]} · 수업 기록지`,s.status==='planned'||s.status==='in_progress'?btn('수업으로','openSession',{sid:s.id},'primary'):'')+
+   `<div class="scroll" data-sk="main">${detailDoc(s,m,rows,nt,parts)}</div>`;
   return topBar(esc(m.code)+` ${mdw(s.date)} ${esc(splitName(s))}`,`${statusLabel[s.status]}${s.seeded?' · 수첩에서 옮긴 기록':''} · 수업 상세`,s.status==='planned'||s.status==='in_progress'?btn('수업으로','openSession',{sid:s.id},'primary'):'')+
    `<div class="scroll" data-sk="main">
     ${s.cond||s.goal||s.memo||nt.length?`<div class="card" style="margin-bottom:10px"><dl class="kv">${s.goal?`<dt>오늘 목표</dt><dd>${esc(s.goal)}</dd>`:''}${s.cond?`<dt>컨디션</dt><dd>${condLine(s.cond)}</dd>`:''}${s.memo?`<dt>수업 메모</dt><dd>${esc(s.memo)}</dd>`:''}${(s.observations||[]).length?`<dt>관찰</dt><dd>${s.observations.map(o=>lab(OBS,o.kind)+(o.dir==='up'?' 좋아짐':' 나빠짐')).join(', ')}</dd>`:''}${nt.length?`<dt>다음 목표</dt><dd>${esc(nt.join(' / '))}</dd>`:''}</dl></div>`:''}

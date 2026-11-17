@@ -709,6 +709,20 @@ body.full #app .hl{outline:0!important;box-shadow:none!important;animation:none!
 #device.port .ld-left{padding:32px 36px 20px;min-height:auto} #device.port .ld-right{border-left:0;border-top:1px solid var(--line);padding:28px 36px}
 #device.port .ld-mock{max-width:520px}
 #device.port .ld-stats{display:none}
+.gdoc .f-paper>.card,.gdoc .f-paper .col>.card,.gdoc .f-paper .grid2 .card{border-radius:0!important}
+/* 카드 제목 = 왼쪽 라벨 칸 (회원 진료기록부의 fsec와 같은 모양) */
+#device.chart .gdoc:not(.r-settings) .card:has(>h2:first-child){display:grid;grid-template-columns:62px minmax(0,1fr);padding:0!important;margin-top:-1px}
+#device.chart .gdoc:not(.r-settings) .card:has(>h2:first-child)>h2:first-child{grid-column:1;grid-row:1/span 60;margin:0!important;padding:6px 2px!important;border:0!important;border-right:1px solid var(--ink-line)!important;border-radius:0!important;background:var(--hd)!important;display:flex!important;flex-direction:column;justify-content:center;align-items:center;gap:2px;text-align:center;font-size:12px!important;font-weight:800;line-height:1.3;color:#173a8a}
+#device.chart .gdoc:not(.r-settings) .card:has(>h2:first-child)>h2:first-child::before{display:none!important}
+#device.chart .gdoc:not(.r-settings) .card:has(>h2:first-child)>h2:first-child>*{font-size:10.5px;font-weight:600;color:var(--muted);margin:0}
+#device.chart .gdoc:not(.r-settings) .card:has(>h2:first-child)>:not(h2:first-child){grid-column:2;margin-left:10px;margin-right:10px;max-width:calc(100% - 20px);box-sizing:border-box}
+#device.chart .gdoc:not(.r-settings) .card:has(>h2:first-child)>:nth-child(2){margin-top:8px}
+#device.chart .gdoc:not(.r-settings) .card:has(>h2:first-child)>:last-child{margin-bottom:8px}
+#device.chart .gdoc .card+.card{margin-top:-1px}
+#device.chart .gdoc table th{background:var(--hd)}
+.f-prog tr.f-wk td{background:var(--soft);font-size:11.5px;font-weight:700;color:var(--muted);padding:4px 6px}
+.f-prog tr.click{cursor:pointer} .f-prog tr.click:hover td{background:var(--accent-soft)}
+.f-prog td.c{text-align:center}
 </style>
 <div id="shell">
   <div id="bar">
