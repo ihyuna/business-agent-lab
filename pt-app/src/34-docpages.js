@@ -59,6 +59,6 @@ function detailDoc(s,m,rows,nt,parts){
     <div class="f-cap">Ⅱ. 실시 내용</div>
     <table class="f-prog"><tr><th style="width:30px">#</th><th style="width:170px">종목</th><th style="width:130px">계획</th><th style="width:150px">실제</th><th>메모 · 수첩 원문</th></tr>${rows}</table>
     ${Object.keys(parts).length?`<div class="tiny muted" style="margin-top:4px">부위별 본세트 수: ${Object.entries(parts).map(([p,c])=>`${p} ${c}`).join(', ')} · 볼륨 ${sessionVolume(s).toLocaleString()}</div>`:''}
-    ${s.status==='completed'?`<div class="f-cap">Ⅲ. 지난번과 비교 · 쓴 근육</div><div class="f-row3 two">${fsec('지난번<br><small>비교</small>',deltaChart(m,s))}${fsec('쓴 근육',muscleBlock([s],260,'이 수업'))}</div>`:''}
+    ${s.status==='completed'?`<div class="f-cap">Ⅲ. 기록 소견</div><div class="f-row3 two">${fsec('지난번<br><small>비교</small>',deltaChart(m,s))}${fsec('쓴 근육',muscleBlock([s],260,'이 수업'))}</div>`:''}
     ${nt.length?`<div class="f-cap">Ⅳ. 다음 계획</div>${fsec('다음<br><small>목표</small>',esc(nt.join(' / ')))}`:''}
     ${signLine('위 기록은 트레이너 수첩과 수업 기록을 옮긴 것이에요.',s.date)}`}

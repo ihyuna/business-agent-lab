@@ -34,14 +34,14 @@ function memberDoc(o){
     <div class="f-cap">Ⅰ. 인적 사항</div>${id}
     <div class="f-cap">Ⅱ. 특이사항 · 확인 · 목표</div>
     <div class="f-row3">${fsec('특이사항<br><small>(주의)</small>',cautionSec(m),'warnsec')}${fsec('다음 확인',checkSec(m))}${fsec('목표<br><small>방향</small>',goalSec(m))}</div>
-    <div class="f-cap">Ⅲ. 몸 · 기록</div>
+    <div class="f-cap">Ⅲ. 신체 · 기록 소견</div>
     ${fsec('지난 PT<br><small>한눈에</small>',last?`<div class="small muted" style="margin-bottom:6px">${mdw(last.date)} · ${esc(splitName(last))} ${btn('수업 상세','go',{to:'detail',sid:last.id},'ghost small')}</div>${lastPtBrief(m,last,u)}`:'<div class="empty">없어요.</div>','lpsec')}
     ${fsec('무게 변화<br><small>추이 · 반복 구간별</small>',roleTrend(m,860,250),'rtsec')}
     ${fsec('인체도',`<div class="row" style="margin-bottom:4px">${chips([['last','지난 PT'],['d30','최근 30일']],rg,'musRange',{mid:m.id})}</div>${muscleBlock(ss,380,rg==='last'?'지난 PT':'최근 30일')}`)}
-    ${fsec('기댓값<br><small>덜 나온 세트</small>',devHistory(m,6))}
+    ${fsec('기댓값<br><small>소견</small>',devHistory(m,6))}
     <div class="f-cap">Ⅳ. 다음 PT 계획</div>${fsec('다음 PT',next)}
     <div class="f-cap">Ⅴ. 수업 기록 <span class="muted" style="font-weight:500">최근 ${Math.min(all.length,14)}회 · 줄을 누르면 펼쳐져요</span><span class="sp"></span>${btn('전체 수업 기록','go',{to:'history',mid:m.id},'small ghost')}</div>
-    <table class="f-prog"><tr><th style="width:92px">일자</th><th style="width:76px">분할</th><th>실시 내용 (종목 · 최고 세트)</th><th style="width:200px">메모</th><th style="width:40px">확인</th></tr>${prog}</table>
+    <table class="f-prog"><tr><th style="width:92px">일자</th><th style="width:76px">분할</th><th>실시 내용 (종목 · 최고 세트)</th><th style="width:200px">소견 · 메모</th><th style="width:40px">확인</th></tr>${prog}</table>
     ${fsec('월별<br><small>수업 횟수</small>',monthHBars(m),'mhsec')}
     <div class="f-cap">Ⅵ. 생활 · 식단 · 개인 운동 메모</div>
     ${fsec('메모',`${notes.map(n=>`<div class="li small">${pill(NOTE_KINDS[n.kind],'gray')}<div style="flex:1">${esc(n.text)}</div>${btn('지우기','delNote',{mid:m.id,id:n.id},'small ghost')}</div>`).join('')||'<div class="empty">없어요.</div>'}<div class="row" style="margin-top:6px;flex-wrap:nowrap">${dSel('nKind-'+m.id,['general','lifestyle','diet','self_train','personality'].map(k=>[k,NOTE_KINDS[k]]),'general',{w:84})}${dIn('nText-'+m.id,'메모',{grow:1})}${btn('넣기','addNote',{mid:m.id},'small')}</div>`)}

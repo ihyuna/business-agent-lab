@@ -280,7 +280,7 @@ V.member=r=>{
         ${last?`<div class="box"><div class="bh">지난 PT 한눈에 <span class="muted" style="font-weight:500">${mdw(last.date)} · ${esc(splitName(last))}</span><span class="sp"></span>${btn('수업 상세','go',{to:'detail',sid:last.id},'ghost small')}</div><div class="bb">${lastPtBrief(m,last,u)}</div></div>`:''}
         <div class="box"><div class="sec3">${cautionSec(m)}${checkSec(m)}${goalSec(m)}</div></div>
         <div class="box"><div class="bh">무게 변화 추이 <span class="muted" style="font-weight:500">반복 구간별</span></div><div class="bb">${roleTrend(m,470,220)}</div></div>
-        <div class="box"><div class="bh">기댓값 <span class="muted" style="font-weight:500">덜 나온 세트</span></div><div class="bb">${devHistory(m,6)}</div></div>
+        <div class="box"><div class="bh">기댓값 소견 <span class="muted" style="font-weight:500">덜 나온 세트</span></div><div class="bb">${devHistory(m,6)}</div></div>
         
       </div>
       <div class="cl-right">

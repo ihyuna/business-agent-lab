@@ -2642,7 +2642,7 @@ V.member=r=>{
         ${last?`<div class="box"><div class="bh">지난 PT 한눈에 <span class="muted" style="font-weight:500">${mdw(last.date)} · ${esc(splitName(last))}</span><span class="sp"></span>${btn('수업 상세','go',{to:'detail',sid:last.id},'ghost small')}</div><div class="bb">${lastPtBrief(m,last,u)}</div></div>`:''}
         <div class="box"><div class="sec3">${cautionSec(m)}${checkSec(m)}${goalSec(m)}</div></div>
         <div class="box"><div class="bh">무게 변화 추이 <span class="muted" style="font-weight:500">반복 구간별</span></div><div class="bb">${roleTrend(m,470,220)}</div></div>
-        <div class="box"><div class="bh">기댓값 <span class="muted" style="font-weight:500">덜 나온 세트</span></div><div class="bb">${devHistory(m,6)}</div></div>
+        <div class="box"><div class="bh">기댓값 소견 <span class="muted" style="font-weight:500">덜 나온 세트</span></div><div class="bb">${devHistory(m,6)}</div></div>
         
       </div>
       <div class="cl-right">
@@ -3425,14 +3425,14 @@ function memberDoc(o){
     <div class="f-cap">Ⅰ. 인적 사항</div>${id}
     <div class="f-cap">Ⅱ. 특이사항 · 확인 · 목표</div>
     <div class="f-row3">${fsec('특이사항<br><small>(주의)</small>',cautionSec(m),'warnsec')}${fsec('다음 확인',checkSec(m))}${fsec('목표<br><small>방향</small>',goalSec(m))}</div>
-    <div class="f-cap">Ⅲ. 몸 · 기록</div>
+    <div class="f-cap">Ⅲ. 신체 · 기록 소견</div>
     ${fsec('지난 PT<br><small>한눈에</small>',last?`<div class="small muted" style="margin-bottom:6px">${mdw(last.date)} · ${esc(splitName(last))} ${btn('수업 상세','go',{to:'detail',sid:last.id},'ghost small')}</div>${lastPtBrief(m,last,u)}`:'<div class="empty">없어요.</div>','lpsec')}
     ${fsec('무게 변화<br><small>추이 · 반복 구간별</small>',roleTrend(m,860,250),'rtsec')}
     ${fsec('인체도',`<div class="row" style="margin-bottom:4px">${chips([['last','지난 PT'],['d30','최근 30일']],rg,'musRange',{mid:m.id})}</div>${muscleBlock(ss,380,rg==='last'?'지난 PT':'최근 30일')}`)}
-    ${fsec('기댓값<br><small>덜 나온 세트</small>',devHistory(m,6))}
+    ${fsec('기댓값<br><small>소견</small>',devHistory(m,6))}
     <div class="f-cap">Ⅳ. 다음 PT 계획</div>${fsec('다음 PT',next)}
     <div class="f-cap">Ⅴ. 수업 기록 <span class="muted" style="font-weight:500">최근 ${Math.min(all.length,14)}회 · 줄을 누르면 펼쳐져요</span><span class="sp"></span>${btn('전체 수업 기록','go',{to:'history',mid:m.id},'small ghost')}</div>
-    <table class="f-prog"><tr><th style="width:92px">일자</th><th style="width:76px">분할</th><th>실시 내용 (종목 · 최고 세트)</th><th style="width:200px">메모</th><th style="width:40px">확인</th></tr>${prog}</table>
+    <table class="f-prog"><tr><th style="width:92px">일자</th><th style="width:76px">분할</th><th>실시 내용 (종목 · 최고 세트)</th><th style="width:200px">소견 · 메모</th><th style="width:40px">확인</th></tr>${prog}</table>
     ${fsec('월별<br><small>수업 횟수</small>',monthHBars(m),'mhsec')}
     <div class="f-cap">Ⅵ. 생활 · 식단 · 개인 운동 메모</div>
     ${fsec('메모',`${notes.map(n=>`<div class="li small">${pill(NOTE_KINDS[n.kind],'gray')}<div style="flex:1">${esc(n.text)}</div>${btn('지우기','delNote',{mid:m.id,id:n.id},'small ghost')}</div>`).join('')||'<div class="empty">없어요.</div>'}<div class="row" style="margin-top:6px;flex-wrap:nowrap">${dSel('nKind-'+m.id,['general','lifestyle','diet','self_train','personality'].map(k=>[k,NOTE_KINDS[k]]),'general',{w:84})}${dIn('nText-'+m.id,'메모',{grow:1})}${btn('넣기','addNote',{mid:m.id},'small')}</div>`)}
@@ -3543,7 +3543,7 @@ function detailDoc(s,m,rows,nt,parts){
     <div class="f-cap">Ⅱ. 실시 내용</div>
     <table class="f-prog"><tr><th style="width:30px">#</th><th style="width:170px">종목</th><th style="width:130px">계획</th><th style="width:150px">실제</th><th>메모 · 수첩 원문</th></tr>${rows}</table>
     ${Object.keys(parts).length?`<div class="tiny muted" style="margin-top:4px">부위별 본세트 수: ${Object.entries(parts).map(([p,c])=>`${p} ${c}`).join(', ')} · 볼륨 ${sessionVolume(s).toLocaleString()}</div>`:''}
-    ${s.status==='completed'?`<div class="f-cap">Ⅲ. 지난번과 비교 · 쓴 근육</div><div class="f-row3 two">${fsec('지난번<br><small>비교</small>',deltaChart(m,s))}${fsec('쓴 근육',muscleBlock([s],260,'이 수업'))}</div>`:''}
+    ${s.status==='completed'?`<div class="f-cap">Ⅲ. 기록 소견</div><div class="f-row3 two">${fsec('지난번<br><small>비교</small>',deltaChart(m,s))}${fsec('쓴 근육',muscleBlock([s],260,'이 수업'))}</div>`:''}
     ${nt.length?`<div class="f-cap">Ⅳ. 다음 계획</div>${fsec('다음<br><small>목표</small>',esc(nt.join(' / ')))}`:''}
     ${signLine('위 기록은 트레이너 수첩과 수업 기록을 옮긴 것이에요.',s.date)}`}
 /* ---------- 시나리오 따라 하기 (시나리오.md 2부, v3 화면 넷 순서의 장면 1~8) ----------
