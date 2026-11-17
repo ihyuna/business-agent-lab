@@ -261,7 +261,7 @@ V.settings=()=>{
      <div class="card"><h2>지난 실제값 기준</h2><div class="row">${chips([['same','같은 분할'],['recent','가장 최근']],S.settings.basis,'setBasis')}</div><div class="tiny muted" style="margin-top:4px">다음 목표가 없을 때 어느 수업의 실제값으로 채울지예요. 같은 분할에 없는 종목은 가장 최근으로 채워요. 바꾸면 앞으로 만드는 수업 준비부터 적용돼요.</div></div>
      <div class="card"><h2>역할별 기준 <span class="tag warn">논문 기준 임시값 (D59)</span></h2><table><tr><th>역할</th><th>횟수 범위</th><th>목표 횟수</th><th>여유 횟수</th><th>세트</th><th>쉬는 초</th></tr>${roleRows}</table><div class="tiny muted" style="margin-top:4px">트레이너 답(O02)이 오면 바꿀 값이에요. 유산소성 순환은 횟수 칸을 라운드로 써요.</div></div>
      <div class="card"><h2>예시 취소·안 옴 <span class="tag warn">예시</span></h2><div class="row">${chips([['1','보임'],['0','숨김']],S.settings.exampleCx===false?'0':'1','setExampleCx')}</div><div class="tiny muted" style="margin-top:4px">수첩에는 취소·안 옴 기록이 없어요. 화면을 보여 주려고 넣은 예시 ${EXAMPLE_CX.length}건이고, 운동 기록은 없어요. 실제 날짜를 알면 바꿔요.</div></div>
-     <div class="card"><h2>화면 디자인</h2><div class="row">${chips([['chart','진료기록부 (B)'],['emr','지금 디자인 (A)']],UI.look,'setLook')}</div><div class="tiny muted" style="margin-top:4px">B는 지도교수님 피드백(11/11)의 종이 진료기록부 느낌이에요. A는 11/6까지 다듬은 화면 그대로예요. 위쪽 도구 줄 '디자인' 버튼으로도 바꿀 수 있어요.</div></div>
+     <div class="card"><h2>화면 디자인</h2><div class="row">${chips([['chart','기록부 (B)'],['emr','지금 디자인 (A)']],UI.look,'setLook')}</div><div class="tiny muted" style="margin-top:4px">B는 지도교수님 피드백(11/11)의 종이 기록부 느낌이에요. A는 11/6까지 다듬은 화면 그대로예요. 위쪽 도구 줄 '디자인' 버튼으로도 바꿀 수 있어요.</div></div>
      <div class="card"><h2>처음 화면</h2>${btn('로그아웃 (처음 화면으로)','logout',null,'small')}<div class="tiny muted" style="margin-top:4px">입력한 기록은 그대로 두고 로그인 화면으로 돌아가요.</div></div>
      <div class="card"><h2>처음 상태로</h2>${UI.confirmReset?`<div class="row"><span class="small">입력한 것을 모두 지울까요?</span>${btn('되돌리기','reset',null,'danger')}${btn('아니요','confirmReset',{v:0})}</div>`:btn('처음 상태로 되돌리기','confirmReset',{v:1},'small')}</div></div>
     <div class="card"><h2>종목 사전 <span class="tag warn">단위·눈금은 예시 (O36)</span></h2><div class="tiny muted" style="margin-bottom:4px">눈금은 +/− 한 칸과 계산한 무게를 내릴 때 써요. '한쪽'은 40/40kg처럼 한쪽 무게로 적는 기구예요.</div>
@@ -353,7 +353,7 @@ function landingPreview(){
   const dots=pts.map((o,i)=>`<circle cx="${X(i)}" cy="${Y(o.t.w)}" r="${i===pts.length-1?4.5:3}" fill="${i===pts.length-1?'var(--accent)':'var(--panel)'}" stroke="var(--accent)" stroke-width="2"/>${o.t.r?`<text x="${X(i)}" y="${Y(o.t.w)-8}" text-anchor="middle">${o.t.r}회</text>`:''}<text x="${X(i)}" y="${H-3}" text-anchor="middle" class="d">${md(o.s.date)}</text>`).join('');
   const a=pts[pts.length-2],b=pts[pts.length-1];
   return `<div class="ld-mock" aria-hidden="true">
-    <div class="ld-mock-hd"><span class="ld-mock-t">PT 회원 진료기록부</span><span class="ld-mock-no">PT-0001</span></div>
+    <div class="ld-mock-hd"><span class="ld-mock-t">PT 회원 기록부</span><span class="ld-mock-no">PT-0001</span></div>
     <div class="ld-mock-id"><span>회원 <b>${esc(m.code)}</b></span><span>분할 <b>하체</b></span><span>종목 <b>핵스쿼트</b></span></div>
     <svg class="ld-mock-svg" viewBox="0 0 ${W} ${H}" width="100%" preserveAspectRatio="xMidYMid meet"><path d="${path}" fill="none" stroke="var(--accent)" stroke-width="2"/>${dots}</svg>
     ${a?`<div class="ld-mock-row"><span>${md(a.s.date)} ${esc(ftop(a.t,'hacksq'))}</span><span class="ar">→</span><span><b>${md(b.s.date)} ${esc(ftop(b.t,'hacksq'))}</b></span><span class="ld-up">▲ 최고 기록</span></div>`:''}
@@ -365,7 +365,7 @@ V.landing=()=>{const nS=S.sessions.filter(s=>s.status==='completed').length, nM=
   <div class="ld-left">
     <div class="ld-brand"><div class="logo">P</div><b>PT 기록</b><span class="ld-badge">트레이너 전용</span></div>
     <div class="ld-main">
-      <div class="ld-eyebrow">종이 수첩 대신 쓰는 진료기록부</div>
+      <div class="ld-eyebrow">종이 수첩 대신 쓰는 회원 기록부</div>
       <h1 class="ld-h">지난 기록이<br>다음 수업의 근거가 돼요</h1>
       <p class="ld-sub">세트·무게·횟수를 앱이 근거와 함께 먼저 채우고, 정하는 건 트레이너가 해요.</p>
       ${landingPreview()}
