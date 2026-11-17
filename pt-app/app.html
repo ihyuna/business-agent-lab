@@ -660,26 +660,48 @@ body.full #b-unfull{display:block;position:fixed;right:10px;bottom:10px;z-index:
 body.full #b-unfull:hover{opacity:1}
 body.full #app .hl{outline:0!important;box-shadow:none!important;animation:none!important}
 /* 0. 처음 화면 (2026-11-16) */
-.landing{flex:1;display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);background:var(--device)}
-.ld-left{padding:64px 56px 32px;display:flex;flex-direction:column;gap:22px}
+.landing{flex:1;display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);background:var(--panel);min-height:0}
+.ld-left{padding:40px 48px 28px;display:flex;flex-direction:column;gap:20px;min-height:0}
 .ld-brand{display:flex;align-items:center;gap:10px}
-.ld-brand .logo{width:34px;height:34px;border-radius:8px;background:var(--accent);color:var(--accent-ink);display:grid;place-items:center;font-weight:800;font-size:18px}
-.ld-brand b{font-size:20px;letter-spacing:-.01em}
-.ld-h{font-size:30px;line-height:1.3;margin:18px 0 4px;font-weight:700;letter-spacing:-.02em}
-.ld-pts{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:14px}
-.ld-pts li{border-left:3px solid var(--accent);padding:2px 0 2px 12px}
-.ld-pts b{display:block;font-size:15px} .ld-pts span{color:var(--muted);font-size:13px}
-.ld-foot{margin-top:auto}
-.ld-right{display:flex;align-items:center;justify-content:center;padding:32px 48px;background:var(--soft);border-left:1px solid var(--line)}
-.ld-card{width:100%;max-width:360px;padding:24px}
-.ld-card h2{font-size:18px;margin:0 0 14px}
-.ld-f{display:block;margin-bottom:10px} .ld-f span{display:block;font-size:12px;color:var(--muted);margin-bottom:4px}
-.ld-f input{width:100%;box-sizing:border-box;height:44px;font-size:15px;padding:0 12px;border:1px solid var(--line2,var(--line));border-radius:6px;background:var(--panel);color:var(--ink);font-family:inherit}
-.btn.ld-go{width:100%;height:46px;font-size:15px;justify-content:center;margin-top:4px}
-.ld-or{display:flex;align-items:center;gap:8px;margin:12px 0 8px;color:var(--faint);font-size:12px}
+.ld-brand .logo{width:32px;height:32px;border-radius:8px;background:var(--accent);color:var(--accent-ink);display:grid;place-items:center;font-weight:800;font-size:17px}
+.ld-brand b{font-size:19px;letter-spacing:-.01em}
+.ld-badge{font-size:11.5px;font-weight:600;color:var(--accent);border:1px solid color-mix(in srgb,var(--accent) 35%,transparent);border-radius:999px;padding:2px 9px}
+.ld-main{display:flex;flex-direction:column;gap:10px;margin:auto 0}
+.ld-eyebrow{font-size:13px;font-weight:600;color:var(--accent);letter-spacing:.02em}
+.ld-h{font-size:34px;line-height:1.25;margin:0;font-weight:800;letter-spacing:-.025em;color:var(--ink)}
+.ld-sub{margin:2px 0 8px;color:var(--muted);font-size:15px;line-height:1.55;max-width:480px}
+.ld-mock{max-width:470px;border:1px solid var(--ink-line,var(--line));background:var(--panel);box-shadow:0 12px 32px rgba(31,102,242,.10),0 2px 6px rgba(26,34,51,.06);border-radius:6px;overflow:hidden}
+.ld-mock-hd{display:flex;align-items:center;justify-content:space-between;padding:9px 14px;background:var(--hd,var(--accent-soft));border-bottom:1px solid var(--ink-line,var(--line))}
+.ld-mock-t{font-weight:700;font-size:13px;color:#173a8a}
+.ld-mock-no{font-size:11px;font-weight:700;color:var(--accent);border:1px solid var(--accent);padding:0 6px;border-radius:3px}
+.ld-mock-id{display:flex;gap:16px;padding:8px 14px;font-size:12px;color:var(--muted);border-bottom:1px solid var(--line)}
+.ld-mock-id b{color:var(--ink)}
+.ld-mock-svg{display:block;padding:6px 10px 0;box-sizing:border-box}
+.ld-mock-svg text{font-size:11px;fill:var(--ink);font-weight:600} .ld-mock-svg text.d{fill:var(--faint);font-weight:500}
+.ld-mock-row{display:flex;align-items:center;gap:8px;padding:8px 14px;font-size:13px;border-top:1px solid var(--line)}
+.ld-mock-row .ar{color:var(--faint)} .ld-up{margin-left:auto;font-size:11.5px;font-weight:700;color:var(--good)}
+.ld-mock-why{padding:8px 14px 10px;font-size:12px;color:var(--muted);border-top:1px dashed var(--line);display:flex;gap:8px;align-items:center}
+.ld-mock-lb{font-size:11px;font-weight:700;color:var(--accent);background:var(--accent-soft);padding:1px 6px;border-radius:3px}
+.ld-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));border-top:1px solid var(--line);padding-top:16px;gap:12px}
+.ld-stats b{display:block;font-size:20px;font-weight:800;letter-spacing:-.02em;color:var(--ink)} .ld-stats span{font-size:12px;color:var(--muted)}
+.ld-right{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:32px 44px;border-left:1px solid var(--line);
+  background-color:var(--device);background-image:linear-gradient(var(--rule,var(--line)) 1px,transparent 1px),linear-gradient(90deg,var(--rule,var(--line)) 1px,transparent 1px);background-size:24px 24px}
+.ld-card{width:100%;max-width:340px;padding:28px 26px 22px;background:var(--panel);border:1px solid var(--line);border-radius:8px;box-shadow:0 10px 30px rgba(26,34,51,.08)}
+.ld-card h2{font-size:22px;margin:0;font-weight:800;letter-spacing:-.02em}
+.ld-cap{font-size:13px;color:var(--muted);margin:4px 0 18px}
+.ld-f{display:block;margin-bottom:12px} .ld-f span{display:block;font-size:12px;font-weight:600;color:var(--muted);margin-bottom:5px}
+.ld-f input{width:100%;box-sizing:border-box;height:46px;font-size:15px;padding:0 13px;border:1px solid var(--line2,var(--line));border-radius:6px;background:var(--panel);color:var(--ink);font-family:inherit;transition:border-color .15s,box-shadow .15s}
+.ld-f input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 18%,transparent)}
+.btn.ld-go{width:100%;height:48px;font-size:15px;font-weight:700;justify-content:center;margin-top:4px;border-radius:6px}
+.btn.ld-ghost{background:var(--panel);color:var(--ink);border:1px solid var(--line2,var(--line))}
+.ld-or{display:flex;align-items:center;gap:8px;margin:14px 0 10px;color:var(--faint);font-size:12px}
 .ld-or:before,.ld-or:after{content:"";flex:1;border-top:1px solid var(--line)}
-#device.port .landing{grid-template-columns:minmax(0,1fr);grid-template-rows:auto 1fr}
-#device.port .ld-left{padding:48px 40px 16px} #device.port .ld-right{border-left:0;border-top:1px solid var(--line)}
+.ld-note{font-size:11.5px;line-height:1.5;color:var(--faint);margin-top:14px}
+.ld-legal{font-size:11.5px;color:var(--faint);text-align:center}
+#device.port .landing{grid-template-columns:minmax(0,1fr);grid-template-rows:auto auto;overflow:auto}
+#device.port .ld-left{padding:32px 36px 20px;min-height:auto} #device.port .ld-right{border-left:0;border-top:1px solid var(--line);padding:28px 36px}
+#device.port .ld-mock{max-width:520px}
+#device.port .ld-stats{display:none}
 </style>
 <div id="shell">
   <div id="bar">
@@ -3088,27 +3110,53 @@ MOD.exList=o=>{const s=SES(o.sid);const cur=UI.cur[s.id];
   return `<h3>오늘 종목</h3><div class="list">${rows}</div><div class="row" style="justify-content:space-between;margin-top:12px">${btn('+ 종목 넣기','modal',{type:'addEx',sid:s.id},'small')}${btn('닫기','closeModal')}</div>`};
 
 /* ---------- 0. 처음 화면(랜딩·로그인) ---------- 2026-11-11 지도교수님 "웹사이트에 들어왔을 때 첫 페이지가 있어야", D82 */
-V.landing=()=>`<div class="landing">
+/* 랜딩 (D83, 2026-11-17 다시): 경쟁 앱(Trainerize·TrueCoach·Everfit) 첫 화면처럼 짧은 제목 + 제품 화면 미리보기 + 숫자 띠 + 한 칸짜리 로그인.
+   미리보기 숫자는 실제 수첩 기록(이00_3 핵스쿼트)에서 그때그때 읽고, 새로 만들지 않는다 */
+function landingPreview(){
+  const m=M('m3'); const ser=m?trendSeries(m,'hacksq'):[]; if(!ser.length) return '';
+  const pts=ser.slice(-6), W=440,H=120,pl=26,pr=26,pt=22,pb=18; const ws=pts.map(o=>o.t.w),lo=Math.min(...ws)*0.85,hi=Math.max(...ws)*1.08;
+  const X=i=>pl+(pts.length<2?0.5:i/(pts.length-1))*(W-pl-pr), Y=v=>pt+(1-(v-lo)/(hi-lo||1))*(H-pt-pb);
+  const path=pts.map((o,i)=>`${i?'L':'M'}${X(i).toFixed(1)},${Y(o.t.w).toFixed(1)}`).join(' ');
+  const dots=pts.map((o,i)=>`<circle cx="${X(i)}" cy="${Y(o.t.w)}" r="${i===pts.length-1?4.5:3}" fill="${i===pts.length-1?'var(--accent)':'var(--panel)'}" stroke="var(--accent)" stroke-width="2"/>${o.t.r?`<text x="${X(i)}" y="${Y(o.t.w)-8}" text-anchor="middle">${o.t.r}회</text>`:''}<text x="${X(i)}" y="${H-3}" text-anchor="middle" class="d">${md(o.s.date)}</text>`).join('');
+  const a=pts[pts.length-2],b=pts[pts.length-1];
+  return `<div class="ld-mock" aria-hidden="true">
+    <div class="ld-mock-hd"><span class="ld-mock-t">PT 회원 진료기록부</span><span class="ld-mock-no">PT-0001</span></div>
+    <div class="ld-mock-id"><span>회원 <b>${esc(m.code)}</b></span><span>분할 <b>하체</b></span><span>종목 <b>핵스쿼트</b></span></div>
+    <svg class="ld-mock-svg" viewBox="0 0 ${W} ${H}" width="100%" preserveAspectRatio="xMidYMid meet"><path d="${path}" fill="none" stroke="var(--accent)" stroke-width="2"/>${dots}</svg>
+    ${a?`<div class="ld-mock-row"><span>${md(a.s.date)} ${esc(ftop(a.t,'hacksq'))}</span><span class="ar">→</span><span><b>${md(b.s.date)} ${esc(ftop(b.t,'hacksq'))}</b></span><span class="ld-up">▲ 최고 기록</span></div>`:''}
+    <div class="ld-mock-why"><span class="ld-mock-lb">근거</span>지난 같은 분할 실제값 · 앞 종목 · 컨디션 '보통' 기준</div>
+  </div>`;
+}
+V.landing=()=>{const nS=S.sessions.filter(s=>s.status==='completed').length, nM=S.members.length;
+ return `<div class="landing">
   <div class="ld-left">
-    <div class="ld-brand"><div class="logo">P</div><b>PT 기록</b><span class="tag">트레이너용 · 시연판</span></div>
-    <h1 class="ld-h">지난 기록을 근거로<br>오늘의 세트·무게·횟수를 정해요</h1>
-    <ul class="ld-pts">
-      <li><b>기록이 다음 계획이 돼요</b><span>수첩에 적던 수업 기록이 쌓이면 다음 수업 숫자의 바탕이 돼요.</span></li>
-      <li><b>숫자마다 근거가 붙어요</b><span>지난번 실제값, 컨디션, 수업 중 바뀐 것을 색과 한 줄 설명으로 보여 줘요.</span></li>
-      <li><b>정하는 건 트레이너예요</b><span>앱은 숫자를 제안하고, 고치고 정하는 건 트레이너가 해요.</span></li>
-    </ul>
-    <div class="tiny muted ld-foot">아이패드 9세대 가로 화면 기준 · 회원 이름은 성+00 코드로 바꿨어요</div>
+    <div class="ld-brand"><div class="logo">P</div><b>PT 기록</b><span class="ld-badge">트레이너 전용</span></div>
+    <div class="ld-main">
+      <div class="ld-eyebrow">종이 수첩 대신 쓰는 진료기록부</div>
+      <h1 class="ld-h">지난 기록이<br>다음 수업의 근거가 돼요</h1>
+      <p class="ld-sub">세트·무게·횟수를 앱이 근거와 함께 먼저 채우고, 정하는 건 트레이너가 해요.</p>
+      ${landingPreview()}
+    </div>
+    <div class="ld-stats">
+      <div><b>${nS}회</b><span>옮겨 담은 수첩 수업</span></div>
+      <div><b>${nM}명</b><span>회원 기록 (성+00 코드)</span></div>
+      <div><b>숫자마다</b><span>근거 한 줄 · 계산 보기</span></div>
+    </div>
   </div>
-  <div class="ld-right"><div class="card ld-card">
-    <h2>로그인</h2>
-    <label class="ld-f"><span>아이디</span><input type="text" autocomplete="off" placeholder="트레이너 아이디" aria-label="아이디"></label>
-    <label class="ld-f"><span>비밀번호</span><input type="password" autocomplete="off" placeholder="비밀번호" aria-label="비밀번호"></label>
-    ${btn('로그인','enter',null,'primary ld-go')}
-    <div class="ld-or"><span>또는</span></div>
-    ${btn('로그인 없이 둘러보기','enter',{guest:1},'ld-go')}
-    <div class="tiny muted" style="margin-top:10px">시연판이라 아이디·비밀번호는 확인하지도, 저장하거나 보내지도 않아요. 어느 버튼을 눌러도 같은 트레이너 기록으로 들어가요. 계정은 실제 앱에서 붙여요.</div>
-  </div></div>
-</div>`;
+  <div class="ld-right">
+    <div class="ld-card">
+      <h2>로그인</h2>
+      <div class="ld-cap">트레이너 계정으로 들어가요</div>
+      <label class="ld-f"><span>아이디</span><input type="text" autocomplete="off" placeholder="트레이너 아이디" aria-label="아이디"></label>
+      <label class="ld-f"><span>비밀번호</span><input type="password" autocomplete="off" placeholder="비밀번호" aria-label="비밀번호"></label>
+      ${btn('로그인','enter',null,'primary ld-go')}
+      <div class="ld-or"><span>또는</span></div>
+      ${btn('로그인 없이 둘러보기','enter',{guest:1},'ld-go ld-ghost')}
+      <div class="ld-note">시연판이에요. 아이디·비밀번호는 확인하지도, 저장하거나 보내지도 않아요. 어느 버튼이든 같은 트레이너 기록으로 들어가요.</div>
+    </div>
+    <div class="ld-legal">아이패드 9세대 가로 화면 기준 · 회원 이름은 성+00 코드로 바꿨어요</div>
+  </div>
+</div>`};
 /* ---------- 변화 그래프와 근육 지도 (2026-11-04 이현아님 요청, D76) ---------- */
 /* 종목 → 근육 짝은 일반적인 운동 지식으로 정한 예시값이다. 수첩 기록이 아니다. 1 = 주로 쓰는 근육, 0.5 = 같이 쓰는 근육. 트레이너 확인 필요 */
 const MUSCLES={quads:'대퇴사두',hams:'햄스트링',glutes:'둔근',adductor:'내전근',calves:'종아리',chest:'가슴',lats:'광배',traps:'등 위·승모',lowback:'허리',frontdelt:'어깨 앞',sidedelt:'어깨 옆',reardelt:'어깨 뒤',biceps:'이두',triceps:'삼두',abs:'복근'};
