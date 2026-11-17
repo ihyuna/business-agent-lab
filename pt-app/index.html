@@ -512,10 +512,17 @@ tr.click:hover td{background:var(--accent-soft)}
 /* ===== 디자인 B '진료기록부' (2026-11-17, 지도교수님 11/11: 병원 종이 진료기록부·회진 차트 느낌으로 전문성) =====
    지금 디자인(A)은 그대로 두고 #device.chart 일 때만 덮어쓴다. 바탕은 종이색, 선은 잉크색, 모서리는 각지게,
    칸 머리는 양식 이름표처럼, 표는 모든 칸에 선, 강조는 남색 잉크, 경고는 빨간 도장색 */
-#device.chart{--device:#f3efe4; --panel:#fffdf7; --ink:#1f2633; --muted:#5a5f69; --faint:#8f8a7e;
-  --line:#d8d0bd; --line2:#a89f8a; --soft:#f6f1e4; --hd:#efe8d6; --phd:#efe8d6; --accent:#1d3d6b; --accent-soft:#e4ebf4; --accent-ink:#fffdf7;
-  --rule:#e3dccb; --ink-line:#3a3f48; --stamp:#b3261e;
+#device.chart{--device:#f3f6fb; --panel:#ffffff; --ink:#1a2233; --muted:#5b6678; --faint:#98a2b3;
+  --line:#e1e7f0; --line2:#c9d4e4; --soft:#f6f8fc; --hd:#edf3fe; --phd:#edf3fe; --accent:#1f66f2; --accent-soft:#eaf1ff; --accent-ink:#ffffff;
+  --rule:#e6ecf5; --ink-line:#9db0cf; --stamp:#e5484d;
   border-radius:4px;background:var(--device)}
+/* 2026-11-17 색 다시: 누런 종이색이 탁하다는 의견으로 흰 종이 + 맑은 파랑. 양식 선·칸 구성은 그대로 */
+#device.chart .f-tt,#device.chart .f-cap{color:#173a8a}
+#device.chart .f-title{border-bottom-color:var(--accent)}
+#device.chart .f-lb{color:#173a8a}
+#device.chart .f-paper{border-color:var(--ink-line);box-shadow:0 2px 10px rgba(31,102,242,.06)}
+#device.chart .f-no{border-color:var(--accent);color:var(--accent)}
+#device.chart .tabbar.sidenav,#device.chart .actbar,#device.chart .pbar{border-color:var(--ink-line)}
 #device.chart .scroll,#device.chart .planner,#device.chart .chartlay{background:var(--device)}
 /* 위쪽 메뉴 = 차트 머리 */
 #device.chart .tabbar.sidenav{background:var(--panel);border-bottom:3px double var(--ink-line)}
