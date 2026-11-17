@@ -363,7 +363,7 @@ function landingPreview(){
 V.landing=()=>{const nS=S.sessions.filter(s=>s.status==='completed').length, nM=S.members.length;
  return `<div class="landing">
   <div class="ld-left">
-    <div class="ld-brand"><div class="logo">P</div><b>PT 기록</b><span class="ld-badge">트레이너 전용</span></div>
+    <div class="ld-brand">${kbIcon(34)}<b>짐노트</b><span class="ld-badge">트레이너 전용</span></div>
     <div class="ld-main">
       <div class="ld-eyebrow">종이 수첩 대신 쓰는 회원 기록부</div>
       <h1 class="ld-h">지난 기록이<br>다음 수업의 근거가 돼요</h1>

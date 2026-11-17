@@ -1,4 +1,4 @@
-<title>PT 기록 앱 MVP</title>
+<title>짐노트 · PT 기록</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap">
@@ -463,7 +463,7 @@ input,select,textarea{border-radius:6px;border-color:#dfe2e7}
 .tabbar.sidenav{left:0;right:0;top:0;bottom:auto;width:auto;height:44px;flex-direction:row;align-items:stretch;border-right:0;border-bottom:1px solid var(--line2);padding:0 10px;gap:2px;background:var(--panel)}
 .sidenav .logo{margin:auto 14px auto 4px;width:auto;height:auto;border:0;border-radius:0;font-size:14px;font-weight:800;letter-spacing:-.02em;color:var(--ink);gap:6px}
 .sidenav .logo::before{content:'';width:9px;height:18px;border-radius:5px;background:linear-gradient(var(--accent),#7a5cff)}
-.sidenav .logo::after{content:'PT 기록';margin-left:0}
+.sidenav .logo::after{content:'짐노트';margin-left:0}
 .tabbar.sidenav button{flex-direction:row;gap:6px;padding:0 14px;border-radius:0;font-size:13px;color:var(--muted)}
 .tabbar.sidenav button svg{width:16px;height:16px}
 .tabbar.sidenav button:hover{background:var(--soft)}
@@ -560,7 +560,7 @@ tr.click:hover td{background:var(--accent-soft)}
 /* 위쪽 메뉴 = 차트 머리 */
 #device.chart .tabbar.sidenav{background:var(--panel);border-bottom:3px double var(--ink-line)}
 #device.chart .sidenav .logo::before{background:var(--accent);border-radius:0;width:6px}
-#device.chart .sidenav .logo::after{content:'PT 기록부';letter-spacing:.02em}
+#device.chart .sidenav .logo::after{content:'짐노트';letter-spacing:.02em}
 #device.chart .tabbar.sidenav button.on{color:var(--accent);box-shadow:inset 0 -3px 0 var(--accent)}
 #device.chart .top{background:var(--panel);border-bottom:1.5px solid var(--ink-line)}
 #device.chart .top h1{letter-spacing:.01em}
@@ -723,6 +723,9 @@ body.full #app .hl{outline:0!important;box-shadow:none!important;animation:none!
 .f-prog tr.f-wk td{background:var(--soft);font-size:11.5px;font-weight:700;color:var(--muted);padding:4px 6px}
 .f-prog tr.click{cursor:pointer} .f-prog tr.click:hover td{background:var(--accent-soft)}
 .f-prog td.c{text-align:center}
+.sidenav .logo::before,#device.chart .sidenav .logo::before{display:none!important}
+.sidenav .logo .kbicon{display:block;border-radius:6px}
+.ld-brand .kbicon{display:block}
 </style>
 <div id="shell">
   <div id="bar">
