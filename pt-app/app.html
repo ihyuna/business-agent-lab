@@ -358,11 +358,14 @@ input,select,textarea{border-radius:6px;border-color:#dfe2e7}
 .dev-tb td.bad{color:var(--bad);font-weight:600} .dev-tb td.good{color:var(--good);font-weight:600} .dev-tb .bad{color:var(--bad)}
 .chip.mini{font-size:11.5px;padding:2px 7px;margin:1px 2px;min-height:0}
 .f-row3.two{grid-template-columns:repeat(2,minmax(0,1fr))}
-.f-row3.two.wide1{grid-template-columns:minmax(0,1fr) 168px}
-.f-sec.mstrip{grid-template-columns:minmax(0,1fr);grid-template-rows:auto 1fr}
-.f-sec.mstrip .f-lb{border-right:0;border-bottom:1px solid var(--ink-line,#333);padding:7px 4px}
-.f-sec.mstrip .f-bd{display:flex;align-items:flex-end}
-#device.port .f-sec.mstrip svg{max-height:240px}
+.mh{display:grid;gap:5px;max-width:560px}
+.mh-r{display:grid;grid-template-columns:52px minmax(0,1fr) 40px;align-items:center;gap:8px;font-size:12px}
+.mh-m{color:var(--muted);text-align:right}
+.mh-t{height:12px;background:var(--line);border-radius:3px;overflow:hidden;display:block}
+.mh-t i{display:block;height:100%;background:color-mix(in srgb,var(--accent) 38%,transparent);border-radius:3px}
+.mh-t i.last{background:var(--accent)}
+.mh-r b{font-weight:700;font-size:12px}
+.f-sec.mhsec{margin-top:10px}
 .lp-chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px}
 .lp-chip{display:inline-flex;gap:6px;align-items:baseline;font-size:12px;padding:3px 9px;border:1px solid var(--line);border-radius:4px;background:var(--soft)}
 .lp-chip span{color:var(--muted)} .lp-chip.warn b{color:var(--bad)} .lp-chip.good b{color:var(--good)}
@@ -3379,6 +3382,15 @@ function lastPtBrief(m,s,u){
     ${s.memo?`<div class="small lp-note"><b>회원 말·메모</b> ${esc(s.memo)}</div>`:''}
     <div class="tiny faint" style="margin-top:4px">비교는 그 종목을 한 바로 전 수업의 최고 세트와 해요(%가 아니라 kg·회). 다음 PT = 마무리에서 정한 목표 → 잡혀 있는 다음 수업의 계획 → 둘 다 없으면 앱이 지금 채울 숫자(앱 제안, 저장 안 함) 순서예요.</div>`;
 }
+
+/* 월별 수업 횟수 가로 막대 (2026-11-17 이현아님 요청: 경과 기록 맨 아래) */
+function monthHBars(m){const done=completed(m.id);if(!done.length)return '<div class="empty">수업 기록이 없어요.</div>';
+  const by={};for(const s of done){const k=s.date.slice(0,7);by[k]=(by[k]||0)+1}
+  const a=done[0].date.slice(0,7),b=done[done.length-1].date.slice(0,7);const ks=[];let [y,mo]=a.split('-').map(Number);
+  while(true){const k=`${y}-${String(mo).padStart(2,'0')}`;ks.push(k);if(k===b||ks.length>24)break;mo++;if(mo>12){mo=1;y++}}
+  const max=Math.max(...ks.map(k=>by[k]||0))||1;const yrs=new Set(ks.map(k=>k.slice(0,4))).size>1;
+  return `<div class="mh">${ks.map((k,i)=>{const v=by[k]||0;const last=i===ks.length-1;
+    return `<div class="mh-r" title="${k.slice(0,4)}년 ${Number(k.slice(5))}월 · 수업 ${v}회"><span class="mh-m">${yrs?k.slice(2,4)+'.':''}${Number(k.slice(5))}월</span><span class="mh-t"><i class="${last?'last':''}" style="width:${v/max*100}%"></i></span><b class="num">${v}회</b></div>`}).join('')}</div>`}
 /* ---------- 디자인 B '진료기록부' 화면 구성 (2026-11-17, D85) ----------
    이현아님: "색깔만 바뀐다고 진료기록부 같아 보이는 건 아니다. 화면 구성이 진료기록부 같아야지."
    회원 화면 = 회원 진료기록부(인적 사항 칸 · 특이사항 · 인체도 · 경과기록 표),
@@ -3418,14 +3430,12 @@ function memberDoc(o){
     <div class="f-cap">Ⅲ. 신체 · 기록 소견</div>
     ${fsec('지난 PT<br><small>한눈에</small>',last?`<div class="small muted" style="margin-bottom:6px">${mdw(last.date)} · ${esc(splitName(last))} ${btn('수업 상세','go',{to:'detail',sid:last.id},'ghost small')}</div>${lastPtBrief(m,last,u)}`:'<div class="empty">없어요.</div>','lpsec')}
     ${fsec('무게 변화<br><small>추이 · 반복 구간별</small>',roleTrend(m,860,250),'rtsec')}
-    <div class="f-row3 body3 two wide1">
-      ${fsec('인체도',`<div class="row" style="margin-bottom:4px">${chips([['last','지난 PT'],['d30','최근 30일']],rg,'musRange',{mid:m.id})}</div>${muscleBlock(ss,340,rg==='last'?'지난 PT':'최근 30일')}`)}
-      ${fsec('월별 수업 횟수',monthBars(m,150,330),'mstrip')}
-    </div>
+    ${fsec('인체도',`<div class="row" style="margin-bottom:4px">${chips([['last','지난 PT'],['d30','최근 30일']],rg,'musRange',{mid:m.id})}</div>${muscleBlock(ss,380,rg==='last'?'지난 PT':'최근 30일')}`)}
     ${fsec('기댓값<br><small>소견</small>',devHistory(m,6))}
     <div class="f-cap">Ⅳ. 다음 PT 계획 (처방)</div>${fsec('다음 PT',next)}
     <div class="f-cap">Ⅴ. 경과 기록 <span class="muted" style="font-weight:500">최근 ${Math.min(all.length,14)}회 · 줄을 누르면 펼쳐져요</span><span class="sp"></span>${btn('전체 수업 기록','go',{to:'history',mid:m.id},'small ghost')}</div>
     <table class="f-prog"><tr><th style="width:92px">일자</th><th style="width:76px">분할</th><th>실시 내용 (종목 · 최고 세트)</th><th style="width:200px">소견 · 메모</th><th style="width:40px">확인</th></tr>${prog}</table>
+    ${fsec('월별<br><small>수업 횟수</small>',monthHBars(m),'mhsec')}
     <div class="f-cap">Ⅵ. 생활 · 식단 · 개인 운동 메모</div>
     ${fsec('메모',`${notes.map(n=>`<div class="li small">${pill(NOTE_KINDS[n.kind],'gray')}<div style="flex:1">${esc(n.text)}</div>${btn('지우기','delNote',{mid:m.id,id:n.id},'small ghost')}</div>`).join('')||'<div class="empty">없어요.</div>'}<div class="row" style="margin-top:6px;flex-wrap:nowrap">${dSel('nKind-'+m.id,['general','lifestyle','diet','self_train','personality'].map(k=>[k,NOTE_KINDS[k]]),'general',{w:84})}${dIn('nText-'+m.id,'메모',{grow:1})}${btn('넣기','addNote',{mid:m.id},'small')}</div>`)}
     ${signLine('위 기록은 트레이너 수첩과 수업 기록을 옮긴 것이에요.',todayIso())}
