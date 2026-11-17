@@ -7,7 +7,7 @@ function render(o={}){
   if(!o.noSave) saveScroll();
   const ae=document.activeElement; const fk=ae&&app.contains(ae)?ae.dataset.k:null; let sel=null; try{if(fk&&ae.selectionStart!=null)sel=[ae.selectionStart,ae.selectionEnd]}catch(e){}
   const r=UI.route; let html;
-  try{html=(V[r.name]||V.today)(r)}catch(err){console.error(err);html=topBar('화면을 그리지 못했어요',esc(err.message),'',{noBack:true})+`<div class="scroll">${btn('처음 화면으로','home',null,'primary')}</div>`}
+  try{html=(V[r.name]||V.today)(r);if(UI.look==='chart'&&DOC_TITLES[r.name])html=docify(html,r)}catch(err){console.error(err);html=topBar('화면을 그리지 못했어요',esc(err.message),'',{noBack:true})+`<div class="scroll">${btn('처음 화면으로','home',null,'primary')}</div>`}
   if(UI.modal&&MOD[UI.modal.type]){let mh;try{mh=MOD[UI.modal.type](UI.modal)}catch(err){console.error(err);mh=`<h3>창을 열지 못했어요</h3>${btn('닫기','closeModal')}`}html+=`<div class="overlay" data-act="overlay"><div class="modal" role="dialog" aria-modal="true">${mh}</div></div>`}
   if(UI.ask) html+=askHTML();
   if(UI.toast) html+=`<div class="toast" role="status">${esc(UI.toast)}</div>`;
