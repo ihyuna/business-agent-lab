@@ -2610,7 +2610,7 @@ V.member=r=>{
   const m=M(r.mid); const u=upcoming(m.id); const done=completed(m.id); const t=todayIso(); const last=done[done.length-1];
   const d30=done.filter(s=>daysBetween(s.date,t)>=0&&daysBetween(s.date,t)<30).length;
   const cn=openCautions(m).length;
-  const pbar=`<div class="pbar"><span class="chartno">No. PT-${String(S.members.indexOf(m)+1).padStart(4,'0')}</span><span class="nm">${esc(m.code)}</span>${pill('회원','blue')}${cn?pill('주의 '+cn,'red'):''}${m.goals.filter(g=>!g.end).length?pill('목표 있음','green'):''}
+  const pbar=`<div class="pbar"><span class="chartno">차트 No. PT-${String(S.members.indexOf(m)+1).padStart(4,'0')}</span><span class="nm">${esc(m.code)}</span>${pill('회원','blue')}${cn?pill('주의 '+cn,'red'):''}${m.goals.filter(g=>!g.end).length?pill('목표 있음','green'):''}
     <div class="vit"><span>누적 <b>${done.length}</b>회</span><span>최근 30일 <b>${d30}</b>회</span>${(()=>{const c=msessions(m.id).filter(x=>x.status==='cancelled'&&x.date<=t).length,n=msessions(m.id).filter(x=>x.status==='no_show'&&x.date<=t).length;return `<span>취소 <b style="color:${c?'var(--bad)':'inherit'}">${c}</b> · 안 옴 <b style="color:${n?'var(--warn)':'inherit'}">${n}</b></span>`})()}<span>첫 기록 <b>${done[0]?md(done[0].date):'—'}</b></span><span>마지막 <b>${last?md(last.date):'—'}</b>${last?` (${daysBetween(last.date,t)}일 전)`:''}</span><span>다음 PT <b>${u?mdw(u.date):'없음'}</b>${u?' '+esc(splitName(u)):''}</span></div></div>`;
   const all=msessions(m.id).filter(s=>!(s.example&&s.date>t)).slice().sort((a,b)=>byDate(b,a));
   const open=UI.cur['hx-'+m.id]===undefined?(done[done.length-1]||{}).id:UI.cur['hx-'+m.id];
@@ -3396,7 +3396,7 @@ function monthHBars(m){const done=completed(m.id);if(!done.length)return '<div c
    회원에게 보여 주기 = PT 결과 안내서(결과표 · 인체도 · 발행 칸).
    숫자는 모두 같은 기록에서 가져오고, 버튼(data-act)은 디자인 A와 같은 것을 쓴다. */
 const chartNo=m=>'PT-'+String(S.members.indexOf(m)+1).padStart(4,'0');
-function docHead(title,m,right){return `<div class="f-title"><span class="f-tt">${title}</span><span class="sp"></span>${right||''}<span class="f-no">No. ${chartNo(m)}</span></div>`}
+function docHead(title,m,right){return `<div class="f-title"><span class="f-tt">${title}</span><span class="sp"></span>${right||''}<span class="f-no">차트 No. ${chartNo(m)}</span></div>`}
 function idTable(cells,cols){/* cells: [라벨, 값, 칸 수?] */let h='',n=0,row='';
   for(const c of cells){const span=c[2]||1;row+=`<th>${c[0]}</th><td${span>1?` colspan="${span*2-1}"`:''}>${c[1]}</td>`;n+=span;if(n>=cols){h+=`<tr>${row}</tr>`;row='';n=0}}
   if(row)h+=`<tr>${row}</tr>`;return `<table class="f-id">${h}</table>`}
@@ -3431,7 +3431,7 @@ function memberDoc(o){
     ${fsec('인체도',`<div class="row" style="margin-bottom:4px">${chips([['last','지난 PT'],['d30','최근 30일']],rg,'musRange',{mid:m.id})}</div>${muscleBlock(ss,380,rg==='last'?'지난 PT':'최근 30일')}`)}
     ${fsec('기댓값<br><small>소견</small>',devHistory(m,6))}
     <div class="f-cap">Ⅳ. 다음 PT 계획</div>${fsec('다음 PT',next)}
-    <div class="f-cap">Ⅴ. 수업 기록 <span class="muted" style="font-weight:500">최근 ${Math.min(all.length,14)}회 · 줄을 누르면 펼쳐져요</span><span class="sp"></span>${btn('전체 수업 기록','go',{to:'history',mid:m.id},'small ghost')}</div>
+    <div class="f-cap">Ⅴ. 경과 기록 <span class="muted" style="font-weight:500">최근 ${Math.min(all.length,14)}회 · 줄을 누르면 펼쳐져요</span><span class="sp"></span>${btn('전체 수업 기록','go',{to:'history',mid:m.id},'small ghost')}</div>
     <table class="f-prog"><tr><th style="width:92px">일자</th><th style="width:76px">분할</th><th>실시 내용 (종목 · 최고 세트)</th><th style="width:200px">소견 · 메모</th><th style="width:40px">확인</th></tr>${prog}</table>
     ${fsec('월별<br><small>수업 횟수</small>',monthHBars(m),'mhsec')}
     <div class="f-cap">Ⅵ. 생활 · 식단 · 개인 운동 메모</div>
@@ -3451,7 +3451,7 @@ function summaryDoc(o){
     return `<tr class="click" data-act="backToEx" data-sid="${s.id}" data-uid="${x.uid}"><td><b>${esc(EX(x.exId).name)}</b></td><td class="small">${x.role}</td><td class="small">${esc(fsets(x.sets.filter(st=>st.done),x.exId,'a'))}</td><td class="small">${ls?`${md(ls.p.date)} · ${esc(fsets(ls.y.sets,x.exId,'a'))}`:'<span class="faint">처음</span>'}</td><td class="c small">${arrow(cmpTop(a,b))}</td></tr>`}).join('')||'<tr><td colspan="5" class="empty">기록한 세트가 없어요.</td></tr>';
   const li=a=>a.map(t=>`<div class="small">· ${esc(t)}</div>`).join('');
   return `<div class="scroll chartdoc" data-sk="main"><div class="f-paper">
-    ${docHead('PT 수업 정리',m,'<span class="muted small">줄을 누르면 고칠 수 있어요</span>')}
+    ${docHead('PT 경과기록지',m,'<span class="muted small">줄을 누르면 고칠 수 있어요</span>')}
     ${id}
     <div class="f-soap">
       ${fsec('수업 전<br><small>컨디션</small>',`<div class="f-sub">수업 전 컨디션 · 회원 말</div>${condT}`)}
@@ -3510,7 +3510,7 @@ function membersDoc(){
       <td class="nowrap">${l?`${md(l.date)} <span class="muted small">(${daysBetween(l.date,t)}일 전)</span>`:'<span class="faint">없음</span>'}</td><td class="num c">${completed(m.id).length}회</td>
       <td class="c">${oc?`<b class="bad">${oc}</b>`:'<span class="faint">0</span>'}</td></tr>`}).join('');
   return `<div class="f-cap">Ⅰ. 회원 ${S.members.length}명 <span class="muted" style="font-weight:500">줄을 누르면 회원 기록부가 열려요</span></div>
-    <table class="f-prog"><tr><th style="width:84px">No.</th><th style="width:76px">회원</th><th>목표</th><th style="width:130px">다음 PT</th><th style="width:130px">지난 수업</th><th style="width:56px">누적</th><th style="width:44px">주의</th></tr>${rows}</table>
+    <table class="f-prog"><tr><th style="width:84px">차트 No.</th><th style="width:76px">회원</th><th>목표</th><th style="width:130px">다음 PT</th><th style="width:130px">지난 수업</th><th style="width:56px">누적</th><th style="width:44px">주의</th></tr>${rows}</table>
     <div class="f-cap">Ⅱ. 이 프로토타입</div>
     ${fsec('알림',`<ul class="small" style="margin:0 0 8px;padding-left:18px">
         <li>회원 기록은 트레이너 수첩의 실제 숫자이고, 이름은 성+00 코드로 바꿨어요(D61).</li>

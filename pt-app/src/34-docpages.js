@@ -26,7 +26,7 @@ function membersDoc(){
       <td class="nowrap">${l?`${md(l.date)} <span class="muted small">(${daysBetween(l.date,t)}일 전)</span>`:'<span class="faint">없음</span>'}</td><td class="num c">${completed(m.id).length}회</td>
       <td class="c">${oc?`<b class="bad">${oc}</b>`:'<span class="faint">0</span>'}</td></tr>`}).join('');
   return `<div class="f-cap">Ⅰ. 회원 ${S.members.length}명 <span class="muted" style="font-weight:500">줄을 누르면 회원 기록부가 열려요</span></div>
-    <table class="f-prog"><tr><th style="width:84px">No.</th><th style="width:76px">회원</th><th>목표</th><th style="width:130px">다음 PT</th><th style="width:130px">지난 수업</th><th style="width:56px">누적</th><th style="width:44px">주의</th></tr>${rows}</table>
+    <table class="f-prog"><tr><th style="width:84px">차트 No.</th><th style="width:76px">회원</th><th>목표</th><th style="width:130px">다음 PT</th><th style="width:130px">지난 수업</th><th style="width:56px">누적</th><th style="width:44px">주의</th></tr>${rows}</table>
     <div class="f-cap">Ⅱ. 이 프로토타입</div>
     ${fsec('알림',`<ul class="small" style="margin:0 0 8px;padding-left:18px">
         <li>회원 기록은 트레이너 수첩의 실제 숫자이고, 이름은 성+00 코드로 바꿨어요(D61).</li>

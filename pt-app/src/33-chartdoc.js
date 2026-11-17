@@ -5,7 +5,7 @@
    회원에게 보여 주기 = PT 결과 안내서(결과표 · 인체도 · 발행 칸).
    숫자는 모두 같은 기록에서 가져오고, 버튼(data-act)은 디자인 A와 같은 것을 쓴다. */
 const chartNo=m=>'PT-'+String(S.members.indexOf(m)+1).padStart(4,'0');
-function docHead(title,m,right){return `<div class="f-title"><span class="f-tt">${title}</span><span class="sp"></span>${right||''}<span class="f-no">No. ${chartNo(m)}</span></div>`}
+function docHead(title,m,right){return `<div class="f-title"><span class="f-tt">${title}</span><span class="sp"></span>${right||''}<span class="f-no">차트 No. ${chartNo(m)}</span></div>`}
 function idTable(cells,cols){/* cells: [라벨, 값, 칸 수?] */let h='',n=0,row='';
   for(const c of cells){const span=c[2]||1;row+=`<th>${c[0]}</th><td${span>1?` colspan="${span*2-1}"`:''}>${c[1]}</td>`;n+=span;if(n>=cols){h+=`<tr>${row}</tr>`;row='';n=0}}
   if(row)h+=`<tr>${row}</tr>`;return `<table class="f-id">${h}</table>`}
@@ -40,7 +40,7 @@ function memberDoc(o){
     ${fsec('인체도',`<div class="row" style="margin-bottom:4px">${chips([['last','지난 PT'],['d30','최근 30일']],rg,'musRange',{mid:m.id})}</div>${muscleBlock(ss,380,rg==='last'?'지난 PT':'최근 30일')}`)}
     ${fsec('기댓값<br><small>소견</small>',devHistory(m,6))}
     <div class="f-cap">Ⅳ. 다음 PT 계획</div>${fsec('다음 PT',next)}
-    <div class="f-cap">Ⅴ. 수업 기록 <span class="muted" style="font-weight:500">최근 ${Math.min(all.length,14)}회 · 줄을 누르면 펼쳐져요</span><span class="sp"></span>${btn('전체 수업 기록','go',{to:'history',mid:m.id},'small ghost')}</div>
+    <div class="f-cap">Ⅴ. 경과 기록 <span class="muted" style="font-weight:500">최근 ${Math.min(all.length,14)}회 · 줄을 누르면 펼쳐져요</span><span class="sp"></span>${btn('전체 수업 기록','go',{to:'history',mid:m.id},'small ghost')}</div>
     <table class="f-prog"><tr><th style="width:92px">일자</th><th style="width:76px">분할</th><th>실시 내용 (종목 · 최고 세트)</th><th style="width:200px">소견 · 메모</th><th style="width:40px">확인</th></tr>${prog}</table>
     ${fsec('월별<br><small>수업 횟수</small>',monthHBars(m),'mhsec')}
     <div class="f-cap">Ⅵ. 생활 · 식단 · 개인 운동 메모</div>
@@ -60,7 +60,7 @@ function summaryDoc(o){
     return `<tr class="click" data-act="backToEx" data-sid="${s.id}" data-uid="${x.uid}"><td><b>${esc(EX(x.exId).name)}</b></td><td class="small">${x.role}</td><td class="small">${esc(fsets(x.sets.filter(st=>st.done),x.exId,'a'))}</td><td class="small">${ls?`${md(ls.p.date)} · ${esc(fsets(ls.y.sets,x.exId,'a'))}`:'<span class="faint">처음</span>'}</td><td class="c small">${arrow(cmpTop(a,b))}</td></tr>`}).join('')||'<tr><td colspan="5" class="empty">기록한 세트가 없어요.</td></tr>';
   const li=a=>a.map(t=>`<div class="small">· ${esc(t)}</div>`).join('');
   return `<div class="scroll chartdoc" data-sk="main"><div class="f-paper">
-    ${docHead('PT 수업 정리',m,'<span class="muted small">줄을 누르면 고칠 수 있어요</span>')}
+    ${docHead('PT 경과기록지',m,'<span class="muted small">줄을 누르면 고칠 수 있어요</span>')}
     ${id}
     <div class="f-soap">
       ${fsec('수업 전<br><small>컨디션</small>',`<div class="f-sub">수업 전 컨디션 · 회원 말</div>${condT}`)}
