@@ -14,6 +14,8 @@ function render(o={}){
   app.innerHTML=html; UI.rk=routeKey();
   app.querySelectorAll('[data-sk]').forEach(el=>{const v=UI.scrolls[UI.rk+'|'+el.dataset.sk];if(v!=null)el.scrollTop=v});
   if(fk){const el=app.querySelector(`[data-k="${CSS.escape(fk)}"]`);if(el){el.focus({preventScroll:true});if(sel)try{el.setSelectionRange(sel[0],sel[1])}catch(e){}}}
+  document.getElementById('device').classList.toggle('chart',UI.look==='chart');
+  document.getElementById('b-look').textContent=UI.look==='chart'?'디자인: 진료기록부':'디자인: 지금(EMR)';
   document.getElementById('b-orient').textContent=UI.orient==='land'?'세로로 보기':'가로로 보기';
   document.getElementById('b-fit').textContent=UI.fit?'실제 크기':'창에 맞추기';
   if(typeof guideAfter==='function') guideAfter();
@@ -112,7 +114,7 @@ const ACT={
   setKindPick:d=>{const {x,st,s}=gx(d);st.kind=d.v;if(s.status==='planned')x.edited=true;UI.modal=null;save();render()},
   delSet:d=>{const {s,x}=gx(d);x.sets.splice(+d.i,1);if(s.status==='planned')x.edited=true;updateExStatus(x);UI.modal=null;UI.edit=null;save();render()},
   addSet:d=>{const {s,x}=gx(d);newSet(s,x);if(isLive(s))UI.cur[s.id]=x.uid;save();render()},
-  moveEx:d=>{const {s,x}=gx(d);UI.modal=null;const i=s.exercises.indexOf(x);let j=i+(+d.dir);while(j>=0&&j<s.exercises.length&&['removed','swapped'].includes(s.exercises[j].status))j+=(+d.dir);if(j<0||j>=s.exercises.length)return render();s.exercises.splice(i,1);s.exercises.splice(j,0,x);save();render()},
+  moveEx:d=>{const {s,x}=gx(d);UI.modal=null;const i=s.exercises.indexOf(x);let j=i+(+d.dir);while(j>=0&&j<s.exercises.length&&['removed','swapped'].includes(s.exercises[j].status))j+=(+d.dir);if(j<0||j>=s.exercises.length)return render();s.exercises.splice(i,1);s.exercises.splice(j,0,x);refillOrder(s);save();render()},
   restoreEx:d=>{const {s,x}=gx(d);x.status='planned';x.reason='';updateExStatus(x);save();render()},
   doRemove:d=>{const {s,x}=gx(UI.modal);removeExercise(s,x,d.v);if(UI.cur[s.id]===x.uid)delete UI.cur[s.id];UI.modal=null;save();toast(`${EX(x.exId).name} 뺐어요 (${d.v})`)},
   pickSwap:d=>{UI.modal.to=d.v;render()},
@@ -129,7 +131,7 @@ const ACT={
   pickShow:d=>{UI.cur['show-'+d.sid]=d.v;render()},
   raiseNext:d=>{const s=SES(d.sid);const x=s.exercises.find(e=>e.exId===d.ex&&e.status==='done');const top=x&&topDone(x);if(!top)return;const inc=+EX(d.ex).inc||2.5;ensureNext(s).targets[d.ex]={w:Math.round((top.w+inc)*100)/100,r:top.r,text:'',raised:true};save();render()},
   keepNext:d=>{delete ensureNext(SES(d.sid)).targets[d.ex];save();render()},
-  doAddEx:()=>{const o=UI.modal;const s=SES(o.sid);const m=M(s.memberId);if(!o.to)return;const y=planExercise(m,{exId:o.to,role:fv('addRole')||'보조',structure:'스트레이트'},s.date,s.templateId,s.exercises.map(e=>({role:e.role})));
+  doAddEx:()=>{const o=UI.modal;const s=SES(o.sid);const m=M(s.memberId);if(!o.to)return;const y=planExercise(m,{exId:o.to,role:fv('addRole')||'보조',structure:'스트레이트'},s.date,s.templateId,prevCtx(s.exercises));
     y.origin='added';s.exercises.push(y);UI.cur[s.id]=y.uid;clearDraft('addRole');UI.modal=null;save();render()},
   // 수업 시작
   cond:d=>{const s=SES(d.sid);s.cond[d.item]=d.v;applyCondition(s);save();render()},
@@ -156,6 +158,10 @@ const ACT={
   npOn:d=>{ensureNext(SES(d.sid)).np.on=d.v==='1';save();render()},
   finish:d=>{const s=SES(d.sid);const made=finishSession(s);UI.timer=null;UI.edit=null;save();home('today');toast(made?`수업을 저장했어요. ${mdw(made.date)} ${splitName(made)} 수업 준비를 미리 채웠어요.`:'수업을 저장했어요.')},
   // 추이, 기록, 찾기
+  pickRt:d=>{UI.cur['rt-'+d.mid]=d.v;render()},
+  devCause:d=>{const s=SES(d.sid);s.devCause=s.devCause||{};s.devCause[d.k]=s.devCause[d.k]===d.v?null:d.v;save();render()},
+  pickRtRole:d=>{UI.cur['rtr-'+d.mid]=d.v;render()},
+  pickRtPer:d=>{UI.cur['rtp-'+d.mid]=d.v;render()},
   pickTrend:d=>{UI.cur['trend-'+d.mid]=d.v;UI.cur['trendPt-'+d.mid]=null;render()},
   trendPt:d=>{const k='trendPt-'+UI.route.mid;UI.cur[k]=UI.cur[k]===+d.i?null:+d.i;render()},
   pickHist:d=>{UI.cur['hist-'+d.mid]=d.v;render()},
@@ -200,7 +206,7 @@ function fit(){
   const sc=UI.fit?Math.min(st.clientWidth/W,st.clientHeight/H):1;
   fr.style.transform=`scale(${sc})`; fr.style.left=Math.max(0,(st.clientWidth-W*sc)/2)+'px'; fr.style.width=W+'px'; fr.style.height=H+'px';
 }
-function saveView(){try{localStorage.setItem(KEY+'-view',JSON.stringify({orient:UI.orient,fit:UI.fit,guide:{open:G.open,scene:G.scene,step:G.step}}))}catch(e){}}
+function saveView(){try{localStorage.setItem(KEY+'-view',JSON.stringify({look:UI.look,orient:UI.orient,fit:UI.fit,guide:{open:G.open,scene:G.scene,step:G.step}}))}catch(e){}}
 /* 입력 칸이 바뀐 직후 버튼을 누르면 그 버튼이 다시 그려지며 사라지지 않게, 그리기를 잠깐 미룬다 */
 let soonT=null;
 function renderSoon(){clearTimeout(soonT);soonT=setTimeout(()=>{soonT=null;render()},300)}
@@ -211,11 +217,12 @@ function flushRender(){if(soonT){cancelSoon();render()}}
 const ENTER_KEY=KEY+'-entered';
 function enterApp(){try{sessionStorage.setItem(ENTER_KEY,'1')}catch(e){}UI.stack=[];UI.route={name:'today'};UI.modal=null;UI.edit=null}
 ACT.enter=()=>{enterApp();document.querySelectorAll('#app .ld-f input').forEach(i=>i.value='');render({noSave:true})};
+ACT.setLook=d=>{UI.look=d.v;saveView();render()};
 ACT.logout=()=>{try{sessionStorage.removeItem(ENTER_KEY)}catch(e){}UI.stack=[];UI.route={name:'landing'};UI.modal=null;UI.edit=null;render({noSave:true})};
 
 /* ---------- 시작 ---------- */
 (function boot(){
-  try{const v=JSON.parse(localStorage.getItem(KEY+'-view')||'null');if(v){UI.orient=v.orient==='port'?'port':'land';UI.fit=v.fit!==false;if(v.guide){G.open=v.guide.open!==false;G.scene=Math.min(+v.guide.scene||0,SCENES.length-1);G.step=+v.guide.step||0}}}catch(e){}
+  try{const v=JSON.parse(localStorage.getItem(KEY+'-view')||'null');if(v){UI.look=v.look==='emr'?'emr':'chart';UI.orient=v.orient==='port'?'port':'land';UI.fit=v.fit!==false;if(v.guide){G.open=v.guide.open!==false;G.scene=Math.min(+v.guide.scene||0,SCENES.length-1);G.step=+v.guide.step||0}}}catch(e){}
   S=load(); ensurePackages(); save();
   let entered=false;try{entered=sessionStorage.getItem(ENTER_KEY)==='1'}catch(e){}
   if(!entered) UI.route={name:'landing'};
@@ -232,6 +239,7 @@ ACT.logout=()=>{try{sessionStorage.removeItem(ENTER_KEY)}catch(e){}UI.stack=[];U
   document.getElementById('b-guide').addEventListener('click',()=>{G.open=!G.open;saveView();fit();render()});
   document.getElementById('guide').addEventListener('click',guideClick);
   const setFull=on=>{document.body.classList.toggle('full',on);try{history.replaceState(null,'',on?'#full':location.pathname+location.search)}catch(e){}fit();render()};
+  document.getElementById('b-look').addEventListener('click',()=>{UI.look=UI.look==='chart'?'emr':'chart';saveView();render()});
   document.getElementById('b-full').addEventListener('click',()=>setFull(true));
   document.getElementById('b-unfull').addEventListener('click',()=>setFull(false));
   if(/full/.test(location.hash)) document.body.classList.add('full');

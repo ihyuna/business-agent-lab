@@ -140,12 +140,15 @@ V.summary=r=>{
        ${np.on?`<div class="row">${bIn('np',np.date,{sid:s.id,f:'date'},{type:'date',w:160})}${bIn('np',np.time,{sid:s.id,f:'time'},{type:'time',w:120})}${bSel('np',m.templates.map(t=>[t.id,t.name]),np.tid,{sid:s.id,f:'tid'},{w:120})}</div><div class="tiny muted" style="margin-top:4px">분할은 순서대로 다음 것을 골라 뒀어요. 끝내면 그 분할의 숫자를 미리 채워요.</div>`:''}</div>
      ${checkCard(m,3)}</div></div></div>`+
    actBar(btn('‹ 마무리로','go',{to:'summary',sid:s.id}),'<span class="tiny muted" style="margin-right:8px">아무것도 안 눌러도 수업 기록은 저장돼요.</span>'+btn('끝내기','finish',{sid:s.id},'primary'));
+  if(UI.look==='chart') return topBar(esc(m.code)+' 마무리',`${mdw(s.date)} · ${esc(splitName(s))} · 회원이 간 뒤 1분 · 오늘 기록 확인`,'',{noBack:true})+summaryDoc({s,m,done,ch,longs,prs,cands,candRows,tplQ})+
+   actBar(btn('‹ 수업으로','go',{to:'live',sid:s.id}),'<span class="tiny muted" style="margin-right:8px">회원이 아직 있으면 결과를 보여 주고, 간 뒤에 다음 PT를 정해요.</span>'+btn('회원에게 보여 주기','go',{to:'show',sid:s.id})+btn('다음 PT 계획 ›','go',{to:'nextplan',sid:s.id},'primary'));
   return topBar(esc(m.code)+' 마무리',`${mdw(s.date)} · ${esc(splitName(s))} · 회원이 간 뒤 1분 · 오늘 기록 확인`,'',{noBack:true})+
    `<div class="scroll" data-sk="main"><div class="grid2"><div class="col">
      <div class="card"><h2><span class="n">1</span>오늘 결과 <span class="tiny muted">줄을 누르면 고칠 수 있어요</span></h2><table><tr><th>종목</th><th>오늘</th><th>지난 같은 분할</th></tr>${res||'<tr><td colspan="3" class="empty">기록한 세트가 없어요.</td></tr>'}</table></div>
      ${tplQ}</div>
     <div class="col">
      ${foldCard('sum2-'+s.id,'<span class="n">2</span>계획과 달라진 곳',ch.length+longs.length,ch.map(c=>`<div class="small">· ${esc(c)}</div>`).join('')+longs.map(c=>`<div class="small" style="color:var(--warn)">· ${esc(c)}</div>`).join('')||'<div class="empty">계획대로 했어요.</div>')}
+     <div class="card"><h2>기댓값과 비교 <span class="tiny muted">이 회원 추정 1RM 기준</span></h2>${devBlock(m,s)}</div>
      ${foldCard('sum3-'+s.id,'<span class="n">3</span>넘은 개인 기록',prs.length,prs.map(p=>`<div class="small">· ${esc(p)}</div>`).join('')||'<div class="empty">없어요.</div>')}
      ${cands.length?foldCard('sum7-'+s.id,'<span class="n">4</span>주의사항으로 올릴 것 <span class="tiny muted">올릴지는 트레이너가 정해요</span>',cands.length,`<div class="list">${candRows}</div>`):''}
     </div></div></div>`+
@@ -166,6 +169,8 @@ V.show=r=>{
     const pts=ser.slice(-9).map(o=>({date:o.s.date,v:o.t.w,label:`${md(o.s.date)} ${ftop(o.t,ex)}`})); if(t&&isNum(t.w)) pts.push({date:s.date,v:t.w,label:`오늘 ${ftop(t,ex)}`});
     const W=UI.orient==='land'?560:700; chart=pts.length&&pts.every(p=>isNum(p.v))?chartSVG(pts,W,220,p=>fw(p.v,ex),pts.length-1,{fewX:1}).replace(/data-act="trendPt"/g,'').replace(`<svg class="chart" width="${W}" height="220"`,`<svg class="chart" width="100%" viewBox="0 0 ${W} 220"`):'<div class="empty">무게 기록이 없는 종목이에요.</div>'}
   const pick=done.filter(x=>{const t=topDone(x);return t&&isNum(t.w)}).map(x=>`<button class="chip${x.exId===ex?' on':''}" data-act="pickShow" data-sid="${s.id}" data-v="${x.exId}">${esc(EX(x.exId).name)}</button>`).join(' ');
+  if(UI.look==='chart') return topBar(`${esc(m.code)} 회원님 결과 안내`,`${mdw(s.date)} · ${esc(splitName(s))}`,'',{noBack:true})+showDoc({s,m,done,chart,pick})+
+   actBar(btn('‹ 마무리로','go',{to:'summary',sid:s.id}),btn('다음 PT 계획 ›','go',{to:'nextplan',sid:s.id},'primary'));
   return topBar(`${esc(m.code)} 회원님, 오늘 수고했어요`,`${mdw(s.date)} · ${esc(splitName(s))}`,'',{noBack:true})+
    `<div class="scroll show" data-sk="main"><div class="grid2"><div class="col">
      <div class="card"><h2>오늘 한 운동 <span class="tiny muted">가장 무거운 세트</span></h2>${today||'<div class="empty">기록한 운동이 없어요.</div>'}${prs?`<div style="margin-top:8px">${prs}</div>`:''}</div>
@@ -274,6 +279,7 @@ V.settings=()=>{
      <div class="card"><h2>지난 실제값 기준</h2><div class="row">${chips([['same','같은 분할'],['recent','가장 최근']],S.settings.basis,'setBasis')}</div><div class="tiny muted" style="margin-top:4px">다음 목표가 없을 때 어느 수업의 실제값으로 채울지예요. 같은 분할에 없는 종목은 가장 최근으로 채워요. 바꾸면 앞으로 만드는 수업 준비부터 적용돼요.</div></div>
      <div class="card"><h2>역할별 기준 <span class="tag warn">논문 기준 임시값 (D59)</span></h2><table><tr><th>역할</th><th>횟수 범위</th><th>목표 횟수</th><th>여유 횟수</th><th>세트</th><th>쉬는 초</th></tr>${roleRows}</table><div class="tiny muted" style="margin-top:4px">트레이너 답(O02)이 오면 바꿀 값이에요. 유산소성 순환은 횟수 칸을 라운드로 써요.</div></div>
      <div class="card"><h2>예시 취소·안 옴 <span class="tag warn">예시</span></h2><div class="row">${chips([['1','보임'],['0','숨김']],S.settings.exampleCx===false?'0':'1','setExampleCx')}</div><div class="tiny muted" style="margin-top:4px">수첩에는 취소·안 옴 기록이 없어요. 화면을 보여 주려고 넣은 예시 ${EXAMPLE_CX.length}건이고, 운동 기록은 없어요. 실제 날짜를 알면 바꿔요.</div></div>
+     <div class="card"><h2>화면 디자인</h2><div class="row">${chips([['chart','진료기록부 (B)'],['emr','지금 디자인 (A)']],UI.look,'setLook')}</div><div class="tiny muted" style="margin-top:4px">B는 지도교수님 피드백(11/11)의 종이 진료기록부 느낌이에요. A는 11/6까지 다듬은 화면 그대로예요. 위쪽 도구 줄 '디자인' 버튼으로도 바꿀 수 있어요.</div></div>
      <div class="card"><h2>처음 화면</h2>${btn('로그아웃 (처음 화면으로)','logout',null,'small')}<div class="tiny muted" style="margin-top:4px">입력한 기록은 그대로 두고 로그인 화면으로 돌아가요.</div></div>
      <div class="card"><h2>처음 상태로</h2>${UI.confirmReset?`<div class="row"><span class="small">입력한 것을 모두 지울까요?</span>${btn('되돌리기','reset',null,'danger')}${btn('아니요','confirmReset',{v:0})}</div>`:btn('처음 상태로 되돌리기','confirmReset',{v:1},'small')}</div></div>
     <div class="card"><h2>종목 사전 <span class="tag warn">단위·눈금은 예시 (O36)</span></h2><div class="tiny muted" style="margin-bottom:4px">눈금은 +/− 한 칸과 계산한 무게를 내릴 때 써요. '한쪽'은 40/40kg처럼 한쪽 무게로 적는 기구예요.</div>

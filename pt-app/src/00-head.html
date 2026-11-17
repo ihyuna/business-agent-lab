@@ -335,6 +335,21 @@ input,select,textarea{border-radius:6px;border-color:#dfe2e7}
 .chart g.hov:hover .bar{fill:var(--accent)}
 .chart .axis{stroke:var(--line)}
 .chart .lbl{fill:var(--ink);font-weight:600;font-size:11px}
+/* D86 무게 변화 추이: 역할별 선, 점 안 순서, 점 위 횟수 */
+.rt-hd{display:flex;flex-wrap:wrap;justify-content:space-between;gap:6px 12px;margin-bottom:6px}
+.chart.rt .rt-pt{cursor:pointer}
+.chart.rt .rt-pt:hover circle{stroke:var(--ink)}
+.chart.rt text.rt-pos{fill:#fff;font-size:10.5px;font-weight:700;pointer-events:none}
+.chart.rt text.rt-r{fill:var(--ink);font-size:11px;font-weight:600}
+.rt-tb{margin-top:6px;font-size:13px}
+.rt-tb td,.rt-tb th{padding:4px 8px}
+.rt-tb tr.faint td{color:var(--faint)}
+.dev-tb{font-size:13px;margin-top:4px} .dev-tb td,.dev-tb th{padding:4px 8px;vertical-align:middle}
+.dev-tb td.bad{color:var(--bad);font-weight:600} .dev-tb td.good{color:var(--good);font-weight:600} .dev-tb .bad{color:var(--bad)}
+.chip.mini{font-size:11.5px;padding:2px 7px;margin:1px 2px;min-height:0}
+.rt-leg{display:flex;gap:12px;align-items:center;font-size:12.5px;flex-wrap:wrap}
+.chart.rt text.rt-pos.hol{font-weight:700}
+.rt-key{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px;vertical-align:-1px}
 .hist .hi.open{background:var(--accent-soft)}
 .hist .chev{color:var(--faint);font-size:12px}
 .visit{padding:10px 12px 12px;border-bottom:1px solid var(--line);background:var(--panel)}
@@ -490,11 +505,12 @@ tr.click:hover td{background:var(--accent-soft)}
 .prep-head{background:var(--hd);margin:-4px -12px 0;padding:6px 12px;border-bottom:1px solid var(--line2);border-radius:5px 5px 0 0;font-size:11.5px;font-weight:600;color:var(--muted)}
 .sw{border-top:1px solid var(--line2)}
 /* 회차 (2026-11-10) */
-.nob{display:inline-block;font-size:11px;font-weight:700;font-variant-numeric:tabular-nums;padding:0 6px;border-radius:3px;line-height:18px;color:var(--muted);background:var(--soft);border:1px solid var(--line);vertical-align:1px}
-.nob.l3{color:#8a6a00;background:#fff6c7;border-color:#f3dc77}
-.nob.l2{color:#c2410c;background:#ffedd8;border-color:#fbc38c}
-.nob.l1{color:#fff;background:var(--bad);border-color:var(--bad)}
-.nob.over{color:#fff;background:#9b1c22;border-color:#9b1c22}
+.nob{display:inline;font-size:12px;font-weight:600;font-variant-numeric:tabular-nums;color:var(--muted);margin-left:2px}
+/* 2026-11-17: 버튼처럼 보이지 않게 칸·배경 없이 글자색만 */
+.nob.l3{color:#8a6a00}
+.nob.l2{color:#c2410c}
+.nob.l1{color:var(--bad);font-weight:700}
+.nob.over{color:#9b1c22;font-weight:700}
 .pkg{padding:10px 12px;border-bottom:1px solid var(--line2);background:var(--panel)}
 .pkg-n{font-size:20px;font-variant-numeric:tabular-nums;letter-spacing:-.01em}
 .pkg-n span{font-size:14px;color:var(--muted);font-weight:600}
@@ -508,6 +524,123 @@ tr.click:hover td{background:var(--accent-soft)}
 .hist .hi.cx .x{color:var(--faint)}
 .pkg-n.l3{color:#b08900}.pkg-n.l2{color:#c2410c}.pkg-n.l1,.pkg-n.over{color:var(--bad)}
 
+
+/* ===== 디자인 B '진료기록부' (2026-11-17, 지도교수님 11/11: 병원 종이 진료기록부·회진 차트 느낌으로 전문성) =====
+   지금 디자인(A)은 그대로 두고 #device.chart 일 때만 덮어쓴다. 바탕은 종이색, 선은 잉크색, 모서리는 각지게,
+   칸 머리는 양식 이름표처럼, 표는 모든 칸에 선, 강조는 남색 잉크, 경고는 빨간 도장색 */
+#device.chart{--device:#f3f6fb; --panel:#ffffff; --ink:#1a2233; --muted:#5b6678; --faint:#98a2b3;
+  --line:#e1e7f0; --line2:#c9d4e4; --soft:#f6f8fc; --hd:#edf3fe; --phd:#edf3fe; --accent:#1f66f2; --accent-soft:#eaf1ff; --accent-ink:#ffffff;
+  --rule:#e6ecf5; --ink-line:#9db0cf; --stamp:#e5484d;
+  border-radius:4px;background:var(--device)}
+/* 2026-11-17 색 다시: 누런 종이색이 탁하다는 의견으로 흰 종이 + 맑은 파랑. 양식 선·칸 구성은 그대로 */
+#device.chart .f-tt,#device.chart .f-cap{color:#173a8a}
+#device.chart .f-title{border-bottom-color:var(--accent)}
+#device.chart .f-lb{color:#173a8a}
+#device.chart .f-paper{border-color:var(--ink-line);box-shadow:0 2px 10px rgba(31,102,242,.06)}
+#device.chart .f-no{border-color:var(--accent);color:var(--accent)}
+#device.chart .tabbar.sidenav,#device.chart .actbar,#device.chart .pbar{border-color:var(--ink-line)}
+#device.chart .scroll,#device.chart .planner,#device.chart .chartlay{background:var(--device)}
+/* 위쪽 메뉴 = 차트 머리 */
+#device.chart .tabbar.sidenav{background:var(--panel);border-bottom:3px double var(--ink-line)}
+#device.chart .sidenav .logo::before{background:var(--accent);border-radius:0;width:6px}
+#device.chart .sidenav .logo::after{content:'PT 진료기록부';letter-spacing:.02em}
+#device.chart .tabbar.sidenav button.on{color:var(--accent);box-shadow:inset 0 -3px 0 var(--accent)}
+#device.chart .top{background:var(--panel);border-bottom:1.5px solid var(--ink-line)}
+#device.chart .top h1{letter-spacing:.01em}
+/* 패널 = 양식 칸 */
+#device.chart .card,#device.chart .box,#device.chart .planner>div,#device.chart .chartlay>div{border-radius:0!important;border:1px solid var(--ink-line)!important;box-shadow:none;background:var(--panel)}
+#device.chart .cl-mid{background:transparent!important;border:0!important}
+#device.chart .card>h2:first-child,#device.chart .box>.bh,#device.chart .pl-colhd,#device.chart .card.fold>.foldhead,#device.chart .prep-head{
+  background:var(--hd);border-radius:0!important;border-bottom:1.5px solid var(--ink-line);font-weight:800;letter-spacing:.04em;color:var(--ink)}
+#device.chart .card>h2:first-child::before,#device.chart .box>.bh::before,#device.chart .card.fold>.foldhead h2::before{
+  content:'■';width:auto;height:auto;background:none;color:var(--accent);font-size:9px;margin-right:6px;vertical-align:1px}
+/* 표: 모든 칸에 잉크 선 */
+#device.chart table{border-collapse:collapse}
+#device.chart th{background:var(--hd);color:var(--ink);font-weight:700;border:1px solid var(--line2)}
+#device.chart td{border:1px solid var(--line)}
+#device.chart .mcal td,#device.chart .mcal th{border:0}
+#device.chart tr.click:hover td{background:var(--accent-soft)}
+/* 쓰는 칸: 줄 쳐진 종이 */
+#device.chart textarea{background:var(--panel) repeating-linear-gradient(transparent 0 23px,var(--rule) 23px 24px);line-height:24px;border-radius:0;border-color:var(--line2)}
+#device.chart input,#device.chart select{border-radius:0;border-color:var(--line2);background:var(--panel)}
+/* 버튼·꼬리표: 각진 도장 느낌 */
+#device.chart .btn{border-radius:2px;border-color:var(--line2)}
+#device.chart .btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+#device.chart .chip{border-radius:2px}
+#device.chart .chip.on{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+#device.chart .tag{border-radius:0;border-width:1.5px;font-weight:700;letter-spacing:.03em}
+#device.chart .tag.warn,#device.chart .tag.bad{color:var(--stamp)}
+#device.chart .pill{border-radius:0;border:1px solid currentColor}
+#device.chart .actbar{background:var(--panel);border-top:3px double var(--ink-line)}
+/* 오늘: 시간표 칸은 차트 대장처럼 */
+#device.chart .tl .blk{border-radius:0;border:1px solid var(--line2);border-left:4px solid currentColor;box-shadow:none}
+#device.chart .mcal button.today{border-radius:0;background:var(--accent)}
+#device.chart .mcal button.has::after{border-radius:0}
+/* 회원 한눈에: 환자 차트 머리줄 */
+#device.chart .pbar{background:var(--panel);border-bottom:3px double var(--ink-line)}
+#device.chart .pbar .nm{font-size:17px;letter-spacing:.02em}
+#device.chart .hist .hi.next,#device.chart .hist .hi.open{box-shadow:inset 4px 0 0 var(--accent)}
+#device.chart .excard{border-top:3px double var(--ink-line)}
+#device.chart .nob{border-radius:0}
+#device.chart .rstat{border-radius:0;border-color:var(--ink-line)}
+#device.chart .modal{border-radius:0;border:1.5px solid var(--ink-line)}
+#device.chart .toast,#device.chart .askbar{border-radius:0}
+/* B에만: 차트 번호, 생체 정보 칸, 서명 칸 */
+.chartno,.signbox{display:none}
+#device.chart .chartno{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.06em;color:var(--muted);border:1px solid var(--ink-line);padding:1px 6px;font-variant-numeric:tabular-nums}
+#device.chart .pbar .vit{gap:0}
+#device.chart .pbar .vit>span{border:1px solid var(--line2);border-right:0;padding:2px 10px;background:var(--panel)}
+#device.chart .pbar .vit>span:last-child{border-right:1px solid var(--line2)}
+#device.chart .signbox{display:inline-flex;align-items:flex-end;gap:8px;font-size:12px;font-weight:700;color:var(--muted);margin-right:14px}
+#device.chart .signbox i{display:inline-block;width:150px;border-bottom:1px solid var(--ink-line);font-style:normal;font-weight:400;font-size:10px;color:var(--faint);text-align:right;padding-bottom:1px}
+
+/* 디자인 B 화면 구성: 종이 양식 (D85) */
+.chartdoc{padding:10px 12px 20px}
+.f-paper{background:var(--panel);border:1.5px solid var(--ink-line,#333);padding:14px 18px 16px;max-width:1040px;margin:0 auto;box-shadow:0 1px 0 var(--line2)}
+.f-title{display:flex;align-items:flex-end;gap:10px;border-bottom:3px double var(--ink-line,#333);padding-bottom:8px;margin-bottom:10px}
+.f-tt{font-size:22px;font-weight:800;letter-spacing:.35em}
+.f-no{font-size:12px;font-weight:700;letter-spacing:.05em;border:1px solid var(--ink-line,#333);padding:2px 8px;font-variant-numeric:tabular-nums}
+.f-cap{display:flex;align-items:center;gap:8px;font-size:12.5px;font-weight:800;letter-spacing:.04em;margin:14px 0 5px;color:var(--ink)}
+.f-id{width:100%;border-collapse:collapse;table-layout:fixed}
+.f-id th{width:76px;background:var(--hd);font-size:11.5px;text-align:center;border:1px solid var(--ink-line,#333)!important;padding:5px 4px}
+.f-id td{border:1px solid var(--ink-line,#333)!important;padding:5px 8px;font-size:12.5px}
+.f-name{font-size:15px;letter-spacing:.03em}
+.f-sec{display:grid;grid-template-columns:62px minmax(0,1fr);border:1px solid var(--ink-line,#333)}
+.f-lb{background:var(--hd);border-right:1px solid var(--ink-line,#333);display:grid;place-items:center;text-align:center;font-size:12px;font-weight:800;line-height:1.3;padding:6px 2px}
+.f-lb small{font-weight:600;color:var(--muted);font-size:10.5px}
+.f-lb b{font-size:22px;font-weight:800;color:var(--accent)}
+.f-bd{padding:8px 10px;min-width:0}
+.f-bd h3{display:none}
+.f-row3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr))}
+.f-row3>.f-sec+.f-sec,.f-row2>.f-sec+.f-sec{border-left:0}
+.f-row2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.3fr);margin-top:10px}
+.f-sec.warnsec .f-lb{color:var(--stamp,#b3261e)}
+.f-sec.warnsec{box-shadow:inset 3px 0 0 var(--stamp,#b3261e)}
+.f-prog,.f-res,.f-cond{width:100%;border-collapse:collapse}
+.f-prog th,.f-res th,.f-cond th{background:var(--hd);font-size:11.5px;border:1px solid var(--ink-line,#333)!important;padding:5px 6px}
+.f-prog td,.f-res td,.f-cond td{border:1px solid var(--line2)!important;padding:5px 6px;vertical-align:top}
+.f-prog tr.on td{background:var(--accent-soft)}
+.f-prog tr.f-open td{background:var(--soft);padding:8px}
+.f-prog .nowrap{white-space:nowrap}
+td.c,th.c{text-align:center}
+.f-chk{font-weight:800;color:var(--accent);font-size:14px}
+.f-box{display:inline-block;width:11px;height:11px;border:1px solid var(--line2)}
+.f-cond{width:auto;min-width:340px}
+.f-cond td{text-align:center;width:80px}
+.f-soap{display:flex;flex-direction:column}
+.f-soap>.f-sec+.f-sec{border-top:0}
+.f-sub{font-size:11.5px;font-weight:700;color:var(--muted);margin-bottom:5px}
+.f-two{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.f-sign,.f-issue{display:flex;align-items:flex-end;gap:10px;margin-top:16px;padding-top:10px;border-top:1px solid var(--ink-line,#333);font-size:12px;color:var(--muted)}
+.f-sign>span:first-child{flex:1}
+.f-sign i,.f-issue i{display:inline-block;width:150px;border-bottom:1px solid var(--ink-line,#333)}
+.f-issue{font-size:13px;color:var(--ink);font-weight:600}
+.f-res.big td{font-size:13.5px;padding:8px}
+.f-res .big{font-size:16px;font-weight:800}
+.up{color:#16794a}.down{color:var(--stamp,#b3261e)}
+.bad{color:var(--stamp,#b3261e);font-weight:700}
+.f-stamp{display:inline-block;border:2px solid var(--stamp,#b3261e);color:var(--stamp,#b3261e);font-weight:800;font-size:11.5px;padding:1px 6px;transform:rotate(-4deg);letter-spacing:.05em}
+#device.port .f-row3{grid-template-columns:minmax(0,1fr)} #device.port .f-row3>.f-sec+.f-sec{border-left:1px solid var(--ink-line,#333);border-top:0}
 /* 앱 화면만 (D82: 웹앱, 아이패드 사파리 기준). 주소 끝에 #full 이어도 이 모드로 열림 */
 #b-unfull{display:none}
 body.full #bar,body.full #guide{display:none!important}
@@ -545,6 +678,7 @@ body.full #app .hl{outline:0!important;box-shadow:none!important;animation:none!
     <button class="btn small" id="b-orient">세로로 보기</button>
     <button class="btn small" id="b-fit">실제 크기</button>
     <button class="btn small" id="b-guide">시나리오 닫기</button>
+    <button class="btn small" id="b-look" title="디자인 A(지금)와 B(진료기록부) 바꾸기">디자인: 진료기록부</button>
     <button class="btn small" id="b-full" title="아이패드 사파리에서 앱처럼 쓰기">앱 화면만</button>
   </div>
   <button class="btn small" id="b-unfull">도구 보기</button>

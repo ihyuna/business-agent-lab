@@ -246,7 +246,7 @@ V.member=r=>{
   const m=M(r.mid); const u=upcoming(m.id); const done=completed(m.id); const t=todayIso(); const last=done[done.length-1];
   const d30=done.filter(s=>daysBetween(s.date,t)>=0&&daysBetween(s.date,t)<30).length;
   const cn=openCautions(m).length;
-  const pbar=`<div class="pbar"><span class="nm">${esc(m.code)}</span>${pill('회원','blue')}${cn?pill('주의 '+cn,'red'):''}${m.goals.filter(g=>!g.end).length?pill('목표 있음','green'):''}
+  const pbar=`<div class="pbar"><span class="chartno">차트 No. PT-${String(S.members.indexOf(m)+1).padStart(4,'0')}</span><span class="nm">${esc(m.code)}</span>${pill('회원','blue')}${cn?pill('주의 '+cn,'red'):''}${m.goals.filter(g=>!g.end).length?pill('목표 있음','green'):''}
     <div class="vit"><span>누적 <b>${done.length}</b>회</span><span>최근 30일 <b>${d30}</b>회</span>${(()=>{const c=msessions(m.id).filter(x=>x.status==='cancelled'&&x.date<=t).length,n=msessions(m.id).filter(x=>x.status==='no_show'&&x.date<=t).length;return `<span>취소 <b style="color:${c?'var(--bad)':'inherit'}">${c}</b> · 안 옴 <b style="color:${n?'var(--warn)':'inherit'}">${n}</b></span>`})()}<span>첫 기록 <b>${done[0]?md(done[0].date):'—'}</b></span><span>마지막 <b>${last?md(last.date):'—'}</b>${last?` (${daysBetween(last.date,t)}일 전)`:''}</span><span>다음 PT <b>${u?mdw(u.date):'없음'}</b>${u?' '+esc(splitName(u)):''}</span></div></div>`;
   const all=msessions(m.id).filter(s=>!(s.example&&s.date>t)).slice().sort((a,b)=>byDate(b,a));
   const open=UI.cur['hx-'+m.id]===undefined?(done[done.length-1]||{}).id:UI.cur['hx-'+m.id];
@@ -265,8 +265,10 @@ V.member=r=>{
       ${ip?btn('이어서 하기','openSession',{sid:u.id},'primary'):btn('숫자 정하기','openSession',{sid:u.id},'primary')+`<button class="btn ghost more" data-act="modal" data-type="sessMenu" data-sid="${u.id}" aria-label="수업 메뉴">…</button>`}</div>`;
   } else next=`<div class="row"><span class="muted">잡힌 수업이 없어요.</span><span class="sp"></span>${btn('다음 PT 잡기','modal',{type:'schedule',mid:m.id},'primary')}</div>`;
   const mainOf=s=>{const x=s.exercises.find(e=>e.status==='done'&&e.role==='메인')||s.exercises.find(e=>e.status==='done');const tt=x&&topSet(x);return x?`${esc(EX(x.exId).name)}${tt?` <b class="num">${ftop(tt,x.exId)}</b>`:''}`:'—'};
-  const mt=mainTrend(m,262,130);
+  const mt=null;
   const notes=m.notes.filter(n=>['general','lifestyle','diet','self_train','personality'].includes(n.kind));
+  if(UI.look==='chart') return topBar(esc(m.code),'회원 진료기록부',
+      btn('추이','go',{to:'trend',mid:m.id})+btn('수업 기록','go',{to:'history',mid:m.id})+btn('루틴 틀','go',{to:'templates',mid:m.id})+btn('회원 정보','go',{to:'memberEdit',mid:m.id}))+memberDoc({m,u,done,last,d30,all,t,next,mt,notes});
   return topBar(esc(m.code),'회원 한눈에',
       btn('추이','go',{to:'trend',mid:m.id})+btn('수업 기록','go',{to:'history',mid:m.id})+btn('루틴 틀','go',{to:'templates',mid:m.id})+btn('회원 정보','go',{to:'memberEdit',mid:m.id}))+pbar+
     `<div class="chartlay">
@@ -274,11 +276,12 @@ V.member=r=>{
       <div class="cl-mid" data-sk="main">
         <div class="box"><div class="bh">다음 PT</div><div class="bb">${next}</div></div>
         <div class="box"><div class="sec3">${cautionSec(m)}${checkSec(m)}${goalSec(m)}</div></div>
+        <div class="box"><div class="bh">무게 변화 추이 <span class="muted" style="font-weight:500">반복 구간별</span></div><div class="bb">${roleTrend(m,470,220)}</div></div>
+        <div class="box"><div class="bh">기댓값 소견 <span class="muted" style="font-weight:500">덜 나온 세트</span></div><div class="bb">${devHistory(m,6)}</div></div>
         ${last?`<div class="box"><div class="bh">지난 PT 변화 <span class="muted" style="font-weight:500">${mdw(last.date)} · ${esc(splitName(last))}</span><span class="sp"></span>${btn('수업 상세','go',{to:'detail',sid:last.id},'ghost small')}</div><div class="bb">${deltaChart(m,last)}</div></div>`:''}
       </div>
       <div class="cl-right">
         <h3>월별 수업 횟수</h3>${monthBars(m,262,130)}
-        <h3>메인 종목 최고 무게 ${mt.ex?`<span class="tiny muted" style="font-weight:500">${esc(EX(mt.ex).name)}</span>`:''}</h3>${mt.svg}
         <h3>쓴 근육 <span class="sp"></span>${chips([['last','지난 PT'],['d30','최근 30일']],UI.cur['mus-'+m.id]||'last','musRange',{mid:m.id})}</h3>
         ${(()=>{const rg=UI.cur['mus-'+m.id]||'last';const ss=rg==='last'?(last?[last]:[]):done.filter(s=>daysBetween(s.date,t)>=0&&daysBetween(s.date,t)<30);return muscleBlock(ss,238,rg==='last'?'지난 PT':'최근 30일')})()}
         <h3>메모</h3>${notes.map(n=>`<div class="li small" style="align-items:flex-start">${pill(NOTE_KINDS[n.kind],'gray')}<div style="flex:1">${esc(n.text)}</div>${btn('지우기','delNote',{mid:m.id,id:n.id},'small ghost')}</div>`).join('')||'<div class="empty">없어요.</div>'}
@@ -373,10 +376,12 @@ function whyShort(s,x){
   const B=x.basis; if(!B) return '';
   if(x.edited) return '트레이너가 고친 숫자';
   const R=S.settings.roles[x.role]||S.settings.roles['보조'];
+  const tg=B.tag||''; const pre=tg.includes('앞 종목')?' · 앞 종목이 더 많아 여유 1개 더':'';
+  if(tg.startsWith('역할 바뀜')) return `${md(B.date)}엔 다른 역할이라 오늘 역할(${x.role}) 기준으로 다시 계산${pre}`;
   if(B.mode==='target') return `${md(B.date)} 수업 끝에 정한 다음 목표`;
-  if(B.mode==='same') return `지난 같은 분할(${md(B.date)}) 실제값 그대로${B.tag==='무게 찾기'?', 무게 기록 없음':''}`;
-  if(B.mode==='recent') return `최근 수업(${md(B.date)}) 실제값 그대로`;
-  if(B.e1) return `추정 1RM ${Math.round(B.e1.e*10)/10} → ${R.target}회·여유 ${R.rir}회 무게`;
+  if(B.mode==='same') return `지난 같은 분할(${md(B.date)}) 실제값${pre?pre:' 그대로'}${B.tag==='무게 찾기'?', 무게 기록 없음':''}`;
+  if(B.mode==='recent') return `최근 수업(${md(B.date)}) 실제값${pre?pre:' 그대로'}`;
+  if(B.e1) return `추정 1RM ${Math.round(B.e1.e*10)/10} → ${R.target}회·여유 ${R.rir}회 무게${pre}`;
   return `기록이 없어 역할(${x.role}) 기준 ${R.target}회, 무게는 수업 중 찾기`;
 }
 function briefLine(s,m){

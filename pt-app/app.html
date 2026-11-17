@@ -345,6 +345,21 @@ input,select,textarea{border-radius:6px;border-color:#dfe2e7}
 .chart g.hov:hover .bar{fill:var(--accent)}
 .chart .axis{stroke:var(--line)}
 .chart .lbl{fill:var(--ink);font-weight:600;font-size:11px}
+/* D86 무게 변화 추이: 역할별 선, 점 안 순서, 점 위 횟수 */
+.rt-hd{display:flex;flex-wrap:wrap;justify-content:space-between;gap:6px 12px;margin-bottom:6px}
+.chart.rt .rt-pt{cursor:pointer}
+.chart.rt .rt-pt:hover circle{stroke:var(--ink)}
+.chart.rt text.rt-pos{fill:#fff;font-size:10.5px;font-weight:700;pointer-events:none}
+.chart.rt text.rt-r{fill:var(--ink);font-size:11px;font-weight:600}
+.rt-tb{margin-top:6px;font-size:13px}
+.rt-tb td,.rt-tb th{padding:4px 8px}
+.rt-tb tr.faint td{color:var(--faint)}
+.dev-tb{font-size:13px;margin-top:4px} .dev-tb td,.dev-tb th{padding:4px 8px;vertical-align:middle}
+.dev-tb td.bad{color:var(--bad);font-weight:600} .dev-tb td.good{color:var(--good);font-weight:600} .dev-tb .bad{color:var(--bad)}
+.chip.mini{font-size:11.5px;padding:2px 7px;margin:1px 2px;min-height:0}
+.rt-leg{display:flex;gap:12px;align-items:center;font-size:12.5px;flex-wrap:wrap}
+.chart.rt text.rt-pos.hol{font-weight:700}
+.rt-key{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px;vertical-align:-1px}
 .hist .hi.open{background:var(--accent-soft)}
 .hist .chev{color:var(--faint);font-size:12px}
 .visit{padding:10px 12px 12px;border-bottom:1px solid var(--line);background:var(--panel)}
@@ -500,11 +515,12 @@ tr.click:hover td{background:var(--accent-soft)}
 .prep-head{background:var(--hd);margin:-4px -12px 0;padding:6px 12px;border-bottom:1px solid var(--line2);border-radius:5px 5px 0 0;font-size:11.5px;font-weight:600;color:var(--muted)}
 .sw{border-top:1px solid var(--line2)}
 /* 회차 (2026-11-10) */
-.nob{display:inline-block;font-size:11px;font-weight:700;font-variant-numeric:tabular-nums;padding:0 6px;border-radius:3px;line-height:18px;color:var(--muted);background:var(--soft);border:1px solid var(--line);vertical-align:1px}
-.nob.l3{color:#8a6a00;background:#fff6c7;border-color:#f3dc77}
-.nob.l2{color:#c2410c;background:#ffedd8;border-color:#fbc38c}
-.nob.l1{color:#fff;background:var(--bad);border-color:var(--bad)}
-.nob.over{color:#fff;background:#9b1c22;border-color:#9b1c22}
+.nob{display:inline;font-size:12px;font-weight:600;font-variant-numeric:tabular-nums;color:var(--muted);margin-left:2px}
+/* 2026-11-17: 버튼처럼 보이지 않게 칸·배경 없이 글자색만 */
+.nob.l3{color:#8a6a00}
+.nob.l2{color:#c2410c}
+.nob.l1{color:var(--bad);font-weight:700}
+.nob.over{color:#9b1c22;font-weight:700}
 .pkg{padding:10px 12px;border-bottom:1px solid var(--line2);background:var(--panel)}
 .pkg-n{font-size:20px;font-variant-numeric:tabular-nums;letter-spacing:-.01em}
 .pkg-n span{font-size:14px;color:var(--muted);font-weight:600}
@@ -518,6 +534,123 @@ tr.click:hover td{background:var(--accent-soft)}
 .hist .hi.cx .x{color:var(--faint)}
 .pkg-n.l3{color:#b08900}.pkg-n.l2{color:#c2410c}.pkg-n.l1,.pkg-n.over{color:var(--bad)}
 
+
+/* ===== 디자인 B '진료기록부' (2026-11-17, 지도교수님 11/11: 병원 종이 진료기록부·회진 차트 느낌으로 전문성) =====
+   지금 디자인(A)은 그대로 두고 #device.chart 일 때만 덮어쓴다. 바탕은 종이색, 선은 잉크색, 모서리는 각지게,
+   칸 머리는 양식 이름표처럼, 표는 모든 칸에 선, 강조는 남색 잉크, 경고는 빨간 도장색 */
+#device.chart{--device:#f3f6fb; --panel:#ffffff; --ink:#1a2233; --muted:#5b6678; --faint:#98a2b3;
+  --line:#e1e7f0; --line2:#c9d4e4; --soft:#f6f8fc; --hd:#edf3fe; --phd:#edf3fe; --accent:#1f66f2; --accent-soft:#eaf1ff; --accent-ink:#ffffff;
+  --rule:#e6ecf5; --ink-line:#9db0cf; --stamp:#e5484d;
+  border-radius:4px;background:var(--device)}
+/* 2026-11-17 색 다시: 누런 종이색이 탁하다는 의견으로 흰 종이 + 맑은 파랑. 양식 선·칸 구성은 그대로 */
+#device.chart .f-tt,#device.chart .f-cap{color:#173a8a}
+#device.chart .f-title{border-bottom-color:var(--accent)}
+#device.chart .f-lb{color:#173a8a}
+#device.chart .f-paper{border-color:var(--ink-line);box-shadow:0 2px 10px rgba(31,102,242,.06)}
+#device.chart .f-no{border-color:var(--accent);color:var(--accent)}
+#device.chart .tabbar.sidenav,#device.chart .actbar,#device.chart .pbar{border-color:var(--ink-line)}
+#device.chart .scroll,#device.chart .planner,#device.chart .chartlay{background:var(--device)}
+/* 위쪽 메뉴 = 차트 머리 */
+#device.chart .tabbar.sidenav{background:var(--panel);border-bottom:3px double var(--ink-line)}
+#device.chart .sidenav .logo::before{background:var(--accent);border-radius:0;width:6px}
+#device.chart .sidenav .logo::after{content:'PT 진료기록부';letter-spacing:.02em}
+#device.chart .tabbar.sidenav button.on{color:var(--accent);box-shadow:inset 0 -3px 0 var(--accent)}
+#device.chart .top{background:var(--panel);border-bottom:1.5px solid var(--ink-line)}
+#device.chart .top h1{letter-spacing:.01em}
+/* 패널 = 양식 칸 */
+#device.chart .card,#device.chart .box,#device.chart .planner>div,#device.chart .chartlay>div{border-radius:0!important;border:1px solid var(--ink-line)!important;box-shadow:none;background:var(--panel)}
+#device.chart .cl-mid{background:transparent!important;border:0!important}
+#device.chart .card>h2:first-child,#device.chart .box>.bh,#device.chart .pl-colhd,#device.chart .card.fold>.foldhead,#device.chart .prep-head{
+  background:var(--hd);border-radius:0!important;border-bottom:1.5px solid var(--ink-line);font-weight:800;letter-spacing:.04em;color:var(--ink)}
+#device.chart .card>h2:first-child::before,#device.chart .box>.bh::before,#device.chart .card.fold>.foldhead h2::before{
+  content:'■';width:auto;height:auto;background:none;color:var(--accent);font-size:9px;margin-right:6px;vertical-align:1px}
+/* 표: 모든 칸에 잉크 선 */
+#device.chart table{border-collapse:collapse}
+#device.chart th{background:var(--hd);color:var(--ink);font-weight:700;border:1px solid var(--line2)}
+#device.chart td{border:1px solid var(--line)}
+#device.chart .mcal td,#device.chart .mcal th{border:0}
+#device.chart tr.click:hover td{background:var(--accent-soft)}
+/* 쓰는 칸: 줄 쳐진 종이 */
+#device.chart textarea{background:var(--panel) repeating-linear-gradient(transparent 0 23px,var(--rule) 23px 24px);line-height:24px;border-radius:0;border-color:var(--line2)}
+#device.chart input,#device.chart select{border-radius:0;border-color:var(--line2);background:var(--panel)}
+/* 버튼·꼬리표: 각진 도장 느낌 */
+#device.chart .btn{border-radius:2px;border-color:var(--line2)}
+#device.chart .btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+#device.chart .chip{border-radius:2px}
+#device.chart .chip.on{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+#device.chart .tag{border-radius:0;border-width:1.5px;font-weight:700;letter-spacing:.03em}
+#device.chart .tag.warn,#device.chart .tag.bad{color:var(--stamp)}
+#device.chart .pill{border-radius:0;border:1px solid currentColor}
+#device.chart .actbar{background:var(--panel);border-top:3px double var(--ink-line)}
+/* 오늘: 시간표 칸은 차트 대장처럼 */
+#device.chart .tl .blk{border-radius:0;border:1px solid var(--line2);border-left:4px solid currentColor;box-shadow:none}
+#device.chart .mcal button.today{border-radius:0;background:var(--accent)}
+#device.chart .mcal button.has::after{border-radius:0}
+/* 회원 한눈에: 환자 차트 머리줄 */
+#device.chart .pbar{background:var(--panel);border-bottom:3px double var(--ink-line)}
+#device.chart .pbar .nm{font-size:17px;letter-spacing:.02em}
+#device.chart .hist .hi.next,#device.chart .hist .hi.open{box-shadow:inset 4px 0 0 var(--accent)}
+#device.chart .excard{border-top:3px double var(--ink-line)}
+#device.chart .nob{border-radius:0}
+#device.chart .rstat{border-radius:0;border-color:var(--ink-line)}
+#device.chart .modal{border-radius:0;border:1.5px solid var(--ink-line)}
+#device.chart .toast,#device.chart .askbar{border-radius:0}
+/* B에만: 차트 번호, 생체 정보 칸, 서명 칸 */
+.chartno,.signbox{display:none}
+#device.chart .chartno{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.06em;color:var(--muted);border:1px solid var(--ink-line);padding:1px 6px;font-variant-numeric:tabular-nums}
+#device.chart .pbar .vit{gap:0}
+#device.chart .pbar .vit>span{border:1px solid var(--line2);border-right:0;padding:2px 10px;background:var(--panel)}
+#device.chart .pbar .vit>span:last-child{border-right:1px solid var(--line2)}
+#device.chart .signbox{display:inline-flex;align-items:flex-end;gap:8px;font-size:12px;font-weight:700;color:var(--muted);margin-right:14px}
+#device.chart .signbox i{display:inline-block;width:150px;border-bottom:1px solid var(--ink-line);font-style:normal;font-weight:400;font-size:10px;color:var(--faint);text-align:right;padding-bottom:1px}
+
+/* 디자인 B 화면 구성: 종이 양식 (D85) */
+.chartdoc{padding:10px 12px 20px}
+.f-paper{background:var(--panel);border:1.5px solid var(--ink-line,#333);padding:14px 18px 16px;max-width:1040px;margin:0 auto;box-shadow:0 1px 0 var(--line2)}
+.f-title{display:flex;align-items:flex-end;gap:10px;border-bottom:3px double var(--ink-line,#333);padding-bottom:8px;margin-bottom:10px}
+.f-tt{font-size:22px;font-weight:800;letter-spacing:.35em}
+.f-no{font-size:12px;font-weight:700;letter-spacing:.05em;border:1px solid var(--ink-line,#333);padding:2px 8px;font-variant-numeric:tabular-nums}
+.f-cap{display:flex;align-items:center;gap:8px;font-size:12.5px;font-weight:800;letter-spacing:.04em;margin:14px 0 5px;color:var(--ink)}
+.f-id{width:100%;border-collapse:collapse;table-layout:fixed}
+.f-id th{width:76px;background:var(--hd);font-size:11.5px;text-align:center;border:1px solid var(--ink-line,#333)!important;padding:5px 4px}
+.f-id td{border:1px solid var(--ink-line,#333)!important;padding:5px 8px;font-size:12.5px}
+.f-name{font-size:15px;letter-spacing:.03em}
+.f-sec{display:grid;grid-template-columns:62px minmax(0,1fr);border:1px solid var(--ink-line,#333)}
+.f-lb{background:var(--hd);border-right:1px solid var(--ink-line,#333);display:grid;place-items:center;text-align:center;font-size:12px;font-weight:800;line-height:1.3;padding:6px 2px}
+.f-lb small{font-weight:600;color:var(--muted);font-size:10.5px}
+.f-lb b{font-size:22px;font-weight:800;color:var(--accent)}
+.f-bd{padding:8px 10px;min-width:0}
+.f-bd h3{display:none}
+.f-row3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr))}
+.f-row3>.f-sec+.f-sec,.f-row2>.f-sec+.f-sec{border-left:0}
+.f-row2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.3fr);margin-top:10px}
+.f-sec.warnsec .f-lb{color:var(--stamp,#b3261e)}
+.f-sec.warnsec{box-shadow:inset 3px 0 0 var(--stamp,#b3261e)}
+.f-prog,.f-res,.f-cond{width:100%;border-collapse:collapse}
+.f-prog th,.f-res th,.f-cond th{background:var(--hd);font-size:11.5px;border:1px solid var(--ink-line,#333)!important;padding:5px 6px}
+.f-prog td,.f-res td,.f-cond td{border:1px solid var(--line2)!important;padding:5px 6px;vertical-align:top}
+.f-prog tr.on td{background:var(--accent-soft)}
+.f-prog tr.f-open td{background:var(--soft);padding:8px}
+.f-prog .nowrap{white-space:nowrap}
+td.c,th.c{text-align:center}
+.f-chk{font-weight:800;color:var(--accent);font-size:14px}
+.f-box{display:inline-block;width:11px;height:11px;border:1px solid var(--line2)}
+.f-cond{width:auto;min-width:340px}
+.f-cond td{text-align:center;width:80px}
+.f-soap{display:flex;flex-direction:column}
+.f-soap>.f-sec+.f-sec{border-top:0}
+.f-sub{font-size:11.5px;font-weight:700;color:var(--muted);margin-bottom:5px}
+.f-two{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.f-sign,.f-issue{display:flex;align-items:flex-end;gap:10px;margin-top:16px;padding-top:10px;border-top:1px solid var(--ink-line,#333);font-size:12px;color:var(--muted)}
+.f-sign>span:first-child{flex:1}
+.f-sign i,.f-issue i{display:inline-block;width:150px;border-bottom:1px solid var(--ink-line,#333)}
+.f-issue{font-size:13px;color:var(--ink);font-weight:600}
+.f-res.big td{font-size:13.5px;padding:8px}
+.f-res .big{font-size:16px;font-weight:800}
+.up{color:#16794a}.down{color:var(--stamp,#b3261e)}
+.bad{color:var(--stamp,#b3261e);font-weight:700}
+.f-stamp{display:inline-block;border:2px solid var(--stamp,#b3261e);color:var(--stamp,#b3261e);font-weight:800;font-size:11.5px;padding:1px 6px;transform:rotate(-4deg);letter-spacing:.05em}
+#device.port .f-row3{grid-template-columns:minmax(0,1fr)} #device.port .f-row3>.f-sec+.f-sec{border-left:1px solid var(--ink-line,#333);border-top:0}
 /* 앱 화면만 (D82: 웹앱, 아이패드 사파리 기준). 주소 끝에 #full 이어도 이 모드로 열림 */
 #b-unfull{display:none}
 body.full #bar,body.full #guide{display:none!important}
@@ -555,6 +688,7 @@ body.full #app .hl{outline:0!important;box-shadow:none!important;animation:none!
     <button class="btn small" id="b-orient">세로로 보기</button>
     <button class="btn small" id="b-fit">실제 크기</button>
     <button class="btn small" id="b-guide">시나리오 닫기</button>
+    <button class="btn small" id="b-look" title="디자인 A(지금)와 B(진료기록부) 바꾸기">디자인: 진료기록부</button>
     <button class="btn small" id="b-full" title="아이패드 사파리에서 앱처럼 쓰기">앱 화면만</button>
   </div>
   <button class="btn small" id="b-unfull">도구 보기</button>
@@ -1645,7 +1779,7 @@ const firstNum=v=>{if(isNum(v))return v;const m=String(v??'').match(/\d+(\.\d+)?
 /* ---------- 상태 ---------- */
 const KEY='pt-mvp-proto-v4';
 let S=null;
-const UI={ask:null,route:{name:'today'},stack:[],modal:null,draft:{},toast:null,orient:'land',fit:true,timer:null,cur:{},open:{},search:'',edit:null,flags:{}};
+const UI={look:'chart',ask:null,route:{name:'today'},stack:[],modal:null,draft:{},toast:null,orient:'land',fit:true,timer:null,cur:{},open:{},search:'',edit:null,flags:{}};
 const todayIso=()=>(S&&S.today)||'2026-10-07';
 function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}if(typeof guideSoon==='function')guideSoon()}
 function load(){try{const t=localStorage.getItem(KEY);if(t){const s=JSON.parse(t);if(s&&s.v===3)return s}}catch(e){}return buildSeed()}
@@ -1755,6 +1889,53 @@ const usedCount=m=>msessions(m.id).filter(s=>s.status==='completed'||s.status===
 const leftCls=left=>left<=0?'over':left===1?'l1':left===2?'l2':left===3?'l3':'';
 function removeExampleCx(){S.sessions=S.sessions.filter(s=>!s.example);S.changes=(S.changes||[]).filter(c=>!c.example)}
 
+
+/* ---------- D90 앞 종목 부하 · 역할이 바뀐 종목 / D91 회원별 기댓값 ----------
+   트레이너: "앞 운동 볼륨에 따른 다음 종목 무게 추천", "같은 2번째 레그컬이라도 1번째가 메인 고강도였는지 워밍업이었는지",
+   "워밍업으로 20kg 쓴 레그컬을 오늘 마무리로 쓸 때", "기댓값보다 안 나오는 회원이 있다면 이유를 찾을 수도".
+   숫자 기준(본세트 6개 차이, 여유 1개, ±2회)은 논문 기준 임시값이고 트레이너 답이 오면 바꾼다. 기록 숫자는 고치지 않는다. */
+function prevCtx(list){return list.filter(e=>!['removed','swapped'].includes(e.status)).map(e=>({role:e.role,exId:e.exId,n:(e.sets||[]).filter(st=>st.kind!=='warmup').length||null}))}
+function loadOf(prev){const RS=S.settings.roles;let mains=0,work=0;const names=[];
+  for(const p of prev){if(p.role==='메인'){mains++;if(p.exId)names.push(EX(p.exId).name)}if(p.role!=='워밍업')work+=p.n!=null?p.n:((RS[p.role]||RS['보조']).sets||0)}
+  return {mains,work,names}}
+function ctxIn(s,exId){if(!s)return null;const i=s.exercises.findIndex(e=>e.exId===exId&&e.status==='done');if(i<0)return null;return loadOf(prevCtx(s.exercises.slice(0,i).filter(e=>e.status==='done')))}
+const ctxText=c=>`메인 ${c.mains}개${c.names.length?'('+c.names.join(', ')+')':''} · 본세트 ${c.work}개`;
+function harderSets(sets,rir,inc){const ch=[];
+  for(const st of sets){if(st.kind==='warmup')continue;const g=repRange(st.pr);const from=`${st.pw??'—'} × ${st.pr??'—'}`;
+    if(isNum(st.pw)&&g&&g[1]<=10){const nw=floorTo(st.pw*(30+g[1]+rir)/(30+g[1]+rir+1),inc);if(nw<st.pw)st.pw=nw;else st.pr=shiftReps(st.pr,-1)}
+    else if(st.pr!=null)st.pr=shiftReps(st.pr,-1); else continue;
+    ch.push(`${from} → ${st.pw??'—'} × ${st.pr}`)}
+  return ch}
+const DEV_CAUSES=['호흡','힘 쓰는 방식','신경계·집중','컨디션','통증','자세 교정 중','기타'];
+/* 기댓값용 추정 1RM: 바로 전 수업에서 이 종목 본세트(20회 이하) 가운데 가장 큰 값. 수첩은 15~20회 세트가 많아
+   10회 이하만 쓰면 거의 계산이 안 돼서 20회까지 쓰고, 10회 넘는 세트로 구했으면 hi=true로 '덜 정확'을 붙인다 */
+function e1For(m,exId,beforeDate){
+  for(const s of prevDone(m,beforeDate)){
+    const x=s.exercises.find(e=>e.exId===exId&&e.status==='done'); if(!x) continue;
+    let best=null;
+    for(const st of x.sets){
+      if(st.kind==='warmup'||st.kind==='drop') continue;
+      if(!isNum(st.aw)||!isNum(st.ar)||st.aw<=0||st.ar<1||st.ar>20) continue;
+      const rir=isNum(st.rir)?st.rir:0; const e=st.aw*(1+(st.ar+rir)/30);
+      if(!best||e>best.e) best={e,w:st.aw,r:st.ar,rir,date:s.date,hi:st.ar>10};
+    }
+    if(best) return best;
+  }
+  return null;
+}
+function expectFor(m,s,x,st){
+  if(st.kind==='warmup'||st.kind==='drop'||!isNum(st.aw)||st.aw<=0||!isNum(st.ar)) return null;
+  const e1=e1For(m,x.exId,s.date); if(!e1) return null;
+  const R=S.settings.roles[x.role]||S.settings.roles['보조']; const rir=isNum(st.rir)?st.rir:R.rir;
+  const er=30*(e1.e/st.aw-1)-rir; if(er<-10||er>25) return null;
+  const exp=Math.max(0,Math.round(er)); return {e1,rir,rirRec:isNum(st.rir),exp,ar:st.ar,diff:st.ar-exp};
+}
+const DEV_UNDER=-2, DEV_OVER=3;
+function expectList(m,s,onlyDone){const out=[];
+  for(const x of s.exercises){if(x.status!=='done')continue;
+    x.sets.forEach((st,i)=>{if(onlyDone&&!st.done)return;const e=expectFor(m,s,x,st);if(e)out.push({x,i,st,...e,key:x.uid+':'+i})})}
+  return out}
+
 /* ---------- 숫자 채우기 (D52, D57, D59, 워크플로우 v2 6단계) ---------- */
 function prevDone(m,beforeDate){return completed(m.id).filter(s=>s.date<beforeDate).reverse()}
 function findActual(m,exId,beforeDate,splitId,basis){
@@ -1820,7 +2001,17 @@ function fillExercise(m,item,date,splitId,force,prevItems){
       if(lw){out.sets.forEach(st=>{if(noW(st.pw))st.pw=lw.w});B.lines.push(`그날 무게가 없어 그 전 ${md(lw.date)} 실제 무게 ${fw(lw.w,item.exId)}를 씀`)}
       else{B.tag='무게 찾기';B.lines.push('이 종목의 무게 기록이 없어 무게를 비워 둠')}}
     const noR=v=>v==null||v==='';if(out.sets.some(st=>noR(st.pr))){out.sets.forEach(st=>{if(noR(st.pr))st.pr=R.target});B.lines.push(`그날 횟수가 없어 역할(${item.role}) 기준 ${R.target}회로 채움 (논문 기준 임시값)`)}
-    if(src.x.role&&src.x.role!==item.role) B.lines.push(`그때 역할은 ${src.x.role}, 오늘 역할은 ${item.role}`);
+    if(src.x.role&&src.x.role!==item.role&&item.role!=='워밍업'){
+      const Rs=S.settings.roles[src.x.role]||S.settings.roles['보조']; const ts=topSet(src.x);
+      B.lines.push(`그때(${md(src.s.date)}) 역할은 ${src.x.role}, 오늘은 ${item.role} → 그날 숫자를 그대로 쓰지 않고 오늘 역할 기준으로 다시 계산해요 (D90)`);
+      let ee=null;
+      if(e1){ee=e1.e;B.lines.push(`추정 1RM ${r1(e1.e)} (${md(e1.date)} ${e1.w} × ${e1.r}회, 10회 이하 세트)`)}
+      else if(ts&&isNum(ts.w)&&isNum(ts.r)&&ts.r>0){const st0=src.x.sets.find(st=>st.aw===ts.w&&(st.ar===ts.r||firstNum(st.ar)===ts.r));const rs=isNum(st0&&st0.rir)?st0.rir:Rs.rir;
+        ee=ts.w*(1+(ts.r+rs)/30);B.lines.push(`그날 ${fw(ts.w,item.exId)} × ${ts.r}회를 여유 ${rs}회${isNum(st0&&st0.rir)?'(기록)':`(${src.x.role} 역할 기준으로 가정, 힘을 덜 쓴 세트로 봄)`}로 보면 추정 1RM ${ts.w} × (1 + (${ts.r} + ${rs}) ÷ 30) = ${r1(ee)}${ts.r>10?' · 10회 넘는 세트로 추정해 덜 정확해요':''}`)}
+      if(ee){const w=wFor(ee,R.target,R.rir,inc);out.sets=ruleSets(w);B.tag='역할 바뀜';
+        B.lines.push(`오늘 ${item.role} 기준 ${R.target}회 · 여유 ${R.rir}회 → ${r1(ee)} ÷ (1 + ${R.target+R.rir}/30) = ${r1(ee/(1+(R.target+R.rir)/30))} → 눈금 ${inc}에 맞춰 ${w} × ${R.target}회 × ${R.sets}세트 (논문 기준 임시값)`)}
+      else B.lines.push('무게를 다시 계산할 기록이 없어 그날 숫자를 그대로 두었어요. 트레이너가 확인해 주세요');
+    }
     const between=msessions(m.id).filter(s=>s.date<date&&s.date>src.s.date&&(mode==='recent'||s.templateId===splitId));
     for(const k of between){const y=k.exercises.find(e=>e.exId===item.exId); if(!y) continue;
       if(k.status==='plan_only') B.lines.push(`${md(k.date)} 칸은 무게만 있어(했는지 모름) 건너뜀`);
@@ -1848,6 +2039,17 @@ function fillExercise(m,item,date,splitId,force,prevItems){
       out.sets.push(mkSet('drop',floorTo(w0*0.8,inc),R.target)); B.lines.push('드롭세트: 마지막에 약 20% 내린 세트 하나 (논문 기준 임시값)');
     }
   }
+  if(item.role!=='워밍업'&&out.sets.length){
+    const today=loadOf(prevItems); let refS=null;
+    if(mode==='same'||mode==='recent') refS=(mode==='same'?same:recent).s; else if(mode==='target') refS=tgt.s; else if(e1) refS=completed(m.id).find(s=>s.date===e1.date&&s.exercises.some(e=>e.exId===item.exId&&e.status==='done'));
+    const ref=ctxIn(refS,item.exId);
+    B.lines.push(`앞 종목: 오늘은 이 종목 앞에 ${ctxText(today)}${ref?` / 기준으로 쓴 ${md(refS.date)}엔 ${ctxText(ref)}`:''} (D90)`);
+    if(ref&&(today.mains>ref.mains||today.work>=ref.work+6)){
+      if(mode==='target') B.lines.push('오늘은 앞에서 더 많이 해서 지칠 수 있어요. 다만 목표는 트레이너가 정한 숫자라 그대로 둬요');
+      else{const ch=harderSets(out.sets,R.rir,inc);if(ch.length){B.tag=(B.tag?B.tag+' · ':'')+'앞 종목';
+        B.lines.push(`오늘은 앞에서 더 많이 해서(${today.mains>ref.mains?'메인이 더 많음':'본세트 6개 이상 더'}) 여유 횟수를 1개 더 남기게 바꿨어요: ${ch.join(', ')}. 컨디션 조절과 같은 계산이에요 (논문 기준 임시값)`)}}
+    } else if(ref&&today.mains<ref.mains&&today.work<=ref.work-6) B.lines.push('오늘은 앞이 그때보다 가벼워 여유가 더 있을 수 있어요. 숫자는 올리지 않았어요 (트레이너가 정해요)');
+  }
   if(item.role==='메인'&&(mode==='target'||mode==='rule')&&!prevItems.some(p=>p.role==='워밍업')){
     const first=out.sets.find(st=>isNum(st.pw)); const lw=lastWarmup(m,item.exId,date);
     if(lw){out.sets.unshift(...lw.sets.map(st=>mkSet('warmup',st.aw,st.ar)));
@@ -1858,6 +2060,7 @@ function fillExercise(m,item,date,splitId,force,prevItems){
   if(R.rounds) B.lines.push('유산소성 순환: 횟수 칸은 라운드 수로 씀');
   const lastTop=(same||recent)&&topSet(((same||recent).x));
   if(mode!=='rule'&&lastTop&&isNum(lastTop.r)&&lastTop.r>10&&isNum(lastTop.w)) B.lines.push(`${md((same||recent).s.date)} ${fw(lastTop.w,item.exId)} × ${lastTop.r}회로 추정 1RM 공식을 쓰면 ${Math.round(lastTop.w*(1+lastTop.r/30)*10)/10}이 나오지만, 10회가 넘는 세트라 공식을 쓰지 않았어요 (공식은 10회 이하만, D59)`);
+  {const fst=out.sets.find(st=>st.kind!=='warmup'&&isNum(st.pw)&&st.pw>0);const ex1=e1For(m,item.exId,date);if(ex1&&fst){const er=30*(ex1.e/fst.pw-1)-R.rir;if(er>=0&&er<=25)B.lines.push(`기댓값: 이 회원 ${md(ex1.date)} ${ex1.w} × ${ex1.r}회로 본 추정 1RM ${r1(ex1.e)}이면 ${fw(fst.pw,item.exId)}에서 여유 ${R.rir}회 남기고 약 ${Math.round(er)}회${ex1.hi?' · 10회 넘는 세트로 추정해 덜 정확해서 숫자 채우기에는 안 쓰고, 마무리에서 기댓값과 비교하는 데만 써요':''} (D91)`)}}
   B.lines.push("기본 추천은 컨디션 '보통' 기준이에요. 수업 시작에서 컨디션이 다르면 바뀐 숫자를 주황색으로 보여 줘요 (D67)");
   return out;
 }
@@ -1870,13 +2073,14 @@ function planExercise(m,item,date,splitId,prevItems,force){
 function createPlanned(m,date,time,tid){
   const t=tplOf(m,tid); const s={id:uid('s'),memberId:m.id,date,time:time||'',templateId:tid,status:'planned',cond:null,cautionChecks:{},goal:'',memo:'',observations:[],nextTargets:{},exercises:[]};
   const prev=[];
-  for(const it of (t?t.items:[])){s.exercises.push(planExercise(m,it,date,tid,prev));prev.push(it)}
+  for(const it of (t?t.items:[])){const y=planExercise(m,it,date,tid,prevCtx(prev));s.exercises.push(y);prev.push(y)}
   const tg=s.exercises.map(x=>{const t=findTarget(m,x.exId,date);return t?(t.t.text?`${EX(x.exId).name} ${t.t.text}`:`${EX(x.exId).name} ${t.t.w!=null?fw(t.t.w,x.exId):''}${t.t.r!=null?' × '+t.t.r:''}`):null}).filter(Boolean);
   s.goal=tg.length?tg.join(' / '):'';
   S.sessions.push(s); return s;
 }
+function refillOrder(s){if(s.status!=='planned')return;for(const x of s.exercises)if(x.status==='planned'&&!x.edited&&!x.sets.some(st=>st.done))refill(s,x,x.force)}
 function refill(s,x,force){
-  const m=M(s.memberId); const idx=s.exercises.indexOf(x); const prev=s.exercises.slice(0,idx).map(e=>({role:e.role}));
+  const m=M(s.memberId); const idx=s.exercises.indexOf(x); const prev=prevCtx(s.exercises.slice(0,idx));
   const f=fillExercise(m,{exId:x.exId,role:x.role,structure:x.structure},s.date,s.templateId,force,prev);
   x.sets=f.sets;x.basis=f.basis;x.rest=f.rest;x.prir=f.prir;x.force=force||null;x.edited=false;
 }
@@ -1971,7 +2175,7 @@ function applyBelow(s,x,i){
 function newSet(s,x){const l=x.sets[x.sets.length-1];const ns=mkSet(l&&l.kind!=='warmup'?l.kind:'working',l?(l.aw??l.pw):null,l?(l.ar??l.pr):null);if(isLive(s))ns.added=true;else x.edited=true;x.sets.push(ns);return ns}
 function swapExercise(s,x,to,scope){
   const m=M(s.memberId); const i=s.exercises.indexOf(x);
-  const y=planExercise(m,{exId:to,role:x.role,structure:x.structure},s.date,s.templateId,s.exercises.slice(0,i).map(e=>({role:e.role})));y.origin='swap';
+  const y=planExercise(m,{exId:to,role:x.role,structure:x.structure},s.date,s.templateId,prevCtx(s.exercises.slice(0,i)));y.origin='swap';
   s.exercises.splice(i+1,0,y);x.status='swapped';x.scope=scope||'today';x.replacedBy=y.uid;
   if(x.scope==='template'){const t=tplOf(m,s.templateId);const it=t&&t.items.find(k=>k.exId===x.exId);if(it){it.exId=to;tplTouched(t,`${EX(x.exId).name} → ${EX(to).name}`,s.date)}}
   return y;
@@ -2093,9 +2297,9 @@ function copyToNext(src,xs){
     let sets=x.sets.filter(st=>which?st.done:true).map(st=>mkSet(st.kind,which?(st.aw??st.pw):st.pw,which?(st.ar??st.pr):st.pr)).filter(st=>st.pw!=null||st.pr!=null);
     const basis={tag:'복사',date:src.date,lines:[`${md(src.date)} ${splitName(src)} 기록을 그대로 복사했어요.`+(x.raw?` 수첩: ${x.raw}`:'')],options:[]};
     let y=tgt.exercises.find(e=>e.exId===x.exId&&e.status!=='removed'&&e.status!=='swapped');
-    if(!sets.length){const p=planExercise(m,{exId:x.exId,role:x.role,structure:x.structure},tgt.date,tgt.templateId,tgt.exercises.map(e=>({role:e.role})));sets=p.sets;basis.lines.push('숫자가 없어 규칙으로 채웠어요.')}
+    if(!sets.length){const p=planExercise(m,{exId:x.exId,role:x.role,structure:x.structure},tgt.date,tgt.templateId,prevCtx(tgt.exercises));sets=p.sets;basis.lines.push('숫자가 없어 규칙으로 채웠어요.')}
     if(y){y.sets=sets;y.basis=basis;y.edited=false}
-    else{y=planExercise(m,{exId:x.exId,role:x.role,structure:x.structure},tgt.date,tgt.templateId,tgt.exercises.map(e=>({role:e.role})));y.sets=sets;y.basis=basis;y.origin='added';if(x.setting)y.setting=x.setting;tgt.exercises.push(y)}
+    else{y=planExercise(m,{exId:x.exId,role:x.role,structure:x.structure},tgt.date,tgt.templateId,prevCtx(tgt.exercises));y.sets=sets;y.basis=basis;y.origin='added';if(x.setting)y.setting=x.setting;tgt.exercises.push(y)}
   }
   save(); return tgt;
 }
@@ -2351,7 +2555,7 @@ V.member=r=>{
   const m=M(r.mid); const u=upcoming(m.id); const done=completed(m.id); const t=todayIso(); const last=done[done.length-1];
   const d30=done.filter(s=>daysBetween(s.date,t)>=0&&daysBetween(s.date,t)<30).length;
   const cn=openCautions(m).length;
-  const pbar=`<div class="pbar"><span class="nm">${esc(m.code)}</span>${pill('회원','blue')}${cn?pill('주의 '+cn,'red'):''}${m.goals.filter(g=>!g.end).length?pill('목표 있음','green'):''}
+  const pbar=`<div class="pbar"><span class="chartno">차트 No. PT-${String(S.members.indexOf(m)+1).padStart(4,'0')}</span><span class="nm">${esc(m.code)}</span>${pill('회원','blue')}${cn?pill('주의 '+cn,'red'):''}${m.goals.filter(g=>!g.end).length?pill('목표 있음','green'):''}
     <div class="vit"><span>누적 <b>${done.length}</b>회</span><span>최근 30일 <b>${d30}</b>회</span>${(()=>{const c=msessions(m.id).filter(x=>x.status==='cancelled'&&x.date<=t).length,n=msessions(m.id).filter(x=>x.status==='no_show'&&x.date<=t).length;return `<span>취소 <b style="color:${c?'var(--bad)':'inherit'}">${c}</b> · 안 옴 <b style="color:${n?'var(--warn)':'inherit'}">${n}</b></span>`})()}<span>첫 기록 <b>${done[0]?md(done[0].date):'—'}</b></span><span>마지막 <b>${last?md(last.date):'—'}</b>${last?` (${daysBetween(last.date,t)}일 전)`:''}</span><span>다음 PT <b>${u?mdw(u.date):'없음'}</b>${u?' '+esc(splitName(u)):''}</span></div></div>`;
   const all=msessions(m.id).filter(s=>!(s.example&&s.date>t)).slice().sort((a,b)=>byDate(b,a));
   const open=UI.cur['hx-'+m.id]===undefined?(done[done.length-1]||{}).id:UI.cur['hx-'+m.id];
@@ -2370,8 +2574,10 @@ V.member=r=>{
       ${ip?btn('이어서 하기','openSession',{sid:u.id},'primary'):btn('숫자 정하기','openSession',{sid:u.id},'primary')+`<button class="btn ghost more" data-act="modal" data-type="sessMenu" data-sid="${u.id}" aria-label="수업 메뉴">…</button>`}</div>`;
   } else next=`<div class="row"><span class="muted">잡힌 수업이 없어요.</span><span class="sp"></span>${btn('다음 PT 잡기','modal',{type:'schedule',mid:m.id},'primary')}</div>`;
   const mainOf=s=>{const x=s.exercises.find(e=>e.status==='done'&&e.role==='메인')||s.exercises.find(e=>e.status==='done');const tt=x&&topSet(x);return x?`${esc(EX(x.exId).name)}${tt?` <b class="num">${ftop(tt,x.exId)}</b>`:''}`:'—'};
-  const mt=mainTrend(m,262,130);
+  const mt=null;
   const notes=m.notes.filter(n=>['general','lifestyle','diet','self_train','personality'].includes(n.kind));
+  if(UI.look==='chart') return topBar(esc(m.code),'회원 진료기록부',
+      btn('추이','go',{to:'trend',mid:m.id})+btn('수업 기록','go',{to:'history',mid:m.id})+btn('루틴 틀','go',{to:'templates',mid:m.id})+btn('회원 정보','go',{to:'memberEdit',mid:m.id}))+memberDoc({m,u,done,last,d30,all,t,next,mt,notes});
   return topBar(esc(m.code),'회원 한눈에',
       btn('추이','go',{to:'trend',mid:m.id})+btn('수업 기록','go',{to:'history',mid:m.id})+btn('루틴 틀','go',{to:'templates',mid:m.id})+btn('회원 정보','go',{to:'memberEdit',mid:m.id}))+pbar+
     `<div class="chartlay">
@@ -2379,11 +2585,12 @@ V.member=r=>{
       <div class="cl-mid" data-sk="main">
         <div class="box"><div class="bh">다음 PT</div><div class="bb">${next}</div></div>
         <div class="box"><div class="sec3">${cautionSec(m)}${checkSec(m)}${goalSec(m)}</div></div>
+        <div class="box"><div class="bh">무게 변화 추이 <span class="muted" style="font-weight:500">반복 구간별</span></div><div class="bb">${roleTrend(m,470,220)}</div></div>
+        <div class="box"><div class="bh">기댓값 소견 <span class="muted" style="font-weight:500">덜 나온 세트</span></div><div class="bb">${devHistory(m,6)}</div></div>
         ${last?`<div class="box"><div class="bh">지난 PT 변화 <span class="muted" style="font-weight:500">${mdw(last.date)} · ${esc(splitName(last))}</span><span class="sp"></span>${btn('수업 상세','go',{to:'detail',sid:last.id},'ghost small')}</div><div class="bb">${deltaChart(m,last)}</div></div>`:''}
       </div>
       <div class="cl-right">
         <h3>월별 수업 횟수</h3>${monthBars(m,262,130)}
-        <h3>메인 종목 최고 무게 ${mt.ex?`<span class="tiny muted" style="font-weight:500">${esc(EX(mt.ex).name)}</span>`:''}</h3>${mt.svg}
         <h3>쓴 근육 <span class="sp"></span>${chips([['last','지난 PT'],['d30','최근 30일']],UI.cur['mus-'+m.id]||'last','musRange',{mid:m.id})}</h3>
         ${(()=>{const rg=UI.cur['mus-'+m.id]||'last';const ss=rg==='last'?(last?[last]:[]):done.filter(s=>daysBetween(s.date,t)>=0&&daysBetween(s.date,t)<30);return muscleBlock(ss,238,rg==='last'?'지난 PT':'최근 30일')})()}
         <h3>메모</h3>${notes.map(n=>`<div class="li small" style="align-items:flex-start">${pill(NOTE_KINDS[n.kind],'gray')}<div style="flex:1">${esc(n.text)}</div>${btn('지우기','delNote',{mid:m.id,id:n.id},'small ghost')}</div>`).join('')||'<div class="empty">없어요.</div>'}
@@ -2478,10 +2685,12 @@ function whyShort(s,x){
   const B=x.basis; if(!B) return '';
   if(x.edited) return '트레이너가 고친 숫자';
   const R=S.settings.roles[x.role]||S.settings.roles['보조'];
+  const tg=B.tag||''; const pre=tg.includes('앞 종목')?' · 앞 종목이 더 많아 여유 1개 더':'';
+  if(tg.startsWith('역할 바뀜')) return `${md(B.date)}엔 다른 역할이라 오늘 역할(${x.role}) 기준으로 다시 계산${pre}`;
   if(B.mode==='target') return `${md(B.date)} 수업 끝에 정한 다음 목표`;
-  if(B.mode==='same') return `지난 같은 분할(${md(B.date)}) 실제값 그대로${B.tag==='무게 찾기'?', 무게 기록 없음':''}`;
-  if(B.mode==='recent') return `최근 수업(${md(B.date)}) 실제값 그대로`;
-  if(B.e1) return `추정 1RM ${Math.round(B.e1.e*10)/10} → ${R.target}회·여유 ${R.rir}회 무게`;
+  if(B.mode==='same') return `지난 같은 분할(${md(B.date)}) 실제값${pre?pre:' 그대로'}${B.tag==='무게 찾기'?', 무게 기록 없음':''}`;
+  if(B.mode==='recent') return `최근 수업(${md(B.date)}) 실제값${pre?pre:' 그대로'}`;
+  if(B.e1) return `추정 1RM ${Math.round(B.e1.e*10)/10} → ${R.target}회·여유 ${R.rir}회 무게${pre}`;
   return `기록이 없어 역할(${x.role}) 기준 ${R.target}회, 무게는 수업 중 찾기`;
 }
 function briefLine(s,m){
@@ -2658,12 +2867,15 @@ V.summary=r=>{
        ${np.on?`<div class="row">${bIn('np',np.date,{sid:s.id,f:'date'},{type:'date',w:160})}${bIn('np',np.time,{sid:s.id,f:'time'},{type:'time',w:120})}${bSel('np',m.templates.map(t=>[t.id,t.name]),np.tid,{sid:s.id,f:'tid'},{w:120})}</div><div class="tiny muted" style="margin-top:4px">분할은 순서대로 다음 것을 골라 뒀어요. 끝내면 그 분할의 숫자를 미리 채워요.</div>`:''}</div>
      ${checkCard(m,3)}</div></div></div>`+
    actBar(btn('‹ 마무리로','go',{to:'summary',sid:s.id}),'<span class="tiny muted" style="margin-right:8px">아무것도 안 눌러도 수업 기록은 저장돼요.</span>'+btn('끝내기','finish',{sid:s.id},'primary'));
+  if(UI.look==='chart') return topBar(esc(m.code)+' 마무리',`${mdw(s.date)} · ${esc(splitName(s))} · 회원이 간 뒤 1분 · 오늘 기록 확인`,'',{noBack:true})+summaryDoc({s,m,done,ch,longs,prs,cands,candRows,tplQ})+
+   actBar(btn('‹ 수업으로','go',{to:'live',sid:s.id}),'<span class="tiny muted" style="margin-right:8px">회원이 아직 있으면 결과를 보여 주고, 간 뒤에 다음 PT를 정해요.</span>'+btn('회원에게 보여 주기','go',{to:'show',sid:s.id})+btn('다음 PT 계획 ›','go',{to:'nextplan',sid:s.id},'primary'));
   return topBar(esc(m.code)+' 마무리',`${mdw(s.date)} · ${esc(splitName(s))} · 회원이 간 뒤 1분 · 오늘 기록 확인`,'',{noBack:true})+
    `<div class="scroll" data-sk="main"><div class="grid2"><div class="col">
      <div class="card"><h2><span class="n">1</span>오늘 결과 <span class="tiny muted">줄을 누르면 고칠 수 있어요</span></h2><table><tr><th>종목</th><th>오늘</th><th>지난 같은 분할</th></tr>${res||'<tr><td colspan="3" class="empty">기록한 세트가 없어요.</td></tr>'}</table></div>
      ${tplQ}</div>
     <div class="col">
      ${foldCard('sum2-'+s.id,'<span class="n">2</span>계획과 달라진 곳',ch.length+longs.length,ch.map(c=>`<div class="small">· ${esc(c)}</div>`).join('')+longs.map(c=>`<div class="small" style="color:var(--warn)">· ${esc(c)}</div>`).join('')||'<div class="empty">계획대로 했어요.</div>')}
+     <div class="card"><h2>기댓값과 비교 <span class="tiny muted">이 회원 추정 1RM 기준</span></h2>${devBlock(m,s)}</div>
      ${foldCard('sum3-'+s.id,'<span class="n">3</span>넘은 개인 기록',prs.length,prs.map(p=>`<div class="small">· ${esc(p)}</div>`).join('')||'<div class="empty">없어요.</div>')}
      ${cands.length?foldCard('sum7-'+s.id,'<span class="n">4</span>주의사항으로 올릴 것 <span class="tiny muted">올릴지는 트레이너가 정해요</span>',cands.length,`<div class="list">${candRows}</div>`):''}
     </div></div></div>`+
@@ -2684,6 +2896,8 @@ V.show=r=>{
     const pts=ser.slice(-9).map(o=>({date:o.s.date,v:o.t.w,label:`${md(o.s.date)} ${ftop(o.t,ex)}`})); if(t&&isNum(t.w)) pts.push({date:s.date,v:t.w,label:`오늘 ${ftop(t,ex)}`});
     const W=UI.orient==='land'?560:700; chart=pts.length&&pts.every(p=>isNum(p.v))?chartSVG(pts,W,220,p=>fw(p.v,ex),pts.length-1,{fewX:1}).replace(/data-act="trendPt"/g,'').replace(`<svg class="chart" width="${W}" height="220"`,`<svg class="chart" width="100%" viewBox="0 0 ${W} 220"`):'<div class="empty">무게 기록이 없는 종목이에요.</div>'}
   const pick=done.filter(x=>{const t=topDone(x);return t&&isNum(t.w)}).map(x=>`<button class="chip${x.exId===ex?' on':''}" data-act="pickShow" data-sid="${s.id}" data-v="${x.exId}">${esc(EX(x.exId).name)}</button>`).join(' ');
+  if(UI.look==='chart') return topBar(`${esc(m.code)} 회원님 결과 안내`,`${mdw(s.date)} · ${esc(splitName(s))}`,'',{noBack:true})+showDoc({s,m,done,chart,pick})+
+   actBar(btn('‹ 마무리로','go',{to:'summary',sid:s.id}),btn('다음 PT 계획 ›','go',{to:'nextplan',sid:s.id},'primary'));
   return topBar(`${esc(m.code)} 회원님, 오늘 수고했어요`,`${mdw(s.date)} · ${esc(splitName(s))}`,'',{noBack:true})+
    `<div class="scroll show" data-sk="main"><div class="grid2"><div class="col">
      <div class="card"><h2>오늘 한 운동 <span class="tiny muted">가장 무거운 세트</span></h2>${today||'<div class="empty">기록한 운동이 없어요.</div>'}${prs?`<div style="margin-top:8px">${prs}</div>`:''}</div>
@@ -2792,6 +3006,7 @@ V.settings=()=>{
      <div class="card"><h2>지난 실제값 기준</h2><div class="row">${chips([['same','같은 분할'],['recent','가장 최근']],S.settings.basis,'setBasis')}</div><div class="tiny muted" style="margin-top:4px">다음 목표가 없을 때 어느 수업의 실제값으로 채울지예요. 같은 분할에 없는 종목은 가장 최근으로 채워요. 바꾸면 앞으로 만드는 수업 준비부터 적용돼요.</div></div>
      <div class="card"><h2>역할별 기준 <span class="tag warn">논문 기준 임시값 (D59)</span></h2><table><tr><th>역할</th><th>횟수 범위</th><th>목표 횟수</th><th>여유 횟수</th><th>세트</th><th>쉬는 초</th></tr>${roleRows}</table><div class="tiny muted" style="margin-top:4px">트레이너 답(O02)이 오면 바꿀 값이에요. 유산소성 순환은 횟수 칸을 라운드로 써요.</div></div>
      <div class="card"><h2>예시 취소·안 옴 <span class="tag warn">예시</span></h2><div class="row">${chips([['1','보임'],['0','숨김']],S.settings.exampleCx===false?'0':'1','setExampleCx')}</div><div class="tiny muted" style="margin-top:4px">수첩에는 취소·안 옴 기록이 없어요. 화면을 보여 주려고 넣은 예시 ${EXAMPLE_CX.length}건이고, 운동 기록은 없어요. 실제 날짜를 알면 바꿔요.</div></div>
+     <div class="card"><h2>화면 디자인</h2><div class="row">${chips([['chart','진료기록부 (B)'],['emr','지금 디자인 (A)']],UI.look,'setLook')}</div><div class="tiny muted" style="margin-top:4px">B는 지도교수님 피드백(11/11)의 종이 진료기록부 느낌이에요. A는 11/6까지 다듬은 화면 그대로예요. 위쪽 도구 줄 '디자인' 버튼으로도 바꿀 수 있어요.</div></div>
      <div class="card"><h2>처음 화면</h2>${btn('로그아웃 (처음 화면으로)','logout',null,'small')}<div class="tiny muted" style="margin-top:4px">입력한 기록은 그대로 두고 로그인 화면으로 돌아가요.</div></div>
      <div class="card"><h2>처음 상태로</h2>${UI.confirmReset?`<div class="row"><span class="small">입력한 것을 모두 지울까요?</span>${btn('되돌리기','reset',null,'danger')}${btn('아니요','confirmReset',{v:0})}</div>`:btn('처음 상태로 되돌리기','confirmReset',{v:1},'small')}</div></div>
     <div class="card"><h2>종목 사전 <span class="tag warn">단위·눈금은 예시 (O36)</span></h2><div class="tiny muted" style="margin-bottom:4px">눈금은 +/− 한 칸과 계산한 무게를 내릴 때 써요. '한쪽'은 40/40kg처럼 한쪽 무게로 적는 기구예요.</div>
@@ -2965,6 +3180,191 @@ function deltaChart(m,s,o={}){
   return `<div class="dsum"><span class="up">오름 <b>${up}</b></span><span class="dn">내림 <b>${dn}</b></span><span>같음 <b>${eq}</b></span></div>
     <div class="dchart">${rows.map(line).join('')}</div>
     <div class="tiny faint" style="margin-top:4px">종목마다 최고 세트를 그 종목을 한 바로 전 수업과 비교해요. 무게가 같으면 횟수로 비교해요. 수첩 숫자 그대로이고, 오르고 내린 까닭은 판단하지 않아요.</div>`}
+
+/* ---------- 회원별 무게 변화 추이 (D86, D87) ----------
+   종목 하나를 골라 그날 가장 무거운 본세트(워밍업 세트 제외)를 찍는다.
+   선 색(범례) = 그 세트 횟수 구간: 저반복 1~5 · 중반복 6~12 · 고반복 13 이상 (논문 기준 임시값, 설정 전).
+   점 = 그날 그 종목의 역할 글자(워밍업·메인·보조, 역할마다 모양도 다름), 점 위 = 횟수. 순서 숫자는 넣지 않는다(D89).
+   세트 수는 표에서 평균으로만. 기록 숫자는 그대로 쓰고 새로 만들지 않는다. */
+const RT_BANDS=[['저반복','1~5회','var(--live)'],['중반복','6~12회','var(--accent)'],['고반복','13회 이상','var(--good)'],['횟수 없음','','var(--faint)']];
+const RT_PER=[['1','1개월'],['3','3개월'],['6','6개월'],['all','전체']];
+const RT_ROLEF=[['all','전체'],['워밍업','워밍업'],['메인','메인'],['보조','보조']];
+const rtBand=r=>!r?'횟수 없음':r<=5?'저반복':r<=12?'중반복':'고반복';
+const rtRole=r=>r==='워밍업'||r==='메인'||r==='보조'?r:'그 외';
+function rtData(m){
+  const by={};
+  for(const s of completed(m.id)){const done=s.exercises.filter(e=>e.status==='done');
+    done.forEach((x,i)=>{const t=topSet(x);if(!t)return;(by[x.exId]=by[x.exId]||[]).push({s,x,t,pos:i+1,of:done.length,b:rtBand(t.r),role:rtRole(x.role),sets:x.sets.filter(st=>st.kind!=='warmup').length})})}
+  return by;
+}
+function rtMark(p,cx,cy,c){
+  const lab=p.role==='그 외'?p.x.role.slice(0,2):p.role; const w=lab.length>2?40:32;
+  if(p.role==='메인') return `<rect x="${cx-w/2}" y="${cy-9}" width="${w}" height="18" rx="9" fill="${c}" stroke="var(--panel)" stroke-width="2"/><text class="rt-pos" x="${cx}" y="${cy+3.8}" text-anchor="middle">${esc(lab)}</text>`;
+  if(p.role==='워밍업') return `<rect x="${cx-w/2}" y="${cy-9}" width="${w}" height="18" rx="2" fill="var(--panel)" stroke="${c}" stroke-width="1.8" stroke-dasharray="3 2"/><text class="rt-pos hol" x="${cx}" y="${cy+3.8}" text-anchor="middle" style="fill:${c}">${esc(lab)}</text>`;
+  return `<rect x="${cx-w/2}" y="${cy-9}" width="${w}" height="18" rx="9" fill="var(--panel)" stroke="${c}" stroke-width="2"/><text class="rt-pos hol" x="${cx}" y="${cy+3.8}" text-anchor="middle" style="fill:${c}">${esc(lab)}</text>`;
+}
+function roleTrend(m,W,H){
+  const by=rtData(m);
+  const exs=Object.keys(by).sort((a,b)=>by[b].length-by[a].length);
+  if(!exs.length) return '<div class="empty">무게를 적은 기록이 없어요.</div>';
+  let ex=UI.cur['rt-'+m.id]; if(!by[ex]) ex=exs[0];
+  const per=UI.cur['rtp-'+m.id]||'all', rf=UI.cur['rtr-'+m.id]||'all'; const t=todayIso();
+  const cut=per==='all'?null:(()=>{const d=pd(t);d.setMonth(d.getMonth()-Number(per));return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`})();
+  const inPer=by[ex].filter(p=>!cut||p.s.date>=cut);
+  const pts=inPer.filter(p=>rf==='all'||p.role===rf);
+  const rc=r=>inPer.filter(p=>p.role===r).length;
+  const head=`<div class="rt-hd"><div class="row" style="gap:6px">${exs.slice(0,6).map(id=>`<button class="chip${id===ex?' on':''}" data-act="pickRt" data-mid="${m.id}" data-v="${id}">${esc(EX(id).name)} <span class="tiny">${by[id].length}</span></button>`).join(' ')}</div>
+    <div class="row" style="gap:6px">${chips(RT_PER,per,'pickRtPer',{mid:m.id})}</div></div>
+    <div class="rt-hd"><div class="row" style="gap:6px"><span class="tiny muted">역할</span>${RT_ROLEF.map(([v,l])=>`<button class="chip${rf===v?' on':''}" data-act="pickRtRole" data-mid="${m.id}" data-v="${v}">${l}${v==='all'?'':` <span class="tiny">${rc(v)}</span>`}</button>`).join(' ')}</div>
+    <div class="rt-leg">${RT_BANDS.slice(0,3).map(([b,r,c])=>`<span><span class="rt-key" style="background:${c}"></span>${b} <span class="tiny muted">${r}</span></span>`).join('')}</div></div>`;
+  if(!pts.length) return head+`<div class="empty">이 기간·역할에는 ${esc(EX(ex).name)} 기록이 없어요. 기간이나 역할을 넓혀 보세요.</div>`;
+  const padL=40,padR=18,padT=24,padB=24;
+  const xs=pts.map(p=>pd(p.s.date).getTime()),x0=Math.min(...xs),x1=Math.max(...xs);
+  const ws=pts.map(p=>p.t.w),lo=Math.min(...ws),hi=Math.max(...ws),span=Math.max(hi-lo,hi*.2,4);
+  const step=span>60?20:span>24?10:span>10?5:span>4?2:1;
+  const y0=Math.max(0,Math.floor((lo-span*.15)/step)*step), y1=Math.ceil((hi+span*.2)/step)*step;
+  const X=v=>x1===x0?padL+(W-padL-padR)/2:padL+10+(v-x0)/(x1-x0)*(W-padL-padR-20), Y=v=>padT+(1-(v-y0)/(y1-y0))*(H-padT-padB);
+  let g='';for(let v=y0;v<=y1+1e-9;v+=step) g+=`<line class="axis" x1="${padL}" x2="${W-padR}" y1="${Y(v)}" y2="${Y(v)}"/><text x="${padL-6}" y="${Y(v)+4}" text-anchor="end">${v}</text>`;
+  const n=pts.length, every=Math.max(1,Math.ceil(n/(W/70)));
+  const xl=pts.map((p,i)=>i%every&&i!==n-1?'':`<text x="${X(xs[i])}" y="${H-6}" text-anchor="middle">${md(p.s.date)}</text>`).join('');
+  const col=b=>RT_BANDS.find(a=>a[0]===b)[2];
+  const lines=RT_BANDS.map(([b,,c])=>{const q=pts.map((p,i)=>({p,i})).filter(o=>o.p.b===b);if(q.length<2)return '';
+    return `<path d="${q.map((o,k)=>`${k?'L':'M'}${X(xs[o.i]).toFixed(1)},${Y(o.p.t.w).toFixed(1)}`).join(' ')}" fill="none" stroke="${c}" stroke-width="2"${b==='횟수 없음'?' stroke-dasharray="4 4"':''}/>`}).join('');
+  const dots=pts.map((p,i)=>{const cx=X(xs[i]),cy=Y(p.t.w);
+    return `<g class="rt-pt" data-act="go" data-to="detail" data-sid="${p.s.id}">${rtMark(p,cx,cy,col(p.b))}${p.t.r?`<text class="rt-r" x="${cx}" y="${cy-14}" text-anchor="middle">${p.t.r}회</text>`:''}<title>${mdw(p.s.date)} · ${p.b} · ${esc(p.x.role)} · ${esc(ftop(p.t,ex))} · ${p.sets}세트 (누르면 수업 상세)</title></g>`}).join('');
+  const svg=`<svg class="chart rt" width="100%" viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(EX(ex).name)} 반복 구간별 무게 변화">${g}${lines}${dots}${xl}</svg>`;
+  const rows=RT_BANDS.map(([b,r,c])=>{const q=pts.filter(p=>p.b===b);
+    if(!q.length) return b==='횟수 없음'?'':`<tr class="faint"><td><span class="rt-key" style="background:${c}"></span>${b} <span class="tiny">${r}</span></td><td colspan="4">이 기간 기록 없음</td></tr>`;
+    const f=q[0],l=q[q.length-1];const avg=q.reduce((a,p)=>a+p.sets,0)/q.length;
+    
+    const rl={};q.forEach(p=>rl[p.x.role]=(rl[p.x.role]||0)+1);
+    return `<tr><td><span class="rt-key" style="background:${c}"></span>${b} <span class="tiny muted">${r}</span></td><td class="num">${q.length}회</td><td class="num">${q.length>1?`${esc(fw(f.t.w,ex))} → <b>${esc(fw(l.t.w,ex))}</b>`:`<b>${esc(fw(l.t.w,ex))}</b>`}</td><td class="num">${(Math.round(avg*10)/10)}세트</td><td class="small">${Object.entries(rl).map(([k,v])=>`${esc(k)} ${v}`).join(' · ')}</td></tr>`}).join('');
+  return head+svg+`<table class="rt-tb"><tr><th>반복 구간</th><th>기록</th><th>무게 (처음 → 최근)</th><th>평균 세트</th><th>역할</th></tr>${rows}</table>
+    <div class="tiny muted" style="margin-top:4px">선 색 = 그 세트 횟수 구간(1~5 · 6~12 · 13 이상, 논문 기준 임시값) · 점 글자 = 그날 그 종목의 역할(메인 채움 · 보조 빈 칸 · 워밍업 점선 네모) · 점 위 = 횟수 · 점 = 그날 가장 무거운 본세트(워밍업 세트 빼고) · 점을 누르면 그날 수업 상세</div>`;
+}
+
+/* ---------- D91 기댓값과 비교 (마무리) · 기댓값 소견 (회원 화면) ----------
+   세트마다 계산하고 종목 하나에 한 줄로 묶는다: 2회 이상 덜 나온 세트가 있으면 ▼(가장 많이 덜 나온 세트),
+   없고 3회 이상 더 나온 세트가 있으면 ▲. 까닭 칩은 ▼ 줄에만, 종목(uid)에 하나 */
+function devGroups(m,s,onlyDone){
+  const by=new Map(); for(const e of expectList(m,s,onlyDone)){if(!by.has(e.x.uid))by.set(e.x.uid,[]);by.get(e.x.uid).push(e)}
+  return [...by.values()].map(L=>{const x=L[0].x;const lo=L.reduce((a,e)=>e.diff<a.diff?e:a);const hi=L.reduce((a,e)=>e.diff>a.diff?e:a);
+    const kind=lo.diff<=DEV_UNDER?'under':hi.diff>=DEV_OVER?'over':'ok';return {x,L,kind,pick:kind==='over'?hi:lo,key:x.uid}});
+}
+const expTxt=e=>e.exp<1?'1회 미만':`약 ${e.exp}회`;
+const e1Txt=e=>`<span class="tiny muted">${md(e.e1.date)} ${e.e1.w}×${e.e1.r} 기준${e.e1.hi?' · 덜 정확':''}</span>`;
+function devBlock(m,s){
+  const G=devGroups(m,s,true); if(!G.length) return '<div class="empty">비교할 세트가 없어요. 이 종목을 20회 이하로 한 지난 기록이 있어야 기댓값을 계산해요.</div>';
+  const dc=s.devCause||{};
+  const rows=G.map(g=>{const e=g.pick;const today=g.L.map(v=>`${fw(v.st.aw,g.x.exId)} × ${v.ar}`).join(', ');
+    const diff=g.kind==='under'?`<td class="num bad">▼ ${Math.abs(e.diff)}회</td>`:g.kind==='over'?`<td class="num good">▲ ${e.diff}회</td>`:'<td class="num muted">±2 안</td>';
+    const cause=g.kind==='under'?DEV_CAUSES.map(c=>`<button class="chip mini${dc[g.key]===c?' on':''}" data-act="devCause" data-sid="${s.id}" data-k="${g.key}" data-v="${c}">${c}</button>`).join(''):g.kind==='over'?'<span class="tiny muted">지난 세트가 한계가 아니었을 수 있어요. 다음 숫자를 올려 볼 근거예요</span>':'';
+    return `<tr><td><b>${esc(EX(g.x.exId).name)}</b></td><td class="small">${esc(today)}</td><td class="num">${esc(fw(e.st.aw,g.x.exId))}에서 ${expTxt(e)}<br>${e1Txt(e)}</td>${diff}<td>${cause}</td></tr>`}).join('');
+  return `<table class="dev-tb"><tr><th>종목</th><th>오늘 (본세트)</th><th>기댓값</th><th>차이</th><th>까닭 (▼만, 트레이너가 골라요)</th></tr>${rows}</table>
+    <div class="tiny muted" style="margin-top:4px">기댓값 = 이 회원이 바로 전에 이 종목을 한 날 최고 본세트로 구한 추정 1RM(여유 횟수 안 적었으면 0)으로, 오늘 무게에서 역할 기준 여유를 남기고 나올 횟수예요. 10회 넘는 세트로 구하면 '덜 정확'. 한 세트라도 2회 이상 적으면 ▼, 3회 이상 많으면 ▲ (논문 기준 임시값). 앱은 까닭을 판단하지 않아요.</div>`;
+}
+function devHistory(m,n){
+  const out=[];
+  for(const s of completed(m.id).slice().reverse()){for(const g of devGroups(m,s,false)){if(g.kind==='under')out.push({s,...g})}if(out.length>=n)break}
+  if(!out.length) return '<div class="empty">기댓값보다 2회 이상 덜 나온 종목이 없어요.</div>';
+  return `<table class="dev-tb"><tr><th>날짜</th><th>종목</th><th>기록</th><th>기댓값</th><th>까닭</th></tr>${out.slice(0,n).map(g=>{const e=g.pick;return `<tr class="click" data-act="go" data-to="detail" data-sid="${g.s.id}"><td class="num">${md(g.s.date)}</td><td>${esc(EX(g.x.exId).name)}</td><td class="num">${esc(fw(e.st.aw,g.x.exId))} × ${e.ar}</td><td class="num">${expTxt(e)} <span class="bad">▼${Math.abs(e.diff)}</span>${e.e1.hi?' <span class="tiny muted">덜 정확</span>':''}</td><td class="small">${esc((g.s.devCause||{})[g.key]||'—')}</td></tr>`}).join('')}</table>
+  <div class="tiny muted" style="margin-top:4px">이 회원 기록으로 계산한 기댓값보다 2회 이상 적게 나온 종목, 최근 ${Math.min(n,out.length)}개. 수첩 숫자 그대로이고, 까닭은 마무리에서 트레이너가 고른 것만 보여요. 줄을 누르면 그날 수업 상세.</div>`;
+}
+/* ---------- 디자인 B '진료기록부' 화면 구성 (2026-11-17, D85) ----------
+   이현아님: "색깔만 바뀐다고 진료기록부 같아 보이는 건 아니다. 화면 구성이 진료기록부 같아야지."
+   회원 화면 = 회원 진료기록부(인적 사항 칸 · 특이사항 · 인체도 · 경과기록 표),
+   마무리 = PT 경과기록지(S 주관 · O 실시 · A 평가 · P 계획, 서명),
+   회원에게 보여 주기 = PT 결과 안내서(결과표 · 인체도 · 발행 칸).
+   숫자는 모두 같은 기록에서 가져오고, 버튼(data-act)은 디자인 A와 같은 것을 쓴다. */
+const chartNo=m=>'PT-'+String(S.members.indexOf(m)+1).padStart(4,'0');
+function docHead(title,m,right){return `<div class="f-title"><span class="f-tt">${title}</span><span class="sp"></span>${right||''}<span class="f-no">차트 No. ${chartNo(m)}</span></div>`}
+function idTable(cells,cols){/* cells: [라벨, 값, 칸 수?] */let h='',n=0,row='';
+  for(const c of cells){const span=c[2]||1;row+=`<th>${c[0]}</th><td${span>1?` colspan="${span*2-1}"`:''}>${c[1]}</td>`;n+=span;if(n>=cols){h+=`<tr>${row}</tr>`;row='';n=0}}
+  if(row)h+=`<tr>${row}</tr>`;return `<table class="f-id">${h}</table>`}
+function fsec(label,body,cls){return `<div class="f-sec ${cls||''}"><div class="f-lb"><span>${label}</span></div><div class="f-bd">${body}</div></div>`}
+const signLine=(what,date)=>`<div class="f-sign"><span>${what}</span><span class="f-date">작성일 ${date}</span><span>담당 트레이너</span><i></i><span class="faint">(서명)</span></div>`;
+function topLine(x){const t=topSet({...x,sets:x.sets.filter(st=>st.done||st.aw!=null)});return t?ftop(t,x.exId):''}
+function cmpTop(a,b){if(!a||!b)return null;if(isNum(a.w)&&isNum(b.w)&&a.w!==b.w)return a.w>b.w?1:-1;const ar=+a.r||0,br=+b.r||0;return ar===br?0:ar>br?1:-1}
+const arrow=c=>c==null?'<span class="faint">—</span>':c>0?'<b class="up">▲ 오름</b>':c<0?'<b class="down">▼ 내림</b>':'<span class="muted">= 같음</span>';
+
+/* 1. 회원 진료기록부 */
+function memberDoc(o){
+  const {m,u,done,last,d30,all,t,next,mt,notes}=o;
+  const cx=msessions(m.id).filter(x=>x.status==='cancelled'&&x.date<=t).length, ns=msessions(m.id).filter(x=>x.status==='no_show'&&x.date<=t).length;
+  const goals=m.goals.filter(g=>!g.end).map(g=>esc(g.text)).join(' / ')||'<span class="faint">없음</span>';
+  const id=idTable([['회원',`<b class="f-name">${esc(m.code)}</b>`],['첫 기록',done[0]?done[0].date:'—'],['마지막 수업',last?`${last.date} <span class="muted">(${daysBetween(last.date,t)}일 전)</span>`:'—'],['다음 PT',u?`${mdw(u.date)} ${esc(splitName(u))}`:'<span class="faint">없음</span>'],
+    ['누적',`${done.length}회`],['최근 30일',`${d30}회`],['회차',`${usedCount(m)} / ${pkgTotal(m)}${(m.packages||[]).some(p=>p.example)?' '+EXAMPLE('예시'):''}`],['취소 · 안 옴',`<span${cx?' class="bad"':''}>${cx}</span> · ${ns}`],
+    ['목표',goals,3],['훈련 방향',blockText(curBlock(m))]],4);
+  const prog=all.slice(0,14).map(s=>{const open=UI.cur['hx-'+m.id]===s.id;const ok=s.status==='completed';
+    const items=ok?s.exercises.filter(x=>x.status==='done').map(x=>`${esc(EX(x.exId).name)}${topLine(x)?` <span class="num">${esc(topLine(x))}</span>`:''}`).join(', '):`<span class="muted">${statusLabel[s.status]}${s.example?' (예시)':''}</span>`;
+    const memo=[s.memo,...s.exercises.filter(x=>x.note).slice(0,2).map(x=>EX(x.exId).name+': '+x.note)].filter(Boolean).map(esc).join(' / ');
+    return `<tr class="click${open?' on':''}" data-act="histOpen" data-mid="${m.id}" data-sid="${s.id}"><td class="num nowrap">${s.date}</td><td>${pill(splitName(s))}</td><td class="small">${items||'—'}</td><td class="small muted">${memo||''}</td><td class="c">${ok?'<span class="f-chk">✓</span>':s.status==='cancelled'||s.status==='no_show'?'<span class="bad">✕</span>':'○'}</td></tr>`+
+      (open?`<tr class="f-open"><td colspan="5">${visitCard(m,s,u)}</td></tr>`:'')}).join('')||'<tr><td colspan="5" class="empty">기록이 없어요.</td></tr>';
+  const rg=UI.cur['mus-'+m.id]||'last';const ss=rg==='last'?(last?[last]:[]):done.filter(s=>daysBetween(s.date,t)>=0&&daysBetween(s.date,t)<30);
+  return `<div class="scroll chartdoc" data-sk="main"><div class="f-paper">
+    ${docHead('PT 회원 진료기록부',m,btn('+ 수업 추가','modal',{type:'addPkg',mid:m.id},'small'))}
+    <div class="f-cap">Ⅰ. 인적 사항</div>${id}
+    <div class="f-cap">Ⅱ. 특이사항 · 확인 · 목표</div>
+    <div class="f-row3">${fsec('특이사항<br><small>(주의)</small>',cautionSec(m),'warnsec')}${fsec('다음 확인',checkSec(m))}${fsec('목표<br><small>방향</small>',goalSec(m))}</div>
+    <div class="f-cap">Ⅲ. 신체 · 기록 소견</div>
+    <div class="f-row3 body3">
+      ${fsec('인체도',`<div class="row" style="margin-bottom:4px">${chips([['last','지난 PT'],['d30','최근 30일']],rg,'musRange',{mid:m.id})}</div>${muscleBlock(ss,220,rg==='last'?'지난 PT':'최근 30일')}`)}
+      ${fsec('월별<br><small>수업 횟수</small>',monthBars(m,262,130))}
+      ${fsec('지난 PT<br><small>변화</small>',last?`<div class="small muted" style="margin-bottom:4px">${mdw(last.date)} · ${esc(splitName(last))} ${btn('수업 상세','go',{to:'detail',sid:last.id},'ghost small')}</div>${deltaChart(m,last)}`:'<div class="empty">없어요.</div>')}
+    </div>
+    ${fsec('무게 변화<br><small>추이 · 반복 구간별</small>',roleTrend(m,860,250),'rtsec')}
+    ${fsec('기댓값<br><small>소견</small>',devHistory(m,6))}
+    <div class="f-cap">Ⅳ. 다음 PT 계획 (처방)</div>${fsec('다음 PT',next)}
+    <div class="f-cap">Ⅴ. 경과 기록 <span class="muted" style="font-weight:500">최근 ${Math.min(all.length,14)}회 · 줄을 누르면 펼쳐져요</span><span class="sp"></span>${btn('전체 수업 기록','go',{to:'history',mid:m.id},'small ghost')}</div>
+    <table class="f-prog"><tr><th style="width:92px">일자</th><th style="width:76px">분할</th><th>실시 내용 (종목 · 최고 세트)</th><th style="width:200px">소견 · 메모</th><th style="width:40px">확인</th></tr>${prog}</table>
+    <div class="f-cap">Ⅵ. 생활 · 식단 · 개인 운동 메모</div>
+    ${fsec('메모',`${notes.map(n=>`<div class="li small">${pill(NOTE_KINDS[n.kind],'gray')}<div style="flex:1">${esc(n.text)}</div>${btn('지우기','delNote',{mid:m.id,id:n.id},'small ghost')}</div>`).join('')||'<div class="empty">없어요.</div>'}<div class="row" style="margin-top:6px;flex-wrap:nowrap">${dSel('nKind-'+m.id,['general','lifestyle','diet','self_train','personality'].map(k=>[k,NOTE_KINDS[k]]),'general',{w:84})}${dIn('nText-'+m.id,'메모',{grow:1})}${btn('넣기','addNote',{mid:m.id},'small')}</div>`)}
+    ${signLine('위 기록은 트레이너 수첩과 수업 기록을 옮긴 것이에요.',todayIso())}
+  </div></div>`;
+}
+
+/* 2. PT 경과기록지 (마무리) */
+function summaryDoc(o){
+  const {s,m,done,ch,longs,prs,cands,candRows,tplQ}=o;
+  const n=sessNo(s);
+  const id=idTable([['회원',`<b class="f-name">${esc(m.code)}</b>`],['수업일',`${s.date} ${esc(s.time||'')}`],['분할',esc(splitName(s))],['회차',n?`${n} / ${pkgTotal(m)}`:'—']],4);
+  const c=s.cond||{};
+  const condT=`<table class="f-cond"><tr><th></th>${['좋음/없음','평소/약간','나쁨/뚜렷'].map(h=>`<th>${h}</th>`).join('')}</tr>${COND_ITEMS.map(([k,l])=>{const opts=k==='pain'?PAIN3:COND3;return `<tr><th>${l}</th>${opts.map(([v])=>`<td class="c">${c[k]===v?'<span class="f-chk">✓</span>':'<span class="f-box"></span>'}</td>`).join('')}</tr>`}).join('')}</table>${c.painWhere?`<div class="small">통증 부위: ${esc(c.painWhere)}</div>`:''}${s.memo?`<div class="small" style="margin-top:4px">회원 말 · 메모: ${esc(s.memo)}</div>`:''}`;
+  const res=done.map(x=>{const ls=lastSame(m,s,x.exId);const a=topSet({...x,sets:x.sets.filter(st=>st.done)});const b=ls&&topSet(ls.y);
+    return `<tr class="click" data-act="backToEx" data-sid="${s.id}" data-uid="${x.uid}"><td><b>${esc(EX(x.exId).name)}</b></td><td class="small">${x.role}</td><td class="small">${esc(fsets(x.sets.filter(st=>st.done),x.exId,'a'))}</td><td class="small">${ls?`${md(ls.p.date)} · ${esc(fsets(ls.y.sets,x.exId,'a'))}`:'<span class="faint">처음</span>'}</td><td class="c small">${arrow(cmpTop(a,b))}</td></tr>`}).join('')||'<tr><td colspan="5" class="empty">기록한 세트가 없어요.</td></tr>';
+  const li=a=>a.map(t=>`<div class="small">· ${esc(t)}</div>`).join('');
+  return `<div class="scroll chartdoc" data-sk="main"><div class="f-paper">
+    ${docHead('PT 경과기록지',m,'<span class="muted small">줄을 누르면 고칠 수 있어요</span>')}
+    ${id}
+    <div class="f-soap">
+      ${fsec('<b>S</b><br><small>주관</small>',`<div class="f-sub">수업 전 컨디션 · 회원 말</div>${condT}`)}
+      ${fsec('<b>O</b><br><small>실시</small>',`<div class="f-sub">오늘 한 세트 (워밍업 포함) · 지난 같은 분할과 비교</div><table class="f-res"><tr><th>종목</th><th style="width:70px">역할</th><th>오늘</th><th>지난 같은 분할</th><th style="width:74px">최고 세트</th></tr>${res}</table>`)}
+      ${fsec('<b>A</b><br><small>평가</small>',`<div class="f-two"><div><div class="f-sub">계획과 달라진 곳 ${ch.length+longs.length}</div>${li(ch)}${longs.map(t=>`<div class="small" style="color:var(--warn)">· ${esc(t)}</div>`).join('')||(ch.length?'':'<div class="empty">계획대로 했어요.</div>')}</div><div><div class="f-sub">넘은 개인 기록 ${prs.length}</div>${li(prs)||'<div class="empty">없어요.</div>'}</div></div><div class="f-sub" style="margin-top:10px">기댓값과 비교 (이 회원 추정 1RM 기준)</div>${devBlock(m,s)}<div class="tiny muted" style="margin-top:6px">앱은 오르내린 까닭을 판단하지 않아요. 까닭은 트레이너가 적어요.</div>`)}
+      ${fsec('<b>P</b><br><small>계획</small>',`<div class="f-sub">주의사항으로 올릴 것 (올릴지는 트레이너가 정해요)</div>${cands.length?`<div class="list">${candRows}</div>`:'<div class="empty">없어요.</div>'}${tplQ?`<div style="margin-top:8px">${tplQ}</div>`:''}<div class="small muted" style="margin-top:6px">다음 숫자와 날짜는 아래 '다음 PT 계획'에서 정해요.</div>`)}
+    </div>
+    ${signLine('기록 확인',s.date)}
+  </div></div>`;
+}
+
+/* 3. PT 결과 안내서 (회원에게 보여 주기): 메모·주의사항·트레이너 판단은 넣지 않는다 */
+function showDoc(o){
+  const {s,m,done,chart,pick}=o;const n=sessNo(s);
+  const id=idTable([['회원님',`<b class="f-name">${esc(m.code)}</b>`],['수업일',s.date],['운동',esc(splitName(s))],['회차',n?`${n}회째`:'—']],4);
+  const rows=done.map(x=>{const a=topSet({...x,sets:x.sets.filter(st=>st.done)});const ls=lastSame(m,s,x.exId);const b=ls&&topSet(ls.y);const p=prFor(m,s,{...x,sets:x.sets.filter(st=>st.done)});
+    const sets=x.sets.filter(st=>st.done&&st.kind!=='warmup').length;
+    return `<tr><td><b>${esc(EX(x.exId).name)}</b></td><td class="num big">${a?esc(ftop(a,x.exId)):'—'}</td><td class="c">${sets}세트</td><td class="small">${b?`${esc(ftop(b,x.exId))} <span class="faint">${md(ls.p.date)}</span>`:'<span class="faint">처음</span>'}</td><td class="c">${arrow(cmpTop(a,b))}</td><td class="c">${p&&!p.first?'<span class="f-stamp">최고 기록</span>':''}</td></tr>`}).join('')||'<tr><td colspan="6" class="empty">기록한 운동이 없어요.</td></tr>';
+  return `<div class="scroll chartdoc show" data-sk="main"><div class="f-paper">
+    ${docHead('PT 운동 결과 안내서',m)}
+    ${id}
+    <div class="f-cap">Ⅰ. 오늘의 결과 <span class="muted" style="font-weight:500">종목마다 가장 무거운 세트</span></div>
+    <table class="f-res big"><tr><th>운동</th><th>오늘 결과</th><th style="width:70px">세트</th><th>지난번</th><th style="width:86px">변화</th><th style="width:90px">비고</th></tr>${rows}</table>
+    <div class="f-row2">
+      ${fsec('오늘 쓴<br>근육',muscleBlock([s],220,'오늘'))}
+      ${fsec('무게<br>흐름',`<div class="row" style="margin-bottom:6px">${pick}</div>${chart}`)}
+    </div>
+    <div class="f-issue"><span>${esc(m.code)} 회원님, 오늘 수고했어요.</span><span class="sp"></span><span>발행일 ${s.date}</span><span>담당 트레이너</span><i></i><span class="faint">(서명)</span></div>
+  </div></div>`;
+}
 /* ---------- 시나리오 따라 하기 (시나리오.md 2부, v3 화면 넷 순서의 장면 1~8) ----------
    장면마다 단계가 있고, 단계마다 할 말(say), 짚을 곳(at), 끝났는지(done), 대신 하기(auto)가 있다.
    화면을 그릴 때마다 지금 단계가 끝났는지 보고 다음 단계로 넘어간다. */
@@ -3433,6 +3833,8 @@ function render(o={}){
   app.innerHTML=html; UI.rk=routeKey();
   app.querySelectorAll('[data-sk]').forEach(el=>{const v=UI.scrolls[UI.rk+'|'+el.dataset.sk];if(v!=null)el.scrollTop=v});
   if(fk){const el=app.querySelector(`[data-k="${CSS.escape(fk)}"]`);if(el){el.focus({preventScroll:true});if(sel)try{el.setSelectionRange(sel[0],sel[1])}catch(e){}}}
+  document.getElementById('device').classList.toggle('chart',UI.look==='chart');
+  document.getElementById('b-look').textContent=UI.look==='chart'?'디자인: 진료기록부':'디자인: 지금(EMR)';
   document.getElementById('b-orient').textContent=UI.orient==='land'?'세로로 보기':'가로로 보기';
   document.getElementById('b-fit').textContent=UI.fit?'실제 크기':'창에 맞추기';
   if(typeof guideAfter==='function') guideAfter();
@@ -3531,7 +3933,7 @@ const ACT={
   setKindPick:d=>{const {x,st,s}=gx(d);st.kind=d.v;if(s.status==='planned')x.edited=true;UI.modal=null;save();render()},
   delSet:d=>{const {s,x}=gx(d);x.sets.splice(+d.i,1);if(s.status==='planned')x.edited=true;updateExStatus(x);UI.modal=null;UI.edit=null;save();render()},
   addSet:d=>{const {s,x}=gx(d);newSet(s,x);if(isLive(s))UI.cur[s.id]=x.uid;save();render()},
-  moveEx:d=>{const {s,x}=gx(d);UI.modal=null;const i=s.exercises.indexOf(x);let j=i+(+d.dir);while(j>=0&&j<s.exercises.length&&['removed','swapped'].includes(s.exercises[j].status))j+=(+d.dir);if(j<0||j>=s.exercises.length)return render();s.exercises.splice(i,1);s.exercises.splice(j,0,x);save();render()},
+  moveEx:d=>{const {s,x}=gx(d);UI.modal=null;const i=s.exercises.indexOf(x);let j=i+(+d.dir);while(j>=0&&j<s.exercises.length&&['removed','swapped'].includes(s.exercises[j].status))j+=(+d.dir);if(j<0||j>=s.exercises.length)return render();s.exercises.splice(i,1);s.exercises.splice(j,0,x);refillOrder(s);save();render()},
   restoreEx:d=>{const {s,x}=gx(d);x.status='planned';x.reason='';updateExStatus(x);save();render()},
   doRemove:d=>{const {s,x}=gx(UI.modal);removeExercise(s,x,d.v);if(UI.cur[s.id]===x.uid)delete UI.cur[s.id];UI.modal=null;save();toast(`${EX(x.exId).name} 뺐어요 (${d.v})`)},
   pickSwap:d=>{UI.modal.to=d.v;render()},
@@ -3548,7 +3950,7 @@ const ACT={
   pickShow:d=>{UI.cur['show-'+d.sid]=d.v;render()},
   raiseNext:d=>{const s=SES(d.sid);const x=s.exercises.find(e=>e.exId===d.ex&&e.status==='done');const top=x&&topDone(x);if(!top)return;const inc=+EX(d.ex).inc||2.5;ensureNext(s).targets[d.ex]={w:Math.round((top.w+inc)*100)/100,r:top.r,text:'',raised:true};save();render()},
   keepNext:d=>{delete ensureNext(SES(d.sid)).targets[d.ex];save();render()},
-  doAddEx:()=>{const o=UI.modal;const s=SES(o.sid);const m=M(s.memberId);if(!o.to)return;const y=planExercise(m,{exId:o.to,role:fv('addRole')||'보조',structure:'스트레이트'},s.date,s.templateId,s.exercises.map(e=>({role:e.role})));
+  doAddEx:()=>{const o=UI.modal;const s=SES(o.sid);const m=M(s.memberId);if(!o.to)return;const y=planExercise(m,{exId:o.to,role:fv('addRole')||'보조',structure:'스트레이트'},s.date,s.templateId,prevCtx(s.exercises));
     y.origin='added';s.exercises.push(y);UI.cur[s.id]=y.uid;clearDraft('addRole');UI.modal=null;save();render()},
   // 수업 시작
   cond:d=>{const s=SES(d.sid);s.cond[d.item]=d.v;applyCondition(s);save();render()},
@@ -3575,6 +3977,10 @@ const ACT={
   npOn:d=>{ensureNext(SES(d.sid)).np.on=d.v==='1';save();render()},
   finish:d=>{const s=SES(d.sid);const made=finishSession(s);UI.timer=null;UI.edit=null;save();home('today');toast(made?`수업을 저장했어요. ${mdw(made.date)} ${splitName(made)} 수업 준비를 미리 채웠어요.`:'수업을 저장했어요.')},
   // 추이, 기록, 찾기
+  pickRt:d=>{UI.cur['rt-'+d.mid]=d.v;render()},
+  devCause:d=>{const s=SES(d.sid);s.devCause=s.devCause||{};s.devCause[d.k]=s.devCause[d.k]===d.v?null:d.v;save();render()},
+  pickRtRole:d=>{UI.cur['rtr-'+d.mid]=d.v;render()},
+  pickRtPer:d=>{UI.cur['rtp-'+d.mid]=d.v;render()},
   pickTrend:d=>{UI.cur['trend-'+d.mid]=d.v;UI.cur['trendPt-'+d.mid]=null;render()},
   trendPt:d=>{const k='trendPt-'+UI.route.mid;UI.cur[k]=UI.cur[k]===+d.i?null:+d.i;render()},
   pickHist:d=>{UI.cur['hist-'+d.mid]=d.v;render()},
@@ -3619,7 +4025,7 @@ function fit(){
   const sc=UI.fit?Math.min(st.clientWidth/W,st.clientHeight/H):1;
   fr.style.transform=`scale(${sc})`; fr.style.left=Math.max(0,(st.clientWidth-W*sc)/2)+'px'; fr.style.width=W+'px'; fr.style.height=H+'px';
 }
-function saveView(){try{localStorage.setItem(KEY+'-view',JSON.stringify({orient:UI.orient,fit:UI.fit,guide:{open:G.open,scene:G.scene,step:G.step}}))}catch(e){}}
+function saveView(){try{localStorage.setItem(KEY+'-view',JSON.stringify({look:UI.look,orient:UI.orient,fit:UI.fit,guide:{open:G.open,scene:G.scene,step:G.step}}))}catch(e){}}
 /* 입력 칸이 바뀐 직후 버튼을 누르면 그 버튼이 다시 그려지며 사라지지 않게, 그리기를 잠깐 미룬다 */
 let soonT=null;
 function renderSoon(){clearTimeout(soonT);soonT=setTimeout(()=>{soonT=null;render()},300)}
@@ -3630,11 +4036,12 @@ function flushRender(){if(soonT){cancelSoon();render()}}
 const ENTER_KEY=KEY+'-entered';
 function enterApp(){try{sessionStorage.setItem(ENTER_KEY,'1')}catch(e){}UI.stack=[];UI.route={name:'today'};UI.modal=null;UI.edit=null}
 ACT.enter=()=>{enterApp();document.querySelectorAll('#app .ld-f input').forEach(i=>i.value='');render({noSave:true})};
+ACT.setLook=d=>{UI.look=d.v;saveView();render()};
 ACT.logout=()=>{try{sessionStorage.removeItem(ENTER_KEY)}catch(e){}UI.stack=[];UI.route={name:'landing'};UI.modal=null;UI.edit=null;render({noSave:true})};
 
 /* ---------- 시작 ---------- */
 (function boot(){
-  try{const v=JSON.parse(localStorage.getItem(KEY+'-view')||'null');if(v){UI.orient=v.orient==='port'?'port':'land';UI.fit=v.fit!==false;if(v.guide){G.open=v.guide.open!==false;G.scene=Math.min(+v.guide.scene||0,SCENES.length-1);G.step=+v.guide.step||0}}}catch(e){}
+  try{const v=JSON.parse(localStorage.getItem(KEY+'-view')||'null');if(v){UI.look=v.look==='emr'?'emr':'chart';UI.orient=v.orient==='port'?'port':'land';UI.fit=v.fit!==false;if(v.guide){G.open=v.guide.open!==false;G.scene=Math.min(+v.guide.scene||0,SCENES.length-1);G.step=+v.guide.step||0}}}catch(e){}
   S=load(); ensurePackages(); save();
   let entered=false;try{entered=sessionStorage.getItem(ENTER_KEY)==='1'}catch(e){}
   if(!entered) UI.route={name:'landing'};
@@ -3651,6 +4058,7 @@ ACT.logout=()=>{try{sessionStorage.removeItem(ENTER_KEY)}catch(e){}UI.stack=[];U
   document.getElementById('b-guide').addEventListener('click',()=>{G.open=!G.open;saveView();fit();render()});
   document.getElementById('guide').addEventListener('click',guideClick);
   const setFull=on=>{document.body.classList.toggle('full',on);try{history.replaceState(null,'',on?'#full':location.pathname+location.search)}catch(e){}fit();render()};
+  document.getElementById('b-look').addEventListener('click',()=>{UI.look=UI.look==='chart'?'emr':'chart';saveView();render()});
   document.getElementById('b-full').addEventListener('click',()=>setFull(true));
   document.getElementById('b-unfull').addEventListener('click',()=>setFull(false));
   if(/full/.test(location.hash)) document.body.classList.add('full');
