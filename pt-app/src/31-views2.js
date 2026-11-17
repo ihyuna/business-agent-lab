@@ -140,6 +140,8 @@ V.summary=r=>{
        ${np.on?`<div class="row">${bIn('np',np.date,{sid:s.id,f:'date'},{type:'date',w:160})}${bIn('np',np.time,{sid:s.id,f:'time'},{type:'time',w:120})}${bSel('np',m.templates.map(t=>[t.id,t.name]),np.tid,{sid:s.id,f:'tid'},{w:120})}</div><div class="tiny muted" style="margin-top:4px">분할은 순서대로 다음 것을 골라 뒀어요. 끝내면 그 분할의 숫자를 미리 채워요.</div>`:''}</div>
      ${checkCard(m,3)}</div></div></div>`+
    actBar(btn('‹ 마무리로','go',{to:'summary',sid:s.id}),'<span class="tiny muted" style="margin-right:8px">아무것도 안 눌러도 수업 기록은 저장돼요.</span>'+btn('끝내기','finish',{sid:s.id},'primary'));
+  if(UI.look==='chart') return topBar(esc(m.code)+' 마무리',`${mdw(s.date)} · ${esc(splitName(s))} · 회원이 간 뒤 1분 · 오늘 기록 확인`,'',{noBack:true})+summaryDoc({s,m,done,ch,longs,prs,cands,candRows,tplQ})+
+   actBar(btn('‹ 수업으로','go',{to:'live',sid:s.id}),'<span class="tiny muted" style="margin-right:8px">회원이 아직 있으면 결과를 보여 주고, 간 뒤에 다음 PT를 정해요.</span>'+btn('회원에게 보여 주기','go',{to:'show',sid:s.id})+btn('다음 PT 계획 ›','go',{to:'nextplan',sid:s.id},'primary'));
   return topBar(esc(m.code)+' 마무리',`${mdw(s.date)} · ${esc(splitName(s))} · 회원이 간 뒤 1분 · 오늘 기록 확인`,'',{noBack:true})+
    `<div class="scroll" data-sk="main"><div class="grid2"><div class="col">
      <div class="card"><h2><span class="n">1</span>오늘 결과 <span class="tiny muted">줄을 누르면 고칠 수 있어요</span></h2><table><tr><th>종목</th><th>오늘</th><th>지난 같은 분할</th></tr>${res||'<tr><td colspan="3" class="empty">기록한 세트가 없어요.</td></tr>'}</table></div>
@@ -149,7 +151,7 @@ V.summary=r=>{
      ${foldCard('sum3-'+s.id,'<span class="n">3</span>넘은 개인 기록',prs.length,prs.map(p=>`<div class="small">· ${esc(p)}</div>`).join('')||'<div class="empty">없어요.</div>')}
      ${cands.length?foldCard('sum7-'+s.id,'<span class="n">4</span>주의사항으로 올릴 것 <span class="tiny muted">올릴지는 트레이너가 정해요</span>',cands.length,`<div class="list">${candRows}</div>`):''}
     </div></div></div>`+
-   actBar(btn('‹ 수업으로','go',{to:'live',sid:s.id}),'<span class="signbox">기록 확인 <i>담당 트레이너 서명</i></span><span class="tiny muted" style="margin-right:8px">회원이 아직 있으면 결과를 보여 주고, 간 뒤에 다음 PT를 정해요.</span>'+btn('회원에게 보여 주기','go',{to:'show',sid:s.id})+btn('다음 PT 계획 ›','go',{to:'nextplan',sid:s.id},'primary'));
+   actBar(btn('‹ 수업으로','go',{to:'live',sid:s.id}),'<span class="tiny muted" style="margin-right:8px">회원이 아직 있으면 결과를 보여 주고, 간 뒤에 다음 PT를 정해요.</span>'+btn('회원에게 보여 주기','go',{to:'show',sid:s.id})+btn('다음 PT 계획 ›','go',{to:'nextplan',sid:s.id},'primary'));
 };
 V.nextplan=V.summary;
 
@@ -166,6 +168,8 @@ V.show=r=>{
     const pts=ser.slice(-9).map(o=>({date:o.s.date,v:o.t.w,label:`${md(o.s.date)} ${ftop(o.t,ex)}`})); if(t&&isNum(t.w)) pts.push({date:s.date,v:t.w,label:`오늘 ${ftop(t,ex)}`});
     const W=UI.orient==='land'?560:700; chart=pts.length&&pts.every(p=>isNum(p.v))?chartSVG(pts,W,220,p=>fw(p.v,ex),pts.length-1,{fewX:1}).replace(/data-act="trendPt"/g,'').replace(`<svg class="chart" width="${W}" height="220"`,`<svg class="chart" width="100%" viewBox="0 0 ${W} 220"`):'<div class="empty">무게 기록이 없는 종목이에요.</div>'}
   const pick=done.filter(x=>{const t=topDone(x);return t&&isNum(t.w)}).map(x=>`<button class="chip${x.exId===ex?' on':''}" data-act="pickShow" data-sid="${s.id}" data-v="${x.exId}">${esc(EX(x.exId).name)}</button>`).join(' ');
+  if(UI.look==='chart') return topBar(`${esc(m.code)} 회원님 결과 안내`,`${mdw(s.date)} · ${esc(splitName(s))}`,'',{noBack:true})+showDoc({s,m,done,chart,pick})+
+   actBar(btn('‹ 마무리로','go',{to:'summary',sid:s.id}),btn('다음 PT 계획 ›','go',{to:'nextplan',sid:s.id},'primary'));
   return topBar(`${esc(m.code)} 회원님, 오늘 수고했어요`,`${mdw(s.date)} · ${esc(splitName(s))}`,'',{noBack:true})+
    `<div class="scroll show" data-sk="main"><div class="grid2"><div class="col">
      <div class="card"><h2>오늘 한 운동 <span class="tiny muted">가장 무거운 세트</span></h2>${today||'<div class="empty">기록한 운동이 없어요.</div>'}${prs?`<div style="margin-top:8px">${prs}</div>`:''}</div>

@@ -267,6 +267,8 @@ V.member=r=>{
   const mainOf=s=>{const x=s.exercises.find(e=>e.status==='done'&&e.role==='메인')||s.exercises.find(e=>e.status==='done');const tt=x&&topSet(x);return x?`${esc(EX(x.exId).name)}${tt?` <b class="num">${ftop(tt,x.exId)}</b>`:''}`:'—'};
   const mt=mainTrend(m,262,130);
   const notes=m.notes.filter(n=>['general','lifestyle','diet','self_train','personality'].includes(n.kind));
+  if(UI.look==='chart') return topBar(esc(m.code),'회원 진료기록부',
+      btn('추이','go',{to:'trend',mid:m.id})+btn('수업 기록','go',{to:'history',mid:m.id})+btn('루틴 틀','go',{to:'templates',mid:m.id})+btn('회원 정보','go',{to:'memberEdit',mid:m.id}))+memberDoc({m,u,done,last,d30,all,t,next,mt,notes});
   return topBar(esc(m.code),'회원 한눈에',
       btn('추이','go',{to:'trend',mid:m.id})+btn('수업 기록','go',{to:'history',mid:m.id})+btn('루틴 틀','go',{to:'templates',mid:m.id})+btn('회원 정보','go',{to:'memberEdit',mid:m.id}))+pbar+
     `<div class="chartlay">

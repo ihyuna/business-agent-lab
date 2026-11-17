@@ -570,6 +570,54 @@ tr.click:hover td{background:var(--accent-soft)}
 #device.chart .pbar .vit>span:last-child{border-right:1px solid var(--line2)}
 #device.chart .signbox{display:inline-flex;align-items:flex-end;gap:8px;font-size:12px;font-weight:700;color:var(--muted);margin-right:14px}
 #device.chart .signbox i{display:inline-block;width:150px;border-bottom:1px solid var(--ink-line);font-style:normal;font-weight:400;font-size:10px;color:var(--faint);text-align:right;padding-bottom:1px}
+
+/* 디자인 B 화면 구성: 종이 양식 (D85) */
+.chartdoc{padding:10px 12px 20px}
+.f-paper{background:var(--panel);border:1.5px solid var(--ink-line,#333);padding:14px 18px 16px;max-width:1040px;margin:0 auto;box-shadow:0 1px 0 var(--line2)}
+.f-title{display:flex;align-items:flex-end;gap:10px;border-bottom:3px double var(--ink-line,#333);padding-bottom:8px;margin-bottom:10px}
+.f-tt{font-size:22px;font-weight:800;letter-spacing:.35em}
+.f-no{font-size:12px;font-weight:700;letter-spacing:.05em;border:1px solid var(--ink-line,#333);padding:2px 8px;font-variant-numeric:tabular-nums}
+.f-cap{display:flex;align-items:center;gap:8px;font-size:12.5px;font-weight:800;letter-spacing:.04em;margin:14px 0 5px;color:var(--ink)}
+.f-id{width:100%;border-collapse:collapse;table-layout:fixed}
+.f-id th{width:76px;background:var(--hd);font-size:11.5px;text-align:center;border:1px solid var(--ink-line,#333)!important;padding:5px 4px}
+.f-id td{border:1px solid var(--ink-line,#333)!important;padding:5px 8px;font-size:12.5px}
+.f-name{font-size:15px;letter-spacing:.03em}
+.f-sec{display:grid;grid-template-columns:62px minmax(0,1fr);border:1px solid var(--ink-line,#333)}
+.f-lb{background:var(--hd);border-right:1px solid var(--ink-line,#333);display:grid;place-items:center;text-align:center;font-size:12px;font-weight:800;line-height:1.3;padding:6px 2px}
+.f-lb small{font-weight:600;color:var(--muted);font-size:10.5px}
+.f-lb b{font-size:22px;font-weight:800;color:var(--accent)}
+.f-bd{padding:8px 10px;min-width:0}
+.f-bd h3{display:none}
+.f-row3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr))}
+.f-row3>.f-sec+.f-sec,.f-row2>.f-sec+.f-sec{border-left:0}
+.f-row2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.3fr);margin-top:10px}
+.f-sec.warnsec .f-lb{color:var(--stamp,#b3261e)}
+.f-sec.warnsec{box-shadow:inset 3px 0 0 var(--stamp,#b3261e)}
+.f-prog,.f-res,.f-cond{width:100%;border-collapse:collapse}
+.f-prog th,.f-res th,.f-cond th{background:var(--hd);font-size:11.5px;border:1px solid var(--ink-line,#333)!important;padding:5px 6px}
+.f-prog td,.f-res td,.f-cond td{border:1px solid var(--line2)!important;padding:5px 6px;vertical-align:top}
+.f-prog tr.on td{background:var(--accent-soft)}
+.f-prog tr.f-open td{background:var(--soft);padding:8px}
+.f-prog .nowrap{white-space:nowrap}
+td.c,th.c{text-align:center}
+.f-chk{font-weight:800;color:var(--accent);font-size:14px}
+.f-box{display:inline-block;width:11px;height:11px;border:1px solid var(--line2)}
+.f-cond{width:auto;min-width:340px}
+.f-cond td{text-align:center;width:80px}
+.f-soap{display:flex;flex-direction:column}
+.f-soap>.f-sec+.f-sec{border-top:0}
+.f-sub{font-size:11.5px;font-weight:700;color:var(--muted);margin-bottom:5px}
+.f-two{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.f-sign,.f-issue{display:flex;align-items:flex-end;gap:10px;margin-top:16px;padding-top:10px;border-top:1px solid var(--ink-line,#333);font-size:12px;color:var(--muted)}
+.f-sign>span:first-child{flex:1}
+.f-sign i,.f-issue i{display:inline-block;width:150px;border-bottom:1px solid var(--ink-line,#333)}
+.f-issue{font-size:13px;color:var(--ink);font-weight:600}
+.f-res.big td{font-size:13.5px;padding:8px}
+.f-res .big{font-size:16px;font-weight:800}
+.up{color:#16794a}.down{color:var(--stamp,#b3261e)}
+.bad{color:var(--stamp,#b3261e);font-weight:700}
+.f-stamp{display:inline-block;border:2px solid var(--stamp,#b3261e);color:var(--stamp,#b3261e);font-weight:800;font-size:11.5px;padding:1px 6px;transform:rotate(-4deg);letter-spacing:.05em}
+#device.port .f-row3{grid-template-columns:minmax(0,1fr)} #device.port .f-row3>.f-sec+.f-sec{border-left:1px solid var(--ink-line,#333);border-top:0}
 /* 앱 화면만 (D82: 웹앱, 아이패드 사파리 기준). 주소 끝에 #full 이어도 이 모드로 열림 */
 #b-unfull{display:none}
 body.full #bar,body.full #guide{display:none!important}
@@ -2425,6 +2473,8 @@ V.member=r=>{
   const mainOf=s=>{const x=s.exercises.find(e=>e.status==='done'&&e.role==='메인')||s.exercises.find(e=>e.status==='done');const tt=x&&topSet(x);return x?`${esc(EX(x.exId).name)}${tt?` <b class="num">${ftop(tt,x.exId)}</b>`:''}`:'—'};
   const mt=mainTrend(m,262,130);
   const notes=m.notes.filter(n=>['general','lifestyle','diet','self_train','personality'].includes(n.kind));
+  if(UI.look==='chart') return topBar(esc(m.code),'회원 진료기록부',
+      btn('추이','go',{to:'trend',mid:m.id})+btn('수업 기록','go',{to:'history',mid:m.id})+btn('루틴 틀','go',{to:'templates',mid:m.id})+btn('회원 정보','go',{to:'memberEdit',mid:m.id}))+memberDoc({m,u,done,last,d30,all,t,next,mt,notes});
   return topBar(esc(m.code),'회원 한눈에',
       btn('추이','go',{to:'trend',mid:m.id})+btn('수업 기록','go',{to:'history',mid:m.id})+btn('루틴 틀','go',{to:'templates',mid:m.id})+btn('회원 정보','go',{to:'memberEdit',mid:m.id}))+pbar+
     `<div class="chartlay">
@@ -2711,6 +2761,8 @@ V.summary=r=>{
        ${np.on?`<div class="row">${bIn('np',np.date,{sid:s.id,f:'date'},{type:'date',w:160})}${bIn('np',np.time,{sid:s.id,f:'time'},{type:'time',w:120})}${bSel('np',m.templates.map(t=>[t.id,t.name]),np.tid,{sid:s.id,f:'tid'},{w:120})}</div><div class="tiny muted" style="margin-top:4px">분할은 순서대로 다음 것을 골라 뒀어요. 끝내면 그 분할의 숫자를 미리 채워요.</div>`:''}</div>
      ${checkCard(m,3)}</div></div></div>`+
    actBar(btn('‹ 마무리로','go',{to:'summary',sid:s.id}),'<span class="tiny muted" style="margin-right:8px">아무것도 안 눌러도 수업 기록은 저장돼요.</span>'+btn('끝내기','finish',{sid:s.id},'primary'));
+  if(UI.look==='chart') return topBar(esc(m.code)+' 마무리',`${mdw(s.date)} · ${esc(splitName(s))} · 회원이 간 뒤 1분 · 오늘 기록 확인`,'',{noBack:true})+summaryDoc({s,m,done,ch,longs,prs,cands,candRows,tplQ})+
+   actBar(btn('‹ 수업으로','go',{to:'live',sid:s.id}),'<span class="tiny muted" style="margin-right:8px">회원이 아직 있으면 결과를 보여 주고, 간 뒤에 다음 PT를 정해요.</span>'+btn('회원에게 보여 주기','go',{to:'show',sid:s.id})+btn('다음 PT 계획 ›','go',{to:'nextplan',sid:s.id},'primary'));
   return topBar(esc(m.code)+' 마무리',`${mdw(s.date)} · ${esc(splitName(s))} · 회원이 간 뒤 1분 · 오늘 기록 확인`,'',{noBack:true})+
    `<div class="scroll" data-sk="main"><div class="grid2"><div class="col">
      <div class="card"><h2><span class="n">1</span>오늘 결과 <span class="tiny muted">줄을 누르면 고칠 수 있어요</span></h2><table><tr><th>종목</th><th>오늘</th><th>지난 같은 분할</th></tr>${res||'<tr><td colspan="3" class="empty">기록한 세트가 없어요.</td></tr>'}</table></div>
@@ -2720,7 +2772,7 @@ V.summary=r=>{
      ${foldCard('sum3-'+s.id,'<span class="n">3</span>넘은 개인 기록',prs.length,prs.map(p=>`<div class="small">· ${esc(p)}</div>`).join('')||'<div class="empty">없어요.</div>')}
      ${cands.length?foldCard('sum7-'+s.id,'<span class="n">4</span>주의사항으로 올릴 것 <span class="tiny muted">올릴지는 트레이너가 정해요</span>',cands.length,`<div class="list">${candRows}</div>`):''}
     </div></div></div>`+
-   actBar(btn('‹ 수업으로','go',{to:'live',sid:s.id}),'<span class="signbox">기록 확인 <i>담당 트레이너 서명</i></span><span class="tiny muted" style="margin-right:8px">회원이 아직 있으면 결과를 보여 주고, 간 뒤에 다음 PT를 정해요.</span>'+btn('회원에게 보여 주기','go',{to:'show',sid:s.id})+btn('다음 PT 계획 ›','go',{to:'nextplan',sid:s.id},'primary'));
+   actBar(btn('‹ 수업으로','go',{to:'live',sid:s.id}),'<span class="tiny muted" style="margin-right:8px">회원이 아직 있으면 결과를 보여 주고, 간 뒤에 다음 PT를 정해요.</span>'+btn('회원에게 보여 주기','go',{to:'show',sid:s.id})+btn('다음 PT 계획 ›','go',{to:'nextplan',sid:s.id},'primary'));
 };
 V.nextplan=V.summary;
 
@@ -2737,6 +2789,8 @@ V.show=r=>{
     const pts=ser.slice(-9).map(o=>({date:o.s.date,v:o.t.w,label:`${md(o.s.date)} ${ftop(o.t,ex)}`})); if(t&&isNum(t.w)) pts.push({date:s.date,v:t.w,label:`오늘 ${ftop(t,ex)}`});
     const W=UI.orient==='land'?560:700; chart=pts.length&&pts.every(p=>isNum(p.v))?chartSVG(pts,W,220,p=>fw(p.v,ex),pts.length-1,{fewX:1}).replace(/data-act="trendPt"/g,'').replace(`<svg class="chart" width="${W}" height="220"`,`<svg class="chart" width="100%" viewBox="0 0 ${W} 220"`):'<div class="empty">무게 기록이 없는 종목이에요.</div>'}
   const pick=done.filter(x=>{const t=topDone(x);return t&&isNum(t.w)}).map(x=>`<button class="chip${x.exId===ex?' on':''}" data-act="pickShow" data-sid="${s.id}" data-v="${x.exId}">${esc(EX(x.exId).name)}</button>`).join(' ');
+  if(UI.look==='chart') return topBar(`${esc(m.code)} 회원님 결과 안내`,`${mdw(s.date)} · ${esc(splitName(s))}`,'',{noBack:true})+showDoc({s,m,done,chart,pick})+
+   actBar(btn('‹ 마무리로','go',{to:'summary',sid:s.id}),btn('다음 PT 계획 ›','go',{to:'nextplan',sid:s.id},'primary'));
   return topBar(`${esc(m.code)} 회원님, 오늘 수고했어요`,`${mdw(s.date)} · ${esc(splitName(s))}`,'',{noBack:true})+
    `<div class="scroll show" data-sk="main"><div class="grid2"><div class="col">
      <div class="card"><h2>오늘 한 운동 <span class="tiny muted">가장 무거운 세트</span></h2>${today||'<div class="empty">기록한 운동이 없어요.</div>'}${prs?`<div style="margin-top:8px">${prs}</div>`:''}</div>
@@ -3019,6 +3073,99 @@ function deltaChart(m,s,o={}){
   return `<div class="dsum"><span class="up">오름 <b>${up}</b></span><span class="dn">내림 <b>${dn}</b></span><span>같음 <b>${eq}</b></span></div>
     <div class="dchart">${rows.map(line).join('')}</div>
     <div class="tiny faint" style="margin-top:4px">종목마다 최고 세트를 그 종목을 한 바로 전 수업과 비교해요. 무게가 같으면 횟수로 비교해요. 수첩 숫자 그대로이고, 오르고 내린 까닭은 판단하지 않아요.</div>`}
+/* ---------- 디자인 B '진료기록부' 화면 구성 (2026-11-17, D85) ----------
+   이현아님: "색깔만 바뀐다고 진료기록부 같아 보이는 건 아니다. 화면 구성이 진료기록부 같아야지."
+   회원 화면 = 회원 진료기록부(인적 사항 칸 · 특이사항 · 인체도 · 경과기록 표),
+   마무리 = PT 경과기록지(S 주관 · O 실시 · A 평가 · P 계획, 서명),
+   회원에게 보여 주기 = PT 결과 안내서(결과표 · 인체도 · 발행 칸).
+   숫자는 모두 같은 기록에서 가져오고, 버튼(data-act)은 디자인 A와 같은 것을 쓴다. */
+const chartNo=m=>'PT-'+String(S.members.indexOf(m)+1).padStart(4,'0');
+function docHead(title,m,right){return `<div class="f-title"><span class="f-tt">${title}</span><span class="sp"></span>${right||''}<span class="f-no">차트 No. ${chartNo(m)}</span></div>`}
+function idTable(cells,cols){/* cells: [라벨, 값, 칸 수?] */let h='',n=0,row='';
+  for(const c of cells){const span=c[2]||1;row+=`<th>${c[0]}</th><td${span>1?` colspan="${span*2-1}"`:''}>${c[1]}</td>`;n+=span;if(n>=cols){h+=`<tr>${row}</tr>`;row='';n=0}}
+  if(row)h+=`<tr>${row}</tr>`;return `<table class="f-id">${h}</table>`}
+function fsec(label,body,cls){return `<div class="f-sec ${cls||''}"><div class="f-lb"><span>${label}</span></div><div class="f-bd">${body}</div></div>`}
+const signLine=(what,date)=>`<div class="f-sign"><span>${what}</span><span class="f-date">작성일 ${date}</span><span>담당 트레이너</span><i></i><span class="faint">(서명)</span></div>`;
+function topLine(x){const t=topSet({...x,sets:x.sets.filter(st=>st.done||st.aw!=null)});return t?ftop(t,x.exId):''}
+function cmpTop(a,b){if(!a||!b)return null;if(isNum(a.w)&&isNum(b.w)&&a.w!==b.w)return a.w>b.w?1:-1;const ar=+a.r||0,br=+b.r||0;return ar===br?0:ar>br?1:-1}
+const arrow=c=>c==null?'<span class="faint">—</span>':c>0?'<b class="up">▲ 오름</b>':c<0?'<b class="down">▼ 내림</b>':'<span class="muted">= 같음</span>';
+
+/* 1. 회원 진료기록부 */
+function memberDoc(o){
+  const {m,u,done,last,d30,all,t,next,mt,notes}=o;
+  const cx=msessions(m.id).filter(x=>x.status==='cancelled'&&x.date<=t).length, ns=msessions(m.id).filter(x=>x.status==='no_show'&&x.date<=t).length;
+  const goals=m.goals.filter(g=>!g.end).map(g=>esc(g.text)).join(' / ')||'<span class="faint">없음</span>';
+  const id=idTable([['회원',`<b class="f-name">${esc(m.code)}</b>`],['첫 기록',done[0]?done[0].date:'—'],['마지막 수업',last?`${last.date} <span class="muted">(${daysBetween(last.date,t)}일 전)</span>`:'—'],['다음 PT',u?`${mdw(u.date)} ${esc(splitName(u))}`:'<span class="faint">없음</span>'],
+    ['누적',`${done.length}회`],['최근 30일',`${d30}회`],['회차',`${usedCount(m)} / ${pkgTotal(m)}${(m.packages||[]).some(p=>p.example)?' '+EXAMPLE('예시'):''}`],['취소 · 안 옴',`<span${cx?' class="bad"':''}>${cx}</span> · ${ns}`],
+    ['목표',goals,3],['훈련 방향',blockText(curBlock(m))]],4);
+  const prog=all.slice(0,14).map(s=>{const open=UI.cur['hx-'+m.id]===s.id;const ok=s.status==='completed';
+    const items=ok?s.exercises.filter(x=>x.status==='done').map(x=>`${esc(EX(x.exId).name)}${topLine(x)?` <span class="num">${esc(topLine(x))}</span>`:''}`).join(', '):`<span class="muted">${statusLabel[s.status]}${s.example?' (예시)':''}</span>`;
+    const memo=[s.memo,...s.exercises.filter(x=>x.note).slice(0,2).map(x=>EX(x.exId).name+': '+x.note)].filter(Boolean).map(esc).join(' / ');
+    return `<tr class="click${open?' on':''}" data-act="histOpen" data-mid="${m.id}" data-sid="${s.id}"><td class="num nowrap">${s.date}</td><td>${pill(splitName(s))}</td><td class="small">${items||'—'}</td><td class="small muted">${memo||''}</td><td class="c">${ok?'<span class="f-chk">✓</span>':s.status==='cancelled'||s.status==='no_show'?'<span class="bad">✕</span>':'○'}</td></tr>`+
+      (open?`<tr class="f-open"><td colspan="5">${visitCard(m,s,u)}</td></tr>`:'')}).join('')||'<tr><td colspan="5" class="empty">기록이 없어요.</td></tr>';
+  const rg=UI.cur['mus-'+m.id]||'last';const ss=rg==='last'?(last?[last]:[]):done.filter(s=>daysBetween(s.date,t)>=0&&daysBetween(s.date,t)<30);
+  return `<div class="scroll chartdoc" data-sk="main"><div class="f-paper">
+    ${docHead('PT 회원 진료기록부',m,btn('+ 수업 추가','modal',{type:'addPkg',mid:m.id},'small'))}
+    <div class="f-cap">Ⅰ. 인적 사항</div>${id}
+    <div class="f-cap">Ⅱ. 특이사항 · 확인 · 목표</div>
+    <div class="f-row3">${fsec('특이사항<br><small>(주의)</small>',cautionSec(m),'warnsec')}${fsec('다음 확인',checkSec(m))}${fsec('목표<br><small>방향</small>',goalSec(m))}</div>
+    <div class="f-cap">Ⅲ. 신체 · 기록 소견</div>
+    <div class="f-row3 body3">
+      ${fsec('인체도',`<div class="row" style="margin-bottom:4px">${chips([['last','지난 PT'],['d30','최근 30일']],rg,'musRange',{mid:m.id})}</div>${muscleBlock(ss,220,rg==='last'?'지난 PT':'최근 30일')}`)}
+      ${fsec('최고 무게<br><small>추이</small>',`${mt.ex?`<div class="small muted">${esc(EX(mt.ex).name)}</div>`:''}${mt.svg}<div class="small muted" style="margin-top:8px">월별 수업 횟수</div>${monthBars(m,262,110)}`)}
+      ${fsec('지난 PT<br><small>변화</small>',last?`<div class="small muted" style="margin-bottom:4px">${mdw(last.date)} · ${esc(splitName(last))} ${btn('수업 상세','go',{to:'detail',sid:last.id},'ghost small')}</div>${deltaChart(m,last)}`:'<div class="empty">없어요.</div>')}
+    </div>
+    <div class="f-cap">Ⅳ. 다음 PT 계획 (처방)</div>${fsec('다음 PT',next)}
+    <div class="f-cap">Ⅴ. 경과 기록 <span class="muted" style="font-weight:500">최근 ${Math.min(all.length,14)}회 · 줄을 누르면 펼쳐져요</span><span class="sp"></span>${btn('전체 수업 기록','go',{to:'history',mid:m.id},'small ghost')}</div>
+    <table class="f-prog"><tr><th style="width:92px">일자</th><th style="width:76px">분할</th><th>실시 내용 (종목 · 최고 세트)</th><th style="width:200px">소견 · 메모</th><th style="width:40px">확인</th></tr>${prog}</table>
+    <div class="f-cap">Ⅵ. 생활 · 식단 · 개인 운동 메모</div>
+    ${fsec('메모',`${notes.map(n=>`<div class="li small">${pill(NOTE_KINDS[n.kind],'gray')}<div style="flex:1">${esc(n.text)}</div>${btn('지우기','delNote',{mid:m.id,id:n.id},'small ghost')}</div>`).join('')||'<div class="empty">없어요.</div>'}<div class="row" style="margin-top:6px;flex-wrap:nowrap">${dSel('nKind-'+m.id,['general','lifestyle','diet','self_train','personality'].map(k=>[k,NOTE_KINDS[k]]),'general',{w:84})}${dIn('nText-'+m.id,'메모',{grow:1})}${btn('넣기','addNote',{mid:m.id},'small')}</div>`)}
+    ${signLine('위 기록은 트레이너 수첩과 수업 기록을 옮긴 것이에요.',todayIso())}
+  </div></div>`;
+}
+
+/* 2. PT 경과기록지 (마무리) */
+function summaryDoc(o){
+  const {s,m,done,ch,longs,prs,cands,candRows,tplQ}=o;
+  const n=sessNo(s);
+  const id=idTable([['회원',`<b class="f-name">${esc(m.code)}</b>`],['수업일',`${s.date} ${esc(s.time||'')}`],['분할',esc(splitName(s))],['회차',n?`${n} / ${pkgTotal(m)}`:'—']],4);
+  const c=s.cond||{};
+  const condT=`<table class="f-cond"><tr><th></th>${['좋음/없음','평소/약간','나쁨/뚜렷'].map(h=>`<th>${h}</th>`).join('')}</tr>${COND_ITEMS.map(([k,l])=>{const opts=k==='pain'?PAIN3:COND3;return `<tr><th>${l}</th>${opts.map(([v])=>`<td class="c">${c[k]===v?'<span class="f-chk">✓</span>':'<span class="f-box"></span>'}</td>`).join('')}</tr>`}).join('')}</table>${c.painWhere?`<div class="small">통증 부위: ${esc(c.painWhere)}</div>`:''}${s.memo?`<div class="small" style="margin-top:4px">회원 말 · 메모: ${esc(s.memo)}</div>`:''}`;
+  const res=done.map(x=>{const ls=lastSame(m,s,x.exId);const a=topSet({...x,sets:x.sets.filter(st=>st.done)});const b=ls&&topSet(ls.y);
+    return `<tr class="click" data-act="backToEx" data-sid="${s.id}" data-uid="${x.uid}"><td><b>${esc(EX(x.exId).name)}</b></td><td class="small">${x.role}</td><td class="small">${esc(fsets(x.sets.filter(st=>st.done),x.exId,'a'))}</td><td class="small">${ls?`${md(ls.p.date)} · ${esc(fsets(ls.y.sets,x.exId,'a'))}`:'<span class="faint">처음</span>'}</td><td class="c small">${arrow(cmpTop(a,b))}</td></tr>`}).join('')||'<tr><td colspan="5" class="empty">기록한 세트가 없어요.</td></tr>';
+  const li=a=>a.map(t=>`<div class="small">· ${esc(t)}</div>`).join('');
+  return `<div class="scroll chartdoc" data-sk="main"><div class="f-paper">
+    ${docHead('PT 경과기록지',m,'<span class="muted small">줄을 누르면 고칠 수 있어요</span>')}
+    ${id}
+    <div class="f-soap">
+      ${fsec('<b>S</b><br><small>주관</small>',`<div class="f-sub">수업 전 컨디션 · 회원 말</div>${condT}`)}
+      ${fsec('<b>O</b><br><small>실시</small>',`<div class="f-sub">오늘 한 세트 (워밍업 포함) · 지난 같은 분할과 비교</div><table class="f-res"><tr><th>종목</th><th style="width:70px">역할</th><th>오늘</th><th>지난 같은 분할</th><th style="width:74px">최고 세트</th></tr>${res}</table>`)}
+      ${fsec('<b>A</b><br><small>평가</small>',`<div class="f-two"><div><div class="f-sub">계획과 달라진 곳 ${ch.length+longs.length}</div>${li(ch)}${longs.map(t=>`<div class="small" style="color:var(--warn)">· ${esc(t)}</div>`).join('')||(ch.length?'':'<div class="empty">계획대로 했어요.</div>')}</div><div><div class="f-sub">넘은 개인 기록 ${prs.length}</div>${li(prs)||'<div class="empty">없어요.</div>'}</div></div><div class="tiny muted" style="margin-top:6px">앱은 오르내린 까닭을 판단하지 않아요. 까닭은 트레이너가 적어요.</div>`)}
+      ${fsec('<b>P</b><br><small>계획</small>',`<div class="f-sub">주의사항으로 올릴 것 (올릴지는 트레이너가 정해요)</div>${cands.length?`<div class="list">${candRows}</div>`:'<div class="empty">없어요.</div>'}${tplQ?`<div style="margin-top:8px">${tplQ}</div>`:''}<div class="small muted" style="margin-top:6px">다음 숫자와 날짜는 아래 '다음 PT 계획'에서 정해요.</div>`)}
+    </div>
+    ${signLine('기록 확인',s.date)}
+  </div></div>`;
+}
+
+/* 3. PT 결과 안내서 (회원에게 보여 주기): 메모·주의사항·트레이너 판단은 넣지 않는다 */
+function showDoc(o){
+  const {s,m,done,chart,pick}=o;const n=sessNo(s);
+  const id=idTable([['회원님',`<b class="f-name">${esc(m.code)}</b>`],['수업일',s.date],['운동',esc(splitName(s))],['회차',n?`${n}회째`:'—']],4);
+  const rows=done.map(x=>{const a=topSet({...x,sets:x.sets.filter(st=>st.done)});const ls=lastSame(m,s,x.exId);const b=ls&&topSet(ls.y);const p=prFor(m,s,{...x,sets:x.sets.filter(st=>st.done)});
+    const sets=x.sets.filter(st=>st.done&&st.kind!=='warmup').length;
+    return `<tr><td><b>${esc(EX(x.exId).name)}</b></td><td class="num big">${a?esc(ftop(a,x.exId)):'—'}</td><td class="c">${sets}세트</td><td class="small">${b?`${esc(ftop(b,x.exId))} <span class="faint">${md(ls.p.date)}</span>`:'<span class="faint">처음</span>'}</td><td class="c">${arrow(cmpTop(a,b))}</td><td class="c">${p&&!p.first?'<span class="f-stamp">최고 기록</span>':''}</td></tr>`}).join('')||'<tr><td colspan="6" class="empty">기록한 운동이 없어요.</td></tr>';
+  return `<div class="scroll chartdoc show" data-sk="main"><div class="f-paper">
+    ${docHead('PT 운동 결과 안내서',m)}
+    ${id}
+    <div class="f-cap">Ⅰ. 오늘의 결과 <span class="muted" style="font-weight:500">종목마다 가장 무거운 세트</span></div>
+    <table class="f-res big"><tr><th>운동</th><th>오늘 결과</th><th style="width:70px">세트</th><th>지난번</th><th style="width:86px">변화</th><th style="width:90px">비고</th></tr>${rows}</table>
+    <div class="f-row2">
+      ${fsec('오늘 쓴<br>근육',muscleBlock([s],220,'오늘'))}
+      ${fsec('무게<br>흐름',`<div class="row" style="margin-bottom:6px">${pick}</div>${chart}`)}
+    </div>
+    <div class="f-issue"><span>${esc(m.code)} 회원님, 오늘 수고했어요.</span><span class="sp"></span><span>발행일 ${s.date}</span><span>담당 트레이너</span><i></i><span class="faint">(서명)</span></div>
+  </div></div>`;
+}
 /* ---------- 시나리오 따라 하기 (시나리오.md 2부, v3 화면 넷 순서의 장면 1~8) ----------
    장면마다 단계가 있고, 단계마다 할 말(say), 짚을 곳(at), 끝났는지(done), 대신 하기(auto)가 있다.
    화면을 그릴 때마다 지금 단계가 끝났는지 보고 다음 단계로 넘어간다. */
