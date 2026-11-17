@@ -14,6 +14,8 @@ function render(o={}){
   app.innerHTML=html; UI.rk=routeKey();
   app.querySelectorAll('[data-sk]').forEach(el=>{const v=UI.scrolls[UI.rk+'|'+el.dataset.sk];if(v!=null)el.scrollTop=v});
   if(fk){const el=app.querySelector(`[data-k="${CSS.escape(fk)}"]`);if(el){el.focus({preventScroll:true});if(sel)try{el.setSelectionRange(sel[0],sel[1])}catch(e){}}}
+  document.getElementById('device').classList.toggle('chart',UI.look==='chart');
+  document.getElementById('b-look').textContent=UI.look==='chart'?'디자인: 진료기록부':'디자인: 지금(EMR)';
   document.getElementById('b-orient').textContent=UI.orient==='land'?'세로로 보기':'가로로 보기';
   document.getElementById('b-fit').textContent=UI.fit?'실제 크기':'창에 맞추기';
   if(typeof guideAfter==='function') guideAfter();
@@ -200,7 +202,7 @@ function fit(){
   const sc=UI.fit?Math.min(st.clientWidth/W,st.clientHeight/H):1;
   fr.style.transform=`scale(${sc})`; fr.style.left=Math.max(0,(st.clientWidth-W*sc)/2)+'px'; fr.style.width=W+'px'; fr.style.height=H+'px';
 }
-function saveView(){try{localStorage.setItem(KEY+'-view',JSON.stringify({orient:UI.orient,fit:UI.fit,guide:{open:G.open,scene:G.scene,step:G.step}}))}catch(e){}}
+function saveView(){try{localStorage.setItem(KEY+'-view',JSON.stringify({look:UI.look,orient:UI.orient,fit:UI.fit,guide:{open:G.open,scene:G.scene,step:G.step}}))}catch(e){}}
 /* 입력 칸이 바뀐 직후 버튼을 누르면 그 버튼이 다시 그려지며 사라지지 않게, 그리기를 잠깐 미룬다 */
 let soonT=null;
 function renderSoon(){clearTimeout(soonT);soonT=setTimeout(()=>{soonT=null;render()},300)}
@@ -211,11 +213,12 @@ function flushRender(){if(soonT){cancelSoon();render()}}
 const ENTER_KEY=KEY+'-entered';
 function enterApp(){try{sessionStorage.setItem(ENTER_KEY,'1')}catch(e){}UI.stack=[];UI.route={name:'today'};UI.modal=null;UI.edit=null}
 ACT.enter=()=>{enterApp();document.querySelectorAll('#app .ld-f input').forEach(i=>i.value='');render({noSave:true})};
+ACT.setLook=d=>{UI.look=d.v;saveView();render()};
 ACT.logout=()=>{try{sessionStorage.removeItem(ENTER_KEY)}catch(e){}UI.stack=[];UI.route={name:'landing'};UI.modal=null;UI.edit=null;render({noSave:true})};
 
 /* ---------- 시작 ---------- */
 (function boot(){
-  try{const v=JSON.parse(localStorage.getItem(KEY+'-view')||'null');if(v){UI.orient=v.orient==='port'?'port':'land';UI.fit=v.fit!==false;if(v.guide){G.open=v.guide.open!==false;G.scene=Math.min(+v.guide.scene||0,SCENES.length-1);G.step=+v.guide.step||0}}}catch(e){}
+  try{const v=JSON.parse(localStorage.getItem(KEY+'-view')||'null');if(v){UI.look=v.look==='emr'?'emr':'chart';UI.orient=v.orient==='port'?'port':'land';UI.fit=v.fit!==false;if(v.guide){G.open=v.guide.open!==false;G.scene=Math.min(+v.guide.scene||0,SCENES.length-1);G.step=+v.guide.step||0}}}catch(e){}
   S=load(); ensurePackages(); save();
   let entered=false;try{entered=sessionStorage.getItem(ENTER_KEY)==='1'}catch(e){}
   if(!entered) UI.route={name:'landing'};
@@ -232,6 +235,7 @@ ACT.logout=()=>{try{sessionStorage.removeItem(ENTER_KEY)}catch(e){}UI.stack=[];U
   document.getElementById('b-guide').addEventListener('click',()=>{G.open=!G.open;saveView();fit();render()});
   document.getElementById('guide').addEventListener('click',guideClick);
   const setFull=on=>{document.body.classList.toggle('full',on);try{history.replaceState(null,'',on?'#full':location.pathname+location.search)}catch(e){}fit();render()};
+  document.getElementById('b-look').addEventListener('click',()=>{UI.look=UI.look==='chart'?'emr':'chart';saveView();render()});
   document.getElementById('b-full').addEventListener('click',()=>setFull(true));
   document.getElementById('b-unfull').addEventListener('click',()=>setFull(false));
   if(/full/.test(location.hash)) document.body.classList.add('full');

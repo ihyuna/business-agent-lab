@@ -518,6 +518,68 @@ tr.click:hover td{background:var(--accent-soft)}
 .hist .hi.cx .x{color:var(--faint)}
 .pkg-n.l3{color:#b08900}.pkg-n.l2{color:#c2410c}.pkg-n.l1,.pkg-n.over{color:var(--bad)}
 
+
+/* ===== 디자인 B '진료기록부' (2026-11-17, 지도교수님 11/11: 병원 종이 진료기록부·회진 차트 느낌으로 전문성) =====
+   지금 디자인(A)은 그대로 두고 #device.chart 일 때만 덮어쓴다. 바탕은 종이색, 선은 잉크색, 모서리는 각지게,
+   칸 머리는 양식 이름표처럼, 표는 모든 칸에 선, 강조는 남색 잉크, 경고는 빨간 도장색 */
+#device.chart{--device:#f3efe4; --panel:#fffdf7; --ink:#1f2633; --muted:#5a5f69; --faint:#8f8a7e;
+  --line:#d8d0bd; --line2:#a89f8a; --soft:#f6f1e4; --hd:#efe8d6; --phd:#efe8d6; --accent:#1d3d6b; --accent-soft:#e4ebf4; --accent-ink:#fffdf7;
+  --rule:#e3dccb; --ink-line:#3a3f48; --stamp:#b3261e;
+  border-radius:4px;background:var(--device)}
+#device.chart .scroll,#device.chart .planner,#device.chart .chartlay{background:var(--device)}
+/* 위쪽 메뉴 = 차트 머리 */
+#device.chart .tabbar.sidenav{background:var(--panel);border-bottom:3px double var(--ink-line)}
+#device.chart .sidenav .logo::before{background:var(--accent);border-radius:0;width:6px}
+#device.chart .sidenav .logo::after{content:'PT 진료기록부';letter-spacing:.02em}
+#device.chart .tabbar.sidenav button.on{color:var(--accent);box-shadow:inset 0 -3px 0 var(--accent)}
+#device.chart .top{background:var(--panel);border-bottom:1.5px solid var(--ink-line)}
+#device.chart .top h1{letter-spacing:.01em}
+/* 패널 = 양식 칸 */
+#device.chart .card,#device.chart .box,#device.chart .planner>div,#device.chart .chartlay>div{border-radius:0!important;border:1px solid var(--ink-line)!important;box-shadow:none;background:var(--panel)}
+#device.chart .cl-mid{background:transparent!important;border:0!important}
+#device.chart .card>h2:first-child,#device.chart .box>.bh,#device.chart .pl-colhd,#device.chart .card.fold>.foldhead,#device.chart .prep-head{
+  background:var(--hd);border-radius:0!important;border-bottom:1.5px solid var(--ink-line);font-weight:800;letter-spacing:.04em;color:var(--ink)}
+#device.chart .card>h2:first-child::before,#device.chart .box>.bh::before,#device.chart .card.fold>.foldhead h2::before{
+  content:'■';width:auto;height:auto;background:none;color:var(--accent);font-size:9px;margin-right:6px;vertical-align:1px}
+/* 표: 모든 칸에 잉크 선 */
+#device.chart table{border-collapse:collapse}
+#device.chart th{background:var(--hd);color:var(--ink);font-weight:700;border:1px solid var(--line2)}
+#device.chart td{border:1px solid var(--line)}
+#device.chart .mcal td,#device.chart .mcal th{border:0}
+#device.chart tr.click:hover td{background:var(--accent-soft)}
+/* 쓰는 칸: 줄 쳐진 종이 */
+#device.chart textarea{background:var(--panel) repeating-linear-gradient(transparent 0 23px,var(--rule) 23px 24px);line-height:24px;border-radius:0;border-color:var(--line2)}
+#device.chart input,#device.chart select{border-radius:0;border-color:var(--line2);background:var(--panel)}
+/* 버튼·꼬리표: 각진 도장 느낌 */
+#device.chart .btn{border-radius:2px;border-color:var(--line2)}
+#device.chart .btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+#device.chart .chip{border-radius:2px}
+#device.chart .chip.on{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+#device.chart .tag{border-radius:0;border-width:1.5px;font-weight:700;letter-spacing:.03em}
+#device.chart .tag.warn,#device.chart .tag.bad{color:var(--stamp)}
+#device.chart .pill{border-radius:0;border:1px solid currentColor}
+#device.chart .actbar{background:var(--panel);border-top:3px double var(--ink-line)}
+/* 오늘: 시간표 칸은 차트 대장처럼 */
+#device.chart .tl .blk{border-radius:0;border:1px solid var(--line2);border-left:4px solid currentColor;box-shadow:none}
+#device.chart .mcal button.today{border-radius:0;background:var(--accent)}
+#device.chart .mcal button.has::after{border-radius:0}
+/* 회원 한눈에: 환자 차트 머리줄 */
+#device.chart .pbar{background:var(--panel);border-bottom:3px double var(--ink-line)}
+#device.chart .pbar .nm{font-size:17px;letter-spacing:.02em}
+#device.chart .hist .hi.next,#device.chart .hist .hi.open{box-shadow:inset 4px 0 0 var(--accent)}
+#device.chart .excard{border-top:3px double var(--ink-line)}
+#device.chart .nob{border-radius:0}
+#device.chart .rstat{border-radius:0;border-color:var(--ink-line)}
+#device.chart .modal{border-radius:0;border:1.5px solid var(--ink-line)}
+#device.chart .toast,#device.chart .askbar{border-radius:0}
+/* B에만: 차트 번호, 생체 정보 칸, 서명 칸 */
+.chartno,.signbox{display:none}
+#device.chart .chartno{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.06em;color:var(--muted);border:1px solid var(--ink-line);padding:1px 6px;font-variant-numeric:tabular-nums}
+#device.chart .pbar .vit{gap:0}
+#device.chart .pbar .vit>span{border:1px solid var(--line2);border-right:0;padding:2px 10px;background:var(--panel)}
+#device.chart .pbar .vit>span:last-child{border-right:1px solid var(--line2)}
+#device.chart .signbox{display:inline-flex;align-items:flex-end;gap:8px;font-size:12px;font-weight:700;color:var(--muted);margin-right:14px}
+#device.chart .signbox i{display:inline-block;width:150px;border-bottom:1px solid var(--ink-line);font-style:normal;font-weight:400;font-size:10px;color:var(--faint);text-align:right;padding-bottom:1px}
 /* 앱 화면만 (D82: 웹앱, 아이패드 사파리 기준). 주소 끝에 #full 이어도 이 모드로 열림 */
 #b-unfull{display:none}
 body.full #bar,body.full #guide{display:none!important}
@@ -555,6 +617,7 @@ body.full #app .hl{outline:0!important;box-shadow:none!important;animation:none!
     <button class="btn small" id="b-orient">세로로 보기</button>
     <button class="btn small" id="b-fit">실제 크기</button>
     <button class="btn small" id="b-guide">시나리오 닫기</button>
+    <button class="btn small" id="b-look" title="디자인 A(지금)와 B(진료기록부) 바꾸기">디자인: 진료기록부</button>
     <button class="btn small" id="b-full" title="아이패드 사파리에서 앱처럼 쓰기">앱 화면만</button>
   </div>
   <button class="btn small" id="b-unfull">도구 보기</button>
@@ -1645,7 +1708,7 @@ const firstNum=v=>{if(isNum(v))return v;const m=String(v??'').match(/\d+(\.\d+)?
 /* ---------- 상태 ---------- */
 const KEY='pt-mvp-proto-v4';
 let S=null;
-const UI={ask:null,route:{name:'today'},stack:[],modal:null,draft:{},toast:null,orient:'land',fit:true,timer:null,cur:{},open:{},search:'',edit:null,flags:{}};
+const UI={look:'chart',ask:null,route:{name:'today'},stack:[],modal:null,draft:{},toast:null,orient:'land',fit:true,timer:null,cur:{},open:{},search:'',edit:null,flags:{}};
 const todayIso=()=>(S&&S.today)||'2026-10-07';
 function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}if(typeof guideSoon==='function')guideSoon()}
 function load(){try{const t=localStorage.getItem(KEY);if(t){const s=JSON.parse(t);if(s&&s.v===3)return s}}catch(e){}return buildSeed()}
@@ -2351,7 +2414,7 @@ V.member=r=>{
   const m=M(r.mid); const u=upcoming(m.id); const done=completed(m.id); const t=todayIso(); const last=done[done.length-1];
   const d30=done.filter(s=>daysBetween(s.date,t)>=0&&daysBetween(s.date,t)<30).length;
   const cn=openCautions(m).length;
-  const pbar=`<div class="pbar"><span class="nm">${esc(m.code)}</span>${pill('회원','blue')}${cn?pill('주의 '+cn,'red'):''}${m.goals.filter(g=>!g.end).length?pill('목표 있음','green'):''}
+  const pbar=`<div class="pbar"><span class="chartno">차트 No. PT-${String(S.members.indexOf(m)+1).padStart(4,'0')}</span><span class="nm">${esc(m.code)}</span>${pill('회원','blue')}${cn?pill('주의 '+cn,'red'):''}${m.goals.filter(g=>!g.end).length?pill('목표 있음','green'):''}
     <div class="vit"><span>누적 <b>${done.length}</b>회</span><span>최근 30일 <b>${d30}</b>회</span>${(()=>{const c=msessions(m.id).filter(x=>x.status==='cancelled'&&x.date<=t).length,n=msessions(m.id).filter(x=>x.status==='no_show'&&x.date<=t).length;return `<span>취소 <b style="color:${c?'var(--bad)':'inherit'}">${c}</b> · 안 옴 <b style="color:${n?'var(--warn)':'inherit'}">${n}</b></span>`})()}<span>첫 기록 <b>${done[0]?md(done[0].date):'—'}</b></span><span>마지막 <b>${last?md(last.date):'—'}</b>${last?` (${daysBetween(last.date,t)}일 전)`:''}</span><span>다음 PT <b>${u?mdw(u.date):'없음'}</b>${u?' '+esc(splitName(u)):''}</span></div></div>`;
   const all=msessions(m.id).filter(s=>!(s.example&&s.date>t)).slice().sort((a,b)=>byDate(b,a));
   const open=UI.cur['hx-'+m.id]===undefined?(done[done.length-1]||{}).id:UI.cur['hx-'+m.id];
@@ -2667,7 +2730,7 @@ V.summary=r=>{
      ${foldCard('sum3-'+s.id,'<span class="n">3</span>넘은 개인 기록',prs.length,prs.map(p=>`<div class="small">· ${esc(p)}</div>`).join('')||'<div class="empty">없어요.</div>')}
      ${cands.length?foldCard('sum7-'+s.id,'<span class="n">4</span>주의사항으로 올릴 것 <span class="tiny muted">올릴지는 트레이너가 정해요</span>',cands.length,`<div class="list">${candRows}</div>`):''}
     </div></div></div>`+
-   actBar(btn('‹ 수업으로','go',{to:'live',sid:s.id}),'<span class="tiny muted" style="margin-right:8px">회원이 아직 있으면 결과를 보여 주고, 간 뒤에 다음 PT를 정해요.</span>'+btn('회원에게 보여 주기','go',{to:'show',sid:s.id})+btn('다음 PT 계획 ›','go',{to:'nextplan',sid:s.id},'primary'));
+   actBar(btn('‹ 수업으로','go',{to:'live',sid:s.id}),'<span class="signbox">기록 확인 <i>담당 트레이너 서명</i></span><span class="tiny muted" style="margin-right:8px">회원이 아직 있으면 결과를 보여 주고, 간 뒤에 다음 PT를 정해요.</span>'+btn('회원에게 보여 주기','go',{to:'show',sid:s.id})+btn('다음 PT 계획 ›','go',{to:'nextplan',sid:s.id},'primary'));
 };
 V.nextplan=V.summary;
 
@@ -2792,6 +2855,7 @@ V.settings=()=>{
      <div class="card"><h2>지난 실제값 기준</h2><div class="row">${chips([['same','같은 분할'],['recent','가장 최근']],S.settings.basis,'setBasis')}</div><div class="tiny muted" style="margin-top:4px">다음 목표가 없을 때 어느 수업의 실제값으로 채울지예요. 같은 분할에 없는 종목은 가장 최근으로 채워요. 바꾸면 앞으로 만드는 수업 준비부터 적용돼요.</div></div>
      <div class="card"><h2>역할별 기준 <span class="tag warn">논문 기준 임시값 (D59)</span></h2><table><tr><th>역할</th><th>횟수 범위</th><th>목표 횟수</th><th>여유 횟수</th><th>세트</th><th>쉬는 초</th></tr>${roleRows}</table><div class="tiny muted" style="margin-top:4px">트레이너 답(O02)이 오면 바꿀 값이에요. 유산소성 순환은 횟수 칸을 라운드로 써요.</div></div>
      <div class="card"><h2>예시 취소·안 옴 <span class="tag warn">예시</span></h2><div class="row">${chips([['1','보임'],['0','숨김']],S.settings.exampleCx===false?'0':'1','setExampleCx')}</div><div class="tiny muted" style="margin-top:4px">수첩에는 취소·안 옴 기록이 없어요. 화면을 보여 주려고 넣은 예시 ${EXAMPLE_CX.length}건이고, 운동 기록은 없어요. 실제 날짜를 알면 바꿔요.</div></div>
+     <div class="card"><h2>화면 디자인</h2><div class="row">${chips([['chart','진료기록부 (B)'],['emr','지금 디자인 (A)']],UI.look,'setLook')}</div><div class="tiny muted" style="margin-top:4px">B는 지도교수님 피드백(11/11)의 종이 진료기록부 느낌이에요. A는 11/6까지 다듬은 화면 그대로예요. 위쪽 도구 줄 '디자인' 버튼으로도 바꿀 수 있어요.</div></div>
      <div class="card"><h2>처음 화면</h2>${btn('로그아웃 (처음 화면으로)','logout',null,'small')}<div class="tiny muted" style="margin-top:4px">입력한 기록은 그대로 두고 로그인 화면으로 돌아가요.</div></div>
      <div class="card"><h2>처음 상태로</h2>${UI.confirmReset?`<div class="row"><span class="small">입력한 것을 모두 지울까요?</span>${btn('되돌리기','reset',null,'danger')}${btn('아니요','confirmReset',{v:0})}</div>`:btn('처음 상태로 되돌리기','confirmReset',{v:1},'small')}</div></div>
     <div class="card"><h2>종목 사전 <span class="tag warn">단위·눈금은 예시 (O36)</span></h2><div class="tiny muted" style="margin-bottom:4px">눈금은 +/− 한 칸과 계산한 무게를 내릴 때 써요. '한쪽'은 40/40kg처럼 한쪽 무게로 적는 기구예요.</div>
@@ -3433,6 +3497,8 @@ function render(o={}){
   app.innerHTML=html; UI.rk=routeKey();
   app.querySelectorAll('[data-sk]').forEach(el=>{const v=UI.scrolls[UI.rk+'|'+el.dataset.sk];if(v!=null)el.scrollTop=v});
   if(fk){const el=app.querySelector(`[data-k="${CSS.escape(fk)}"]`);if(el){el.focus({preventScroll:true});if(sel)try{el.setSelectionRange(sel[0],sel[1])}catch(e){}}}
+  document.getElementById('device').classList.toggle('chart',UI.look==='chart');
+  document.getElementById('b-look').textContent=UI.look==='chart'?'디자인: 진료기록부':'디자인: 지금(EMR)';
   document.getElementById('b-orient').textContent=UI.orient==='land'?'세로로 보기':'가로로 보기';
   document.getElementById('b-fit').textContent=UI.fit?'실제 크기':'창에 맞추기';
   if(typeof guideAfter==='function') guideAfter();
@@ -3619,7 +3685,7 @@ function fit(){
   const sc=UI.fit?Math.min(st.clientWidth/W,st.clientHeight/H):1;
   fr.style.transform=`scale(${sc})`; fr.style.left=Math.max(0,(st.clientWidth-W*sc)/2)+'px'; fr.style.width=W+'px'; fr.style.height=H+'px';
 }
-function saveView(){try{localStorage.setItem(KEY+'-view',JSON.stringify({orient:UI.orient,fit:UI.fit,guide:{open:G.open,scene:G.scene,step:G.step}}))}catch(e){}}
+function saveView(){try{localStorage.setItem(KEY+'-view',JSON.stringify({look:UI.look,orient:UI.orient,fit:UI.fit,guide:{open:G.open,scene:G.scene,step:G.step}}))}catch(e){}}
 /* 입력 칸이 바뀐 직후 버튼을 누르면 그 버튼이 다시 그려지며 사라지지 않게, 그리기를 잠깐 미룬다 */
 let soonT=null;
 function renderSoon(){clearTimeout(soonT);soonT=setTimeout(()=>{soonT=null;render()},300)}
@@ -3630,11 +3696,12 @@ function flushRender(){if(soonT){cancelSoon();render()}}
 const ENTER_KEY=KEY+'-entered';
 function enterApp(){try{sessionStorage.setItem(ENTER_KEY,'1')}catch(e){}UI.stack=[];UI.route={name:'today'};UI.modal=null;UI.edit=null}
 ACT.enter=()=>{enterApp();document.querySelectorAll('#app .ld-f input').forEach(i=>i.value='');render({noSave:true})};
+ACT.setLook=d=>{UI.look=d.v;saveView();render()};
 ACT.logout=()=>{try{sessionStorage.removeItem(ENTER_KEY)}catch(e){}UI.stack=[];UI.route={name:'landing'};UI.modal=null;UI.edit=null;render({noSave:true})};
 
 /* ---------- 시작 ---------- */
 (function boot(){
-  try{const v=JSON.parse(localStorage.getItem(KEY+'-view')||'null');if(v){UI.orient=v.orient==='port'?'port':'land';UI.fit=v.fit!==false;if(v.guide){G.open=v.guide.open!==false;G.scene=Math.min(+v.guide.scene||0,SCENES.length-1);G.step=+v.guide.step||0}}}catch(e){}
+  try{const v=JSON.parse(localStorage.getItem(KEY+'-view')||'null');if(v){UI.look=v.look==='emr'?'emr':'chart';UI.orient=v.orient==='port'?'port':'land';UI.fit=v.fit!==false;if(v.guide){G.open=v.guide.open!==false;G.scene=Math.min(+v.guide.scene||0,SCENES.length-1);G.step=+v.guide.step||0}}}catch(e){}
   S=load(); ensurePackages(); save();
   let entered=false;try{entered=sessionStorage.getItem(ENTER_KEY)==='1'}catch(e){}
   if(!entered) UI.route={name:'landing'};
@@ -3651,6 +3718,7 @@ ACT.logout=()=>{try{sessionStorage.removeItem(ENTER_KEY)}catch(e){}UI.stack=[];U
   document.getElementById('b-guide').addEventListener('click',()=>{G.open=!G.open;saveView();fit();render()});
   document.getElementById('guide').addEventListener('click',guideClick);
   const setFull=on=>{document.body.classList.toggle('full',on);try{history.replaceState(null,'',on?'#full':location.pathname+location.search)}catch(e){}fit();render()};
+  document.getElementById('b-look').addEventListener('click',()=>{UI.look=UI.look==='chart'?'emr':'chart';saveView();render()});
   document.getElementById('b-full').addEventListener('click',()=>setFull(true));
   document.getElementById('b-unfull').addEventListener('click',()=>setFull(false));
   if(/full/.test(location.hash)) document.body.classList.add('full');
