@@ -276,7 +276,7 @@ V.member=r=>{
       <div class="cl-mid" data-sk="main">
         <div class="box"><div class="bh">다음 PT</div><div class="bb">${next}</div></div>
         <div class="box"><div class="sec3">${cautionSec(m)}${checkSec(m)}${goalSec(m)}</div></div>
-        <div class="box"><div class="bh">무게 변화 추이 <span class="muted" style="font-weight:500">역할별</span></div><div class="bb">${roleTrend(m,470,220)}</div></div>
+        <div class="box"><div class="bh">무게 변화 추이 <span class="muted" style="font-weight:500">반복 구간별</span></div><div class="bb">${roleTrend(m,470,220)}</div></div>
         ${last?`<div class="box"><div class="bh">지난 PT 변화 <span class="muted" style="font-weight:500">${mdw(last.date)} · ${esc(splitName(last))}</span><span class="sp"></span>${btn('수업 상세','go',{to:'detail',sid:last.id},'ghost small')}</div><div class="bb">${deltaChart(m,last)}</div></div>`:''}
       </div>
       <div class="cl-right">

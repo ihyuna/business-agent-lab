@@ -159,6 +159,7 @@ const ACT={
   finish:d=>{const s=SES(d.sid);const made=finishSession(s);UI.timer=null;UI.edit=null;save();home('today');toast(made?`수업을 저장했어요. ${mdw(made.date)} ${splitName(made)} 수업 준비를 미리 채웠어요.`:'수업을 저장했어요.')},
   // 추이, 기록, 찾기
   pickRt:d=>{UI.cur['rt-'+d.mid]=d.v;render()},
+  pickRtRole:d=>{UI.cur['rtr-'+d.mid]=d.v;render()},
   pickRtPer:d=>{UI.cur['rtp-'+d.mid]=d.v;render()},
   pickTrend:d=>{UI.cur['trend-'+d.mid]=d.v;UI.cur['trendPt-'+d.mid]=null;render()},
   trendPt:d=>{const k='trendPt-'+UI.route.mid;UI.cur[k]=UI.cur[k]===+d.i?null:+d.i;render()},
