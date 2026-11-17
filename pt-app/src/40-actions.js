@@ -114,7 +114,7 @@ const ACT={
   setKindPick:d=>{const {x,st,s}=gx(d);st.kind=d.v;if(s.status==='planned')x.edited=true;UI.modal=null;save();render()},
   delSet:d=>{const {s,x}=gx(d);x.sets.splice(+d.i,1);if(s.status==='planned')x.edited=true;updateExStatus(x);UI.modal=null;UI.edit=null;save();render()},
   addSet:d=>{const {s,x}=gx(d);newSet(s,x);if(isLive(s))UI.cur[s.id]=x.uid;save();render()},
-  moveEx:d=>{const {s,x}=gx(d);UI.modal=null;const i=s.exercises.indexOf(x);let j=i+(+d.dir);while(j>=0&&j<s.exercises.length&&['removed','swapped'].includes(s.exercises[j].status))j+=(+d.dir);if(j<0||j>=s.exercises.length)return render();s.exercises.splice(i,1);s.exercises.splice(j,0,x);save();render()},
+  moveEx:d=>{const {s,x}=gx(d);UI.modal=null;const i=s.exercises.indexOf(x);let j=i+(+d.dir);while(j>=0&&j<s.exercises.length&&['removed','swapped'].includes(s.exercises[j].status))j+=(+d.dir);if(j<0||j>=s.exercises.length)return render();s.exercises.splice(i,1);s.exercises.splice(j,0,x);refillOrder(s);save();render()},
   restoreEx:d=>{const {s,x}=gx(d);x.status='planned';x.reason='';updateExStatus(x);save();render()},
   doRemove:d=>{const {s,x}=gx(UI.modal);removeExercise(s,x,d.v);if(UI.cur[s.id]===x.uid)delete UI.cur[s.id];UI.modal=null;save();toast(`${EX(x.exId).name} 뺐어요 (${d.v})`)},
   pickSwap:d=>{UI.modal.to=d.v;render()},
@@ -131,7 +131,7 @@ const ACT={
   pickShow:d=>{UI.cur['show-'+d.sid]=d.v;render()},
   raiseNext:d=>{const s=SES(d.sid);const x=s.exercises.find(e=>e.exId===d.ex&&e.status==='done');const top=x&&topDone(x);if(!top)return;const inc=+EX(d.ex).inc||2.5;ensureNext(s).targets[d.ex]={w:Math.round((top.w+inc)*100)/100,r:top.r,text:'',raised:true};save();render()},
   keepNext:d=>{delete ensureNext(SES(d.sid)).targets[d.ex];save();render()},
-  doAddEx:()=>{const o=UI.modal;const s=SES(o.sid);const m=M(s.memberId);if(!o.to)return;const y=planExercise(m,{exId:o.to,role:fv('addRole')||'보조',structure:'스트레이트'},s.date,s.templateId,s.exercises.map(e=>({role:e.role})));
+  doAddEx:()=>{const o=UI.modal;const s=SES(o.sid);const m=M(s.memberId);if(!o.to)return;const y=planExercise(m,{exId:o.to,role:fv('addRole')||'보조',structure:'스트레이트'},s.date,s.templateId,prevCtx(s.exercises));
     y.origin='added';s.exercises.push(y);UI.cur[s.id]=y.uid;clearDraft('addRole');UI.modal=null;save();render()},
   // 수업 시작
   cond:d=>{const s=SES(d.sid);s.cond[d.item]=d.v;applyCondition(s);save();render()},
@@ -159,6 +159,7 @@ const ACT={
   finish:d=>{const s=SES(d.sid);const made=finishSession(s);UI.timer=null;UI.edit=null;save();home('today');toast(made?`수업을 저장했어요. ${mdw(made.date)} ${splitName(made)} 수업 준비를 미리 채웠어요.`:'수업을 저장했어요.')},
   // 추이, 기록, 찾기
   pickRt:d=>{UI.cur['rt-'+d.mid]=d.v;render()},
+  devCause:d=>{const s=SES(d.sid);s.devCause=s.devCause||{};s.devCause[d.k]=s.devCause[d.k]===d.v?null:d.v;save();render()},
   pickRtRole:d=>{UI.cur['rtr-'+d.mid]=d.v;render()},
   pickRtPer:d=>{UI.cur['rtp-'+d.mid]=d.v;render()},
   pickTrend:d=>{UI.cur['trend-'+d.mid]=d.v;UI.cur['trendPt-'+d.mid]=null;render()},

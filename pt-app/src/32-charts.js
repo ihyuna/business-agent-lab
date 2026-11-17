@@ -131,3 +131,31 @@ function roleTrend(m,W,H){
   return head+svg+`<table class="rt-tb"><tr><th>반복 구간</th><th>기록</th><th>무게 (처음 → 최근)</th><th>평균 세트</th><th>역할</th></tr>${rows}</table>
     <div class="tiny muted" style="margin-top:4px">선 색 = 그 세트 횟수 구간(1~5 · 6~12 · 13 이상, 논문 기준 임시값) · 점 글자 = 그날 그 종목의 역할(메인 채움 · 보조 빈 칸 · 워밍업 점선 네모) · 점 위 = 횟수 · 점 = 그날 가장 무거운 본세트(워밍업 세트 빼고) · 점을 누르면 그날 수업 상세</div>`;
 }
+
+/* ---------- D91 기댓값과 비교 (마무리) · 기댓값 소견 (회원 화면) ----------
+   세트마다 계산하고 종목 하나에 한 줄로 묶는다: 2회 이상 덜 나온 세트가 있으면 ▼(가장 많이 덜 나온 세트),
+   없고 3회 이상 더 나온 세트가 있으면 ▲. 까닭 칩은 ▼ 줄에만, 종목(uid)에 하나 */
+function devGroups(m,s,onlyDone){
+  const by=new Map(); for(const e of expectList(m,s,onlyDone)){if(!by.has(e.x.uid))by.set(e.x.uid,[]);by.get(e.x.uid).push(e)}
+  return [...by.values()].map(L=>{const x=L[0].x;const lo=L.reduce((a,e)=>e.diff<a.diff?e:a);const hi=L.reduce((a,e)=>e.diff>a.diff?e:a);
+    const kind=lo.diff<=DEV_UNDER?'under':hi.diff>=DEV_OVER?'over':'ok';return {x,L,kind,pick:kind==='over'?hi:lo,key:x.uid}});
+}
+const expTxt=e=>e.exp<1?'1회 미만':`약 ${e.exp}회`;
+const e1Txt=e=>`<span class="tiny muted">${md(e.e1.date)} ${e.e1.w}×${e.e1.r} 기준${e.e1.hi?' · 덜 정확':''}</span>`;
+function devBlock(m,s){
+  const G=devGroups(m,s,true); if(!G.length) return '<div class="empty">비교할 세트가 없어요. 이 종목을 20회 이하로 한 지난 기록이 있어야 기댓값을 계산해요.</div>';
+  const dc=s.devCause||{};
+  const rows=G.map(g=>{const e=g.pick;const today=g.L.map(v=>`${fw(v.st.aw,g.x.exId)} × ${v.ar}`).join(', ');
+    const diff=g.kind==='under'?`<td class="num bad">▼ ${Math.abs(e.diff)}회</td>`:g.kind==='over'?`<td class="num good">▲ ${e.diff}회</td>`:'<td class="num muted">±2 안</td>';
+    const cause=g.kind==='under'?DEV_CAUSES.map(c=>`<button class="chip mini${dc[g.key]===c?' on':''}" data-act="devCause" data-sid="${s.id}" data-k="${g.key}" data-v="${c}">${c}</button>`).join(''):g.kind==='over'?'<span class="tiny muted">지난 세트가 한계가 아니었을 수 있어요. 다음 숫자를 올려 볼 근거예요</span>':'';
+    return `<tr><td><b>${esc(EX(g.x.exId).name)}</b></td><td class="small">${esc(today)}</td><td class="num">${esc(fw(e.st.aw,g.x.exId))}에서 ${expTxt(e)}<br>${e1Txt(e)}</td>${diff}<td>${cause}</td></tr>`}).join('');
+  return `<table class="dev-tb"><tr><th>종목</th><th>오늘 (본세트)</th><th>기댓값</th><th>차이</th><th>까닭 (▼만, 트레이너가 골라요)</th></tr>${rows}</table>
+    <div class="tiny muted" style="margin-top:4px">기댓값 = 이 회원이 바로 전에 이 종목을 한 날 최고 본세트로 구한 추정 1RM(여유 횟수 안 적었으면 0)으로, 오늘 무게에서 역할 기준 여유를 남기고 나올 횟수예요. 10회 넘는 세트로 구하면 '덜 정확'. 한 세트라도 2회 이상 적으면 ▼, 3회 이상 많으면 ▲ (논문 기준 임시값). 앱은 까닭을 판단하지 않아요.</div>`;
+}
+function devHistory(m,n){
+  const out=[];
+  for(const s of completed(m.id).slice().reverse()){for(const g of devGroups(m,s,false)){if(g.kind==='under')out.push({s,...g})}if(out.length>=n)break}
+  if(!out.length) return '<div class="empty">기댓값보다 2회 이상 덜 나온 종목이 없어요.</div>';
+  return `<table class="dev-tb"><tr><th>날짜</th><th>종목</th><th>기록</th><th>기댓값</th><th>까닭</th></tr>${out.slice(0,n).map(g=>{const e=g.pick;return `<tr class="click" data-act="go" data-to="detail" data-sid="${g.s.id}"><td class="num">${md(g.s.date)}</td><td>${esc(EX(g.x.exId).name)}</td><td class="num">${esc(fw(e.st.aw,g.x.exId))} × ${e.ar}</td><td class="num">${expTxt(e)} <span class="bad">▼${Math.abs(e.diff)}</span>${e.e1.hi?' <span class="tiny muted">덜 정확</span>':''}</td><td class="small">${esc((g.s.devCause||{})[g.key]||'—')}</td></tr>`}).join('')}</table>
+  <div class="tiny muted" style="margin-top:4px">이 회원 기록으로 계산한 기댓값보다 2회 이상 적게 나온 종목, 최근 ${Math.min(n,out.length)}개. 수첩 숫자 그대로이고, 까닭은 마무리에서 트레이너가 고른 것만 보여요. 줄을 누르면 그날 수업 상세.</div>`;
+}

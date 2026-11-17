@@ -126,6 +126,53 @@ const usedCount=m=>msessions(m.id).filter(s=>s.status==='completed'||s.status===
 const leftCls=left=>left<=0?'over':left===1?'l1':left===2?'l2':left===3?'l3':'';
 function removeExampleCx(){S.sessions=S.sessions.filter(s=>!s.example);S.changes=(S.changes||[]).filter(c=>!c.example)}
 
+
+/* ---------- D90 앞 종목 부하 · 역할이 바뀐 종목 / D91 회원별 기댓값 ----------
+   트레이너: "앞 운동 볼륨에 따른 다음 종목 무게 추천", "같은 2번째 레그컬이라도 1번째가 메인 고강도였는지 워밍업이었는지",
+   "워밍업으로 20kg 쓴 레그컬을 오늘 마무리로 쓸 때", "기댓값보다 안 나오는 회원이 있다면 이유를 찾을 수도".
+   숫자 기준(본세트 6개 차이, 여유 1개, ±2회)은 논문 기준 임시값이고 트레이너 답이 오면 바꾼다. 기록 숫자는 고치지 않는다. */
+function prevCtx(list){return list.filter(e=>!['removed','swapped'].includes(e.status)).map(e=>({role:e.role,exId:e.exId,n:(e.sets||[]).filter(st=>st.kind!=='warmup').length||null}))}
+function loadOf(prev){const RS=S.settings.roles;let mains=0,work=0;const names=[];
+  for(const p of prev){if(p.role==='메인'){mains++;if(p.exId)names.push(EX(p.exId).name)}if(p.role!=='워밍업')work+=p.n!=null?p.n:((RS[p.role]||RS['보조']).sets||0)}
+  return {mains,work,names}}
+function ctxIn(s,exId){if(!s)return null;const i=s.exercises.findIndex(e=>e.exId===exId&&e.status==='done');if(i<0)return null;return loadOf(prevCtx(s.exercises.slice(0,i).filter(e=>e.status==='done')))}
+const ctxText=c=>`메인 ${c.mains}개${c.names.length?'('+c.names.join(', ')+')':''} · 본세트 ${c.work}개`;
+function harderSets(sets,rir,inc){const ch=[];
+  for(const st of sets){if(st.kind==='warmup')continue;const g=repRange(st.pr);const from=`${st.pw??'—'} × ${st.pr??'—'}`;
+    if(isNum(st.pw)&&g&&g[1]<=10){const nw=floorTo(st.pw*(30+g[1]+rir)/(30+g[1]+rir+1),inc);if(nw<st.pw)st.pw=nw;else st.pr=shiftReps(st.pr,-1)}
+    else if(st.pr!=null)st.pr=shiftReps(st.pr,-1); else continue;
+    ch.push(`${from} → ${st.pw??'—'} × ${st.pr}`)}
+  return ch}
+const DEV_CAUSES=['호흡','힘 쓰는 방식','신경계·집중','컨디션','통증','자세 교정 중','기타'];
+/* 기댓값용 추정 1RM: 바로 전 수업에서 이 종목 본세트(20회 이하) 가운데 가장 큰 값. 수첩은 15~20회 세트가 많아
+   10회 이하만 쓰면 거의 계산이 안 돼서 20회까지 쓰고, 10회 넘는 세트로 구했으면 hi=true로 '덜 정확'을 붙인다 */
+function e1For(m,exId,beforeDate){
+  for(const s of prevDone(m,beforeDate)){
+    const x=s.exercises.find(e=>e.exId===exId&&e.status==='done'); if(!x) continue;
+    let best=null;
+    for(const st of x.sets){
+      if(st.kind==='warmup'||st.kind==='drop') continue;
+      if(!isNum(st.aw)||!isNum(st.ar)||st.aw<=0||st.ar<1||st.ar>20) continue;
+      const rir=isNum(st.rir)?st.rir:0; const e=st.aw*(1+(st.ar+rir)/30);
+      if(!best||e>best.e) best={e,w:st.aw,r:st.ar,rir,date:s.date,hi:st.ar>10};
+    }
+    if(best) return best;
+  }
+  return null;
+}
+function expectFor(m,s,x,st){
+  if(st.kind==='warmup'||st.kind==='drop'||!isNum(st.aw)||st.aw<=0||!isNum(st.ar)) return null;
+  const e1=e1For(m,x.exId,s.date); if(!e1) return null;
+  const R=S.settings.roles[x.role]||S.settings.roles['보조']; const rir=isNum(st.rir)?st.rir:R.rir;
+  const er=30*(e1.e/st.aw-1)-rir; if(er<-10||er>25) return null;
+  const exp=Math.max(0,Math.round(er)); return {e1,rir,rirRec:isNum(st.rir),exp,ar:st.ar,diff:st.ar-exp};
+}
+const DEV_UNDER=-2, DEV_OVER=3;
+function expectList(m,s,onlyDone){const out=[];
+  for(const x of s.exercises){if(x.status!=='done')continue;
+    x.sets.forEach((st,i)=>{if(onlyDone&&!st.done)return;const e=expectFor(m,s,x,st);if(e)out.push({x,i,st,...e,key:x.uid+':'+i})})}
+  return out}
+
 /* ---------- 숫자 채우기 (D52, D57, D59, 워크플로우 v2 6단계) ---------- */
 function prevDone(m,beforeDate){return completed(m.id).filter(s=>s.date<beforeDate).reverse()}
 function findActual(m,exId,beforeDate,splitId,basis){
@@ -191,7 +238,17 @@ function fillExercise(m,item,date,splitId,force,prevItems){
       if(lw){out.sets.forEach(st=>{if(noW(st.pw))st.pw=lw.w});B.lines.push(`그날 무게가 없어 그 전 ${md(lw.date)} 실제 무게 ${fw(lw.w,item.exId)}를 씀`)}
       else{B.tag='무게 찾기';B.lines.push('이 종목의 무게 기록이 없어 무게를 비워 둠')}}
     const noR=v=>v==null||v==='';if(out.sets.some(st=>noR(st.pr))){out.sets.forEach(st=>{if(noR(st.pr))st.pr=R.target});B.lines.push(`그날 횟수가 없어 역할(${item.role}) 기준 ${R.target}회로 채움 (논문 기준 임시값)`)}
-    if(src.x.role&&src.x.role!==item.role) B.lines.push(`그때 역할은 ${src.x.role}, 오늘 역할은 ${item.role}`);
+    if(src.x.role&&src.x.role!==item.role&&item.role!=='워밍업'){
+      const Rs=S.settings.roles[src.x.role]||S.settings.roles['보조']; const ts=topSet(src.x);
+      B.lines.push(`그때(${md(src.s.date)}) 역할은 ${src.x.role}, 오늘은 ${item.role} → 그날 숫자를 그대로 쓰지 않고 오늘 역할 기준으로 다시 계산해요 (D90)`);
+      let ee=null;
+      if(e1){ee=e1.e;B.lines.push(`추정 1RM ${r1(e1.e)} (${md(e1.date)} ${e1.w} × ${e1.r}회, 10회 이하 세트)`)}
+      else if(ts&&isNum(ts.w)&&isNum(ts.r)&&ts.r>0){const st0=src.x.sets.find(st=>st.aw===ts.w&&(st.ar===ts.r||firstNum(st.ar)===ts.r));const rs=isNum(st0&&st0.rir)?st0.rir:Rs.rir;
+        ee=ts.w*(1+(ts.r+rs)/30);B.lines.push(`그날 ${fw(ts.w,item.exId)} × ${ts.r}회를 여유 ${rs}회${isNum(st0&&st0.rir)?'(기록)':`(${src.x.role} 역할 기준으로 가정, 힘을 덜 쓴 세트로 봄)`}로 보면 추정 1RM ${ts.w} × (1 + (${ts.r} + ${rs}) ÷ 30) = ${r1(ee)}${ts.r>10?' · 10회 넘는 세트로 추정해 덜 정확해요':''}`)}
+      if(ee){const w=wFor(ee,R.target,R.rir,inc);out.sets=ruleSets(w);B.tag='역할 바뀜';
+        B.lines.push(`오늘 ${item.role} 기준 ${R.target}회 · 여유 ${R.rir}회 → ${r1(ee)} ÷ (1 + ${R.target+R.rir}/30) = ${r1(ee/(1+(R.target+R.rir)/30))} → 눈금 ${inc}에 맞춰 ${w} × ${R.target}회 × ${R.sets}세트 (논문 기준 임시값)`)}
+      else B.lines.push('무게를 다시 계산할 기록이 없어 그날 숫자를 그대로 두었어요. 트레이너가 확인해 주세요');
+    }
     const between=msessions(m.id).filter(s=>s.date<date&&s.date>src.s.date&&(mode==='recent'||s.templateId===splitId));
     for(const k of between){const y=k.exercises.find(e=>e.exId===item.exId); if(!y) continue;
       if(k.status==='plan_only') B.lines.push(`${md(k.date)} 칸은 무게만 있어(했는지 모름) 건너뜀`);
@@ -219,6 +276,17 @@ function fillExercise(m,item,date,splitId,force,prevItems){
       out.sets.push(mkSet('drop',floorTo(w0*0.8,inc),R.target)); B.lines.push('드롭세트: 마지막에 약 20% 내린 세트 하나 (논문 기준 임시값)');
     }
   }
+  if(item.role!=='워밍업'&&out.sets.length){
+    const today=loadOf(prevItems); let refS=null;
+    if(mode==='same'||mode==='recent') refS=(mode==='same'?same:recent).s; else if(mode==='target') refS=tgt.s; else if(e1) refS=completed(m.id).find(s=>s.date===e1.date&&s.exercises.some(e=>e.exId===item.exId&&e.status==='done'));
+    const ref=ctxIn(refS,item.exId);
+    B.lines.push(`앞 종목: 오늘은 이 종목 앞에 ${ctxText(today)}${ref?` / 기준으로 쓴 ${md(refS.date)}엔 ${ctxText(ref)}`:''} (D90)`);
+    if(ref&&(today.mains>ref.mains||today.work>=ref.work+6)){
+      if(mode==='target') B.lines.push('오늘은 앞에서 더 많이 해서 지칠 수 있어요. 다만 목표는 트레이너가 정한 숫자라 그대로 둬요');
+      else{const ch=harderSets(out.sets,R.rir,inc);if(ch.length){B.tag=(B.tag?B.tag+' · ':'')+'앞 종목';
+        B.lines.push(`오늘은 앞에서 더 많이 해서(${today.mains>ref.mains?'메인이 더 많음':'본세트 6개 이상 더'}) 여유 횟수를 1개 더 남기게 바꿨어요: ${ch.join(', ')}. 컨디션 조절과 같은 계산이에요 (논문 기준 임시값)`)}}
+    } else if(ref&&today.mains<ref.mains&&today.work<=ref.work-6) B.lines.push('오늘은 앞이 그때보다 가벼워 여유가 더 있을 수 있어요. 숫자는 올리지 않았어요 (트레이너가 정해요)');
+  }
   if(item.role==='메인'&&(mode==='target'||mode==='rule')&&!prevItems.some(p=>p.role==='워밍업')){
     const first=out.sets.find(st=>isNum(st.pw)); const lw=lastWarmup(m,item.exId,date);
     if(lw){out.sets.unshift(...lw.sets.map(st=>mkSet('warmup',st.aw,st.ar)));
@@ -229,6 +297,7 @@ function fillExercise(m,item,date,splitId,force,prevItems){
   if(R.rounds) B.lines.push('유산소성 순환: 횟수 칸은 라운드 수로 씀');
   const lastTop=(same||recent)&&topSet(((same||recent).x));
   if(mode!=='rule'&&lastTop&&isNum(lastTop.r)&&lastTop.r>10&&isNum(lastTop.w)) B.lines.push(`${md((same||recent).s.date)} ${fw(lastTop.w,item.exId)} × ${lastTop.r}회로 추정 1RM 공식을 쓰면 ${Math.round(lastTop.w*(1+lastTop.r/30)*10)/10}이 나오지만, 10회가 넘는 세트라 공식을 쓰지 않았어요 (공식은 10회 이하만, D59)`);
+  {const fst=out.sets.find(st=>st.kind!=='warmup'&&isNum(st.pw)&&st.pw>0);const ex1=e1For(m,item.exId,date);if(ex1&&fst){const er=30*(ex1.e/fst.pw-1)-R.rir;if(er>=0&&er<=25)B.lines.push(`기댓값: 이 회원 ${md(ex1.date)} ${ex1.w} × ${ex1.r}회로 본 추정 1RM ${r1(ex1.e)}이면 ${fw(fst.pw,item.exId)}에서 여유 ${R.rir}회 남기고 약 ${Math.round(er)}회${ex1.hi?' · 10회 넘는 세트로 추정해 덜 정확해서 숫자 채우기에는 안 쓰고, 마무리에서 기댓값과 비교하는 데만 써요':''} (D91)`)}}
   B.lines.push("기본 추천은 컨디션 '보통' 기준이에요. 수업 시작에서 컨디션이 다르면 바뀐 숫자를 주황색으로 보여 줘요 (D67)");
   return out;
 }
@@ -241,13 +310,14 @@ function planExercise(m,item,date,splitId,prevItems,force){
 function createPlanned(m,date,time,tid){
   const t=tplOf(m,tid); const s={id:uid('s'),memberId:m.id,date,time:time||'',templateId:tid,status:'planned',cond:null,cautionChecks:{},goal:'',memo:'',observations:[],nextTargets:{},exercises:[]};
   const prev=[];
-  for(const it of (t?t.items:[])){s.exercises.push(planExercise(m,it,date,tid,prev));prev.push(it)}
+  for(const it of (t?t.items:[])){const y=planExercise(m,it,date,tid,prevCtx(prev));s.exercises.push(y);prev.push(y)}
   const tg=s.exercises.map(x=>{const t=findTarget(m,x.exId,date);return t?(t.t.text?`${EX(x.exId).name} ${t.t.text}`:`${EX(x.exId).name} ${t.t.w!=null?fw(t.t.w,x.exId):''}${t.t.r!=null?' × '+t.t.r:''}`):null}).filter(Boolean);
   s.goal=tg.length?tg.join(' / '):'';
   S.sessions.push(s); return s;
 }
+function refillOrder(s){if(s.status!=='planned')return;for(const x of s.exercises)if(x.status==='planned'&&!x.edited&&!x.sets.some(st=>st.done))refill(s,x,x.force)}
 function refill(s,x,force){
-  const m=M(s.memberId); const idx=s.exercises.indexOf(x); const prev=s.exercises.slice(0,idx).map(e=>({role:e.role}));
+  const m=M(s.memberId); const idx=s.exercises.indexOf(x); const prev=prevCtx(s.exercises.slice(0,idx));
   const f=fillExercise(m,{exId:x.exId,role:x.role,structure:x.structure},s.date,s.templateId,force,prev);
   x.sets=f.sets;x.basis=f.basis;x.rest=f.rest;x.prir=f.prir;x.force=force||null;x.edited=false;
 }
@@ -342,7 +412,7 @@ function applyBelow(s,x,i){
 function newSet(s,x){const l=x.sets[x.sets.length-1];const ns=mkSet(l&&l.kind!=='warmup'?l.kind:'working',l?(l.aw??l.pw):null,l?(l.ar??l.pr):null);if(isLive(s))ns.added=true;else x.edited=true;x.sets.push(ns);return ns}
 function swapExercise(s,x,to,scope){
   const m=M(s.memberId); const i=s.exercises.indexOf(x);
-  const y=planExercise(m,{exId:to,role:x.role,structure:x.structure},s.date,s.templateId,s.exercises.slice(0,i).map(e=>({role:e.role})));y.origin='swap';
+  const y=planExercise(m,{exId:to,role:x.role,structure:x.structure},s.date,s.templateId,prevCtx(s.exercises.slice(0,i)));y.origin='swap';
   s.exercises.splice(i+1,0,y);x.status='swapped';x.scope=scope||'today';x.replacedBy=y.uid;
   if(x.scope==='template'){const t=tplOf(m,s.templateId);const it=t&&t.items.find(k=>k.exId===x.exId);if(it){it.exId=to;tplTouched(t,`${EX(x.exId).name} → ${EX(to).name}`,s.date)}}
   return y;
@@ -464,9 +534,9 @@ function copyToNext(src,xs){
     let sets=x.sets.filter(st=>which?st.done:true).map(st=>mkSet(st.kind,which?(st.aw??st.pw):st.pw,which?(st.ar??st.pr):st.pr)).filter(st=>st.pw!=null||st.pr!=null);
     const basis={tag:'복사',date:src.date,lines:[`${md(src.date)} ${splitName(src)} 기록을 그대로 복사했어요.`+(x.raw?` 수첩: ${x.raw}`:'')],options:[]};
     let y=tgt.exercises.find(e=>e.exId===x.exId&&e.status!=='removed'&&e.status!=='swapped');
-    if(!sets.length){const p=planExercise(m,{exId:x.exId,role:x.role,structure:x.structure},tgt.date,tgt.templateId,tgt.exercises.map(e=>({role:e.role})));sets=p.sets;basis.lines.push('숫자가 없어 규칙으로 채웠어요.')}
+    if(!sets.length){const p=planExercise(m,{exId:x.exId,role:x.role,structure:x.structure},tgt.date,tgt.templateId,prevCtx(tgt.exercises));sets=p.sets;basis.lines.push('숫자가 없어 규칙으로 채웠어요.')}
     if(y){y.sets=sets;y.basis=basis;y.edited=false}
-    else{y=planExercise(m,{exId:x.exId,role:x.role,structure:x.structure},tgt.date,tgt.templateId,tgt.exercises.map(e=>({role:e.role})));y.sets=sets;y.basis=basis;y.origin='added';if(x.setting)y.setting=x.setting;tgt.exercises.push(y)}
+    else{y=planExercise(m,{exId:x.exId,role:x.role,structure:x.structure},tgt.date,tgt.templateId,prevCtx(tgt.exercises));y.sets=sets;y.basis=basis;y.origin='added';if(x.setting)y.setting=x.setting;tgt.exercises.push(y)}
   }
   save(); return tgt;
 }

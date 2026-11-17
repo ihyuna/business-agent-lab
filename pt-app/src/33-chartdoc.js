@@ -41,6 +41,7 @@ function memberDoc(o){
       ${fsec('지난 PT<br><small>변화</small>',last?`<div class="small muted" style="margin-bottom:4px">${mdw(last.date)} · ${esc(splitName(last))} ${btn('수업 상세','go',{to:'detail',sid:last.id},'ghost small')}</div>${deltaChart(m,last)}`:'<div class="empty">없어요.</div>')}
     </div>
     ${fsec('무게 변화<br><small>추이 · 반복 구간별</small>',roleTrend(m,860,250),'rtsec')}
+    ${fsec('기댓값<br><small>소견</small>',devHistory(m,6))}
     <div class="f-cap">Ⅳ. 다음 PT 계획 (처방)</div>${fsec('다음 PT',next)}
     <div class="f-cap">Ⅴ. 경과 기록 <span class="muted" style="font-weight:500">최근 ${Math.min(all.length,14)}회 · 줄을 누르면 펼쳐져요</span><span class="sp"></span>${btn('전체 수업 기록','go',{to:'history',mid:m.id},'small ghost')}</div>
     <table class="f-prog"><tr><th style="width:92px">일자</th><th style="width:76px">분할</th><th>실시 내용 (종목 · 최고 세트)</th><th style="width:200px">소견 · 메모</th><th style="width:40px">확인</th></tr>${prog}</table>
@@ -66,7 +67,7 @@ function summaryDoc(o){
     <div class="f-soap">
       ${fsec('<b>S</b><br><small>주관</small>',`<div class="f-sub">수업 전 컨디션 · 회원 말</div>${condT}`)}
       ${fsec('<b>O</b><br><small>실시</small>',`<div class="f-sub">오늘 한 세트 (워밍업 포함) · 지난 같은 분할과 비교</div><table class="f-res"><tr><th>종목</th><th style="width:70px">역할</th><th>오늘</th><th>지난 같은 분할</th><th style="width:74px">최고 세트</th></tr>${res}</table>`)}
-      ${fsec('<b>A</b><br><small>평가</small>',`<div class="f-two"><div><div class="f-sub">계획과 달라진 곳 ${ch.length+longs.length}</div>${li(ch)}${longs.map(t=>`<div class="small" style="color:var(--warn)">· ${esc(t)}</div>`).join('')||(ch.length?'':'<div class="empty">계획대로 했어요.</div>')}</div><div><div class="f-sub">넘은 개인 기록 ${prs.length}</div>${li(prs)||'<div class="empty">없어요.</div>'}</div></div><div class="tiny muted" style="margin-top:6px">앱은 오르내린 까닭을 판단하지 않아요. 까닭은 트레이너가 적어요.</div>`)}
+      ${fsec('<b>A</b><br><small>평가</small>',`<div class="f-two"><div><div class="f-sub">계획과 달라진 곳 ${ch.length+longs.length}</div>${li(ch)}${longs.map(t=>`<div class="small" style="color:var(--warn)">· ${esc(t)}</div>`).join('')||(ch.length?'':'<div class="empty">계획대로 했어요.</div>')}</div><div><div class="f-sub">넘은 개인 기록 ${prs.length}</div>${li(prs)||'<div class="empty">없어요.</div>'}</div></div><div class="f-sub" style="margin-top:10px">기댓값과 비교 (이 회원 추정 1RM 기준)</div>${devBlock(m,s)}<div class="tiny muted" style="margin-top:6px">앱은 오르내린 까닭을 판단하지 않아요. 까닭은 트레이너가 적어요.</div>`)}
       ${fsec('<b>P</b><br><small>계획</small>',`<div class="f-sub">주의사항으로 올릴 것 (올릴지는 트레이너가 정해요)</div>${cands.length?`<div class="list">${candRows}</div>`:'<div class="empty">없어요.</div>'}${tplQ?`<div style="margin-top:8px">${tplQ}</div>`:''}<div class="small muted" style="margin-top:6px">다음 숫자와 날짜는 아래 '다음 PT 계획'에서 정해요.</div>`)}
     </div>
     ${signLine('기록 확인',s.date)}

@@ -277,6 +277,7 @@ V.member=r=>{
         <div class="box"><div class="bh">다음 PT</div><div class="bb">${next}</div></div>
         <div class="box"><div class="sec3">${cautionSec(m)}${checkSec(m)}${goalSec(m)}</div></div>
         <div class="box"><div class="bh">무게 변화 추이 <span class="muted" style="font-weight:500">반복 구간별</span></div><div class="bb">${roleTrend(m,470,220)}</div></div>
+        <div class="box"><div class="bh">기댓값 소견 <span class="muted" style="font-weight:500">덜 나온 세트</span></div><div class="bb">${devHistory(m,6)}</div></div>
         ${last?`<div class="box"><div class="bh">지난 PT 변화 <span class="muted" style="font-weight:500">${mdw(last.date)} · ${esc(splitName(last))}</span><span class="sp"></span>${btn('수업 상세','go',{to:'detail',sid:last.id},'ghost small')}</div><div class="bb">${deltaChart(m,last)}</div></div>`:''}
       </div>
       <div class="cl-right">
@@ -375,10 +376,12 @@ function whyShort(s,x){
   const B=x.basis; if(!B) return '';
   if(x.edited) return '트레이너가 고친 숫자';
   const R=S.settings.roles[x.role]||S.settings.roles['보조'];
+  const tg=B.tag||''; const pre=tg.includes('앞 종목')?' · 앞 종목이 더 많아 여유 1개 더':'';
+  if(tg.startsWith('역할 바뀜')) return `${md(B.date)}엔 다른 역할이라 오늘 역할(${x.role}) 기준으로 다시 계산${pre}`;
   if(B.mode==='target') return `${md(B.date)} 수업 끝에 정한 다음 목표`;
-  if(B.mode==='same') return `지난 같은 분할(${md(B.date)}) 실제값 그대로${B.tag==='무게 찾기'?', 무게 기록 없음':''}`;
-  if(B.mode==='recent') return `최근 수업(${md(B.date)}) 실제값 그대로`;
-  if(B.e1) return `추정 1RM ${Math.round(B.e1.e*10)/10} → ${R.target}회·여유 ${R.rir}회 무게`;
+  if(B.mode==='same') return `지난 같은 분할(${md(B.date)}) 실제값${pre?pre:' 그대로'}${B.tag==='무게 찾기'?', 무게 기록 없음':''}`;
+  if(B.mode==='recent') return `최근 수업(${md(B.date)}) 실제값${pre?pre:' 그대로'}`;
+  if(B.e1) return `추정 1RM ${Math.round(B.e1.e*10)/10} → ${R.target}회·여유 ${R.rir}회 무게${pre}`;
   return `기록이 없어 역할(${x.role}) 기준 ${R.target}회, 무게는 수업 중 찾기`;
 }
 function briefLine(s,m){
