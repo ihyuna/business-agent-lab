@@ -36,11 +36,11 @@ function memberDoc(o){
     <div class="f-row3">${fsec('특이사항<br><small>(주의)</small>',cautionSec(m),'warnsec')}${fsec('다음 확인',checkSec(m))}${fsec('목표<br><small>방향</small>',goalSec(m))}</div>
     <div class="f-cap">Ⅲ. 신체 · 기록 소견</div>
     ${fsec('지난 PT<br><small>한눈에</small>',last?`<div class="small muted" style="margin-bottom:6px">${mdw(last.date)} · ${esc(splitName(last))} ${btn('수업 상세','go',{to:'detail',sid:last.id},'ghost small')}</div>${lastPtBrief(m,last,u)}`:'<div class="empty">없어요.</div>','lpsec')}
-    <div class="f-row3 body3 two">
-      ${fsec('인체도',`<div class="row" style="margin-bottom:4px">${chips([['last','지난 PT'],['d30','최근 30일']],rg,'musRange',{mid:m.id})}</div>${muscleBlock(ss,220,rg==='last'?'지난 PT':'최근 30일')}`)}
-      ${fsec('월별<br><small>수업 횟수</small>',monthBars(m,262,130))}
-    </div>
     ${fsec('무게 변화<br><small>추이 · 반복 구간별</small>',roleTrend(m,860,250),'rtsec')}
+    <div class="f-row3 body3 two wide1">
+      ${fsec('인체도',`<div class="row" style="margin-bottom:4px">${chips([['last','지난 PT'],['d30','최근 30일']],rg,'musRange',{mid:m.id})}</div>${muscleBlock(ss,340,rg==='last'?'지난 PT':'최근 30일')}`)}
+      ${fsec('월별<br><small>수업 횟수</small>',monthBars(m,200,120))}
+    </div>
     ${fsec('기댓값<br><small>소견</small>',devHistory(m,6))}
     <div class="f-cap">Ⅳ. 다음 PT 계획 (처방)</div>${fsec('다음 PT',next)}
     <div class="f-cap">Ⅴ. 경과 기록 <span class="muted" style="font-weight:500">최근 ${Math.min(all.length,14)}회 · 줄을 누르면 펼쳐져요</span><span class="sp"></span>${btn('전체 수업 기록','go',{to:'history',mid:m.id},'small ghost')}</div>
