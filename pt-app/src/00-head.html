@@ -726,6 +726,27 @@ body.full #app .hl{outline:0!important;box-shadow:none!important;animation:none!
 .sidenav .logo::before,#device.chart .sidenav .logo::before{display:none!important}
 .sidenav .logo .kbicon{display:block;border-radius:6px}
 .ld-brand .kbicon{display:block}
+/* 시작 화면 · 소셜 로그인 (D97). 카카오 노랑·네이버 초록은 각 로그인 버튼에만 쓴다 */
+.lg{flex:1;min-height:0;position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;background:linear-gradient(180deg,#f4f7fd 0%,#fff 60%);overflow:auto;padding:24px}
+.lg-col{width:100%;max-width:360px;display:flex;flex-direction:column;align-items:center;text-align:center}
+.lg-icon .kbicon{display:block;filter:drop-shadow(0 8px 20px rgba(31,102,242,.25))}
+.lg-name{font-size:30px;font-weight:800;letter-spacing:-.02em;margin-top:18px;color:var(--ink)}
+.lg-tag{font-size:16px;font-weight:600;color:var(--ink);margin-top:8px}
+.lg-sub{font-size:13px;color:var(--muted);margin-top:4px}
+.lg-btns{width:100%;display:grid;gap:10px;margin-top:40px}
+.lg-b{position:relative;display:flex;align-items:center;justify-content:center;gap:8px;width:100%;height:52px;border-radius:12px;border:0;font:inherit;font-size:15.5px;font-weight:700;cursor:pointer}
+.lg-b>svg,.lg-b>.lg-n{position:absolute;left:18px}
+.lg-kakao{background:#FEE500;color:#191919}
+.lg-naver{background:#03C75A;color:#fff}
+.lg-n{font-size:17px;font-weight:900;font-family:Arial,sans-serif}
+.lg-apple{background:#111;color:#fff}
+.lg-b:active{transform:translateY(1px)}
+.lg-links{display:flex;align-items:center;gap:12px;margin-top:20px;font-size:13.5px}
+.lg-links i{width:1px;height:12px;background:var(--line2)}
+.lg-links .linkbtn{color:var(--muted)}
+.lg-note{font-size:11.5px;color:var(--faint);margin-top:22px;line-height:1.5}
+.lg-foot{position:absolute;bottom:14px;left:0;right:0;text-align:center;font-size:11px;color:var(--faint)}
+#device.chart .lg-b{border-radius:12px!important}
 </style>
 <div id="shell">
   <div id="bar">
