@@ -360,33 +360,22 @@ function landingPreview(){
     <div class="ld-mock-why"><span class="ld-mock-lb">근거</span>지난 같은 분할 실제값 · 앞 종목 · 컨디션 '보통' 기준</div>
   </div>`;
 }
-V.landing=()=>{const nS=S.sessions.filter(s=>s.status==='completed').length, nM=S.members.length;
- return `<div class="landing">
-  <div class="ld-left">
-    <div class="ld-brand">${kbIcon(34)}<b>짐노트</b><span class="ld-badge">트레이너 전용</span></div>
-    <div class="ld-main">
-      <div class="ld-eyebrow">종이 수첩 대신 쓰는 회원 기록부</div>
-      <h1 class="ld-h">지난 기록이<br>다음 수업의 근거가 돼요</h1>
-      <p class="ld-sub">세트·무게·횟수를 앱이 근거와 함께 먼저 채우고, 정하는 건 트레이너가 해요.</p>
-      ${landingPreview()}
+/* 시작 화면 (2026-11-18 이현아님: 카카오톡으로 로그인 같은 페이지가 더 좋겠다, D97).
+   소셜 로그인 버튼은 모양만 있는 시연용이다. 실제로 카카오·네이버·애플에 연결하지 않고, 아무것도 보내거나 저장하지 않는다. */
+const BUBBLE='<svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true"><path d="M9 2.2C4.6 2.2 1.2 4.9 1.2 8.3c0 2.2 1.4 4.1 3.6 5.2l-.8 3 3.4-2.2c.5.1 1 .1 1.6.1 4.4 0 7.8-2.7 7.8-6.1S13.4 2.2 9 2.2z" fill="#191919"/></svg>';
+V.landing=()=>`<div class="lg">
+  <div class="lg-col">
+    <div class="lg-icon">${kbIcon(104)}</div>
+    <div class="lg-name">짐노트</div>
+    <div class="lg-tag">지난 기록이 다음 수업의 근거가 돼요</div>
+    <div class="lg-sub">PT 트레이너 전용 회원 기록</div>
+    <div class="lg-btns">
+      <button class="lg-b lg-kakao" data-act="enter" data-via="kakao">${BUBBLE}<span>카카오로 시작하기</span></button>
+      <button class="lg-b lg-naver" data-act="enter" data-via="naver"><b class="lg-n">N</b><span>네이버로 시작하기</span></button>
+      <button class="lg-b lg-apple" data-act="enter" data-via="apple"><span>Apple로 계속하기</span></button>
     </div>
-    <div class="ld-stats">
-      <div><b>${nS}회</b><span>옮겨 담은 수첩 수업</span></div>
-      <div><b>${nM}명</b><span>회원 기록 (성+00 코드)</span></div>
-      <div><b>숫자마다</b><span>근거 한 줄 · 계산 보기</span></div>
-    </div>
+    <div class="lg-links"><button class="linkbtn" data-act="enter" data-via="mail">이메일로 로그인</button><i></i><button class="linkbtn" data-act="enter" data-guest="1">로그인 없이 둘러보기</button></div>
+    <div class="lg-note">시연판이에요. 어느 버튼을 눌러도 실제 로그인은 하지 않고, 아무것도 보내거나 저장하지 않아요. 모두 같은 트레이너 기록으로 들어가요.</div>
   </div>
-  <div class="ld-right">
-    <div class="ld-card">
-      <h2>로그인</h2>
-      <div class="ld-cap">트레이너 계정으로 들어가요</div>
-      <label class="ld-f"><span>아이디</span><input type="text" autocomplete="off" placeholder="트레이너 아이디" aria-label="아이디"></label>
-      <label class="ld-f"><span>비밀번호</span><input type="password" autocomplete="off" placeholder="비밀번호" aria-label="비밀번호"></label>
-      ${btn('로그인','enter',null,'primary ld-go')}
-      <div class="ld-or"><span>또는</span></div>
-      ${btn('로그인 없이 둘러보기','enter',{guest:1},'ld-go ld-ghost')}
-      <div class="ld-note">시연판이에요. 아이디·비밀번호는 확인하지도, 저장하거나 보내지도 않아요. 어느 버튼이든 같은 트레이너 기록으로 들어가요.</div>
-    </div>
-    <div class="ld-legal">아이패드 9세대 가로 화면 기준 · 회원 이름은 성+00 코드로 바꿨어요</div>
-  </div>
-</div>`};
+  <div class="lg-foot">회원 이름은 성+00 코드로 바꿨어요 · 아이패드 9세대 기준</div>
+</div>`;
