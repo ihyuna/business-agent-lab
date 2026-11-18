@@ -726,27 +726,37 @@ body.full #app .hl{outline:0!important;box-shadow:none!important;animation:none!
 .sidenav .logo::before,#device.chart .sidenav .logo::before{display:none!important}
 .sidenav .logo .kbicon{display:block;border-radius:6px}
 .ld-brand .kbicon{display:block}
-/* 시작 화면 · 소셜 로그인 (D97). 카카오 노랑·네이버 초록은 각 로그인 버튼에만 쓴다 */
-.lg{flex:1;min-height:0;position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;background:linear-gradient(180deg,#f4f7fd 0%,#fff 60%);overflow:auto;padding:24px}
-.lg-col{width:100%;max-width:360px;display:flex;flex-direction:column;align-items:center;text-align:center}
-.lg-icon .kbicon{display:block;filter:drop-shadow(0 8px 20px rgba(31,102,242,.25))}
-.lg-name{font-size:30px;font-weight:800;letter-spacing:-.02em;margin-top:18px;color:var(--ink)}
-.lg-tag{font-size:16px;font-weight:600;color:var(--ink);margin-top:8px}
-.lg-sub{font-size:13px;color:var(--muted);margin-top:4px}
-.lg-btns{width:100%;display:grid;gap:10px;margin-top:40px}
-.lg-b{position:relative;display:flex;align-items:center;justify-content:center;gap:8px;width:100%;height:52px;border-radius:12px;border:0;font:inherit;font-size:15.5px;font-weight:700;cursor:pointer}
-.lg-b>svg,.lg-b>.lg-n{position:absolute;left:18px}
-.lg-kakao{background:#FEE500;color:#191919}
-.lg-naver{background:#03C75A;color:#fff}
-.lg-n{font-size:17px;font-weight:900;font-family:Arial,sans-serif}
-.lg-apple{background:#111;color:#fff}
+/* 시작 화면 (D97 → 11/18 이메일 로그인 + 아래 소셜 버튼 모양) */
+.lg{flex:1;min-height:0;position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;background:#fff;overflow:auto;padding:24px}
+.lg-col{width:100%;max-width:380px;display:flex;flex-direction:column}
+.lg-logo{display:flex;align-items:center;justify-content:center;gap:10px}
+.lg-logo .kbicon{display:block}
+.lg-logo span{font-size:30px;font-weight:800;letter-spacing:-.02em;color:var(--ink)}
+.lg-sub{text-align:center;font-size:13px;color:var(--muted);margin:8px 0 34px}
+.lg-f{position:relative;display:block;margin-top:14px}
+.lg-f>span{position:absolute;left:12px;top:-8px;padding:0 5px;background:#fff;font-size:12px;color:var(--muted)}
+.lg-f input{width:100%;box-sizing:border-box;height:52px;border:1px solid var(--line2);border-radius:10px;padding:0 16px;font:inherit;font-size:15px;background:#fff}
+.lg-f input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.lg-opt{display:flex;justify-content:space-between;align-items:center;margin:12px 2px 0;font-size:13px;color:var(--muted)}
+.lg-opt label{display:flex;align-items:center;gap:6px;cursor:pointer}
+.lg-opt input{width:16px;height:16px;margin:0}
+.lg-opt .linkbtn{color:var(--muted)}
+.lg-b{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;height:50px;border-radius:10px;border:0;font:inherit;font-size:15px;font-weight:700;cursor:pointer}
+.lg-go{margin-top:22px;background:var(--accent);color:#fff}
+.lg-or{display:flex;align-items:center;gap:12px;margin:26px 0 14px;font-size:12.5px;color:var(--faint)}
+.lg-or::before,.lg-or::after{content:'';flex:1;height:1px;background:var(--line)}
+.lg-btns{display:grid;gap:10px}
+.lg-out{background:#fff;border:1px solid var(--line2);color:var(--ink);font-weight:600}
+.lg-out i{width:20px;height:20px;border-radius:5px;display:grid;place-items:center;font-style:normal}
+.lg-k{background:#FEE500}
+.lg-nv{background:#03C75A;color:#fff;font:900 12px Arial,sans-serif}
 .lg-b:active{transform:translateY(1px)}
-.lg-links{display:flex;align-items:center;gap:12px;margin-top:20px;font-size:13.5px}
-.lg-links i{width:1px;height:12px;background:var(--line2)}
-.lg-links .linkbtn{color:var(--muted)}
-.lg-note{font-size:11.5px;color:var(--faint);margin-top:22px;line-height:1.5}
+.lg-links{text-align:center;margin-top:28px;font-size:13.5px;color:var(--muted)}
+.lg-acc{color:var(--accent)!important;font-weight:700}
+.lg-guest{margin:10px auto 0;font-size:13px;color:var(--muted)}
+.lg-note{text-align:center;font-size:11.5px;color:var(--faint);margin-top:18px;line-height:1.5}
 .lg-foot{position:absolute;bottom:14px;left:0;right:0;text-align:center;font-size:11px;color:var(--faint)}
-#device.chart .lg-b{border-radius:12px!important}
+#device.chart .lg-b,#device.chart .lg-f input{border-radius:10px!important}
 </style>
 <div id="shell">
   <div id="bar">
@@ -3163,20 +3173,24 @@ function landingPreview(){
 }
 /* 시작 화면 (2026-11-18 이현아님: 카카오톡으로 로그인 같은 페이지가 더 좋겠다, D97).
    소셜 로그인 버튼은 모양만 있는 시연용이다. 실제로 카카오·네이버·애플에 연결하지 않고, 아무것도 보내거나 저장하지 않는다. */
-const BUBBLE='<svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true"><path d="M9 2.2C4.6 2.2 1.2 4.9 1.2 8.3c0 2.2 1.4 4.1 3.6 5.2l-.8 3 3.4-2.2c.5.1 1 .1 1.6.1 4.4 0 7.8-2.7 7.8-6.1S13.4 2.2 9 2.2z" fill="#191919"/></svg>';
+const BUBBLE='<svg width="12" height="12" viewBox="0 0 18 18" aria-hidden="true"><path d="M9 2.2C4.6 2.2 1.2 4.9 1.2 8.3c0 2.2 1.4 4.1 3.6 5.2l-.8 3 3.4-2.2c.5.1 1 .1 1.6.1 4.4 0 7.8-2.7 7.8-6.1S13.4 2.2 9 2.2z" fill="#191919"/></svg>';
 V.landing=()=>`<div class="lg">
   <div class="lg-col">
-    <div class="lg-icon">${kbIcon(104)}</div>
-    <div class="lg-name">짐노트</div>
-    <div class="lg-tag">지난 기록이 다음 수업의 근거가 돼요</div>
+    <div class="lg-logo">${kbIcon(44)}<span>짐노트</span></div>
     <div class="lg-sub">PT 트레이너 전용 회원 기록</div>
+    <label class="lg-f ld-f"><span>이메일</span><input type="email" autocomplete="off" placeholder="trainer@example.com" aria-label="이메일"></label>
+    <label class="lg-f ld-f"><span>비밀번호</span><input type="password" autocomplete="off" placeholder="비밀번호" aria-label="비밀번호"></label>
+    <div class="lg-opt"><label><input type="checkbox"> 아이디 저장</label><button class="linkbtn" data-act="enter" data-via="find">비밀번호 찾기</button></div>
+    <button class="lg-b lg-go" data-act="enter" data-via="mail">로그인</button>
+    <div class="lg-or"><span>다음으로 로그인하기</span></div>
     <div class="lg-btns">
-      <button class="lg-b lg-kakao" data-act="enter" data-via="kakao">${BUBBLE}<span>카카오로 시작하기</span></button>
-      <button class="lg-b lg-naver" data-act="enter" data-via="naver"><b class="lg-n">N</b><span>네이버로 시작하기</span></button>
-      <button class="lg-b lg-apple" data-act="enter" data-via="apple"><span>Apple로 계속하기</span></button>
+      <button class="lg-b lg-out" data-act="enter" data-via="kakao"><i class="lg-k">${BUBBLE}</i><span>카카오로 계속하기</span></button>
+      <button class="lg-b lg-out" data-act="enter" data-via="naver"><i class="lg-nv">N</i><span>네이버로 계속하기</span></button>
+      <button class="lg-b lg-out" data-act="enter" data-via="apple"><span>애플로 계속하기</span></button>
     </div>
-    <div class="lg-links"><button class="linkbtn" data-act="enter" data-via="mail">이메일로 로그인</button><i></i><button class="linkbtn" data-act="enter" data-guest="1">로그인 없이 둘러보기</button></div>
-    <div class="lg-note">시연판이에요. 어느 버튼을 눌러도 실제 로그인은 하지 않고, 아무것도 보내거나 저장하지 않아요. 모두 같은 트레이너 기록으로 들어가요.</div>
+    <div class="lg-links">계정이 없으신가요? <button class="linkbtn lg-acc" data-act="enter" data-via="join">계정 만들기</button></div>
+    <button class="linkbtn lg-guest" data-act="enter" data-guest="1">로그인 없이 둘러보기 ›</button>
+    <div class="lg-note">시연판이에요. 입력한 이메일·비밀번호는 확인하지도, 저장하거나 보내지도 않아요. 어느 버튼이든 같은 트레이너 기록으로 들어가요.</div>
   </div>
   <div class="lg-foot">회원 이름은 성+00 코드로 바꿨어요 · 아이패드 9세대 기준</div>
 </div>`;

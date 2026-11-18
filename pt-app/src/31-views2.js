@@ -362,20 +362,24 @@ function landingPreview(){
 }
 /* 시작 화면 (2026-11-18 이현아님: 카카오톡으로 로그인 같은 페이지가 더 좋겠다, D97).
    소셜 로그인 버튼은 모양만 있는 시연용이다. 실제로 카카오·네이버·애플에 연결하지 않고, 아무것도 보내거나 저장하지 않는다. */
-const BUBBLE='<svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true"><path d="M9 2.2C4.6 2.2 1.2 4.9 1.2 8.3c0 2.2 1.4 4.1 3.6 5.2l-.8 3 3.4-2.2c.5.1 1 .1 1.6.1 4.4 0 7.8-2.7 7.8-6.1S13.4 2.2 9 2.2z" fill="#191919"/></svg>';
+const BUBBLE='<svg width="12" height="12" viewBox="0 0 18 18" aria-hidden="true"><path d="M9 2.2C4.6 2.2 1.2 4.9 1.2 8.3c0 2.2 1.4 4.1 3.6 5.2l-.8 3 3.4-2.2c.5.1 1 .1 1.6.1 4.4 0 7.8-2.7 7.8-6.1S13.4 2.2 9 2.2z" fill="#191919"/></svg>';
 V.landing=()=>`<div class="lg">
   <div class="lg-col">
-    <div class="lg-icon">${kbIcon(104)}</div>
-    <div class="lg-name">짐노트</div>
-    <div class="lg-tag">지난 기록이 다음 수업의 근거가 돼요</div>
+    <div class="lg-logo">${kbIcon(44)}<span>짐노트</span></div>
     <div class="lg-sub">PT 트레이너 전용 회원 기록</div>
+    <label class="lg-f ld-f"><span>이메일</span><input type="email" autocomplete="off" placeholder="trainer@example.com" aria-label="이메일"></label>
+    <label class="lg-f ld-f"><span>비밀번호</span><input type="password" autocomplete="off" placeholder="비밀번호" aria-label="비밀번호"></label>
+    <div class="lg-opt"><label><input type="checkbox"> 아이디 저장</label><button class="linkbtn" data-act="enter" data-via="find">비밀번호 찾기</button></div>
+    <button class="lg-b lg-go" data-act="enter" data-via="mail">로그인</button>
+    <div class="lg-or"><span>다음으로 로그인하기</span></div>
     <div class="lg-btns">
-      <button class="lg-b lg-kakao" data-act="enter" data-via="kakao">${BUBBLE}<span>카카오로 시작하기</span></button>
-      <button class="lg-b lg-naver" data-act="enter" data-via="naver"><b class="lg-n">N</b><span>네이버로 시작하기</span></button>
-      <button class="lg-b lg-apple" data-act="enter" data-via="apple"><span>Apple로 계속하기</span></button>
+      <button class="lg-b lg-out" data-act="enter" data-via="kakao"><i class="lg-k">${BUBBLE}</i><span>카카오로 계속하기</span></button>
+      <button class="lg-b lg-out" data-act="enter" data-via="naver"><i class="lg-nv">N</i><span>네이버로 계속하기</span></button>
+      <button class="lg-b lg-out" data-act="enter" data-via="apple"><span>애플로 계속하기</span></button>
     </div>
-    <div class="lg-links"><button class="linkbtn" data-act="enter" data-via="mail">이메일로 로그인</button><i></i><button class="linkbtn" data-act="enter" data-guest="1">로그인 없이 둘러보기</button></div>
-    <div class="lg-note">시연판이에요. 어느 버튼을 눌러도 실제 로그인은 하지 않고, 아무것도 보내거나 저장하지 않아요. 모두 같은 트레이너 기록으로 들어가요.</div>
+    <div class="lg-links">계정이 없으신가요? <button class="linkbtn lg-acc" data-act="enter" data-via="join">계정 만들기</button></div>
+    <button class="linkbtn lg-guest" data-act="enter" data-guest="1">로그인 없이 둘러보기 ›</button>
+    <div class="lg-note">시연판이에요. 입력한 이메일·비밀번호는 확인하지도, 저장하거나 보내지도 않아요. 어느 버튼이든 같은 트레이너 기록으로 들어가요.</div>
   </div>
   <div class="lg-foot">회원 이름은 성+00 코드로 바꿨어요 · 아이패드 9세대 기준</div>
 </div>`;

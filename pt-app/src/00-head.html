@@ -726,27 +726,37 @@ body.full #app .hl{outline:0!important;box-shadow:none!important;animation:none!
 .sidenav .logo::before,#device.chart .sidenav .logo::before{display:none!important}
 .sidenav .logo .kbicon{display:block;border-radius:6px}
 .ld-brand .kbicon{display:block}
-/* 시작 화면 · 소셜 로그인 (D97). 카카오 노랑·네이버 초록은 각 로그인 버튼에만 쓴다 */
-.lg{flex:1;min-height:0;position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;background:linear-gradient(180deg,#f4f7fd 0%,#fff 60%);overflow:auto;padding:24px}
-.lg-col{width:100%;max-width:360px;display:flex;flex-direction:column;align-items:center;text-align:center}
-.lg-icon .kbicon{display:block;filter:drop-shadow(0 8px 20px rgba(31,102,242,.25))}
-.lg-name{font-size:30px;font-weight:800;letter-spacing:-.02em;margin-top:18px;color:var(--ink)}
-.lg-tag{font-size:16px;font-weight:600;color:var(--ink);margin-top:8px}
-.lg-sub{font-size:13px;color:var(--muted);margin-top:4px}
-.lg-btns{width:100%;display:grid;gap:10px;margin-top:40px}
-.lg-b{position:relative;display:flex;align-items:center;justify-content:center;gap:8px;width:100%;height:52px;border-radius:12px;border:0;font:inherit;font-size:15.5px;font-weight:700;cursor:pointer}
-.lg-b>svg,.lg-b>.lg-n{position:absolute;left:18px}
-.lg-kakao{background:#FEE500;color:#191919}
-.lg-naver{background:#03C75A;color:#fff}
-.lg-n{font-size:17px;font-weight:900;font-family:Arial,sans-serif}
-.lg-apple{background:#111;color:#fff}
+/* 시작 화면 (D97 → 11/18 이메일 로그인 + 아래 소셜 버튼 모양) */
+.lg{flex:1;min-height:0;position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;background:#fff;overflow:auto;padding:24px}
+.lg-col{width:100%;max-width:380px;display:flex;flex-direction:column}
+.lg-logo{display:flex;align-items:center;justify-content:center;gap:10px}
+.lg-logo .kbicon{display:block}
+.lg-logo span{font-size:30px;font-weight:800;letter-spacing:-.02em;color:var(--ink)}
+.lg-sub{text-align:center;font-size:13px;color:var(--muted);margin:8px 0 34px}
+.lg-f{position:relative;display:block;margin-top:14px}
+.lg-f>span{position:absolute;left:12px;top:-8px;padding:0 5px;background:#fff;font-size:12px;color:var(--muted)}
+.lg-f input{width:100%;box-sizing:border-box;height:52px;border:1px solid var(--line2);border-radius:10px;padding:0 16px;font:inherit;font-size:15px;background:#fff}
+.lg-f input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.lg-opt{display:flex;justify-content:space-between;align-items:center;margin:12px 2px 0;font-size:13px;color:var(--muted)}
+.lg-opt label{display:flex;align-items:center;gap:6px;cursor:pointer}
+.lg-opt input{width:16px;height:16px;margin:0}
+.lg-opt .linkbtn{color:var(--muted)}
+.lg-b{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;height:50px;border-radius:10px;border:0;font:inherit;font-size:15px;font-weight:700;cursor:pointer}
+.lg-go{margin-top:22px;background:var(--accent);color:#fff}
+.lg-or{display:flex;align-items:center;gap:12px;margin:26px 0 14px;font-size:12.5px;color:var(--faint)}
+.lg-or::before,.lg-or::after{content:'';flex:1;height:1px;background:var(--line)}
+.lg-btns{display:grid;gap:10px}
+.lg-out{background:#fff;border:1px solid var(--line2);color:var(--ink);font-weight:600}
+.lg-out i{width:20px;height:20px;border-radius:5px;display:grid;place-items:center;font-style:normal}
+.lg-k{background:#FEE500}
+.lg-nv{background:#03C75A;color:#fff;font:900 12px Arial,sans-serif}
 .lg-b:active{transform:translateY(1px)}
-.lg-links{display:flex;align-items:center;gap:12px;margin-top:20px;font-size:13.5px}
-.lg-links i{width:1px;height:12px;background:var(--line2)}
-.lg-links .linkbtn{color:var(--muted)}
-.lg-note{font-size:11.5px;color:var(--faint);margin-top:22px;line-height:1.5}
+.lg-links{text-align:center;margin-top:28px;font-size:13.5px;color:var(--muted)}
+.lg-acc{color:var(--accent)!important;font-weight:700}
+.lg-guest{margin:10px auto 0;font-size:13px;color:var(--muted)}
+.lg-note{text-align:center;font-size:11.5px;color:var(--faint);margin-top:18px;line-height:1.5}
 .lg-foot{position:absolute;bottom:14px;left:0;right:0;text-align:center;font-size:11px;color:var(--faint)}
-#device.chart .lg-b{border-radius:12px!important}
+#device.chart .lg-b,#device.chart .lg-f input{border-radius:10px!important}
 </style>
 <div id="shell">
   <div id="bar">
