@@ -3,7 +3,7 @@
    종이 서식 틀(제목 + 차트 No. + 이중 줄) 안에 넣고, 카드 제목은 왼쪽 라벨 칸(fsec)처럼 보이게 한다.
    읽기만 하는 화면(회원 명부, 수업 기록 대장, 수업 기록지)은 표로 다시 짠다. 버튼(data-act)은 디자인 A와 같다. */
 const DOC_TITLES={members:'회원 명부',history:'수업 기록 대장',detail:'수업 기록지',search:'기록 조회',prep:'오늘 수업 계획',briefing:'오늘 수업 계획',plan:'오늘 수업 계획',
-  live:'수업 기록지',start:'수업 기록지',templates:'루틴 틀 대장',memberEdit:'회원 정보 카드',settings:'설정'};
+  live:'수업 기록지',start:'수업 기록지',templates:'루틴 틀 대장',nextplan:'다음 PT 계획서',memberEdit:'회원 정보 카드',settings:'설정'};
 function docMember(r){try{if(r.mid)return M(r.mid);if(r.sid){const s=SES(r.sid);return s&&M(s.memberId)}}catch(e){}return null}
 /* 화면 html에서 첫 '.scroll' 칸을 찾아 서식 틀로 감싼다 */
 function docify(html,r){

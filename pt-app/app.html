@@ -272,6 +272,7 @@ input,select,textarea{border-radius:6px;border-color:#dfe2e7}
 .pl-mid{display:flex;flex-direction:column}
 .pl-colhd{display:flex;align-items:center;gap:6px;padding:10px 14px;border-bottom:1px solid var(--line);font-weight:700;font-size:13px;position:sticky;top:0;background:var(--panel);z-index:2}
 .pl-colhd .n{color:var(--faint);font-weight:500}
+.pl-left,.pl-right{padding-top:0!important}.pl-left>.pl-colhd,.pl-right>.pl-colhd{margin:0 -12px 10px}
 .mcal{font-size:11.5px;text-align:center;font-variant-numeric:tabular-nums}
 .mcal .hd{display:flex;align-items:center;justify-content:center;gap:10px;font-weight:700;font-size:12.5px;margin-bottom:6px}
 .mcal table{table-layout:fixed} .mcal td,.mcal th{padding:2px 0;border:0;background:none!important;text-align:center}
@@ -2542,7 +2543,7 @@ V.today=()=>{
   const nav=WEBAPP?`${d!==realToday()?btn('오늘로','setDay',{v:realToday()},'small'):''}${btn('‹','shiftDay',{dir:-1},'small')}${btn('›','shiftDay',{dir:1},'small')}`:`<span class="tiny muted">시연용 날짜</span>${btn('‹','shiftDay',{dir:-1},'small')}${btn('›','shiftDay',{dir:1},'small')}`;
   return topBar(`플래너 <span class="muted" style="font-weight:500;font-size:14px;margin-left:6px">${dt.getFullYear()}년 ${dt.getMonth()+1}월 ${dt.getDate()}일 ${DOW[dt.getDay()]}요일</span>`,`오늘 수업 ${list.length}`,nav,{noBack:true})+
    `<div class="planner" style="flex:1;min-height:0">
-     <div class="pl-left">${miniCal(d)}
+     <div class="pl-left"><div class="pl-colhd">달력</div>${miniCal(d)}
        <div class="pl-sec">회원 ${S.members.length}</div><div class="legend2">${legend}</div><div class="tiny faint" style="margin-top:4px">못 함 = 오늘까지 취소·안 옴 횟수</div><div class="pl-key"><span><i class="k-todo"></i>남은 수업</span><span><i class="k-fin"></i>끝난 수업</span><span><i class="k-cx"></i>취소·안 옴</span></div>
        ${up.length?`<div class="pl-sec">다가오는 수업</div>${up.map(s=>`<div class="li click srow small" data-act="openSession" data-sid="${s.id}" style="padding:6px 0"><div style="flex:1"><b>${md(s.date)}</b> ${esc(M(s.memberId).code)} <span class="muted">${esc(splitName(s))}</span></div><button class="btn ghost more" data-act="modal" data-type="sessMenu" data-sid="${s.id}" aria-label="수업 메뉴">…</button></div>`).join('')}`:''}
        ${WEBAPP?'':'<div class="tiny faint" style="margin-top:12px">시간은 예시예요. 다른 회원 기록은 수첩 날짜 그대로예요.</div>'}</div>
@@ -2550,7 +2551,7 @@ V.today=()=>{
        ${untimed.length?`<div class="untimed">${untimed.map(s=>`<div class="li click srow ${s.status==='completed'?'fin':'todo'}" data-act="openSession" data-sid="${s.id}"><span class="pill gray">시간 미정</span><b>${esc(M(s.memberId).code)}</b> ${esc(splitName(s))}<span class="sp"></span>${s.status==='completed'?'<span class="pill gray">✓ 끝남</span>':s.status==='planned'?'<span class="pill blue">남음</span>':''}${s.status==='planned'?`<button class="btn ghost more" data-act="modal" data-type="sessMenu" data-sid="${s.id}" aria-label="수업 메뉴">…</button>`:''}</div>`).join('')}</div>`:''}
        <div class="tl" style="height:${(h1-h0)*HH+10}px">${grid}${blocks}</div>
        ${list.length?'':'<div class="empty" style="padding:14px">오늘 잡힌 수업이 없어요.</div>'}</div>
-     <div class="pl-right"><div style="font-weight:700;font-size:13px">최근 기록 <span class="tiny muted" style="font-weight:500">최근 30일</span></div>${stat}<div class="row" style="gap:4px;margin:8px 0 2px">${tabs}</div><div class="recent">${recHTML}</div></div>
+     <div class="pl-right"><div class="pl-colhd">최근 기록 <span class="n">최근 30일</span></div>${stat}<div class="row" style="gap:4px;margin:8px 0 2px">${tabs}</div><div class="recent">${recHTML}</div></div>
    </div>`+tabBar('today');
 };
 
@@ -3528,7 +3529,7 @@ function showDoc(o){
    종이 서식 틀(제목 + 차트 No. + 이중 줄) 안에 넣고, 카드 제목은 왼쪽 라벨 칸(fsec)처럼 보이게 한다.
    읽기만 하는 화면(회원 명부, 수업 기록 대장, 수업 기록지)은 표로 다시 짠다. 버튼(data-act)은 디자인 A와 같다. */
 const DOC_TITLES={members:'회원 명부',history:'수업 기록 대장',detail:'수업 기록지',search:'기록 조회',prep:'오늘 수업 계획',briefing:'오늘 수업 계획',plan:'오늘 수업 계획',
-  live:'수업 기록지',start:'수업 기록지',templates:'루틴 틀 대장',memberEdit:'회원 정보 카드',settings:'설정'};
+  live:'수업 기록지',start:'수업 기록지',templates:'루틴 틀 대장',nextplan:'다음 PT 계획서',memberEdit:'회원 정보 카드',settings:'설정'};
 function docMember(r){try{if(r.mid)return M(r.mid);if(r.sid){const s=SES(r.sid);return s&&M(s.memberId)}}catch(e){}return null}
 /* 화면 html에서 첫 '.scroll' 칸을 찾아 서식 틀로 감싼다 */
 function docify(html,r){

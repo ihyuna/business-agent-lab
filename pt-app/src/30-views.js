@@ -132,7 +132,7 @@ V.today=()=>{
   const nav=WEBAPP?`${d!==realToday()?btn('오늘로','setDay',{v:realToday()},'small'):''}${btn('‹','shiftDay',{dir:-1},'small')}${btn('›','shiftDay',{dir:1},'small')}`:`<span class="tiny muted">시연용 날짜</span>${btn('‹','shiftDay',{dir:-1},'small')}${btn('›','shiftDay',{dir:1},'small')}`;
   return topBar(`플래너 <span class="muted" style="font-weight:500;font-size:14px;margin-left:6px">${dt.getFullYear()}년 ${dt.getMonth()+1}월 ${dt.getDate()}일 ${DOW[dt.getDay()]}요일</span>`,`오늘 수업 ${list.length}`,nav,{noBack:true})+
    `<div class="planner" style="flex:1;min-height:0">
-     <div class="pl-left">${miniCal(d)}
+     <div class="pl-left"><div class="pl-colhd">달력</div>${miniCal(d)}
        <div class="pl-sec">회원 ${S.members.length}</div><div class="legend2">${legend}</div><div class="tiny faint" style="margin-top:4px">못 함 = 오늘까지 취소·안 옴 횟수</div><div class="pl-key"><span><i class="k-todo"></i>남은 수업</span><span><i class="k-fin"></i>끝난 수업</span><span><i class="k-cx"></i>취소·안 옴</span></div>
        ${up.length?`<div class="pl-sec">다가오는 수업</div>${up.map(s=>`<div class="li click srow small" data-act="openSession" data-sid="${s.id}" style="padding:6px 0"><div style="flex:1"><b>${md(s.date)}</b> ${esc(M(s.memberId).code)} <span class="muted">${esc(splitName(s))}</span></div><button class="btn ghost more" data-act="modal" data-type="sessMenu" data-sid="${s.id}" aria-label="수업 메뉴">…</button></div>`).join('')}`:''}
        ${WEBAPP?'':'<div class="tiny faint" style="margin-top:12px">시간은 예시예요. 다른 회원 기록은 수첩 날짜 그대로예요.</div>'}</div>
@@ -140,7 +140,7 @@ V.today=()=>{
        ${untimed.length?`<div class="untimed">${untimed.map(s=>`<div class="li click srow ${s.status==='completed'?'fin':'todo'}" data-act="openSession" data-sid="${s.id}"><span class="pill gray">시간 미정</span><b>${esc(M(s.memberId).code)}</b> ${esc(splitName(s))}<span class="sp"></span>${s.status==='completed'?'<span class="pill gray">✓ 끝남</span>':s.status==='planned'?'<span class="pill blue">남음</span>':''}${s.status==='planned'?`<button class="btn ghost more" data-act="modal" data-type="sessMenu" data-sid="${s.id}" aria-label="수업 메뉴">…</button>`:''}</div>`).join('')}</div>`:''}
        <div class="tl" style="height:${(h1-h0)*HH+10}px">${grid}${blocks}</div>
        ${list.length?'':'<div class="empty" style="padding:14px">오늘 잡힌 수업이 없어요.</div>'}</div>
-     <div class="pl-right"><div style="font-weight:700;font-size:13px">최근 기록 <span class="tiny muted" style="font-weight:500">최근 30일</span></div>${stat}<div class="row" style="gap:4px;margin:8px 0 2px">${tabs}</div><div class="recent">${recHTML}</div></div>
+     <div class="pl-right"><div class="pl-colhd">최근 기록 <span class="n">최근 30일</span></div>${stat}<div class="row" style="gap:4px;margin:8px 0 2px">${tabs}</div><div class="recent">${recHTML}</div></div>
    </div>`+tabBar('today');
 };
 

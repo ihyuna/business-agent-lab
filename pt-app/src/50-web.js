@@ -203,7 +203,6 @@ function webSettingsCards(){
      <div class="small" style="margin-bottom:8px"><b>${esc(AUTH.user?AUTH.user.email:'')}</b> · ${AUTH.mode==='cloud'?'클라우드 계정 (어느 기기에서든 로그인)':'이 기기 계정'} ${syncHTML()}</div>
      <div class="row" style="flex-wrap:nowrap"><input class="ci" data-d="pf-name" value="${esc(P.name||'')}" placeholder="이름" style="width:140px"><input class="ci" data-d="pf-gym" value="${esc(P.gym||'')}" placeholder="센터 이름 (선택)" style="flex:1">${btn('저장','saveProfile',null,'small')}</div>
      <div class="row" style="margin-top:8px">${AUTH.mode==='cloud'&&AUTH.sync!=='saved'?btn('지금 저장','syncNow',null,'small'):''}${btn('화면 안내 다시 보기','replayCoach',null,'small ghost')}${btn('로그아웃','logout',null,'small')}</div></div>
-   <div class="card"><h2>화면 디자인</h2><div class="row">${chips([['chart','기록부 (B)'],['emr','지금 디자인 (A)']],UI.look,'setLook')}</div></div>
    <div class="card"><h2>기록 보관</h2>
      <div class="small" style="margin-bottom:6px">${AUTH.mode==='cloud'?'기록은 내 계정에만 저장돼요. 다른 트레이너는 볼 수 없어요.':'기록은 <b>이 기기의 이 브라우저</b>에만, 이 계정 몫으로 따로 저장돼요.'} (지금 ${storedKB()}KB)</div>
      <div class="row">${btn('백업 파일 내려받기','exportData',null,'small primary')}<label class="btn small">백업 파일 불러오기<input type="file" accept="application/json,.json" data-on="importFile" style="display:none"></label>${before?btn('불러오기 전으로','undoImport',null,'small ghost'):''}</div>
@@ -234,7 +233,7 @@ V.landing=()=>{
       <p>수첩에 적던 무게·횟수·메모를 그대로 옮기고, 다음 수업 숫자를 근거와 함께 정하세요. 판단은 트레이너가, 기억과 계산은 짐노트가 해요.</p>
       <div class="lp-btns"><button class="lp-cta" data-act="goAuth" data-v="signup">무료로 시작하기</button><button class="lp-ghost" data-act="goAuth" data-v="login">이미 계정이 있어요</button></div>
     </div>${mock}</section>
-    <section class="lp-feats">${LP_FEATS.map(([t,d],i)=>`<div class="lp-f"><span class="lp-n">${i+1}</span><h3>${t}</h3><p>${d}</p></div>`).join('')}</section>
+    <section class="lp-feats">${LP_FEATS.map(([t,d],i)=>`<div class="lp-f"><h3><span class="lp-n">${i+1}</span>${t}</h3><p>${d}</p></div>`).join('')}</section>
     <section class="lp-flow"><h2>수업 하나의 흐름</h2><div class="lp-steps">${[['오늘','오늘 수업과 회원별 확인할 것'],['수업 준비','지난 기록 → 오늘 숫자'],['수업','컨디션 · 세트 기록 · 다시 맞추기'],['마무리','바뀐 것 · 다음 PT 초안']].map(([a,b],i)=>`<div class="lp-st"><b>${a}</b><span>${b}</span></div>${i<3?'<i>›</i>':''}`).join('')}</div></section>
     <section class="lp-trust"><div><b>내 기록은 내 계정에만</b><span>트레이너마다 자기 계정으로 들어가고, 다른 트레이너의 회원 기록은 볼 수 없어요.</span></div>
       <div><b>아이패드에 맞춘 화면</b><span>아이패드 사파리에서 '홈 화면에 추가'하면 앱처럼 열려요. 한 번 연 뒤에는 인터넷이 없어도 돼요.</span></div>
@@ -372,7 +371,7 @@ ACT.coachSkip=()=>{if(UI.cm){S.profile.coach[UI.cm.key]=true;save();UI.cm=null}r
 
 /* ---------- 시작 ---------- */
 function webBoot(){
-  document.body.classList.add('full','web');
+  document.body.classList.add('full','web'); UI.look='chart'; // 웹앱은 기록부 디자인 하나로 통일 (2026-11-23)
   let day=realToday(); S.today=day;
   UI.route={name:'landing'};
   try{if(navigator.storage&&navigator.storage.persist)navigator.storage.persist()}catch(e){}
