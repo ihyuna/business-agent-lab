@@ -365,3 +365,7 @@ body #device.apple.dark .lp-mock{background:var(--panel);box-shadow:0 12px 40px 
 }
 #device.apple .card.fold{padding:0}
 #device.apple .card.fold>.foldhead h2{font-size:15px;font-weight:650}
+/* 프로필 동그라미 (2026-11-23): 아이폰 연락처·설정의 이름 첫 글자 동그라미처럼 위가 밝고 아래가 진한 회색.
+   파랑은 '누를 수 있는 것'에만 쓰므로 사람 표시는 중립색으로. 다크에서는 한 단계 어둡게 */
+#device.apple .st-av{background:linear-gradient(180deg,#a5abb6,#858a94);color:#fff;font-weight:600;letter-spacing:-.01em;box-shadow:inset 0 .5px 0 rgba(255,255,255,.25)}
+#device.apple.dark .st-av{background:linear-gradient(180deg,#7c7c82,#56565b)}
