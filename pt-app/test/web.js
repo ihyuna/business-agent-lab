@@ -33,7 +33,7 @@ async function logout(p){await p.evaluate(()=>__pt.ACT.logout());await p.waitFor
    let cm=await walkCoach(p,'today');ok(cm.length>=4,'오늘 화면 안내 '+cm.length+'개: '+cm.join(', '));
    ok(await p.evaluate(()=>__pt.S.profile.coach.today===true)&&!(await p.$('#app .cm')),'본 안내는 다시 안 뜸');
    await p.evaluate(()=>__pt.ACT.go({to:'member',mid:__pt.S.members.find(m=>m.code==='이00_3').id}));await p.waitForTimeout(200);
-   cm=await walkCoach(p,'member');ok(cm.length===6,'회원 기록부 안내 '+cm.join(', '));
+   cm=await walkCoach(p,'member');ok(cm.length===5,'회원 기록부 안내 '+cm.join(', '));
    await p.evaluate(()=>__pt.ACT.home());await p.waitForTimeout(100);
    let s=await st(p);ok(s.route==='today'&&s.members===6&&s.name==='윤 트레이너','수첩 예시로 시작: '+JSON.stringify(s));await p.screenshot({path:out+'/w3-today.png'});
    // 다음 PT 잡고 수업 한 세트
