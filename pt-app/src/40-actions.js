@@ -15,7 +15,7 @@ function render(o={}){
   app.querySelectorAll('[data-sk]').forEach(el=>{const v=UI.scrolls[UI.rk+'|'+el.dataset.sk];if(v!=null)el.scrollTop=v});
   if(fk){const el=app.querySelector(`[data-k="${CSS.escape(fk)}"]`);if(el){el.focus({preventScroll:true});if(sel)try{el.setSelectionRange(sel[0],sel[1])}catch(e){}}}
   document.getElementById('device').classList.toggle('chart',UI.look==='chart');
-  document.getElementById('b-look').textContent=UI.look==='chart'?'디자인: 기록부':'디자인: 지금(EMR)';
+  document.getElementById('b-look').textContent=UI.look==='chart'?'디자인: 기록부':'디자인: 애플';
   document.getElementById('b-orient').textContent=UI.orient==='land'?'세로로 보기':'가로로 보기';
   document.getElementById('b-fit').textContent=UI.fit?'실제 크기':'창에 맞추기';
   if(typeof guideAfter==='function') guideAfter();

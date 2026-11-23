@@ -203,6 +203,7 @@ function webSettingsCards(){
      <div class="small" style="margin-bottom:8px"><b>${esc(AUTH.user?AUTH.user.email:'')}</b> · ${AUTH.mode==='cloud'?'클라우드 계정 (어느 기기에서든 로그인)':'이 기기 계정'} ${syncHTML()}</div>
      <div class="row" style="flex-wrap:nowrap"><input class="ci" data-d="pf-name" value="${esc(P.name||'')}" placeholder="이름" style="width:140px"><input class="ci" data-d="pf-gym" value="${esc(P.gym||'')}" placeholder="센터 이름 (선택)" style="flex:1">${btn('저장','saveProfile',null,'small')}</div>
      <div class="row" style="margin-top:8px">${AUTH.mode==='cloud'&&AUTH.sync!=='saved'?btn('지금 저장','syncNow',null,'small'):''}${btn('화면 안내 다시 보기','replayCoach',null,'small ghost')}${btn('로그아웃','logout',null,'small')}</div></div>
+   <div class="card"><h2>화면 디자인</h2><div class="row">${chips(LOOKS,UI.look,'setLook')}</div><div class="tiny muted" style="margin-top:4px">애플 디자인은 만드는 중이라 지금은 예전 화면이 보여요.</div></div>
    <div class="card"><h2>기록 보관</h2>
      <div class="small" style="margin-bottom:6px">${AUTH.mode==='cloud'?'기록은 내 계정에만 저장돼요. 다른 트레이너는 볼 수 없어요.':'기록은 <b>이 기기의 이 브라우저</b>에만, 이 계정 몫으로 따로 저장돼요.'} (지금 ${storedKB()}KB)</div>
      <div class="row">${btn('백업 파일 내려받기','exportData',null,'small primary')}<label class="btn small">백업 파일 불러오기<input type="file" accept="application/json,.json" data-on="importFile" style="display:none"></label>${before?btn('불러오기 전으로','undoImport',null,'small ghost'):''}</div>
@@ -371,7 +372,7 @@ ACT.coachSkip=()=>{if(UI.cm){S.profile.coach[UI.cm.key]=true;save();UI.cm=null}r
 
 /* ---------- 시작 ---------- */
 function webBoot(){
-  document.body.classList.add('full','web'); UI.look='chart'; // 웹앱은 기록부 디자인 하나로 통일 (2026-11-23)
+  document.body.classList.add('full','web');
   let day=realToday(); S.today=day;
   UI.route={name:'landing'};
   try{if(navigator.storage&&navigator.storage.persist)navigator.storage.persist()}catch(e){}
