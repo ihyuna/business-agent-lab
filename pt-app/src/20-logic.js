@@ -14,12 +14,12 @@ const isNum=v=>typeof v==='number'&&Number.isFinite(v);
 const firstNum=v=>{if(isNum(v))return v;const m=String(v??'').match(/\d+(\.\d+)?/);return m?Number(m[0]):null};
 
 /* ---------- 상태 ---------- */
-const KEY='pt-mvp-proto-v4';
+const KEY=WEBAPP?'jimnote-v1':'pt-mvp-proto-v4';
 let S=null;
 const UI={look:'chart',ask:null,route:{name:'today'},stack:[],modal:null,draft:{},toast:null,orient:'land',fit:true,timer:null,cur:{},open:{},search:'',edit:null,flags:{}};
 const todayIso=()=>(S&&S.today)||'2026-10-07';
-function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}if(typeof guideSoon==='function')guideSoon()}
-function load(){try{const t=localStorage.getItem(KEY);if(t){const s=JSON.parse(t);if(s&&s.v===3)return s}}catch(e){}return buildSeed()}
+function save(){if(WEBAPP&&S&&S._fresh)return;try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}if(typeof guideSoon==='function')guideSoon()}
+function load(){if(WEBAPP)return webLoad();try{const t=localStorage.getItem(KEY);if(t){const s=JSON.parse(t);if(s&&s.v===3)return s}}catch(e){}return buildSeed()}
 
 const EX=id=>S.exercises[id]||{name:id,part:'',unit:'',inc:2.5};
 const M=id=>S.members.find(m=>m.id===id);
@@ -58,7 +58,7 @@ function buildSeed(){
     for(const ss of sm.sessions) seedSession(m,ss);
     for(const n of [].concat(sm.next||[])) createPlanned(m,n.d,n.time,n.t);
   }
-  addExampleCx();
+  if(WEBAPP)st.settings.exampleCx=false; else addExampleCx();
   ensurePackages();
   return st;
 }
@@ -505,13 +505,19 @@ function onSetDone(s,x,i){
   const st=x.sets[i]; const first=!x.sets.some((t,j)=>j!==i&&t.done&&t.doneMin!=null);
   const extra=s.extraRest||0; s.extraRest=0; // '시연 시계 +5분'으로 이미 시계에 더한 분
   const rest=first?null:(x.rest||60)/60+extra;
+  if(WEBAPP&&s.startedAt){ // 웹앱: 실제 시계. 쉬는 시간 = 앞 세트를 끝낸 시각부터 이 세트를 끝낸 시각까지에서 세트 1분을 뺀 값
+    const now=realMin(s); const prevMin=Math.max(...x.sets.filter((t,j)=>j!==i&&t.done&&t.doneMin!=null).map(t=>t.doneMin),-Infinity);
+    s.clock=now; st.doneMin=now; st.restMin=first||!isFinite(prevMin)?null:Math.max(0,Math.round((now-prevMin-SET_MIN)*10)/10);
+    replanAfter(s,x,i); return;
+  }
   s.clock=(s.clock??START_MIN)+(first?SWITCH_MIN:(x.rest||60)/60)+SET_MIN;
   st.doneMin=s.clock; st.restMin=rest;
   replanAfter(s,x,i);
 }
 function exMinutes(x){const n=x.sets.filter(st=>!st.done).length;if(!n)return 0;const k=EX(x.exId).uni?2:1;return (x.sets.some(st=>st.done)?0:SWITCH_MIN)+n*(SET_MIN*k+(x.rest||60)/60)}
 function planMinutes(s){return Math.round(START_MIN+liveEx(s).reduce((a,x)=>a+SWITCH_MIN+x.sets.length*(SET_MIN*(EX(x.exId).uni?2:1)+(x.rest||60)/60),0)-SWITCH_MIN+WRAP_MIN)}
-function timeState(s){const now=s.clock??START_MIN;const left=CLASS_MIN-now;const proj=liveEx(s).reduce((a,x)=>a+exMinutes(x),0);return {now,left,proj,tight:left-(proj+WRAP_MIN)<SPARE_MIN}}
+function realMin(s){return Math.max(0,(Date.now()-Date.parse(s.startedAt))/60000)}
+function timeState(s){const now=WEBAPP&&s.startedAt&&s.status==='in_progress'?realMin(s):(s.clock??START_MIN);const left=CLASS_MIN-now;const proj=liveEx(s).reduce((a,x)=>a+exMinutes(x),0);return {now,left,proj,tight:left-(proj+WRAP_MIN)<SPARE_MIN}}
 const DROP_ORDER=['마무리 털기','혈류 모으기','유산소성 순환','보조'];
 function canDrop(s,x){
   if(!isLive(s)||x.sets.some(st=>st.done)||!timeState(s).tight) return false;
@@ -519,7 +525,7 @@ function canDrop(s,x){
   for(const r of DROP_ORDER){const c=cand.filter(e=>e.role===r);if(c.length)return c.includes(x)}
   return false;
 }
-function clockText(s,min){const [h,m]=(s.time||'19:00').split(':').map(Number);const t=h*60+m+Math.round(min);return `${Math.floor(t/60)}:${String(t%60).padStart(2,'0')}`}
+function clockText(s,min){if(WEBAPP&&s.startedAt){const d=new Date(Date.parse(s.startedAt)+Math.round(min)*60000);return `${d.getHours()}:${String(d.getMinutes()).padStart(2,'0')}`}const [h,m]=(s.time||'19:00').split(':').map(Number);const t=h*60+m+Math.round(min);return `${Math.floor(t/60)}:${String(t%60).padStart(2,'0')}`}
 const restText=v=>v==null?'':`${Math.floor(v)}:${String(Math.round((v%1)*60)).padStart(2,'0')}`;
 /* 마무리: 모든 본세트가 계획 범위 위 끝(또는 목표 횟수) 이상이면 '목표 넘음'. 표시만 하고 올리기는 트레이너가 누른다 */
 function reachedTop(x){const w=x.sets.filter(st=>st.kind!=='warmup'&&st.done);if(!w.length)return false;return w.every(st=>{const g=repRange(st.adj&&st.adj.from?st.adj.from.r:st.pr);const a=isNum(st.ar)?st.ar:firstNum(st.ar);return g&&a!=null&&a>=g[1]})}

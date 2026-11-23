@@ -27,12 +27,12 @@ function membersDoc(){
       <td class="c">${oc?`<b class="bad">${oc}</b>`:'<span class="faint">0</span>'}</td></tr>`}).join('');
   return `<div class="f-cap">Ⅰ. 회원 ${S.members.length}명 <span class="muted" style="font-weight:500">줄을 누르면 회원 기록부가 열려요</span></div>
     <table class="f-prog"><tr><th style="width:84px">차트 No.</th><th style="width:76px">회원</th><th>목표</th><th style="width:130px">다음 PT</th><th style="width:130px">지난 수업</th><th style="width:56px">누적</th><th style="width:44px">주의</th></tr>${rows}</table>
-    <div class="f-cap">Ⅱ. 이 프로토타입</div>
+    ${WEBAPP?'':`<div class="f-cap">Ⅱ. 이 프로토타입</div>
     ${fsec('알림',`<ul class="small" style="margin:0 0 8px;padding-left:18px">
         <li>회원 기록은 트레이너 수첩의 실제 숫자이고, 이름은 성+00 코드로 바꿨어요(D61).</li>
         <li>역할, 여유 횟수, 쉬는 시간, 기구 눈금은 수첩에 없어서 ${EXAMPLE('예시')}나 논문 기준 임시값(D59)이에요.</li>
         <li>입력한 것은 이 브라우저에만 저장돼요.</li></ul>
-      ${UI.confirmReset?`<div class="row"><span class="small">입력한 것을 모두 지우고 처음 상태로 되돌릴까요?</span>${btn('되돌리기','reset',null,'danger')}${btn('아니요','confirmReset',{v:0})}</div>`:btn('처음 상태로 되돌리기','confirmReset',{v:1},'small')}`)}`}
+      ${UI.confirmReset?`<div class="row"><span class="small">입력한 것을 모두 지우고 처음 상태로 되돌릴까요?</span>${btn('되돌리기','reset',null,'danger')}${btn('아니요','confirmReset',{v:0})}</div>`:btn('처음 상태로 되돌리기','confirmReset',{v:1},'small')}`)}`}`}
 
 /* 수업 기록 대장 */
 function historyDoc(m,list,f){

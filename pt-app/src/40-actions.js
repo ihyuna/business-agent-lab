@@ -45,7 +45,7 @@ function askHTML(){const a=UI.ask;const {x}=gx(a);if(!x)return '';const cur=x.re
   return `<div class="askbar" role="status"><span class="small"><b>${esc(EX(x.exId).name)}</b> ${a.kind==='remove'?'뺐어요':'바꿨어요'}. 이유</span>${REMOVE_REASONS.map(r=>`<button class="chip${cur===r?' on':''}" data-act="askPick" data-v="${r}">${r}</button>`).join('')}<span class="tiny muted">안 누르면 '${esc(cur||'이유 없음')}'으로 남아요 · 다른 곳을 누르면 닫혀요</span>${a.kind==='remove'?btn('되돌리기','askUndo',null,'small ghost'):''}</div>`}
 
 /* ---------- 누르기 ---------- */
-function resetAll(){try{localStorage.removeItem(KEY)}catch(e){}S=buildSeed();save();clearTimeout(askT);Object.assign(UI,{ask:null,stack:[],route:{name:'today'},modal:null,draft:{},cur:{},open:{},search:'',timer:null,confirmReset:false,scrolls:{},edit:null,flags:{}})}
+function resetAll(){if(WEBAPP)return webWipe();try{localStorage.removeItem(KEY)}catch(e){}S=buildSeed();save();clearTimeout(askT);Object.assign(UI,{ask:null,stack:[],route:{name:'today'},modal:null,draft:{},cur:{},open:{},search:'',timer:null,confirmReset:false,scrolls:{},edit:null,flags:{}})}
 const ACT={
   back:()=>back(),
   home:()=>home(),
@@ -219,11 +219,11 @@ ACT.setLook=d=>{UI.look=d.v;saveView();render()};
 ACT.logout=()=>{try{sessionStorage.removeItem(ENTER_KEY)}catch(e){}UI.stack=[];UI.route={name:'landing'};UI.modal=null;UI.edit=null;render({noSave:true})};
 
 /* ---------- 시작 ---------- */
-(function boot(){
+function boot(){
   try{const v=JSON.parse(localStorage.getItem(KEY+'-view')||'null');if(v){UI.look=v.look==='emr'?'emr':'chart';UI.orient=v.orient==='port'?'port':'land';UI.fit=v.fit!==false;if(v.guide){G.open=v.guide.open!==false;G.scene=Math.min(+v.guide.scene||0,SCENES.length-1);G.step=+v.guide.step||0}}}catch(e){}
   S=load(); ensurePackages(); save();
   let entered=false;try{entered=sessionStorage.getItem(ENTER_KEY)==='1'}catch(e){}
-  if(!entered) UI.route={name:'landing'};
+  if(WEBAPP) webBoot(); else if(!entered) UI.route={name:'landing'};
   const app=document.getElementById('app');
   app.addEventListener('click',ev=>{const el=ev.target.closest('[data-act]');if(!el||el.disabled||!app.contains(el)){flushRender();return}cancelSoon();if(UI.ask&&!/^ask/.test(el.dataset.act))UI.ask=null;const f=ACT[el.dataset.act];if(f)f(el.dataset,el,ev)});
   app.addEventListener('change',ev=>{const el=ev.target.closest('[data-on]');if(!el)return;const f=ON[el.dataset.on];if(f)f(el.value,el.dataset,el)});
@@ -245,4 +245,4 @@ ACT.logout=()=>{try{sessionStorage.removeItem(ENTER_KEY)}catch(e){}UI.stack=[];U
   try{new ResizeObserver(fit).observe(document.getElementById('stage'))}catch(e){}
   setInterval(()=>{const el=document.getElementById('timer-text');if(el&&UI.timer)el.innerHTML=timerText()},1000);
   render(); fit();
-})();
+}
