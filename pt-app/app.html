@@ -872,6 +872,9 @@ body.full #app .hl{outline:0!important;box-shadow:none!important;animation:none!
 #device.chart:not(.apple) .th-auto i{border-radius:0;background:linear-gradient(90deg,#fff 50%,#121a28 50%);box-shadow:inset 0 0 0 1px #6f86ad}
 #device.chart:not(.apple) :is(.th-light,.th-dark,.th-auto) i.s{background:#1f66f2;box-shadow:none}
 #device.chart:not(.apple) .th-dark i.s{background:#5b9bff}
+/* 프로필 동그라미: 기록부도 회색 (파랑은 누르는 것에만) */
+#device.chart:not(.apple) .st-av{background:linear-gradient(180deg,#a5abb6,#858a94);font-weight:600}
+#device.chart.dark:not(.apple) .st-av{background:linear-gradient(180deg,#7a8496,#535d70)}
 /* ---- 애플 디자인 (2026-11-23) ----
    설정 → 화면 디자인 → '애플 디자인'(UI.look 'emr')을 고르면 #device에 .apple이 붙는다.
    원칙: emilkowalski/skills 'apple-design' 스킬(MIT)에서 가져옴.
@@ -1243,6 +1246,15 @@ body #device.apple.dark .lp-mock{background:var(--panel);box-shadow:0 12px 40px 
    파랑은 '누를 수 있는 것'에만 쓰므로 사람 표시는 중립색으로. 다크에서는 한 단계 어둡게 */
 #device.apple .st-av{background:linear-gradient(180deg,#a5abb6,#858a94);color:#fff;font-weight:600;letter-spacing:-.01em;box-shadow:inset 0 .5px 0 rgba(255,255,255,.25)}
 #device.apple.dark .st-av{background:linear-gradient(180deg,#7c7c82,#56565b)}
+/* 특이사항(주의) 칸 (2026-11-23): 둥근 모서리에 잘리던 빨간 세로줄 대신, 라벨 칸 자체를 연한 빨강 바탕(한 덩어리 색 면)으로.
+   빨강은 이 라벨에만 쓰고 테두리는 다른 칸과 같게. 칸 안 고르기·입력·넣기 버튼은 높이 32px로 맞춰 한 줄로 */
+#device.apple .f-sec.warnsec{box-shadow:none}
+#device.apple .f-sec.warnsec .f-lb{background:var(--bad-soft);color:var(--bad);border-right-color:transparent}
+#device.apple .f-sec.warnsec .f-lb small{color:inherit;opacity:.75}
+#device.apple .f-row3 .f-bd :is(input:not([type=checkbox]):not([type=radio]),select,.btn){height:32px;box-sizing:border-box;font-size:13px;vertical-align:middle}
+#device.apple .f-row3 .f-bd .btn{display:inline-flex;align-items:center;padding:0 var(--s3)}
+#device.apple .f-row3 .f-bd select{padding:0 var(--s2) 0 var(--s3)}
+#device.apple .f-row3 .f-bd input:not([type=checkbox]):not([type=radio]){padding:0 var(--s3)}
 /* ---- 기록부 다크 모드 (2026-11-23): 밤에 보는 기록부 ----
    양식 선·칸·이중 밑줄은 그대로 두고 색만 바꾼다. 종이는 짙은 남색, 글자는 밝은 회청색,
    칸 머리는 한 단계 밝은 남색, 제목 잉크(남색)는 밝은 하늘색, 도장 빨강은 조금 밝게 */

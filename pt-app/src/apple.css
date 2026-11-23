@@ -369,3 +369,12 @@ body #device.apple.dark .lp-mock{background:var(--panel);box-shadow:0 12px 40px 
    파랑은 '누를 수 있는 것'에만 쓰므로 사람 표시는 중립색으로. 다크에서는 한 단계 어둡게 */
 #device.apple .st-av{background:linear-gradient(180deg,#a5abb6,#858a94);color:#fff;font-weight:600;letter-spacing:-.01em;box-shadow:inset 0 .5px 0 rgba(255,255,255,.25)}
 #device.apple.dark .st-av{background:linear-gradient(180deg,#7c7c82,#56565b)}
+/* 특이사항(주의) 칸 (2026-11-23): 둥근 모서리에 잘리던 빨간 세로줄 대신, 라벨 칸 자체를 연한 빨강 바탕(한 덩어리 색 면)으로.
+   빨강은 이 라벨에만 쓰고 테두리는 다른 칸과 같게. 칸 안 고르기·입력·넣기 버튼은 높이 32px로 맞춰 한 줄로 */
+#device.apple .f-sec.warnsec{box-shadow:none}
+#device.apple .f-sec.warnsec .f-lb{background:var(--bad-soft);color:var(--bad);border-right-color:transparent}
+#device.apple .f-sec.warnsec .f-lb small{color:inherit;opacity:.75}
+#device.apple .f-row3 .f-bd :is(input:not([type=checkbox]):not([type=radio]),select,.btn){height:32px;box-sizing:border-box;font-size:13px;vertical-align:middle}
+#device.apple .f-row3 .f-bd .btn{display:inline-flex;align-items:center;padding:0 var(--s3)}
+#device.apple .f-row3 .f-bd select{padding:0 var(--s2) 0 var(--s3)}
+#device.apple .f-row3 .f-bd input:not([type=checkbox]):not([type=radio]){padding:0 var(--s3)}
