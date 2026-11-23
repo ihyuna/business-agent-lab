@@ -98,7 +98,7 @@ function tlBlock(s,top,h){
       <div><span class="bn">${esc(m.code)}</span> <span class="bs">· ${esc(splitName(s))}</span></div><div class="bd">계획은 다음 같은 분할로 넘어가요</div></div>${btn('되돌리기','markSession',{sid:s.id,v:'planned'},'small')}</div>`}
   const fin=s.status==='completed';
   return `<div class="blk srow ${fin?'fin':memberHue(m)}" style="top:${top}px;height:${h}px" data-act="openSession" data-sid="${s.id}">
-    <div style="flex:1;min-width:0"><div class="bt">${esc(s.time)}-${end} ${EXAMPLE('예시')}</div>
+    <div style="flex:1;min-width:0"><div class="bt">${esc(s.time)}-${end} ${WEBAPP?'':EXAMPLE('예시')}</div>
       <div><span class="bn">${esc(m.code)}</span> <span class="bs">· ${esc(splitName(s))}</span> ${noBadge(s)} ${cn?pill('주의 '+cn,'red'):''} ${st}</div>
       <div class="bd">${s.goal?'오늘 목표: '+esc(s.goal)+' · ':''}${l?`마지막 수업 <b>${daysBetween(l.date,s.date)}일 전</b> (${md(l.date)} ${esc(splitName(l))})`:'첫 수업'}</div>
       ${todayMemos(m,s).map(n=>`<div class="bd" style="color:var(--accent)">오늘 메모: ${esc(n.text)}</div>`).join('')}</div>
@@ -108,7 +108,7 @@ V.today=()=>{
   const d=todayIso(); const dt=pd(d);
   const list=S.sessions.filter(s=>s.date===d&&s.status!=='plan_only').sort(byDate);
   const timed=list.filter(s=>/^\d{1,2}:\d{2}$/.test(s.time||'')), untimed=list.filter(s=>!timed.includes(s));
-  const hs=timed.map(s=>Number(s.time.split(':')[0])); const h0=hs.length?Math.max(6,Math.min(...hs)-1):9, h1=hs.length?Math.min(23,Math.max(...hs)+2):18;
+  const hs=timed.map(s=>Number(s.time.split(':')[0])); const h0=hs.length?Math.max(0,Math.min(...hs)-1):9, h1=hs.length?Math.min(23,Math.max(...hs)+2):18;
   const HH=78; let grid='';for(let h=h0;h<=h1;h++) grid+=`<div class="hr" style="top:${(h-h0)*HH}px"><span>${String(h).padStart(2,'0')}:00</span></div>`;
   const blocks=timed.map(s=>{const [hh,mm]=s.time.split(':').map(Number);return tlBlock(s,(hh-h0+mm/60)*HH+3,HH-6)}).join('');
   const up=S.sessions.filter(s=>s.date>d&&s.status==='planned').sort(byDate).slice(0,5);
@@ -129,13 +129,13 @@ V.today=()=>{
   const tabs=[['all','전체'],['done','완료'],['cx','취소·안 옴',evCx.length],['moved','옮김',evMv.length]].map(([v,l,n])=>`<button class="chip${tab===v?' on':''}" data-act="recentTab" data-v="${v}">${l}${n?` <b>${n}</b>`:''}</button>`).join('');
   const stat=`<div class="rstat"><div><span>완료</span><b>${n30.done}</b></div><div><span>취소</span><b class="r">${n30.cx}</b></div><div><span>안 옴</span><b class="o">${n30.ns}</b></div><div><span>못 한 %</span><b>${rate}%</b></div></div>`;
   const legend=S.members.map(m=>{const xs=msessions(m.id).filter(x=>(x.status==='cancelled'||x.status==='no_show')&&x.date<=d);const nc=xs.length;return `<div><i class="${memberHue(m)}" style="background:currentColor"></i>${esc(m.code)}${nc?` <span class="pill red" style="margin-left:4px" title="취소·안 옴 (오늘까지)">못 함 ${nc}</span>${xs.every(x=>x.example)?' '+EXAMPLE('예시'):''}`:''}</div>`}).join('');
-  const nav=`<span class="tiny muted">시연용 날짜</span>${btn('‹','shiftDay',{dir:-1},'small')}${btn('›','shiftDay',{dir:1},'small')}`;
+  const nav=WEBAPP?`${d!==realToday()?btn('오늘로','setDay',{v:realToday()},'small'):''}${btn('‹','shiftDay',{dir:-1},'small')}${btn('›','shiftDay',{dir:1},'small')}`:`<span class="tiny muted">시연용 날짜</span>${btn('‹','shiftDay',{dir:-1},'small')}${btn('›','shiftDay',{dir:1},'small')}`;
   return topBar(`플래너 <span class="muted" style="font-weight:500;font-size:14px;margin-left:6px">${dt.getFullYear()}년 ${dt.getMonth()+1}월 ${dt.getDate()}일 ${DOW[dt.getDay()]}요일</span>`,`오늘 수업 ${list.length}`,nav,{noBack:true})+
    `<div class="planner" style="flex:1;min-height:0">
      <div class="pl-left">${miniCal(d)}
        <div class="pl-sec">회원 ${S.members.length}</div><div class="legend2">${legend}</div><div class="tiny faint" style="margin-top:4px">못 함 = 오늘까지 취소·안 옴 횟수</div><div class="pl-key"><span><i class="k-todo"></i>남은 수업</span><span><i class="k-fin"></i>끝난 수업</span><span><i class="k-cx"></i>취소·안 옴</span></div>
        ${up.length?`<div class="pl-sec">다가오는 수업</div>${up.map(s=>`<div class="li click srow small" data-act="openSession" data-sid="${s.id}" style="padding:6px 0"><div style="flex:1"><b>${md(s.date)}</b> ${esc(M(s.memberId).code)} <span class="muted">${esc(splitName(s))}</span></div><button class="btn ghost more" data-act="modal" data-type="sessMenu" data-sid="${s.id}" aria-label="수업 메뉴">…</button></div>`).join('')}`:''}
-       <div class="tiny faint" style="margin-top:12px">시간은 예시예요. 다른 회원 기록은 수첩 날짜 그대로예요.</div></div>
+       ${WEBAPP?'':'<div class="tiny faint" style="margin-top:12px">시간은 예시예요. 다른 회원 기록은 수첩 날짜 그대로예요.</div>'}</div>
      <div class="pl-mid" data-sk="main"><div class="pl-colhd">PT 수업 <span class="n">${list.length}</span></div>
        ${untimed.length?`<div class="untimed">${untimed.map(s=>`<div class="li click srow ${s.status==='completed'?'fin':'todo'}" data-act="openSession" data-sid="${s.id}"><span class="pill gray">시간 미정</span><b>${esc(M(s.memberId).code)}</b> ${esc(splitName(s))}<span class="sp"></span>${s.status==='completed'?'<span class="pill gray">✓ 끝남</span>':s.status==='planned'?'<span class="pill blue">남음</span>':''}${s.status==='planned'?`<button class="btn ghost more" data-act="modal" data-type="sessMenu" data-sid="${s.id}" aria-label="수업 메뉴">…</button>`:''}</div>`).join('')}</div>`:''}
        <div class="tl" style="height:${(h1-h0)*HH+10}px">${grid}${blocks}</div>
@@ -149,16 +149,16 @@ V.members=()=>{
   const rows=S.members.map(m=>{const u=upcoming(m.id);const l=lastSession(m);return `<div class="li click" data-act="go" data-to="member" data-mid="${m.id}">
       <div style="flex:1;min-width:0"><b>${esc(m.code)}</b> <span class="muted small">${m.goals[0]?esc(m.goals[0].text):''}</span>
       <div class="tiny muted">다음 PT ${u?mdw(u.date)+' '+esc(splitName(u)):'없음'} · 지난 수업 ${l?md(l.date)+' '+esc(splitName(l)):'없음'} · 기록 ${completed(m.id).length}회</div></div>${openCautions(m).length?`<span class="tag warn">주의 ${openCautions(m).length}</span>`:''}<span class="faint">›</span></div>`}).join('');
-  if(UI.look==='chart') return topBar('회원',`${S.members.length}명 · 트레이너 수첩 기록으로 채운 프로토타입`,btn('기록 찾기','go',{to:'search'})+btn('설정','go',{to:'settings'})+btn('+ 회원','newMember'),{noBack:true})+
+  if(UI.look==='chart') return topBar('회원',`${S.members.length}명 · ${WEBAPP?'이 기기에 저장된 기록':'트레이너 수첩 기록으로 채운 프로토타입'}`,btn('기록 찾기','go',{to:'search'})+btn('설정','go',{to:'settings'})+btn('+ 회원','newMember'),{noBack:true})+
    `<div class="scroll" data-sk="main">${membersDoc()}</div>`+tabBar('members');
-  return topBar('회원',`${S.members.length}명 · 트레이너 수첩 기록으로 채운 프로토타입`,btn('기록 찾기','go',{to:'search'})+btn('설정','go',{to:'settings'})+btn('+ 회원','newMember'),{noBack:true})+
+  return topBar('회원',`${S.members.length}명 · ${WEBAPP?'이 기기에 저장된 기록':'트레이너 수첩 기록으로 채운 프로토타입'}`,btn('기록 찾기','go',{to:'search'})+btn('설정','go',{to:'settings'})+btn('+ 회원','newMember'),{noBack:true})+
    `<div class="scroll" data-sk="main"><div class="card"><div class="list">${rows}</div></div>
-    <div class="card" style="margin-top:12px"><h2>이 프로토타입</h2>
+    ${WEBAPP?'':`<div class="card" style="margin-top:12px"><h2>이 프로토타입</h2>
       <ul class="small" style="margin:0 0 8px;padding-left:18px">
         <li>회원 기록은 트레이너 수첩의 실제 숫자이고, 이름은 성+00 코드로 바꿨어요(D61).</li>
         <li>역할, 여유 횟수, 쉬는 시간, 기구 눈금은 수첩에 없어서 ${EXAMPLE('예시')}나 논문 기준 임시값(D59)이에요.</li>
         <li>입력한 것은 이 브라우저에만 저장돼요.</li></ul>
-      ${UI.confirmReset?`<div class="row"><span class="small">입력한 것을 모두 지우고 처음 상태로 되돌릴까요?</span>${btn('되돌리기','reset',null,'danger')}${btn('아니요','confirmReset',{v:0})}</div>`:btn('처음 상태로 되돌리기','confirmReset',{v:1},'small')}</div></div>`+tabBar('members');
+      ${UI.confirmReset?`<div class="row"><span class="small">입력한 것을 모두 지우고 처음 상태로 되돌릴까요?</span>${btn('되돌리기','reset',null,'danger')}${btn('아니요','confirmReset',{v:0})}</div>`:btn('처음 상태로 되돌리기','confirmReset',{v:1},'small')}</div>`}</div>`+tabBar('members');
 };
 
 /* ---------- 회원 한눈에 ---------- */

@@ -773,6 +773,7 @@ body.full #app .hl{outline:0!important;box-shadow:none!important;animation:none!
 </div>
 <script>
 (()=>{
+const WEBAPP=false;
 /* 앱 아이콘: 케틀벨 캐릭터 D (2026-11-17 이현아님 선택, D96; 11/18 다리 뺌). 이름 짐노트 */
 const APP_NAME='짐노트';
 const KB_SVG='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" shape-rendering="crispEdges"><rect width="16" height="16" rx="3.6" fill="#1f66f2"/><rect x="6" y="3" width="1.02" height="1.02" fill="#fff"/><rect x="7" y="3" width="1.02" height="1.02" fill="#fff"/><rect x="8" y="3" width="1.02" height="1.02" fill="#fff"/><rect x="9" y="3" width="1.02" height="1.02" fill="#fff"/><rect x="5" y="4" width="1.02" height="1.02" fill="#fff"/><rect x="10" y="4" width="1.02" height="1.02" fill="#fff"/><rect x="5" y="5" width="1.02" height="1.02" fill="#fff"/><rect x="10" y="5" width="1.02" height="1.02" fill="#fff"/><rect x="4" y="6" width="1.02" height="1.02" fill="#fff"/><rect x="5" y="6" width="1.02" height="1.02" fill="#fff"/><rect x="6" y="6" width="1.02" height="1.02" fill="#fff"/><rect x="7" y="6" width="1.02" height="1.02" fill="#fff"/><rect x="8" y="6" width="1.02" height="1.02" fill="#fff"/><rect x="9" y="6" width="1.02" height="1.02" fill="#fff"/><rect x="10" y="6" width="1.02" height="1.02" fill="#fff"/><rect x="11" y="6" width="1.02" height="1.02" fill="#fff"/><rect x="3" y="7" width="1.02" height="1.02" fill="#fff"/><rect x="4" y="7" width="1.02" height="1.02" fill="#fff"/><rect x="5" y="7" width="1.02" height="1.02" fill="#fff"/><rect x="6" y="7" width="1.02" height="1.02" fill="#fff"/><rect x="7" y="7" width="1.02" height="1.02" fill="#fff"/><rect x="8" y="7" width="1.02" height="1.02" fill="#fff"/><rect x="9" y="7" width="1.02" height="1.02" fill="#fff"/><rect x="10" y="7" width="1.02" height="1.02" fill="#fff"/><rect x="11" y="7" width="1.02" height="1.02" fill="#fff"/><rect x="12" y="7" width="1.02" height="1.02" fill="#fff"/><rect x="3" y="8" width="1.02" height="1.02" fill="#fff"/><rect x="4" y="8" width="1.02" height="1.02" fill="#fff"/><rect x="5" y="8" width="1.02" height="1.02" fill="#111"/><rect x="6" y="8" width="1.02" height="1.02" fill="#fff"/><rect x="7" y="8" width="1.02" height="1.02" fill="#fff"/><rect x="8" y="8" width="1.02" height="1.02" fill="#fff"/><rect x="9" y="8" width="1.02" height="1.02" fill="#fff"/><rect x="10" y="8" width="1.02" height="1.02" fill="#111"/><rect x="11" y="8" width="1.02" height="1.02" fill="#fff"/><rect x="12" y="8" width="1.02" height="1.02" fill="#fff"/><rect x="3" y="9" width="1.02" height="1.02" fill="#fff"/><rect x="4" y="9" width="1.02" height="1.02" fill="#fff"/><rect x="5" y="9" width="1.02" height="1.02" fill="#111"/><rect x="6" y="9" width="1.02" height="1.02" fill="#fff"/><rect x="7" y="9" width="1.02" height="1.02" fill="#fff"/><rect x="8" y="9" width="1.02" height="1.02" fill="#fff"/><rect x="9" y="9" width="1.02" height="1.02" fill="#fff"/><rect x="10" y="9" width="1.02" height="1.02" fill="#111"/><rect x="11" y="9" width="1.02" height="1.02" fill="#fff"/><rect x="12" y="9" width="1.02" height="1.02" fill="#fff"/><rect x="3" y="10" width="1.02" height="1.02" fill="#fff"/><rect x="4" y="10" width="1.02" height="1.02" fill="#fff"/><rect x="5" y="10" width="1.02" height="1.02" fill="#fff"/><rect x="6" y="10" width="1.02" height="1.02" fill="#fff"/><rect x="7" y="10" width="1.02" height="1.02" fill="#fff"/><rect x="8" y="10" width="1.02" height="1.02" fill="#fff"/><rect x="9" y="10" width="1.02" height="1.02" fill="#fff"/><rect x="10" y="10" width="1.02" height="1.02" fill="#fff"/><rect x="11" y="10" width="1.02" height="1.02" fill="#fff"/><rect x="12" y="10" width="1.02" height="1.02" fill="#fff"/><rect x="3" y="11" width="1.02" height="1.02" fill="#fff"/><rect x="4" y="11" width="1.02" height="1.02" fill="#fff"/><rect x="5" y="11" width="1.02" height="1.02" fill="#fff"/><rect x="6" y="11" width="1.02" height="1.02" fill="#fff"/><rect x="7" y="11" width="1.02" height="1.02" fill="#1f66f2"/><rect x="8" y="11" width="1.02" height="1.02" fill="#1f66f2"/><rect x="9" y="11" width="1.02" height="1.02" fill="#fff"/><rect x="10" y="11" width="1.02" height="1.02" fill="#fff"/><rect x="11" y="11" width="1.02" height="1.02" fill="#fff"/><rect x="12" y="11" width="1.02" height="1.02" fill="#fff"/><rect x="4" y="12" width="1.02" height="1.02" fill="#fff"/><rect x="5" y="12" width="1.02" height="1.02" fill="#fff"/><rect x="6" y="12" width="1.02" height="1.02" fill="#fff"/><rect x="7" y="12" width="1.02" height="1.02" fill="#fff"/><rect x="8" y="12" width="1.02" height="1.02" fill="#fff"/><rect x="9" y="12" width="1.02" height="1.02" fill="#fff"/><rect x="10" y="12" width="1.02" height="1.02" fill="#fff"/><rect x="11" y="12" width="1.02" height="1.02" fill="#fff"/></svg>';
@@ -1858,12 +1859,12 @@ const isNum=v=>typeof v==='number'&&Number.isFinite(v);
 const firstNum=v=>{if(isNum(v))return v;const m=String(v??'').match(/\d+(\.\d+)?/);return m?Number(m[0]):null};
 
 /* ---------- 상태 ---------- */
-const KEY='pt-mvp-proto-v4';
+const KEY=WEBAPP?'jimnote-v1':'pt-mvp-proto-v4';
 let S=null;
 const UI={look:'chart',ask:null,route:{name:'today'},stack:[],modal:null,draft:{},toast:null,orient:'land',fit:true,timer:null,cur:{},open:{},search:'',edit:null,flags:{}};
 const todayIso=()=>(S&&S.today)||'2026-10-07';
-function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}if(typeof guideSoon==='function')guideSoon()}
-function load(){try{const t=localStorage.getItem(KEY);if(t){const s=JSON.parse(t);if(s&&s.v===3)return s}}catch(e){}return buildSeed()}
+function save(){if(WEBAPP&&S&&S._fresh)return;try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}if(typeof guideSoon==='function')guideSoon()}
+function load(){if(WEBAPP)return webLoad();try{const t=localStorage.getItem(KEY);if(t){const s=JSON.parse(t);if(s&&s.v===3)return s}}catch(e){}return buildSeed()}
 
 const EX=id=>S.exercises[id]||{name:id,part:'',unit:'',inc:2.5};
 const M=id=>S.members.find(m=>m.id===id);
@@ -1902,7 +1903,7 @@ function buildSeed(){
     for(const ss of sm.sessions) seedSession(m,ss);
     for(const n of [].concat(sm.next||[])) createPlanned(m,n.d,n.time,n.t);
   }
-  addExampleCx();
+  if(WEBAPP)st.settings.exampleCx=false; else addExampleCx();
   ensurePackages();
   return st;
 }
@@ -2349,13 +2350,19 @@ function onSetDone(s,x,i){
   const st=x.sets[i]; const first=!x.sets.some((t,j)=>j!==i&&t.done&&t.doneMin!=null);
   const extra=s.extraRest||0; s.extraRest=0; // '시연 시계 +5분'으로 이미 시계에 더한 분
   const rest=first?null:(x.rest||60)/60+extra;
+  if(WEBAPP&&s.startedAt){ // 웹앱: 실제 시계. 쉬는 시간 = 앞 세트를 끝낸 시각부터 이 세트를 끝낸 시각까지에서 세트 1분을 뺀 값
+    const now=realMin(s); const prevMin=Math.max(...x.sets.filter((t,j)=>j!==i&&t.done&&t.doneMin!=null).map(t=>t.doneMin),-Infinity);
+    s.clock=now; st.doneMin=now; st.restMin=first||!isFinite(prevMin)?null:Math.max(0,Math.round((now-prevMin-SET_MIN)*10)/10);
+    replanAfter(s,x,i); return;
+  }
   s.clock=(s.clock??START_MIN)+(first?SWITCH_MIN:(x.rest||60)/60)+SET_MIN;
   st.doneMin=s.clock; st.restMin=rest;
   replanAfter(s,x,i);
 }
 function exMinutes(x){const n=x.sets.filter(st=>!st.done).length;if(!n)return 0;const k=EX(x.exId).uni?2:1;return (x.sets.some(st=>st.done)?0:SWITCH_MIN)+n*(SET_MIN*k+(x.rest||60)/60)}
 function planMinutes(s){return Math.round(START_MIN+liveEx(s).reduce((a,x)=>a+SWITCH_MIN+x.sets.length*(SET_MIN*(EX(x.exId).uni?2:1)+(x.rest||60)/60),0)-SWITCH_MIN+WRAP_MIN)}
-function timeState(s){const now=s.clock??START_MIN;const left=CLASS_MIN-now;const proj=liveEx(s).reduce((a,x)=>a+exMinutes(x),0);return {now,left,proj,tight:left-(proj+WRAP_MIN)<SPARE_MIN}}
+function realMin(s){return Math.max(0,(Date.now()-Date.parse(s.startedAt))/60000)}
+function timeState(s){const now=WEBAPP&&s.startedAt&&s.status==='in_progress'?realMin(s):(s.clock??START_MIN);const left=CLASS_MIN-now;const proj=liveEx(s).reduce((a,x)=>a+exMinutes(x),0);return {now,left,proj,tight:left-(proj+WRAP_MIN)<SPARE_MIN}}
 const DROP_ORDER=['마무리 털기','혈류 모으기','유산소성 순환','보조'];
 function canDrop(s,x){
   if(!isLive(s)||x.sets.some(st=>st.done)||!timeState(s).tight) return false;
@@ -2363,7 +2370,7 @@ function canDrop(s,x){
   for(const r of DROP_ORDER){const c=cand.filter(e=>e.role===r);if(c.length)return c.includes(x)}
   return false;
 }
-function clockText(s,min){const [h,m]=(s.time||'19:00').split(':').map(Number);const t=h*60+m+Math.round(min);return `${Math.floor(t/60)}:${String(t%60).padStart(2,'0')}`}
+function clockText(s,min){if(WEBAPP&&s.startedAt){const d=new Date(Date.parse(s.startedAt)+Math.round(min)*60000);return `${d.getHours()}:${String(d.getMinutes()).padStart(2,'0')}`}const [h,m]=(s.time||'19:00').split(':').map(Number);const t=h*60+m+Math.round(min);return `${Math.floor(t/60)}:${String(t%60).padStart(2,'0')}`}
 const restText=v=>v==null?'':`${Math.floor(v)}:${String(Math.round((v%1)*60)).padStart(2,'0')}`;
 /* 마무리: 모든 본세트가 계획 범위 위 끝(또는 목표 횟수) 이상이면 '목표 넘음'. 표시만 하고 올리기는 트레이너가 누른다 */
 function reachedTop(x){const w=x.sets.filter(st=>st.kind!=='warmup'&&st.done);if(!w.length)return false;return w.every(st=>{const g=repRange(st.adj&&st.adj.from?st.adj.from.r:st.pr);const a=isNum(st.ar)?st.ar:firstNum(st.ar);return g&&a!=null&&a>=g[1]})}
@@ -2488,7 +2495,7 @@ function tlBlock(s,top,h){
       <div><span class="bn">${esc(m.code)}</span> <span class="bs">· ${esc(splitName(s))}</span></div><div class="bd">계획은 다음 같은 분할로 넘어가요</div></div>${btn('되돌리기','markSession',{sid:s.id,v:'planned'},'small')}</div>`}
   const fin=s.status==='completed';
   return `<div class="blk srow ${fin?'fin':memberHue(m)}" style="top:${top}px;height:${h}px" data-act="openSession" data-sid="${s.id}">
-    <div style="flex:1;min-width:0"><div class="bt">${esc(s.time)}-${end} ${EXAMPLE('예시')}</div>
+    <div style="flex:1;min-width:0"><div class="bt">${esc(s.time)}-${end} ${WEBAPP?'':EXAMPLE('예시')}</div>
       <div><span class="bn">${esc(m.code)}</span> <span class="bs">· ${esc(splitName(s))}</span> ${noBadge(s)} ${cn?pill('주의 '+cn,'red'):''} ${st}</div>
       <div class="bd">${s.goal?'오늘 목표: '+esc(s.goal)+' · ':''}${l?`마지막 수업 <b>${daysBetween(l.date,s.date)}일 전</b> (${md(l.date)} ${esc(splitName(l))})`:'첫 수업'}</div>
       ${todayMemos(m,s).map(n=>`<div class="bd" style="color:var(--accent)">오늘 메모: ${esc(n.text)}</div>`).join('')}</div>
@@ -2498,7 +2505,7 @@ V.today=()=>{
   const d=todayIso(); const dt=pd(d);
   const list=S.sessions.filter(s=>s.date===d&&s.status!=='plan_only').sort(byDate);
   const timed=list.filter(s=>/^\d{1,2}:\d{2}$/.test(s.time||'')), untimed=list.filter(s=>!timed.includes(s));
-  const hs=timed.map(s=>Number(s.time.split(':')[0])); const h0=hs.length?Math.max(6,Math.min(...hs)-1):9, h1=hs.length?Math.min(23,Math.max(...hs)+2):18;
+  const hs=timed.map(s=>Number(s.time.split(':')[0])); const h0=hs.length?Math.max(0,Math.min(...hs)-1):9, h1=hs.length?Math.min(23,Math.max(...hs)+2):18;
   const HH=78; let grid='';for(let h=h0;h<=h1;h++) grid+=`<div class="hr" style="top:${(h-h0)*HH}px"><span>${String(h).padStart(2,'0')}:00</span></div>`;
   const blocks=timed.map(s=>{const [hh,mm]=s.time.split(':').map(Number);return tlBlock(s,(hh-h0+mm/60)*HH+3,HH-6)}).join('');
   const up=S.sessions.filter(s=>s.date>d&&s.status==='planned').sort(byDate).slice(0,5);
@@ -2519,13 +2526,13 @@ V.today=()=>{
   const tabs=[['all','전체'],['done','완료'],['cx','취소·안 옴',evCx.length],['moved','옮김',evMv.length]].map(([v,l,n])=>`<button class="chip${tab===v?' on':''}" data-act="recentTab" data-v="${v}">${l}${n?` <b>${n}</b>`:''}</button>`).join('');
   const stat=`<div class="rstat"><div><span>완료</span><b>${n30.done}</b></div><div><span>취소</span><b class="r">${n30.cx}</b></div><div><span>안 옴</span><b class="o">${n30.ns}</b></div><div><span>못 한 %</span><b>${rate}%</b></div></div>`;
   const legend=S.members.map(m=>{const xs=msessions(m.id).filter(x=>(x.status==='cancelled'||x.status==='no_show')&&x.date<=d);const nc=xs.length;return `<div><i class="${memberHue(m)}" style="background:currentColor"></i>${esc(m.code)}${nc?` <span class="pill red" style="margin-left:4px" title="취소·안 옴 (오늘까지)">못 함 ${nc}</span>${xs.every(x=>x.example)?' '+EXAMPLE('예시'):''}`:''}</div>`}).join('');
-  const nav=`<span class="tiny muted">시연용 날짜</span>${btn('‹','shiftDay',{dir:-1},'small')}${btn('›','shiftDay',{dir:1},'small')}`;
+  const nav=WEBAPP?`${d!==realToday()?btn('오늘로','setDay',{v:realToday()},'small'):''}${btn('‹','shiftDay',{dir:-1},'small')}${btn('›','shiftDay',{dir:1},'small')}`:`<span class="tiny muted">시연용 날짜</span>${btn('‹','shiftDay',{dir:-1},'small')}${btn('›','shiftDay',{dir:1},'small')}`;
   return topBar(`플래너 <span class="muted" style="font-weight:500;font-size:14px;margin-left:6px">${dt.getFullYear()}년 ${dt.getMonth()+1}월 ${dt.getDate()}일 ${DOW[dt.getDay()]}요일</span>`,`오늘 수업 ${list.length}`,nav,{noBack:true})+
    `<div class="planner" style="flex:1;min-height:0">
      <div class="pl-left">${miniCal(d)}
        <div class="pl-sec">회원 ${S.members.length}</div><div class="legend2">${legend}</div><div class="tiny faint" style="margin-top:4px">못 함 = 오늘까지 취소·안 옴 횟수</div><div class="pl-key"><span><i class="k-todo"></i>남은 수업</span><span><i class="k-fin"></i>끝난 수업</span><span><i class="k-cx"></i>취소·안 옴</span></div>
        ${up.length?`<div class="pl-sec">다가오는 수업</div>${up.map(s=>`<div class="li click srow small" data-act="openSession" data-sid="${s.id}" style="padding:6px 0"><div style="flex:1"><b>${md(s.date)}</b> ${esc(M(s.memberId).code)} <span class="muted">${esc(splitName(s))}</span></div><button class="btn ghost more" data-act="modal" data-type="sessMenu" data-sid="${s.id}" aria-label="수업 메뉴">…</button></div>`).join('')}`:''}
-       <div class="tiny faint" style="margin-top:12px">시간은 예시예요. 다른 회원 기록은 수첩 날짜 그대로예요.</div></div>
+       ${WEBAPP?'':'<div class="tiny faint" style="margin-top:12px">시간은 예시예요. 다른 회원 기록은 수첩 날짜 그대로예요.</div>'}</div>
      <div class="pl-mid" data-sk="main"><div class="pl-colhd">PT 수업 <span class="n">${list.length}</span></div>
        ${untimed.length?`<div class="untimed">${untimed.map(s=>`<div class="li click srow ${s.status==='completed'?'fin':'todo'}" data-act="openSession" data-sid="${s.id}"><span class="pill gray">시간 미정</span><b>${esc(M(s.memberId).code)}</b> ${esc(splitName(s))}<span class="sp"></span>${s.status==='completed'?'<span class="pill gray">✓ 끝남</span>':s.status==='planned'?'<span class="pill blue">남음</span>':''}${s.status==='planned'?`<button class="btn ghost more" data-act="modal" data-type="sessMenu" data-sid="${s.id}" aria-label="수업 메뉴">…</button>`:''}</div>`).join('')}</div>`:''}
        <div class="tl" style="height:${(h1-h0)*HH+10}px">${grid}${blocks}</div>
@@ -2539,16 +2546,16 @@ V.members=()=>{
   const rows=S.members.map(m=>{const u=upcoming(m.id);const l=lastSession(m);return `<div class="li click" data-act="go" data-to="member" data-mid="${m.id}">
       <div style="flex:1;min-width:0"><b>${esc(m.code)}</b> <span class="muted small">${m.goals[0]?esc(m.goals[0].text):''}</span>
       <div class="tiny muted">다음 PT ${u?mdw(u.date)+' '+esc(splitName(u)):'없음'} · 지난 수업 ${l?md(l.date)+' '+esc(splitName(l)):'없음'} · 기록 ${completed(m.id).length}회</div></div>${openCautions(m).length?`<span class="tag warn">주의 ${openCautions(m).length}</span>`:''}<span class="faint">›</span></div>`}).join('');
-  if(UI.look==='chart') return topBar('회원',`${S.members.length}명 · 트레이너 수첩 기록으로 채운 프로토타입`,btn('기록 찾기','go',{to:'search'})+btn('설정','go',{to:'settings'})+btn('+ 회원','newMember'),{noBack:true})+
+  if(UI.look==='chart') return topBar('회원',`${S.members.length}명 · ${WEBAPP?'이 기기에 저장된 기록':'트레이너 수첩 기록으로 채운 프로토타입'}`,btn('기록 찾기','go',{to:'search'})+btn('설정','go',{to:'settings'})+btn('+ 회원','newMember'),{noBack:true})+
    `<div class="scroll" data-sk="main">${membersDoc()}</div>`+tabBar('members');
-  return topBar('회원',`${S.members.length}명 · 트레이너 수첩 기록으로 채운 프로토타입`,btn('기록 찾기','go',{to:'search'})+btn('설정','go',{to:'settings'})+btn('+ 회원','newMember'),{noBack:true})+
+  return topBar('회원',`${S.members.length}명 · ${WEBAPP?'이 기기에 저장된 기록':'트레이너 수첩 기록으로 채운 프로토타입'}`,btn('기록 찾기','go',{to:'search'})+btn('설정','go',{to:'settings'})+btn('+ 회원','newMember'),{noBack:true})+
    `<div class="scroll" data-sk="main"><div class="card"><div class="list">${rows}</div></div>
-    <div class="card" style="margin-top:12px"><h2>이 프로토타입</h2>
+    ${WEBAPP?'':`<div class="card" style="margin-top:12px"><h2>이 프로토타입</h2>
       <ul class="small" style="margin:0 0 8px;padding-left:18px">
         <li>회원 기록은 트레이너 수첩의 실제 숫자이고, 이름은 성+00 코드로 바꿨어요(D61).</li>
         <li>역할, 여유 횟수, 쉬는 시간, 기구 눈금은 수첩에 없어서 ${EXAMPLE('예시')}나 논문 기준 임시값(D59)이에요.</li>
         <li>입력한 것은 이 브라우저에만 저장돼요.</li></ul>
-      ${UI.confirmReset?`<div class="row"><span class="small">입력한 것을 모두 지우고 처음 상태로 되돌릴까요?</span>${btn('되돌리기','reset',null,'danger')}${btn('아니요','confirmReset',{v:0})}</div>`:btn('처음 상태로 되돌리기','confirmReset',{v:1},'small')}</div></div>`+tabBar('members');
+      ${UI.confirmReset?`<div class="row"><span class="small">입력한 것을 모두 지우고 처음 상태로 되돌릴까요?</span>${btn('되돌리기','reset',null,'danger')}${btn('아니요','confirmReset',{v:0})}</div>`:btn('처음 상태로 되돌리기','confirmReset',{v:1},'small')}</div>`}</div>`+tabBar('members');
 };
 
 /* ---------- 회원 한눈에 ---------- */
@@ -2843,7 +2850,7 @@ function numIn(s,x,i,f,val,unit,cls){return `<span class="numwrap"><input class=
 function adjTag(s,x,i){const st=x.sets[i];if(!adjCls(st))return '';return `<button class="tag t-${st.adj.by} adjbtn" data-act="adj" data-sid="${s.id}" data-uid="${x.uid}" data-i="${i}" title="바뀐 까닭">${ADJ_NAME[st.adj.by]} · 원래 ${esc(fwr(st.adj.from.w,st.adj.from.r,x.exId))} !</button>`}
 function timeBar(s){
   const T=timeState(s);
-  return `<div class="timebar${T.tight?' tight':''}" role="status"><span>지금 <b>${clockText(s,T.now)}</b></span><span>끝까지 남은 <b>${Math.max(0,Math.round(T.left))}분</b></span><span>남은 종목 예상 <b>${Math.round(T.proj)}분</b> + 마무리 ${WRAP_MIN}분</span>${T.tight?'<span><b>빠듯해요</b> · 뺄 수 있는 종목에 표시가 붙어요</span>':''}<span class="sp"></span><button class="btn small" data-act="plusFive" data-sid="${s.id}" title="시연용: 쉬는 시간을 5분 더 쓴 것으로 시계를 옮겨요">시연 시계 +5분</button></div>`;
+  return `<div class="timebar${T.tight?' tight':''}" role="status"><span>지금 <b>${clockText(s,T.now)}</b></span><span>끝까지 남은 <b>${Math.max(0,Math.round(T.left))}분</b></span><span>남은 종목 예상 <b>${Math.round(T.proj)}분</b> + 마무리 ${WRAP_MIN}분</span>${T.tight?'<span><b>빠듯해요</b> · 뺄 수 있는 종목에 표시가 붙어요</span>':''}<span class="sp"></span>${WEBAPP?'':`<button class="btn small" data-act="plusFive" data-sid="${s.id}" title="시연용: 쉬는 시간을 5분 더 쓴 것으로 시계를 옮겨요">시연 시계 +5분</button>`}</div>`;
 }
 V.live=r=>{
   const s=SES(r.sid), m=M(s.memberId);
@@ -3071,10 +3078,10 @@ V.settings=()=>{
      <div class="card"><h2>쉬는 시간 타이머</h2><div class="row">${chips([['0','끔'],['1','켬']],S.settings.restTimer?'1':'0','setTimer')}</div><div class="tiny muted" style="margin-top:4px">켜면 세트를 끝낼 때 계획한 쉬는 시간으로 돌아요. 트레이너 답이 오기 전이라 기본은 꺼 둬요.</div></div>
      <div class="card"><h2>지난 실제값 기준</h2><div class="row">${chips([['same','같은 분할'],['recent','가장 최근']],S.settings.basis,'setBasis')}</div><div class="tiny muted" style="margin-top:4px">다음 목표가 없을 때 어느 수업의 실제값으로 채울지예요. 같은 분할에 없는 종목은 가장 최근으로 채워요. 바꾸면 앞으로 만드는 수업 준비부터 적용돼요.</div></div>
      <div class="card"><h2>역할별 기준 <span class="tag warn">논문 기준 임시값 (D59)</span></h2><table><tr><th>역할</th><th>횟수 범위</th><th>목표 횟수</th><th>여유 횟수</th><th>세트</th><th>쉬는 초</th></tr>${roleRows}</table><div class="tiny muted" style="margin-top:4px">트레이너 답(O02)이 오면 바꿀 값이에요. 유산소성 순환은 횟수 칸을 라운드로 써요.</div></div>
-     <div class="card"><h2>예시 취소·안 옴 <span class="tag warn">예시</span></h2><div class="row">${chips([['1','보임'],['0','숨김']],S.settings.exampleCx===false?'0':'1','setExampleCx')}</div><div class="tiny muted" style="margin-top:4px">수첩에는 취소·안 옴 기록이 없어요. 화면을 보여 주려고 넣은 예시 ${EXAMPLE_CX.length}건이고, 운동 기록은 없어요. 실제 날짜를 알면 바꿔요.</div></div>
+     ${WEBAPP?webSettingsCards():`<div class="card"><h2>예시 취소·안 옴 <span class="tag warn">예시</span></h2><div class="row">${chips([['1','보임'],['0','숨김']],S.settings.exampleCx===false?'0':'1','setExampleCx')}</div><div class="tiny muted" style="margin-top:4px">수첩에는 취소·안 옴 기록이 없어요. 화면을 보여 주려고 넣은 예시 ${EXAMPLE_CX.length}건이고, 운동 기록은 없어요. 실제 날짜를 알면 바꿔요.</div></div>
      <div class="card"><h2>화면 디자인</h2><div class="row">${chips([['chart','기록부 (B)'],['emr','지금 디자인 (A)']],UI.look,'setLook')}</div><div class="tiny muted" style="margin-top:4px">B는 지도교수님 피드백(11/11)의 종이 기록부 느낌이에요. A는 11/6까지 다듬은 화면 그대로예요. 위쪽 도구 줄 '디자인' 버튼으로도 바꿀 수 있어요.</div></div>
      <div class="card"><h2>처음 화면</h2>${btn('로그아웃 (처음 화면으로)','logout',null,'small')}<div class="tiny muted" style="margin-top:4px">입력한 기록은 그대로 두고 로그인 화면으로 돌아가요.</div></div>
-     <div class="card"><h2>처음 상태로</h2>${UI.confirmReset?`<div class="row"><span class="small">입력한 것을 모두 지울까요?</span>${btn('되돌리기','reset',null,'danger')}${btn('아니요','confirmReset',{v:0})}</div>`:btn('처음 상태로 되돌리기','confirmReset',{v:1},'small')}</div></div>
+     <div class="card"><h2>처음 상태로</h2>${UI.confirmReset?`<div class="row"><span class="small">입력한 것을 모두 지울까요?</span>${btn('되돌리기','reset',null,'danger')}${btn('아니요','confirmReset',{v:0})}</div>`:btn('처음 상태로 되돌리기','confirmReset',{v:1},'small')}</div>`}</div>
     <div class="card"><h2>종목 사전 <span class="tag warn">단위·눈금은 예시 (O36)</span></h2><div class="tiny muted" style="margin-bottom:4px">눈금은 +/− 한 칸과 계산한 무게를 내릴 때 써요. '한쪽'은 40/40kg처럼 한쪽 무게로 적는 기구예요.</div>
      <table><tr><th>이름</th><th>부위</th><th>단위</th><th>눈금</th><th>한쪽</th></tr>${exRows}</table>
      <div class="row" style="margin-top:8px;flex-wrap:nowrap">${dIn('newExName','새 종목 이름',{grow:1})}${dSel('newExPart',pairs(['하체','가슴','등','어깨','팔','복근','전신','기타']),'하체',{w:80})}${dSel('newExUnit',[['kg','kg'],['lb','lb'],['','(없음)']],'kg',{w:80})}${dIn('newExInc','눈금',{w:56,im:'decimal',v:'2.5'})}${btn('+ 종목','newEx',null,'small')}</div></div></div></div>`;
@@ -3532,12 +3539,12 @@ function membersDoc(){
       <td class="c">${oc?`<b class="bad">${oc}</b>`:'<span class="faint">0</span>'}</td></tr>`}).join('');
   return `<div class="f-cap">Ⅰ. 회원 ${S.members.length}명 <span class="muted" style="font-weight:500">줄을 누르면 회원 기록부가 열려요</span></div>
     <table class="f-prog"><tr><th style="width:84px">차트 No.</th><th style="width:76px">회원</th><th>목표</th><th style="width:130px">다음 PT</th><th style="width:130px">지난 수업</th><th style="width:56px">누적</th><th style="width:44px">주의</th></tr>${rows}</table>
-    <div class="f-cap">Ⅱ. 이 프로토타입</div>
+    ${WEBAPP?'':`<div class="f-cap">Ⅱ. 이 프로토타입</div>
     ${fsec('알림',`<ul class="small" style="margin:0 0 8px;padding-left:18px">
         <li>회원 기록은 트레이너 수첩의 실제 숫자이고, 이름은 성+00 코드로 바꿨어요(D61).</li>
         <li>역할, 여유 횟수, 쉬는 시간, 기구 눈금은 수첩에 없어서 ${EXAMPLE('예시')}나 논문 기준 임시값(D59)이에요.</li>
         <li>입력한 것은 이 브라우저에만 저장돼요.</li></ul>
-      ${UI.confirmReset?`<div class="row"><span class="small">입력한 것을 모두 지우고 처음 상태로 되돌릴까요?</span>${btn('되돌리기','reset',null,'danger')}${btn('아니요','confirmReset',{v:0})}</div>`:btn('처음 상태로 되돌리기','confirmReset',{v:1},'small')}`)}`}
+      ${UI.confirmReset?`<div class="row"><span class="small">입력한 것을 모두 지우고 처음 상태로 되돌릴까요?</span>${btn('되돌리기','reset',null,'danger')}${btn('아니요','confirmReset',{v:0})}</div>`:btn('처음 상태로 되돌리기','confirmReset',{v:1},'small')}`)}`}`}
 
 /* 수업 기록 대장 */
 function historyDoc(m,list,f){
@@ -4061,7 +4068,7 @@ function askHTML(){const a=UI.ask;const {x}=gx(a);if(!x)return '';const cur=x.re
   return `<div class="askbar" role="status"><span class="small"><b>${esc(EX(x.exId).name)}</b> ${a.kind==='remove'?'뺐어요':'바꿨어요'}. 이유</span>${REMOVE_REASONS.map(r=>`<button class="chip${cur===r?' on':''}" data-act="askPick" data-v="${r}">${r}</button>`).join('')}<span class="tiny muted">안 누르면 '${esc(cur||'이유 없음')}'으로 남아요 · 다른 곳을 누르면 닫혀요</span>${a.kind==='remove'?btn('되돌리기','askUndo',null,'small ghost'):''}</div>`}
 
 /* ---------- 누르기 ---------- */
-function resetAll(){try{localStorage.removeItem(KEY)}catch(e){}S=buildSeed();save();clearTimeout(askT);Object.assign(UI,{ask:null,stack:[],route:{name:'today'},modal:null,draft:{},cur:{},open:{},search:'',timer:null,confirmReset:false,scrolls:{},edit:null,flags:{}})}
+function resetAll(){if(WEBAPP)return webWipe();try{localStorage.removeItem(KEY)}catch(e){}S=buildSeed();save();clearTimeout(askT);Object.assign(UI,{ask:null,stack:[],route:{name:'today'},modal:null,draft:{},cur:{},open:{},search:'',timer:null,confirmReset:false,scrolls:{},edit:null,flags:{}})}
 const ACT={
   back:()=>back(),
   home:()=>home(),
@@ -4235,11 +4242,11 @@ ACT.setLook=d=>{UI.look=d.v;saveView();render()};
 ACT.logout=()=>{try{sessionStorage.removeItem(ENTER_KEY)}catch(e){}UI.stack=[];UI.route={name:'landing'};UI.modal=null;UI.edit=null;render({noSave:true})};
 
 /* ---------- 시작 ---------- */
-(function boot(){
+function boot(){
   try{const v=JSON.parse(localStorage.getItem(KEY+'-view')||'null');if(v){UI.look=v.look==='emr'?'emr':'chart';UI.orient=v.orient==='port'?'port':'land';UI.fit=v.fit!==false;if(v.guide){G.open=v.guide.open!==false;G.scene=Math.min(+v.guide.scene||0,SCENES.length-1);G.step=+v.guide.step||0}}}catch(e){}
   S=load(); ensurePackages(); save();
   let entered=false;try{entered=sessionStorage.getItem(ENTER_KEY)==='1'}catch(e){}
-  if(!entered) UI.route={name:'landing'};
+  if(WEBAPP) webBoot(); else if(!entered) UI.route={name:'landing'};
   const app=document.getElementById('app');
   app.addEventListener('click',ev=>{const el=ev.target.closest('[data-act]');if(!el||el.disabled||!app.contains(el)){flushRender();return}cancelSoon();if(UI.ask&&!/^ask/.test(el.dataset.act))UI.ask=null;const f=ACT[el.dataset.act];if(f)f(el.dataset,el,ev)});
   app.addEventListener('change',ev=>{const el=ev.target.closest('[data-on]');if(!el)return;const f=ON[el.dataset.on];if(f)f(el.value,el.dataset,el)});
@@ -4261,8 +4268,9 @@ ACT.logout=()=>{try{sessionStorage.removeItem(ENTER_KEY)}catch(e){}UI.stack=[];U
   try{new ResizeObserver(fit).observe(document.getElementById('stage'))}catch(e){}
   setInterval(()=>{const el=document.getElementById('timer-text');if(el&&UI.timer)el.innerHTML=timerText()},1000);
   render(); fit();
-})();
+}
 
+boot();
 window.__pt={get S(){return S},UI,ACT,ON,G,SCENES,gotoScene};
 })();
 </script>
