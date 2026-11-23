@@ -16,7 +16,7 @@ const firstNum=v=>{if(isNum(v))return v;const m=String(v??'').match(/\d+(\.\d+)?
 /* ---------- 상태 ---------- */
 const KEY=WEBAPP?'jimnote-v1':'pt-mvp-proto-v4';
 let S=null;
-const UI={look:'chart',ask:null,route:{name:'today'},stack:[],modal:null,draft:{},toast:null,orient:'land',fit:true,timer:null,cur:{},open:{},search:'',edit:null,flags:{}};
+const UI={look:'chart',theme:'light',ask:null,route:{name:'today'},stack:[],modal:null,draft:{},toast:null,orient:'land',fit:true,timer:null,cur:{},open:{},search:'',edit:null,flags:{}};
 const todayIso=()=>(S&&S.today)||'2026-10-07';
 function save(){if(WEBAPP)return webSave();try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}if(typeof guideSoon==='function')guideSoon()}
 function load(){if(WEBAPP)return webLoad();try{const t=localStorage.getItem(KEY);if(t){const s=JSON.parse(t);if(s&&s.v===3)return s}}catch(e){}return buildSeed()}

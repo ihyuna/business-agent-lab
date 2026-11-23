@@ -196,20 +196,29 @@ ACT.saveProfile=()=>{S.profile.name=dval('pf-name').trim()||S.profile.name;S.pro
 ACT.syncNow=()=>{pushCloud()};
 function webWipe(){const p=S.profile;S=emptyState();S.profile=Object.assign({},p);LS.del(dataKey(AUTH.user.id)+'-before-import');save();resetUI('today')}
 
-function webSettingsCards(){
+/* 설정 묶음 (웹앱): 왼쪽 목록 순서. '|'는 목록 묶음 나눔 */
+const WEB_SETTINGS_ORDER=['account','|','display','guide','|','class','roles','exercises','|','data','about','|','logout'];
+function webSettingsSections(){
   const before=!!(AUTH.user&&LS.get(dataKey(AUTH.user.id)+'-before-import'));
-  const lb=S.settings.lastBackup; const P=S.profile||{};
-  return `<div class="card"><h2>내 계정</h2>
-     <div class="small" style="margin-bottom:8px"><b>${esc(AUTH.user?AUTH.user.email:'')}</b> · ${AUTH.mode==='cloud'?'클라우드 계정 (어느 기기에서든 로그인)':'이 기기 계정'} ${syncHTML()}</div>
-     <div class="row" style="flex-wrap:nowrap"><input class="ci" data-d="pf-name" value="${esc(P.name||'')}" placeholder="이름" style="width:140px"><input class="ci" data-d="pf-gym" value="${esc(P.gym||'')}" placeholder="센터 이름 (선택)" style="flex:1">${btn('저장','saveProfile',null,'small')}</div>
-     <div class="row" style="margin-top:8px">${AUTH.mode==='cloud'&&AUTH.sync!=='saved'?btn('지금 저장','syncNow',null,'small'):''}${btn('화면 안내 다시 보기','replayCoach',null,'small ghost')}${btn('로그아웃','logout',null,'small')}</div></div>
-   <div class="card"><h2>화면 디자인</h2><div class="row">${chips(LOOKS,UI.look,'setLook')}</div><div class="tiny muted" style="margin-top:4px">기록부는 종이 기록부 느낌, 애플 디자인은 아이패드 기본 앱 느낌이에요. 기록은 같고 모양만 바뀌어요.</div></div>
-   <div class="card"><h2>기록 보관</h2>
-     <div class="small" style="margin-bottom:6px">${AUTH.mode==='cloud'?'기록은 내 계정에만 저장돼요. 다른 트레이너는 볼 수 없어요.':'기록은 <b>이 기기의 이 브라우저</b>에만, 이 계정 몫으로 따로 저장돼요.'} (지금 ${storedKB()}KB)</div>
-     <div class="row">${btn('백업 파일 내려받기','exportData',null,'small primary')}<label class="btn small">백업 파일 불러오기<input type="file" accept="application/json,.json" data-on="importFile" style="display:none"></label>${before?btn('불러오기 전으로','undoImport',null,'small ghost'):''}</div>
-     <div class="tiny muted" style="margin-top:6px">마지막 백업: ${lb?esc(lb.slice(0,10)):'아직 없음'}.${AUTH.mode==='cloud'?'':' 브라우저 기록을 지우거나 기기를 바꾸면 기록이 사라지니, 가끔 백업 파일을 받아 두세요.'}</div></div>
-   <div class="card"><h2>내 기록 모두 지우기</h2>${UI.confirmReset?`<div class="row"><span class="small">이 계정의 회원과 수업 기록을 모두 지울까요? 되돌릴 수 없어요.</span>${btn('지우기','reset',null,'danger')}${btn('아니요','confirmReset',{v:0})}</div>`:btn('모두 지우고 처음 설정으로','confirmReset',{v:1},'small')}</div>
-   <div class="card"><h2>앱 정보</h2><div class="tiny muted">짐노트 ${APP_VER} · 아이패드 9세대 화면 기준 · 한 번 연 뒤에는 인터넷 없이도 열려요</div></div>`;
+  const lb=S.settings.lastBackup; const P=S.profile||{}; const nm=P.name||'트레이너';
+  const cloud=AUTH.mode==='cloud';
+  return {
+   account:{ic:['user','#8e8e93'],t:'내 계정',sub:'',
+    head:on=>`<button class="st-prof${on?' on':''}" data-act="setSec" data-v="account"><span class="st-av">${esc(nm.trim().slice(0,1))}</span><span class="st-tx"><b>${esc(nm)}</b><span>${esc(AUTH.user?AUTH.user.email:'')}</span></span><span class="st-chev">›</span></button>`,
+    body:()=>`<div class="st-hero"><span class="st-av big">${esc(nm.trim().slice(0,1))}</span><b>${esc(nm)}</b><span>${esc(AUTH.user?AUTH.user.email:'')} · ${cloud?'클라우드 계정':'이 기기 계정'}</span>${syncHTML()}</div>`+
+     stGroup('이름과 센터',`<div class="st-pad"><div class="row" style="flex-wrap:nowrap"><input class="ci" data-d="pf-name" value="${esc(P.name||'')}" placeholder="이름" style="width:160px"><input class="ci" data-d="pf-gym" value="${esc(P.gym||'')}" placeholder="센터 이름 (선택)" style="flex:1">${btn('저장','saveProfile',null,'small primary')}</div></div>`,'이름은 경과기록지와 회원 안내서의 서명 줄에 들어가요.')+
+     (cloud&&AUTH.sync!=='saved'?stGroup('',stItem(stIcon('archive','#007aff'),'지금 저장','저장이 밀려 있으면 눌러서 바로 올려요.',btn('지금 저장','syncNow',null,'small'))):'')},
+   guide:{ic:['guide','#5ac8fa'],t:'화면 안내',sub:'처음 쓸 때 설명 다시 보기',body:()=>
+     stGroup('',stItem(stIcon('guide','#5ac8fa'),'화면 안내 다시 보기','화면마다 처음 열 때 나오는 설명을 다시 봐요. 누르면 오늘 화면부터 시작해요.',btn('다시 보기','replayCoach',null,'small')))},
+   data:{ic:['archive','#30b0c7'],t:'기록 보관',sub:`백업 · 지금 ${storedKB()}KB`,body:()=>
+     stGroup('',stItem(stIcon('archive','#30b0c7'),'백업 파일 내려받기',`마지막 백업: ${lb?esc(lb.slice(0,10)):'아직 없음'}`,btn('내려받기','exportData',null,'small primary'))+
+       stItem(stIcon('archive','#8e8e93'),'백업 파일 불러오기','짐노트에서 받은 .json 파일로 기록을 바꿔요.',`<label class="btn small">불러오기<input type="file" accept="application/json,.json" data-on="importFile" style="display:none"></label>${before?btn('불러오기 전으로','undoImport',null,'small ghost'):''}`),
+       '',cloud?'기록은 내 계정에만 저장돼요. 다른 트레이너는 볼 수 없어요.':'기록은 이 기기의 이 브라우저에만, 이 계정 몫으로 따로 저장돼요. 브라우저 기록을 지우거나 기기를 바꾸면 기록이 사라지니, 가끔 백업 파일을 받아 두세요.')+
+     stGroup('',stItem(stIcon('trash','#ff3b30'),'내 기록 모두 지우기','이 계정의 회원과 수업 기록을 모두 지우고 처음 설정으로 가요. 되돌릴 수 없어요.',UI.confirmReset?`${btn('지우기','reset',null,'small danger')}${btn('아니요','confirmReset',{v:0},'small')}`:btn('지우기','confirmReset',{v:1},'small danger'),'danger'))},
+   about:{ic:['info','#8e8e93'],t:'앱 정보',sub:`짐노트 ${APP_VER}`,body:()=>
+     stGroup('',stItem('','버전',`짐노트 ${APP_VER}`)+stItem('','화면 기준','아이패드 9세대 (1080 × 810)')+stItem('','인터넷 없이','한 번 연 뒤에는 인터넷 없이도 열려요'))},
+   logout:{t:'로그아웃',head:()=>`<button class="st-row st-out" data-act="logout"><span class="st-tx"><b>로그아웃</b></span></button>`}
+  };
 }
 
 /* ---------- 화면: 소개 ---------- */
@@ -328,10 +337,10 @@ const COACH={
  show:[
   {q:'.f-cap',has:'Ⅰ.',pair:1,t:'회원에게 보여 주기',d:'회원에게 그대로 보여 주는 안내서예요. 오늘 결과와 지난번에서 바뀐 것을 담았어요.'}],
  settings:[
-  {q:'h2',has:'내 계정',up:'.card',t:'내 계정',d:'이름은 서명 줄에 들어가요. 로그아웃과 화면 안내 다시 보기도 여기 있어요.'},
-  {q:'h2',has:'기록 보관',up:'.card',t:'기록 보관',d:'내 기록 전체를 백업 파일로 내려받거나 불러와요.'},
-  {q:'h2',has:'역할별 기준',up:'.card',t:'역할별 기준',d:'역할마다 횟수, 여유 횟수, 세트, 쉬는 시간 기준이에요. 지금은 논문 기준 임시값이라 트레이너 기준으로 바꿔요.'},
-  {q:'h2',has:'종목 사전',up:'.card',t:'종목 사전',d:'기구 눈금과 한쪽 무게를 정해요. 숫자를 올리고 내릴 때 이 눈금을 써요.'}]
+  {q:'.st-prof',t:'내 계정',d:'이름은 서명 줄에 들어가요. 로그아웃과 화면 안내 다시 보기도 여기 있어요.'},
+  {q:'.st-row',has:'기록 보관',t:'기록 보관',d:'내 기록 전체를 백업 파일로 내려받거나 불러와요.'},
+  {q:'.st-row',has:'역할별 기준',t:'역할별 기준',d:'역할마다 횟수, 여유 횟수, 세트, 쉬는 시간 기준이에요. 지금은 논문 기준 임시값이라 트레이너 기준으로 바꿔요.'},
+  {q:'.st-row',has:'종목 사전',t:'종목 사전',d:'기구 눈금과 한쪽 무게를 정해요. 숫자를 올리고 내릴 때 이 눈금을 써요.'}]
 };
 const NO_COACH=['landing','auth','onboard'];
 function coachKey(){const r=UI.route.name;if(r==='live'){const s=SES(UI.route.sid);return s&&s.status==='planned'?'start':'live'}return r}

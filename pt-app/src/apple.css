@@ -15,7 +15,7 @@
   --good:#248a3d; --good-soft:rgba(52,199,89,.14); --warn:#a05a00; --warn-soft:rgba(255,149,0,.14);
   --bad:#d70015; --bad-soft:rgba(255,59,48,.11); --cond:#c93400; --cond-soft:rgba(255,149,0,.13);
   --live:#5e5ce6; --live-soft:rgba(94,92,230,.12); --now:#ff3b30;
-  --bar:rgba(255,255,255,.72); --spring:cubic-bezier(.32,.72,0,1);
+  --mat:rgba(255,255,255,.72); --sub:#3c3c43; --spring:cubic-bezier(.32,.72,0,1);
   color-scheme:light;background:var(--device);border-radius:18px;
   -webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
 
@@ -25,17 +25,17 @@
 #device.apple .card h2,#device.apple .pl-colhd,#device.apple .box>.bh{letter-spacing:-.01em}
 
 /* 위 메뉴: 반투명 막대 + 가운데 알약 모양 탭 (iPadOS 위쪽 탭 막대) */
-#device.apple .tabbar.sidenav{background:var(--bar);-webkit-backdrop-filter:blur(20px) saturate(180%);backdrop-filter:blur(20px) saturate(180%);border-bottom:.5px solid var(--line2);padding:0 12px;gap:4px;align-items:center;z-index:5}
+#device.apple .tabbar.sidenav{background:var(--mat);-webkit-backdrop-filter:blur(20px) saturate(180%);backdrop-filter:blur(20px) saturate(180%);border-bottom:.5px solid var(--line2);padding:0 12px;gap:4px;align-items:center;z-index:5}
 #device.apple .sidenav .logo::before{background:var(--accent);border-radius:3px}
 #device.apple .tabbar.sidenav button{height:32px;padding:0 14px;border-radius:999px;font-weight:500;color:var(--ink)}
 #device.apple .tabbar.sidenav button svg{stroke:var(--accent)}
 #device.apple .tabbar.sidenav button.on{background:var(--fill);color:var(--accent);font-weight:600;box-shadow:none}
-#device.apple .top{background:var(--bar);-webkit-backdrop-filter:blur(20px) saturate(180%);backdrop-filter:blur(20px) saturate(180%);border-bottom:.5px solid var(--line)}
+#device.apple .top{background:var(--mat);-webkit-backdrop-filter:blur(20px) saturate(180%);backdrop-filter:blur(20px) saturate(180%);border-bottom:.5px solid var(--line)}
 #device.apple .top .sub{color:var(--muted)}
 #device.apple .pbar{background:var(--panel);border-bottom:.5px solid var(--line);gap:12px}
 #device.apple .pbar .vit{gap:14px}
 #device.apple .timebar{background:var(--panel);border-bottom:.5px solid var(--line)}
-#device.apple .actbar{background:var(--bar);-webkit-backdrop-filter:blur(20px) saturate(180%);backdrop-filter:blur(20px) saturate(180%);border-top:.5px solid var(--line2)}
+#device.apple .actbar{background:var(--mat);-webkit-backdrop-filter:blur(20px) saturate(180%);backdrop-filter:blur(20px) saturate(180%);border-top:.5px solid var(--line2)}
 
 /* 바탕과 카드: 테두리 없이 흰 면, 둥근 모서리 */
 #device.apple .scroll,#device.apple .planner,#device.apple .chartlay{background:var(--device)}
@@ -133,14 +133,14 @@
 #device.apple .overlay.leave .modal{animation:ap-sheet 220ms ease-in reverse forwards}
 #device.apple .toast{border:0;border-radius:999px;background:rgba(28,28,30,.82);color:#fff;-webkit-backdrop-filter:blur(20px) saturate(180%);backdrop-filter:blur(20px) saturate(180%);box-shadow:0 8px 24px rgba(0,0,0,.16)}
 #device.apple .toast.enter{animation:ap-toast 320ms var(--spring)}
-#device.apple .askbar{border:0;border-radius:var(--r4);background:var(--bar);-webkit-backdrop-filter:blur(20px) saturate(180%);backdrop-filter:blur(20px) saturate(180%);box-shadow:0 10px 32px rgba(0,0,0,.16),0 0 0 .5px var(--line2)}
+#device.apple .askbar{border:0;border-radius:var(--r4);background:var(--mat);-webkit-backdrop-filter:blur(20px) saturate(180%);backdrop-filter:blur(20px) saturate(180%);box-shadow:0 10px 32px rgba(0,0,0,.16),0 0 0 .5px var(--line2)}
 @keyframes ap-fade{from{opacity:0}to{opacity:1}}
 @keyframes ap-sheet{from{opacity:0;transform:scale(.92);filter:blur(6px)}to{opacity:1;transform:none;filter:none}}
 @keyframes ap-toast{from{opacity:0;transform:translate(-50%,12px)}to{opacity:1;transform:translate(-50%,0)}}
 
 /* 웹앱 화면별 첫 안내 */
 body #device.apple .cm-hole{border-radius:12px!important;box-shadow:0 0 0 2px var(--accent),0 0 0 9999px rgba(0,0,0,.45)}
-body #device.apple .cm-card{border:0!important;border-radius:16px!important;padding:16px 18px 14px;background:var(--bar);-webkit-backdrop-filter:blur(24px) saturate(180%);backdrop-filter:blur(24px) saturate(180%);box-shadow:0 18px 48px rgba(0,0,0,.25)}
+body #device.apple .cm-card{border:0!important;border-radius:16px!important;padding:16px 18px 14px;background:var(--mat);-webkit-backdrop-filter:blur(24px) saturate(180%);backdrop-filter:blur(24px) saturate(180%);box-shadow:0 18px 48px rgba(0,0,0,.25)}
 body #device.apple .cm-card .cm-n{padding:0;margin:0 0 4px;background:none;border:0;color:var(--accent)}
 body #device.apple .cm-card b{padding:0;color:var(--ink);letter-spacing:-.01em}
 body #device.apple .cm-card p,body #device.apple .cm-b{padding:0}
@@ -151,7 +151,7 @@ body #device.apple .cm-next{background:var(--accent)}
 
 /* 웹앱 소개·로그인·처음 설정 */
 body #device.apple .lp,body #device.apple .lg,body #device.apple .ob{background:var(--device)!important}
-body #device.apple .lp-top,body #device.apple .ob-top{background:var(--bar);-webkit-backdrop-filter:blur(20px) saturate(180%);backdrop-filter:blur(20px) saturate(180%);border-bottom:.5px solid var(--line2)}
+body #device.apple .lp-top,body #device.apple .ob-top{background:var(--mat);-webkit-backdrop-filter:blur(20px) saturate(180%);backdrop-filter:blur(20px) saturate(180%);border-bottom:.5px solid var(--line2)}
 body #device.apple .lp-hero{background:var(--panel);border:0;border-radius:22px;margin:16px 40px 0}
 body #device.apple .lp-hero h1{color:var(--ink);letter-spacing:-.03em}
 body #device.apple .lp-eye{border-radius:999px;background:var(--accent-soft);color:var(--accent)}
@@ -278,15 +278,15 @@ body #device.apple .cm-card{padding:var(--s4) var(--s5) var(--s4)}
 #device.apple .rstat span,#device.apple .pkg-st span,#device.apple .f-no,#device.apple .chartno,body #device.apple .cm-n,#device.apple .tl .blk .bt,#device.apple .tl .hr span{letter-spacing:.01em}
 /* 반투명 막대 위 글자는 회색 대신 진하게(§12 vibrancy) */
 #device.apple .tabbar.sidenav button{color:var(--ink);font-weight:550}
-#device.apple .top .sub{color:#3c3c43}
+#device.apple .top .sub{color:var(--sub)}
 
 /* §12 구분선 대신 스크롤 가장자리: 위 제목 줄·아래 버튼 줄의 1px 선을 빼고,
    내용이 그 밑으로 스크롤될 때만 가장자리가 살짝 흐려진다 (스크롤 위치로 움직이는 CSS, 안 되는 브라우저에서는 그냥 선 없음) */
 #device.apple .top,#device.apple .actbar{border:0}
 #device.apple .scroll::before,#device.apple .scroll::after{content:'';display:block;position:sticky;left:0;right:0;height:var(--s5);z-index:4;pointer-events:none;opacity:0}
-#device.apple .scroll::before{top:calc(-1 * var(--s4));margin:calc(-1 * var(--s4)) calc(-1 * var(--s4)) calc(-1 * var(--s1));background:linear-gradient(var(--device),rgba(242,242,247,0));
+#device.apple .scroll::before{top:calc(-1 * var(--s4));margin:calc(-1 * var(--s4)) calc(-1 * var(--s4)) calc(-1 * var(--s1));background:linear-gradient(var(--device),transparent);
   animation:ap-edge linear both;animation-timeline:scroll(self);animation-range:0 var(--s6)}
-#device.apple .scroll::after{bottom:calc(-1 * var(--s6));margin:calc(-1 * var(--s1)) calc(-1 * var(--s4)) calc(-1 * var(--s6));background:linear-gradient(rgba(242,242,247,0),var(--device));
+#device.apple .scroll::after{bottom:calc(-1 * var(--s6));margin:calc(-1 * var(--s1)) calc(-1 * var(--s4)) calc(-1 * var(--s6));background:linear-gradient(transparent,var(--device));
   opacity:1;animation:ap-edge-out linear both;animation-timeline:scroll(self);animation-range:calc(100% - var(--s6)) 100%}
 @keyframes ap-edge{to{opacity:1}}
 @keyframes ap-edge-out{to{opacity:0}}
@@ -294,6 +294,55 @@ body #device.apple .cm-card{padding:var(--s4) var(--s5) var(--s4)}
 
 /* §1 반응: 두 번 눌러 확대를 기다리는 지연(~300ms)을 없애 누르는 순간 바로 반응 */
 #device.apple button,#device.apple [data-act],#device.apple input,#device.apple select,#device.apple label{touch-action:manipulation}
+
+/* 설정 화면 (애플): 테두리 없는 둥근 목록, 고른 줄은 파란 면 + 흰 글자 (아이패드 설정 앱 옆 목록) */
+#device.apple .st-list,#device.apple .st-group{border:0;border-radius:var(--r3)}
+#device.apple .st-row,#device.apple .st-prof{border-radius:0;transition:background-color 150ms ease-out}
+#device.apple .st-row.on,#device.apple .st-prof.on{background:var(--accent)}
+#device.apple .st-row.on .st-tx b,#device.apple .st-prof.on .st-tx b,#device.apple .st-row.on .st-tx>span,#device.apple .st-prof.on .st-tx>span,#device.apple .st-row.on .st-chev,#device.apple .st-prof.on .st-chev{color:#fff}
+#device.apple .st-row.on+.st-row,#device.apple .st-row+.st-row.on{box-shadow:none}
+#device.apple .st-row+.st-row,#device.apple .st-item+.st-item{box-shadow:inset 54px 0 0 var(--panel),inset 0 .5px 0 var(--line2)}
+#device.apple .st-item+.st-item{box-shadow:inset 0 .5px 0 var(--line2)}
+#device.apple .st-ic{border-radius:7px}
+#device.apple .st-title{font-size:28px;letter-spacing:-.02em;line-height:1.2}
+#device.apple .st-gh{font-weight:500;letter-spacing:.01em;text-transform:none}
+#device.apple .st-row:active,#device.apple .st-prof:active,#device.apple .st-pick:active,#device.apple .st-seg button:active{transform:scale(.98)}
+#device.apple .st-pick,#device.apple .st-seg button{transition:transform 100ms ease-out}
+
+/* 설정은 종이 판 없이 회색 바탕 위에 흰 목록이 떠 있게 (아이패드 설정 앱) */
+#device.apple .gdoc.r-settings .f-paper{background:transparent;padding:0 0 var(--s4)}
+#device.apple .gdoc.r-settings .f-title{border-bottom:0;margin-bottom:var(--s3)}
+
+/* ---- 다크 모드 (설정 → 화면 → 화면 모드). 애플 시스템 색의 다크 값 ----
+   바탕은 검정, 판은 한 단계 밝은 회색(#1c1c1e), 위로 뜬 판은 한 단계 더(#2c2c2e). 색은 다크용으로 조금 밝게 */
+#device.apple.dark{
+  --device:#000000; --panel:#1c1c1e; --ink:#ffffff; --muted:#98989f; --faint:#636366; --sub:#d1d1d6;
+  --line:rgba(84,84,88,.5); --line2:rgba(84,84,88,.75); --soft:#2c2c2e;
+  --fill:rgba(118,118,128,.24); --fill2:rgba(118,118,128,.16);
+  --accent:#0a84ff; --accent-soft:rgba(10,132,255,.2);
+  --good:#30d158; --good-soft:rgba(48,209,88,.18); --warn:#ffb340; --warn-soft:rgba(255,159,10,.18);
+  --bad:#ff6961; --bad-soft:rgba(255,69,58,.2); --cond:#ff9f0a; --cond-soft:rgba(255,159,10,.18);
+  --live:#7d7aff; --live-soft:rgba(94,92,230,.24); --now:#ff453a;
+  --mat:rgba(28,28,30,.72); --ink-line:rgba(84,84,88,.75); --hd:transparent; --phd:transparent; --side:#1c1c1e;
+  --mus0:#3a3a3c; --musbase:#48484a; --musline:#1c1c1e;
+  --zebra:rgba(255,255,255,.035); --bar:#4e78b8;
+  --p1:#7fb0ff; --p1s:#1b2b47; --p2:#c39af2; --p2s:#2c2140; --p3:#ff8fab; --p3s:#3d1f29; --p4:#5fd197; --p4s:#15291e; --p5:#f5b24f; --p5s:#352710; --p6:#5cd0de; --p6s:#132e33;
+  color-scheme:dark;color:var(--ink)}
+#device.apple.dark .modal,#device.apple.dark .askbar{background:#2c2c2e}
+#device.apple.dark .btn:hover:not([disabled]){background:rgba(118,118,128,.32)}
+#device.apple.dark .btn.primary:hover:not([disabled]){background:#409cff}
+#device.apple.dark .toast{background:rgba(58,58,60,.9)}
+#device.apple.dark .overlay{background:rgba(0,0,0,.5)}
+#device.apple.dark .st-seg button.on,#device.apple.dark .au-tabs button.on{background:#636366}
+#device.apple.dark .st-sw i{box-shadow:0 2px 6px rgba(0,0,0,.4)}
+#device.apple.dark .st-sw:not(.on){background:rgba(120,120,128,.36)}
+body #device.apple.dark .lp-mrow.h{background:var(--soft)}
+body #device.apple.dark .ob-dots i{background:#3a3a3c}
+body #device.apple.dark .au-msg{background:var(--bad-soft);color:var(--bad)}
+body #device.apple.dark .au-msg.ok{background:var(--accent-soft);color:var(--accent)}
+body #device.apple.dark .lp-hero{background:var(--panel)}
+body #device.apple.dark .lp-mock{background:var(--panel);box-shadow:0 12px 40px rgba(0,0,0,.5)}
+#device.apple.dark img,#device.apple.dark .kbicon{filter:none}
 
 /* 움직임 줄이기: 커지기·미끄러지기·누름 축소를 빼고, 짧은 흐려짐(cross-fade)만 남긴다 (§14) */
 @media (prefers-reduced-motion:reduce){
@@ -304,7 +353,7 @@ body #device.apple .cm-card{padding:var(--s4) var(--s5) var(--s4)}
   #device.apple .scroll::before,#device.apple .scroll::after{animation:none}
 }
 @media (prefers-reduced-transparency:reduce){
-  #device.apple{--bar:#f9f9f9}
+  #device.apple{--mat:#f9f9f9}
   #device.apple .tabbar.sidenav,#device.apple .top,#device.apple .actbar,#device.apple .toast,#device.apple .askbar,body #device.apple .cm-card,body #device.apple .lp-top,body #device.apple .ob-top{-webkit-backdrop-filter:none;backdrop-filter:none}
   #device.apple .toast{background:#1c1c1e}
 }
