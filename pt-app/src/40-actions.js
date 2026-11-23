@@ -28,10 +28,10 @@ function sheetMotion(app,prevOv,hadToast){
   const ov=app.querySelector(':scope>.overlay');
   if(ov&&!prevOv){ov.classList.add('enter');const m=ov.querySelector('.modal');
     if(m&&UI.pt){const r=m.getBoundingClientRect(),k=r.width/m.offsetWidth||1;m.style.transformOrigin=`${Math.round((UI.pt[0]-r.left)/k)}px ${Math.round((UI.pt[1]-r.top)/k)}px`}}
-  if(!ov&&prevOv&&UI.look==='emr'){prevOv.classList.remove('enter');prevOv.classList.add('leave');prevOv.querySelectorAll('[data-act]').forEach(e=>e.removeAttribute('data-act'));prevOv.removeAttribute('data-act');app.appendChild(prevOv);setTimeout(()=>prevOv.remove(),240)}
+  if(!ov&&prevOv){prevOv.classList.remove('enter');prevOv.classList.add('leave');prevOv.querySelectorAll('[data-act]').forEach(e=>e.removeAttribute('data-act'));prevOv.removeAttribute('data-act');app.appendChild(prevOv);setTimeout(()=>prevOv.remove(),240)}
   const t=app.querySelector(':scope>.toast'); if(t&&!hadToast) t.classList.add('enter');
 }
-/* 다크 모드: 애플 디자인에서만. '자동'은 기기 설정(라이트·다크)을 따른다 */
+/* 다크 모드: 두 디자인 모두. '자동'은 기기 설정(라이트·다크)을 따른다 */
 const darkMQ=window.matchMedia?matchMedia('(prefers-color-scheme: dark)'):null;
 function isDark(){return (UI.theme==='dark'||(UI.theme==='auto'&&!!darkMQ&&darkMQ.matches))}
 let toastT=null;
