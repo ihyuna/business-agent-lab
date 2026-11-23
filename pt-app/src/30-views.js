@@ -149,7 +149,7 @@ V.members=()=>{
   const rows=S.members.map(m=>{const u=upcoming(m.id);const l=lastSession(m);return `<div class="li click" data-act="go" data-to="member" data-mid="${m.id}">
       <div style="flex:1;min-width:0"><b>${esc(m.code)}</b> <span class="muted small">${m.goals[0]?esc(m.goals[0].text):''}</span>
       <div class="tiny muted">다음 PT ${u?mdw(u.date)+' '+esc(splitName(u)):'없음'} · 지난 수업 ${l?md(l.date)+' '+esc(splitName(l)):'없음'} · 기록 ${completed(m.id).length}회</div></div>${openCautions(m).length?`<span class="tag warn">주의 ${openCautions(m).length}</span>`:''}<span class="faint">›</span></div>`}).join('');
-  if(UI.look==='chart') return topBar('회원',`${S.members.length}명 · ${WEBAPP?'이 기기에 저장된 기록':'트레이너 수첩 기록으로 채운 프로토타입'}`,btn('기록 찾기','go',{to:'search'})+btn('설정','go',{to:'settings'})+btn('+ 회원','newMember'),{noBack:true})+
+  if(chartLayout()) return topBar('회원',`${S.members.length}명 · ${WEBAPP?'이 기기에 저장된 기록':'트레이너 수첩 기록으로 채운 프로토타입'}`,btn('기록 찾기','go',{to:'search'})+btn('설정','go',{to:'settings'})+btn('+ 회원','newMember'),{noBack:true})+
    `<div class="scroll" data-sk="main">${membersDoc()}</div>`+tabBar('members');
   return topBar('회원',`${S.members.length}명 · ${WEBAPP?'이 기기에 저장된 기록':'트레이너 수첩 기록으로 채운 프로토타입'}`,btn('기록 찾기','go',{to:'search'})+btn('설정','go',{to:'settings'})+btn('+ 회원','newMember'),{noBack:true})+
    `<div class="scroll" data-sk="main"><div class="card"><div class="list">${rows}</div></div>
@@ -269,7 +269,7 @@ V.member=r=>{
   const mainOf=s=>{const x=s.exercises.find(e=>e.status==='done'&&e.role==='메인')||s.exercises.find(e=>e.status==='done');const tt=x&&topSet(x);return x?`${esc(EX(x.exId).name)}${tt?` <b class="num">${ftop(tt,x.exId)}</b>`:''}`:'—'};
   const mt=null;
   const notes=m.notes.filter(n=>['general','lifestyle','diet','self_train','personality'].includes(n.kind));
-  if(UI.look==='chart') return topBar(esc(m.code),'회원 기록부',
+  if(chartLayout()) return topBar(esc(m.code),'회원 기록부',
       btn('훈련 방향 바꾸기','modal',{type:'block',mid:m.id})+btn('수업 기록','go',{to:'history',mid:m.id})+btn('루틴 틀','go',{to:'templates',mid:m.id})+btn('회원 정보','go',{to:'memberEdit',mid:m.id}))+memberDoc({m,u,done,last,d30,all,t,next,mt,notes});
   return topBar(esc(m.code),'회원 한눈에',
       btn('훈련 방향 바꾸기','modal',{type:'block',mid:m.id})+btn('수업 기록','go',{to:'history',mid:m.id})+btn('루틴 틀','go',{to:'templates',mid:m.id})+btn('회원 정보','go',{to:'memberEdit',mid:m.id}))+pbar+

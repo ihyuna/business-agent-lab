@@ -1066,3 +1066,5 @@ const OTHERS_LATER={
     ['ohp','메인','30x12x3',{origin:'added',raw:'OHP. 30kg × 12 × 3'}],
     ['incdb','보조','25x15',{origin:'added',raw:'인클라인 덤벨 25/25lb × 15'}]]}]
 };
+// 기록부와 애플 디자인은 화면 구성(위치·칸)이 같고 겉모양만 다르다 (2026-11-23)
+function chartLayout(){return UI.look==='chart'||UI.look==='emr'}
