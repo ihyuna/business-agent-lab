@@ -33,7 +33,7 @@ function sheetMotion(app,prevOv,hadToast){
 }
 /* 다크 모드: 애플 디자인에서만. '자동'은 기기 설정(라이트·다크)을 따른다 */
 const darkMQ=window.matchMedia?matchMedia('(prefers-color-scheme: dark)'):null;
-function isDark(){return UI.look==='emr'&&(UI.theme==='dark'||(UI.theme==='auto'&&!!darkMQ&&darkMQ.matches))}
+function isDark(){return (UI.theme==='dark'||(UI.theme==='auto'&&!!darkMQ&&darkMQ.matches))}
 let toastT=null;
 function toast(msg){UI.toast=msg;render();clearTimeout(toastT);toastT=setTimeout(()=>{UI.toast=null;document.querySelector('#app .toast')?.remove()},2600)}
 function go(name,params){

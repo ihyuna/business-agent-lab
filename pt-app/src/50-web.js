@@ -203,19 +203,19 @@ function webSettingsSections(){
   const lb=S.settings.lastBackup; const P=S.profile||{}; const nm=P.name||'트레이너';
   const cloud=AUTH.mode==='cloud';
   return {
-   account:{ic:['user','#8e8e93'],t:'내 계정',sub:'',
+   account:{ic:['user'],t:'내 계정',sub:'',
     head:on=>`<button class="st-prof${on?' on':''}" data-act="setSec" data-v="account"><span class="st-av">${esc(nm.trim().slice(0,1))}</span><span class="st-tx"><b>${esc(nm)}</b><span>${esc(AUTH.user?AUTH.user.email:'')}</span></span><span class="st-chev">›</span></button>`,
     body:()=>`<div class="st-hero"><span class="st-av big">${esc(nm.trim().slice(0,1))}</span><b>${esc(nm)}</b><span>${esc(AUTH.user?AUTH.user.email:'')} · ${cloud?'클라우드 계정':'이 기기 계정'}</span>${syncHTML()}</div>`+
      stGroup('이름과 센터',`<div class="st-pad"><div class="row" style="flex-wrap:nowrap"><input class="ci" data-d="pf-name" value="${esc(P.name||'')}" placeholder="이름" style="width:160px"><input class="ci" data-d="pf-gym" value="${esc(P.gym||'')}" placeholder="센터 이름 (선택)" style="flex:1">${btn('저장','saveProfile',null,'small primary')}</div></div>`,'이름은 경과기록지와 회원 안내서의 서명 줄에 들어가요.')+
-     (cloud&&AUTH.sync!=='saved'?stGroup('',stItem(stIcon('archive','#007aff'),'지금 저장','저장이 밀려 있으면 눌러서 바로 올려요.',btn('지금 저장','syncNow',null,'small'))):'')},
-   guide:{ic:['guide','#5ac8fa'],t:'화면 안내',sub:'처음 쓸 때 설명 다시 보기',body:()=>
-     stGroup('',stItem(stIcon('guide','#5ac8fa'),'화면 안내 다시 보기','화면마다 처음 열 때 나오는 설명을 다시 봐요. 누르면 오늘 화면부터 시작해요.',btn('다시 보기','replayCoach',null,'small')))},
-   data:{ic:['archive','#30b0c7'],t:'기록 보관',sub:`백업 · 지금 ${storedKB()}KB`,body:()=>
-     stGroup('',stItem(stIcon('archive','#30b0c7'),'백업 파일 내려받기',`마지막 백업: ${lb?esc(lb.slice(0,10)):'아직 없음'}`,btn('내려받기','exportData',null,'small primary'))+
-       stItem(stIcon('archive','#8e8e93'),'백업 파일 불러오기','짐노트에서 받은 .json 파일로 기록을 바꿔요.',`<label class="btn small">불러오기<input type="file" accept="application/json,.json" data-on="importFile" style="display:none"></label>${before?btn('불러오기 전으로','undoImport',null,'small ghost'):''}`),
+     (cloud&&AUTH.sync!=='saved'?stGroup('',stItem(stIcon('cloud'),'지금 저장','저장이 밀려 있으면 눌러서 바로 올려요.',btn('지금 저장','syncNow',null,'small'))):'')},
+   guide:{ic:['guide'],t:'화면 안내',sub:'처음 쓸 때 설명 다시 보기',body:()=>
+     stGroup('',stItem(stIcon('guide'),'화면 안내 다시 보기','화면마다 처음 열 때 나오는 설명을 다시 봐요. 누르면 오늘 화면부터 시작해요.',btn('다시 보기','replayCoach',null,'small')))},
+   data:{ic:['archive'],t:'기록 보관',sub:`백업 · 지금 ${storedKB()}KB`,body:()=>
+     stGroup('',stItem(stIcon('download'),'백업 파일 내려받기',`마지막 백업: ${lb?esc(lb.slice(0,10)):'아직 없음'}`,btn('내려받기','exportData',null,'small primary'))+
+       stItem(stIcon('upload'),'백업 파일 불러오기','짐노트에서 받은 .json 파일로 기록을 바꿔요.',`<label class="btn small">불러오기<input type="file" accept="application/json,.json" data-on="importFile" style="display:none"></label>${before?btn('불러오기 전으로','undoImport',null,'small ghost'):''}`),
        '',cloud?'기록은 내 계정에만 저장돼요. 다른 트레이너는 볼 수 없어요.':'기록은 이 기기의 이 브라우저에만, 이 계정 몫으로 따로 저장돼요. 브라우저 기록을 지우거나 기기를 바꾸면 기록이 사라지니, 가끔 백업 파일을 받아 두세요.')+
-     stGroup('',stItem(stIcon('trash','#ff3b30'),'내 기록 모두 지우기','이 계정의 회원과 수업 기록을 모두 지우고 처음 설정으로 가요. 되돌릴 수 없어요.',UI.confirmReset?`${btn('지우기','reset',null,'small danger')}${btn('아니요','confirmReset',{v:0},'small')}`:btn('지우기','confirmReset',{v:1},'small danger'),'danger'))},
-   about:{ic:['info','#8e8e93'],t:'앱 정보',sub:`짐노트 ${APP_VER}`,body:()=>
+     stGroup('',stItem(stIcon('trash','bad'),'내 기록 모두 지우기','이 계정의 회원과 수업 기록을 모두 지우고 처음 설정으로 가요. 되돌릴 수 없어요.',UI.confirmReset?`${btn('지우기','reset',null,'small danger')}${btn('아니요','confirmReset',{v:0},'small')}`:btn('지우기','confirmReset',{v:1},'small danger'),'danger'))},
+   about:{ic:['info'],t:'앱 정보',sub:`짐노트 ${APP_VER}`,body:()=>
      stGroup('',stItem('','버전',`짐노트 ${APP_VER}`)+stItem('','화면 기준','아이패드 9세대 (1080 × 810)')+stItem('','인터넷 없이','한 번 연 뒤에는 인터넷 없이도 열려요'))},
    logout:{t:'로그아웃',head:()=>`<button class="st-row st-out" data-act="logout"><span class="st-tx"><b>로그아웃</b></span></button>`}
   };

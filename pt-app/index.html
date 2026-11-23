@@ -549,12 +549,12 @@ tr.click:hover td{background:var(--accent-soft)}
    칸 머리는 양식 이름표처럼, 표는 모든 칸에 선, 강조는 남색 잉크, 경고는 빨간 도장색 */
 #device.chart{--device:#f3f6fb; --panel:#ffffff; --ink:#1a2233; --muted:#5b6678; --faint:#98a2b3;
   --line:#e1e7f0; --line2:#c9d4e4; --soft:#f6f8fc; --hd:#edf3fe; --phd:#edf3fe; --accent:#1f66f2; --accent-soft:#eaf1ff; --accent-ink:#ffffff;
-  --rule:#e6ecf5; --ink-line:#9db0cf; --stamp:#e5484d;
+  --rule:#e6ecf5; --ink-line:#9db0cf; --stamp:#e5484d; --navy:#173a8a;
   border-radius:4px;background:var(--device)}
 /* 2026-11-17 색 다시: 누런 종이색이 탁하다는 의견으로 흰 종이 + 맑은 파랑. 양식 선·칸 구성은 그대로 */
-#device.chart .f-tt,#device.chart .f-cap{color:#173a8a}
+#device.chart .f-tt,#device.chart .f-cap{color:var(--navy,#173a8a)}
 #device.chart .f-title{border-bottom-color:var(--accent)}
-#device.chart .f-lb{color:#173a8a}
+#device.chart .f-lb{color:var(--navy,#173a8a)}
 #device.chart .f-paper{border-color:var(--ink-line);box-shadow:0 2px 10px rgba(31,102,242,.06)}
 #device.chart .f-no{border-color:var(--accent);color:var(--accent)}
 #device.chart .tabbar.sidenav,#device.chart .actbar,#device.chart .pbar{border-color:var(--ink-line)}
@@ -681,7 +681,7 @@ body.full #app .hl{outline:0!important;box-shadow:none!important;animation:none!
 .ld-sub{margin:2px 0 8px;color:var(--muted);font-size:15px;line-height:1.55;max-width:480px}
 .ld-mock{max-width:470px;border:1px solid var(--ink-line,var(--line));background:var(--panel);box-shadow:0 12px 32px rgba(31,102,242,.10),0 2px 6px rgba(26,34,51,.06);border-radius:6px;overflow:hidden}
 .ld-mock-hd{display:flex;align-items:center;justify-content:space-between;padding:9px 14px;background:var(--hd,var(--accent-soft));border-bottom:1px solid var(--ink-line,var(--line))}
-.ld-mock-t{font-weight:700;font-size:13px;color:#173a8a}
+.ld-mock-t{font-weight:700;font-size:13px;color:var(--navy,#173a8a)}
 .ld-mock-no{font-size:11px;font-weight:700;color:var(--accent);border:1px solid var(--accent);padding:0 6px;border-radius:3px}
 .ld-mock-id{display:flex;gap:16px;padding:8px 14px;font-size:12px;color:var(--muted);border-bottom:1px solid var(--line)}
 .ld-mock-id b{color:var(--ink)}
@@ -714,7 +714,7 @@ body.full #app .hl{outline:0!important;box-shadow:none!important;animation:none!
 .gdoc .f-paper>.card,.gdoc .f-paper .col>.card,.gdoc .f-paper .grid2 .card{border-radius:0!important}
 /* 카드 제목 = 왼쪽 라벨 칸 (회원 진료기록부의 fsec와 같은 모양) */
 #device.chart .gdoc:not(.r-settings) .card:has(>h2:first-child){display:grid;grid-template-columns:62px minmax(0,1fr);padding:0!important;margin-top:-1px}
-#device.chart .gdoc:not(.r-settings) .card:has(>h2:first-child)>h2:first-child{grid-column:1;grid-row:1/span 60;margin:0!important;padding:6px 2px!important;border:0!important;border-right:1px solid var(--ink-line)!important;border-radius:0!important;background:var(--hd)!important;display:flex!important;flex-direction:column;justify-content:center;align-items:center;gap:2px;text-align:center;font-size:12px!important;font-weight:800;line-height:1.3;color:#173a8a}
+#device.chart .gdoc:not(.r-settings) .card:has(>h2:first-child)>h2:first-child{grid-column:1;grid-row:1/span 60;margin:0!important;padding:6px 2px!important;border:0!important;border-right:1px solid var(--ink-line)!important;border-radius:0!important;background:var(--hd)!important;display:flex!important;flex-direction:column;justify-content:center;align-items:center;gap:2px;text-align:center;font-size:12px!important;font-weight:800;line-height:1.3;color:var(--navy,#173a8a)}
 #device.chart .gdoc:not(.r-settings) .card:has(>h2:first-child)>h2:first-child::before{display:none!important}
 #device.chart .gdoc:not(.r-settings) .card:has(>h2:first-child)>h2:first-child>*{font-size:10.5px;font-weight:600;color:var(--muted);margin:0}
 #device.chart .gdoc:not(.r-settings) .card:has(>h2:first-child)>:not(h2:first-child){grid-column:2;margin-left:10px;margin-right:10px;max-width:calc(100% - 20px);box-sizing:border-box}
@@ -790,8 +790,10 @@ body.full #app .hl{outline:0!important;box-shadow:none!important;animation:none!
 .st-row .st-tx>span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .st-chev{color:var(--faint);font-size:18px;line-height:1}
 .st-out{justify-content:center}.st-out .st-tx{align-items:center}.st-out b{color:var(--bad)}
-.st-ic{flex:none;display:inline-grid;place-items:center;width:30px;height:30px;border-radius:8px;background:var(--ic);color:#fff}
-.st-ic svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.st-ic{flex:none;display:inline-grid;place-items:center;width:30px;height:30px;border-radius:8px;background:var(--accent-soft);color:var(--accent)}
+.st-ic.bad{background:var(--bad-soft);color:var(--bad)}
+.st-ic svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.st-row.on .st-ic{background:var(--accent);color:var(--accent-ink)}
 .st-av{flex:none;display:inline-grid;place-items:center;width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#7aa7ff,#1f66f2);color:#fff;font-weight:700;font-size:18px}
 .st-av.big{width:72px;height:72px;font-size:30px}
 .st-prof{padding:12px}
@@ -823,7 +825,6 @@ body.full #app .hl{outline:0!important;box-shadow:none!important;animation:none!
 .st-seg button.on{background:var(--panel);box-shadow:0 1px 4px rgba(0,0,0,.12);font-weight:600}
 /* 미리보기 그림으로 고르기 */
 .st-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px;padding:16px}
-.st-cards.off{opacity:.45}
 .st-pick{display:flex;flex-direction:column;align-items:center;gap:4px;border:0;background:none;padding:0;font:inherit;color:var(--ink)}
 .st-pick b{font-size:13.5px;font-weight:600;margin-top:6px}.st-pick>span{font-size:11.5px;color:var(--muted)}
 .st-pick .lp-pv,.st-pick .th-pv{outline:2px solid transparent;outline-offset:3px;transition:outline-color 150ms ease-out}
@@ -844,10 +845,21 @@ body.full #app .hl{outline:0!important;box-shadow:none!important;animation:none!
 .th-auto{background:linear-gradient(90deg,#f2f2f7 50%,#000 50%)}.th-auto i{height:16px;border-radius:5px;background:linear-gradient(90deg,#fff 50%,#1c1c1e 50%)}.th-auto i.s{width:55%;background:#007aff}
 /* 기록부 모양: 각진 칸과 잉크 선 */
 #device.chart:not(.apple) .st-list,#device.chart:not(.apple) .st-group{border-radius:0;border-color:var(--ink-line)}
-#device.chart:not(.apple) .st-ic{border-radius:2px}
-#device.chart:not(.apple) .st-gh{color:#173a8a;font-weight:800;letter-spacing:.04em}
-#device.chart:not(.apple) .st-title{color:#173a8a}
+#device.chart:not(.apple) .st-ic{border-radius:2px;background:var(--hd);color:var(--navy);box-shadow:inset 0 0 0 1px var(--ink-line)}
+#device.chart:not(.apple) .st-ic.bad{background:var(--bad-soft);color:var(--stamp);box-shadow:inset 0 0 0 1px currentColor}
+#device.chart:not(.apple) .st-row.on .st-ic{background:var(--accent);color:var(--accent-ink);box-shadow:none}
+#device.chart:not(.apple) .st-gh{color:var(--navy,#173a8a);font-weight:800;letter-spacing:.04em}
+#device.chart:not(.apple) .st-title{color:var(--navy,#173a8a)}
 #device.chart:not(.apple) .st-seg,#device.chart:not(.apple) .st-seg button,#device.chart:not(.apple) .lp-pv,#device.chart:not(.apple) .th-pv{border-radius:2px}
+/* 기록부에서는 화면 모드 그림도 종이 기록부 색으로 */
+#device.chart:not(.apple) .th-light{background:#f3f6fb}
+#device.chart:not(.apple) .th-light i{background:#fff;border-radius:0;box-shadow:inset 0 0 0 1px #9db0cf}
+#device.chart:not(.apple) .th-dark{background:#0b111c}
+#device.chart:not(.apple) .th-dark i{background:#121a28;border-radius:0;box-shadow:inset 0 0 0 1px #3a4e70}
+#device.chart:not(.apple) .th-auto{background:linear-gradient(90deg,#f3f6fb 50%,#0b111c 50%)}
+#device.chart:not(.apple) .th-auto i{border-radius:0;background:linear-gradient(90deg,#fff 50%,#121a28 50%);box-shadow:inset 0 0 0 1px #6f86ad}
+#device.chart:not(.apple) :is(.th-light,.th-dark,.th-auto) i.s{background:#1f66f2;box-shadow:none}
+#device.chart:not(.apple) .th-dark i.s{background:#5b9bff}
 /* ---- 애플 디자인 (2026-11-23) ----
    설정 → 화면 디자인 → '애플 디자인'(UI.look 'emr')을 고르면 #device에 .apple이 붙는다.
    원칙: emilkowalski/skills 'apple-design' 스킬(MIT)에서 가져옴.
@@ -1153,7 +1165,9 @@ body #device.apple .cm-card{padding:var(--s4) var(--s5) var(--s4)}
 #device.apple .st-row.on+.st-row,#device.apple .st-row+.st-row.on{box-shadow:none}
 #device.apple .st-row+.st-row,#device.apple .st-item+.st-item{box-shadow:inset 54px 0 0 var(--panel),inset 0 .5px 0 var(--line2)}
 #device.apple .st-item+.st-item{box-shadow:inset 0 .5px 0 var(--line2)}
-#device.apple .st-ic{border-radius:7px}
+#device.apple .st-ic{border-radius:7px;background:var(--fill);color:var(--accent)}
+#device.apple .st-ic.bad{background:var(--bad-soft);color:var(--bad)}
+#device.apple .st-row.on .st-ic,#device.apple .st-prof.on .st-ic{background:rgba(255,255,255,.22);color:#fff}
 #device.apple .st-title{font-size:28px;letter-spacing:-.02em;line-height:1.2}
 #device.apple .st-gh{font-weight:500;letter-spacing:.01em;text-transform:none}
 #device.apple .st-row:active,#device.apple .st-prof:active,#device.apple .st-pick:active,#device.apple .st-seg button:active{transform:scale(.98)}
@@ -1213,6 +1227,49 @@ body #device.apple.dark .lp-mock{background:var(--panel);box-shadow:0 12px 40px 
 }
 #device.apple .card.fold{padding:0}
 #device.apple .card.fold>.foldhead h2{font-size:15px;font-weight:650}
+/* ---- 기록부 다크 모드 (2026-11-23): 밤에 보는 기록부 ----
+   양식 선·칸·이중 밑줄은 그대로 두고 색만 바꾼다. 종이는 짙은 남색, 글자는 밝은 회청색,
+   칸 머리는 한 단계 밝은 남색, 제목 잉크(남색)는 밝은 하늘색, 도장 빨강은 조금 밝게 */
+#device.chart.dark:not(.apple){
+  --device:#0b111c; --panel:#121a28; --ink:#e3e8f1; --muted:#9aa5b8; --faint:#6a768b;
+  --line:#222d40; --line2:#2d3a52; --soft:#182233; --hd:#17233a; --phd:#17233a;
+  --accent:#5b9bff; --accent-soft:#16284a; --accent-ink:#06101f;
+  --rule:#1a2436; --ink-line:#3a4e70; --stamp:#ff6b70; --navy:#a9c4f5;
+  --side:#0f1622; --zebra:#141d2c; --bar:#4e78b8; --now:#ff6b70;
+  --good:#4cc787; --good-soft:#15291e; --warn:#f0b04a; --warn-soft:#33270f; --bad:#ff7d80; --bad-soft:#3a1d1f;
+  --cond:#ff9a52; --cond-soft:#3d2817; --live:#b39dff; --live-soft:#2c2547;
+  --p1:#7fb0ff; --p1s:#1b2b47; --p2:#c39af2; --p2s:#2c2140; --p3:#ff8fab; --p3s:#3d1f29; --p4:#5fd197; --p4s:#15291e; --p5:#f5b24f; --p5s:#352710; --p6:#5cd0de; --p6s:#132e33;
+  color-scheme:dark;color:var(--ink)}
+#device.chart.dark:not(.apple) .f-paper{box-shadow:0 2px 14px rgba(0,0,0,.35)}
+#device.chart.dark:not(.apple) .btn{background:var(--soft);color:var(--ink)}
+#device.chart.dark:not(.apple) .btn.primary{background:var(--accent);color:var(--accent-ink)}
+#device.chart.dark:not(.apple) .btn.danger{color:var(--bad)}
+#device.chart.dark:not(.apple) .btn:hover:not([disabled]){background:var(--hd)}
+#device.chart.dark:not(.apple) .btn.primary:hover:not([disabled]){background:#7aaeff}
+#device.chart.dark:not(.apple) .modal,#device.chart.dark:not(.apple) .askbar{background:var(--panel);color:var(--ink)}
+#device.chart.dark:not(.apple) .toast{background:#24324a;color:var(--ink)}
+#device.chart.dark:not(.apple) .overlay{background:rgba(0,0,0,.55)}
+#device.chart.dark:not(.apple) .up{color:var(--good)}
+#device.chart.dark:not(.apple) .st-sw:not(.on){background:rgba(120,130,150,.32)}
+#device.chart.dark:not(.apple) .st-sw i{box-shadow:0 2px 6px rgba(0,0,0,.4)}
+#device.chart.dark:not(.apple) img,#device.chart.dark:not(.apple) .kbicon{filter:none}
+/* 웹앱 처음 화면·로그인·처음 설정·화면 안내 (web.css 의 흰 종이 고정색을 다크로) */
+body #device.chart.dark:not(.apple) .lp,body #device.chart.dark:not(.apple) .lg,body #device.chart.dark:not(.apple) .ob{background:var(--device)!important}
+body #device.chart.dark:not(.apple) :is(.lp-top,.lp-hero,.lp-f,.lp-st,.lp-trust,.lp-mock,.lg-col,.ob-top,.ob-body,.ob-opt,.cm-card,.lg-out,.lp-ghost,.ld-card,.ld-mock){background:var(--panel);border-color:var(--ink-line);color:var(--ink);box-shadow:none}
+body #device.chart.dark:not(.apple) .cm-card{box-shadow:0 12px 32px rgba(0,0,0,.55)}
+body #device.chart.dark:not(.apple) :is(.lp-eye,.lp-f h3,.lp-mh,.au-tabs,.cm-card .cm-n,.ob-opt:hover,.ob-opt:focus){background:var(--hd);border-color:var(--line2)}
+body #device.chart.dark:not(.apple) .au-tabs button.on{background:var(--panel);color:var(--ink)}
+body #device.chart.dark:not(.apple) :is(.lp-mrow,.lp-f h3,.lp-mh){border-color:var(--line2)}
+body #device.chart.dark:not(.apple) .lp-mh i{background:var(--line2)}
+body #device.chart.dark:not(.apple) :is(.lg-f input,.ld-f input){background:var(--panel);color:var(--ink);border-color:var(--line2)}
+body #device.chart.dark:not(.apple) .lg-f>span{background:var(--panel)}
+body #device.chart.dark:not(.apple) :is(.lp-cta,.lp-n,.lg-go,.cm-next){background:var(--accent);color:var(--accent-ink)}
+body #device.chart.dark:not(.apple) .lp-hero{border-bottom-color:var(--accent)}
+body #device.chart.dark:not(.apple) :is(.lp-flow h2,.ob h2,.lg-logo){border-bottom-color:var(--accent)}
+body #device.chart.dark:not(.apple) .lp-mrow.h{background:var(--soft)}
+body #device.chart.dark:not(.apple) :is(.lp-mh span,.lp-st b){color:var(--navy)}
+body #device.chart.dark:not(.apple) .au-msg{background:var(--bad-soft);color:var(--bad)}
+body #device.chart.dark:not(.apple) .au-msg.ok{background:var(--accent-soft);color:var(--navy)}
 </style>
 <script>
 (()=>{
@@ -3517,19 +3574,25 @@ V.search=r=>{
 /* ---------- 설정 ---------- */
 /* ---------- 설정: 아이패드 설정 앱처럼 왼쪽 목록 + 오른쪽 내용 (2026-11-23) ----------
    왼쪽에서 묶음을 고르면 오른쪽에 그 묶음만 보인다. 기록부·애플 디자인 둘 다 같은 구성이고 모양만 다르다. */
+/* 아이콘 (2026-11-23 다시): 알록달록한 색 타일 대신 한 가지 색 선 아이콘. 24칸 격자, 선 굵기 1.6, 둥근 끝.
+   평소에는 차분한 연한 바탕 + 강조색 선, 지우기처럼 되돌릴 수 없는 것만 빨강 */
 const ST_ICON={
-  user:'<circle cx="12" cy="8" r="4"/><path d="M4 20c1.5-4 4.5-6 8-6s6.5 2 8 6"/>',
-  display:'<circle cx="12" cy="12" r="8"/><path d="M12 4v16" /><path d="M12 4a8 8 0 0 1 0 16z" fill="currentColor"/>',
-  guide:'<circle cx="12" cy="12" r="8.5"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.7.3-1 .8-1 1.5v.4"/><circle cx="12" cy="17" r=".6" fill="currentColor"/>',
-  timer:'<circle cx="12" cy="13" r="7.5"/><path d="M12 9v4l2.5 2"/><path d="M9.5 3h5"/>',
-  sliders:'<path d="M5 7h9M18 7h1M5 17h3M12 17h7"/><circle cx="16" cy="7" r="2"/><circle cx="10" cy="17" r="2"/>',
-  dumbbell:'<path d="M4 9v6M7 7v10M17 7v10M20 9v6M7 12h10"/>',
-  archive:'<rect x="3.5" y="5" width="17" height="4" rx="1"/><path d="M5 9v9a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V9M10 13h4"/>',
-  info:'<circle cx="12" cy="12" r="8.5"/><path d="M12 11v5"/><circle cx="12" cy="8" r=".6" fill="currentColor"/>',
-  trash:'<path d="M5 7h14M10 7V5h4v2M7 7l1 12h8l1-12"/>',
-  out:'<path d="M14 5h4a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1h-4M10 8l-4 4 4 4M6 12h10"/>',
-  play:'<path d="M8 6l10 6-10 6z"/>'};
-function stIcon(k,c){return `<span class="st-ic" style="--ic:${c}"><svg viewBox="0 0 24 24" aria-hidden="true">${ST_ICON[k]||''}</svg></span>`}
+  user:'<circle cx="12" cy="8.5" r="3.5"/><path d="M5 19.5c1.3-3.2 3.9-4.9 7-4.9s5.7 1.7 7 4.9"/>',
+  display:'<rect x="5" y="3" width="14" height="18" rx="2.5"/><path d="M10.5 18h3"/>',
+  guide:'<path d="M12 3.5l1.6 4.9 4.9 1.6-4.9 1.6L12 16.5l-1.6-4.9L5.5 10l4.9-1.6z"/><path d="M18 16.5l.6 1.9 1.9.6-1.9.6-.6 1.9-.6-1.9-1.9-.6 1.9-.6z"/>',
+  timer:'<circle cx="12" cy="13.5" r="7"/><path d="M12 10v3.5l2.2 1.6M10 3.5h4M18.2 6.8l1.3-1.3"/>',
+  sliders:'<path d="M4 7h10M18 7h2M4 17h2M10 17h10"/><circle cx="16" cy="7" r="2"/><circle cx="8" cy="17" r="2"/>',
+  dumbbell:'<rect x="5" y="7" width="3" height="10" rx="1"/><rect x="16" y="7" width="3" height="10" rx="1"/><path d="M2.5 10v4M21.5 10v4M8 12h8"/>',
+  archive:'<rect x="3.5" y="4.5" width="17" height="4.5" rx="1.2"/><path d="M5 9v9.5c0 .6.4 1 1 1h12c.6 0 1-.4 1-1V9M10 13h4"/>',
+  download:'<path d="M12 4v11M7.5 10.5L12 15l4.5-4.5M5 19.5h14"/>',
+  upload:'<path d="M12 15V4M7.5 8.5L12 4l4.5 4.5M5 19.5h14"/>',
+  cloud:'<path d="M7 18.5a4 4 0 0 1-.6-8 5.5 5.5 0 0 1 10.6-1.3A4.5 4.5 0 0 1 17 18.5z"/>',
+  info:'<circle cx="12" cy="12" r="8.5"/><path d="M12 11v5"/><circle cx="12" cy="8" r=".7" fill="currentColor"/>',
+  trash:'<path d="M4.5 7h15M9.5 7V4.8c0-.4.3-.8.8-.8h3.4c.5 0 .8.4.8.8V7M6.5 7l.9 12.2c0 .5.5.8 1 .8h7.2c.5 0 1-.3 1-.8L17.5 7M10 11v5.5M14 11v5.5"/>',
+  out:'<path d="M14 4.5h3.5c.8 0 1.5.7 1.5 1.5v12c0 .8-.7 1.5-1.5 1.5H14M10 8l-4 4 4 4M6 12h10"/>',
+  eye:'<path d="M2.5 12s3.5-6.5 9.5-6.5S21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z"/><circle cx="12" cy="12" r="2.8"/>',
+  play:'<path d="M8 5.5v13l10.5-6.5z"/>'};
+function stIcon(k,tone){return `<span class="st-ic${tone?' '+tone:''}"><svg viewBox="0 0 24 24" aria-hidden="true">${ST_ICON[k]||''}</svg></span>`}
 function stSwitch(on,act,extra){return `<button class="st-sw${on?' on':''}" role="switch" aria-checked="${on?'true':'false'}" data-act="${act}" data-v="${on?'0':'1'}"${extra||''}><i></i></button>`}
 function stSeg(opts,cur,act){return `<div class="st-seg" role="radiogroup">${opts.map(([v,l])=>`<button class="${v===cur?'on':''}" role="radio" aria-checked="${v===cur}" data-act="${act}" data-v="${v}">${l}</button>`).join('')}</div>`}
 function stItem(ic,title,desc,ctrl,cls){return `<div class="st-item ${cls||''}">${ic||''}<div class="st-tx"><b>${title}</b>${desc?`<span>${desc}</span>`:''}</div>${ctrl?`<div class="st-ctl">${ctrl}</div>`:''}</div>`}
@@ -3544,23 +3607,22 @@ function settingsSections(){
   const R=S.settings.roles;
   const roleRows=ROLES.map(k=>{const v=R[k];const f=(n,w)=>bIn('roleVal',v[n],{role:k,f:n},{w:w||52,im:'numeric',cls:'num'});return `<tr><td>${k}</td><td>${f('rmin')}~${f('rmax')}</td><td>${f('target')}</td><td>${f('rir')}</td><td>${f('sets')}</td><td>${f('rest',60)}</td></tr>`}).join('');
   const exRows=Object.entries(S.exercises).map(([id,e])=>`<tr><td>${bIn('exName',e.name,{id},{w:190})}</td><td>${bSel('exPart',pairs(['하체','가슴','등','어깨','팔','복근','전신','기타']),e.part,{id},{w:80})}</td><td>${bSel('exUnit',[['','(없음)'],['kg','kg'],['lb','lb']],e.unit,{id},{w:80})}</td><td>${bIn('exInc',e.inc,{id},{w:56,im:'decimal',cls:'num'})}</td><td><input type="checkbox" data-act="exSide" data-id="${id}"${e.side?' checked':''} aria-label="한쪽 무게"></td></tr>`).join('');
-  const apple=UI.look==='emr';
   const sec={};
-  sec.display={ic:['display','#007aff'],t:'화면',sub:'디자인 · 다크 모드',body:()=>
+  sec.display={ic:['display'],t:'화면',sub:'디자인 · 다크 모드',body:()=>
     stGroup('디자인',`<div class="st-cards">${LOOKS.map(([k,l])=>`<button class="st-pick${UI.look===k?' on':''}" data-act="setLook" data-v="${k}">${lookPreview(k)}<b>${l}</b><span>${k==='chart'?'종이 기록부 느낌':'아이패드 기본 앱 느낌'}</span></button>`).join('')}</div>`,'기록은 같고 모양만 바뀌어요. 화면 구성과 위치는 둘 다 같아요.')+
-    stGroup('화면 모드',`<div class="st-cards${apple?'':' off'}">${THEMES.map(([k,l])=>`<button class="st-pick${(UI.theme||'light')===k?' on':''}" data-act="setTheme" data-v="${k}"${apple?'':' disabled'}>${themePreview(k)}<b>${l}</b></button>`).join('')}</div>`,apple?'자동은 아이패드 설정(라이트·다크)을 따라가요.':'다크 모드는 애플 디자인에서 쓸 수 있어요.')};
-  sec.class={ic:['timer','#34c759'],t:'수업',sub:'쉬는 시간 · 숫자 채우기',body:()=>
-    stGroup('',stItem(stIcon('timer','#ff9500'),'쉬는 시간 타이머','켜면 세트를 끝낼 때 계획한 쉬는 시간으로 돌아요. 트레이너 답이 오기 전이라 기본은 꺼 둬요.',stSwitch(!!S.settings.restTimer,'setTimer')))+
+    stGroup('화면 모드',`<div class="st-cards">${THEMES.map(([k,l])=>`<button class="st-pick${(UI.theme||'light')===k?' on':''}" data-act="setTheme" data-v="${k}">${themePreview(k)}<b>${l}</b></button>`).join('')}</div>`,'두 디자인 모두 다크 모드가 있어요. 자동은 아이패드 설정(라이트·다크)을 따라가요.')};
+  sec.class={ic:['timer'],t:'수업',sub:'쉬는 시간 · 숫자 채우기',body:()=>
+    stGroup('',stItem(stIcon('timer'),'쉬는 시간 타이머','켜면 세트를 끝낼 때 계획한 쉬는 시간으로 돌아요. 트레이너 답이 오기 전이라 기본은 꺼 둬요.',stSwitch(!!S.settings.restTimer,'setTimer')))+
     stGroup('지난 실제값 기준',stItem('','다음 목표가 없을 때 채울 숫자','같은 분할에 없는 종목은 가장 최근으로 채워요. 바꾸면 앞으로 만드는 수업 준비부터 적용돼요.',stSeg([['same','같은 분할'],['recent','가장 최근']],S.settings.basis,'setBasis'),'col'))};
-  sec.roles={ic:['sliders','#ff9500'],t:'역할별 기준',sub:'횟수 · 여유 횟수 · 세트 · 쉬는 초',body:()=>
+  sec.roles={ic:['sliders'],t:'역할별 기준',sub:'횟수 · 여유 횟수 · 세트 · 쉬는 초',body:()=>
     stGroup(`역할별 기준 <span class="tag warn">논문 기준 임시값 (D59)</span>`,`<div class="st-pad"><table><tr><th>역할</th><th>횟수 범위</th><th>목표 횟수</th><th>여유 횟수</th><th>세트</th><th>쉬는 초</th></tr>${roleRows}</table></div>`,'트레이너 답(O02)이 오면 바꿀 값이에요. 유산소성 순환은 횟수 칸을 라운드로 써요.')};
-  sec.exercises={ic:['dumbbell','#5856d6'],t:'종목 사전',sub:`${Object.keys(S.exercises).length}개 · 부위 · 단위 · 눈금`,body:()=>
+  sec.exercises={ic:['dumbbell'],t:'종목 사전',sub:`${Object.keys(S.exercises).length}개 · 부위 · 단위 · 눈금`,body:()=>
     stGroup(`종목 사전 <span class="tag warn">단위·눈금은 예시 (O36)</span>`,`<div class="st-pad"><table><tr><th>이름</th><th>부위</th><th>단위</th><th>눈금</th><th>한쪽</th></tr>${exRows}</table></div>`,'눈금은 +/− 한 칸과 계산한 무게를 내릴 때 써요. \'한쪽\'은 40/40kg처럼 한쪽 무게로 적는 기구예요.')+
     stGroup('새 종목',`<div class="st-pad"><div class="row" style="flex-wrap:nowrap">${dIn('newExName','새 종목 이름',{grow:1})}${dSel('newExPart',pairs(['하체','가슴','등','어깨','팔','복근','전신','기타']),'하체',{w:80})}${dSel('newExUnit',[['kg','kg'],['lb','lb'],['','(없음)']],'kg',{w:80})}${dIn('newExInc','눈금',{w:56,im:'decimal',v:'2.5'})}${btn('+ 종목','newEx',null,'small primary')}</div></div>`)};
-  if(!WEBAPP) sec.demo={ic:['play','#8e8e93'],t:'시연',sub:'예시 · 처음 상태로',body:()=>
-    stGroup('',stItem(stIcon('info','#ff9500'),'예시 취소·안 옴 보이기',`수첩에는 취소·안 옴 기록이 없어요. 화면을 보여 주려고 넣은 예시 ${EXAMPLE_CX.length}건이고, 운동 기록은 없어요.`,stSwitch(S.settings.exampleCx!==false,'setExampleCx')))+
-    stGroup('',stItem(stIcon('out','#007aff'),'로그아웃','입력한 기록은 그대로 두고 로그인 화면으로 돌아가요.',btn('로그아웃','logout',null,'small'))+
-      stItem(stIcon('trash','#ff3b30'),'처음 상태로 되돌리기','입력한 것을 모두 지워요.',UI.confirmReset?`${btn('되돌리기','reset',null,'small danger')}${btn('아니요','confirmReset',{v:0},'small')}`:btn('되돌리기','confirmReset',{v:1},'small danger')))};
+  if(!WEBAPP) sec.demo={ic:['play'],t:'시연',sub:'예시 · 처음 상태로',body:()=>
+    stGroup('',stItem(stIcon('eye'),'예시 취소·안 옴 보이기',`수첩에는 취소·안 옴 기록이 없어요. 화면을 보여 주려고 넣은 예시 ${EXAMPLE_CX.length}건이고, 운동 기록은 없어요.`,stSwitch(S.settings.exampleCx!==false,'setExampleCx')))+
+    stGroup('',stItem(stIcon('out'),'로그아웃','입력한 기록은 그대로 두고 로그인 화면으로 돌아가요.',btn('로그아웃','logout',null,'small'))+
+      stItem(stIcon('trash','bad'),'처음 상태로 되돌리기','입력한 것을 모두 지워요.',UI.confirmReset?`${btn('되돌리기','reset',null,'small danger')}${btn('아니요','confirmReset',{v:0},'small')}`:btn('되돌리기','confirmReset',{v:1},'small danger')))};
   return WEBAPP?Object.assign(webSettingsSections(),sec):sec;
 }
 V.settings=()=>{
@@ -4544,7 +4606,7 @@ function sheetMotion(app,prevOv,hadToast){
 }
 /* 다크 모드: 애플 디자인에서만. '자동'은 기기 설정(라이트·다크)을 따른다 */
 const darkMQ=window.matchMedia?matchMedia('(prefers-color-scheme: dark)'):null;
-function isDark(){return UI.look==='emr'&&(UI.theme==='dark'||(UI.theme==='auto'&&!!darkMQ&&darkMQ.matches))}
+function isDark(){return (UI.theme==='dark'||(UI.theme==='auto'&&!!darkMQ&&darkMQ.matches))}
 let toastT=null;
 function toast(msg){UI.toast=msg;render();clearTimeout(toastT);toastT=setTimeout(()=>{UI.toast=null;document.querySelector('#app .toast')?.remove()},2600)}
 function go(name,params){

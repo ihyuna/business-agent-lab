@@ -303,7 +303,9 @@ body #device.apple .cm-card{padding:var(--s4) var(--s5) var(--s4)}
 #device.apple .st-row.on+.st-row,#device.apple .st-row+.st-row.on{box-shadow:none}
 #device.apple .st-row+.st-row,#device.apple .st-item+.st-item{box-shadow:inset 54px 0 0 var(--panel),inset 0 .5px 0 var(--line2)}
 #device.apple .st-item+.st-item{box-shadow:inset 0 .5px 0 var(--line2)}
-#device.apple .st-ic{border-radius:7px}
+#device.apple .st-ic{border-radius:7px;background:var(--fill);color:var(--accent)}
+#device.apple .st-ic.bad{background:var(--bad-soft);color:var(--bad)}
+#device.apple .st-row.on .st-ic,#device.apple .st-prof.on .st-ic{background:rgba(255,255,255,.22);color:#fff}
 #device.apple .st-title{font-size:28px;letter-spacing:-.02em;line-height:1.2}
 #device.apple .st-gh{font-weight:500;letter-spacing:.01em;text-transform:none}
 #device.apple .st-row:active,#device.apple .st-prof:active,#device.apple .st-pick:active,#device.apple .st-seg button:active{transform:scale(.98)}
