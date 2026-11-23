@@ -1,0 +1,96 @@
+/* ---- 기록부 편하게 (2026-11-23): 애플 디자인 기준으로 ----
+   기록부와 애플 디자인을 바꿔도 너무 다른 앱처럼 느껴지지 않게, 애플 디자인의 '쓰는 느낌' 규칙을 기록부에도 쓴다.
+   그대로 두는 것(기록부다움): 흰 종이 + 잉크 선, 칸마다 선이 있는 표, 남색 제목, 제목 아래 이중 밑줄, ■ 칸 이름, 빨간 도장.
+   애플에서 가져온 것: 여백·모서리 단위(4의 배수), 버튼·입력 높이, 누르면 바로 살짝 작아짐, 시트가 누른 곳에서 열리고 닫힘,
+   큰 글자 자간·줄 간격, 위·아래 막대의 가는 선, 칸 사이 띄우기, 두 번 눌러 확대 지연 없애기 */
+#device.chart:not(.apple){--s1:4px;--s2:8px;--s3:12px;--s4:16px;--s5:20px;--s6:24px;--r1:3px;--r2:6px;--r3:8px;--r4:10px;--r5:12px;--spring:cubic-bezier(.32,.72,0,1)}
+
+/* 여백: 화면 가장자리 16, 판 사이 12 (애플과 같은 값) */
+#device.chart:not(.apple) .scroll{padding:var(--s4) var(--s4) var(--s6)}
+#device.chart:not(.apple) .chartdoc{padding:var(--s3) var(--s4) var(--s6)}
+#device.chart:not(.apple) .planner,#device.chart:not(.apple) .chartlay{gap:var(--s3);padding:var(--s3) var(--s4)}
+#device.chart:not(.apple) .card{padding:var(--s3) var(--s4);margin-bottom:var(--s3)}
+#device.chart:not(.apple) .box{margin-bottom:var(--s3)}
+
+/* 모서리: 각진 종이 느낌은 살리되 0 대신 아주 조금 둥글게 */
+#device.chart:not(.apple) .card,#device.chart:not(.apple) .box,#device.chart:not(.apple) .planner>div,#device.chart:not(.apple) .chartlay>div{border-radius:var(--r2)!important;overflow:hidden}
+#device.chart:not(.apple) .cl-mid{border-radius:0!important;overflow:visible}
+#device.chart:not(.apple) .f-paper{border-radius:var(--r3);padding:var(--s5) var(--s6) var(--s6)}
+#device.chart:not(.apple) .modal{border-radius:var(--r5);padding:var(--s5) var(--s6)}
+#device.chart:not(.apple) .toast,#device.chart:not(.apple) .askbar{border-radius:var(--r3)}
+
+/* 양식 칸: 세 칸·두 칸 줄은 붙이지 않고 12 띄우고, 칸마다 살짝 둥글게 (애플과 같은 자리·같은 간격) */
+#device.chart:not(.apple) .f-id,#device.chart:not(.apple) .f-cond{border-collapse:separate;border-spacing:0;border:1px solid var(--ink-line);border-radius:var(--r2);overflow:hidden}
+#device.chart:not(.apple) .f-id th,#device.chart:not(.apple) .f-id td{border-width:0 1px 1px 0!important}
+#device.chart:not(.apple) .f-id tr>:last-child{border-right:0!important}
+#device.chart:not(.apple) .f-id tr:last-child>*{border-bottom:0!important}
+#device.chart:not(.apple) .f-sec{border-radius:var(--r2);overflow:hidden}
+#device.chart:not(.apple) .f-row3>.f-sec+.f-sec,#device.chart:not(.apple) .f-row2>.f-sec+.f-sec{margin-left:var(--s3);border-left:1px solid var(--ink-line)}
+#device.port.chart:not(.apple) .f-row3>.f-sec+.f-sec{margin-left:0;margin-top:var(--s3);border-top:1px solid var(--ink-line)}
+#device.chart:not(.apple) .f-row2{margin-top:var(--s3)}
+#device.chart:not(.apple) .f-soap{gap:var(--s3)}
+#device.chart:not(.apple) .f-soap>.f-sec+.f-sec{border-top:1px solid var(--ink-line)}
+#device.chart:not(.apple) .f-bd{padding:var(--s3)}
+#device.chart:not(.apple) .gdoc .card+.card{margin-top:var(--s3)}
+/* 특이사항(주의): 빨간 세로줄 대신 라벨 칸을 연한 빨강 면으로 (애플과 같은 방식) */
+#device.chart:not(.apple) .f-sec.warnsec{box-shadow:none}
+#device.chart:not(.apple) .f-sec.warnsec .f-lb{background:var(--bad-soft);color:var(--stamp)}
+#device.chart:not(.apple) .f-sec.warnsec .f-lb small{color:inherit;opacity:.75}
+
+/* 글자: 제목 자간을 덜 벌리고, 큰 글자일수록 줄 간격 좁게 */
+#device.chart:not(.apple) .f-tt{letter-spacing:.18em;line-height:1.15}
+#device.chart:not(.apple) .top h1,#device.chart:not(.apple) .pbar .nm{letter-spacing:-.01em;line-height:1.2}
+#device.chart:not(.apple) .card h2,#device.chart:not(.apple) .pl-colhd,#device.chart:not(.apple) .f-cap,#device.chart:not(.apple) .modal h3{line-height:1.3}
+#device.chart:not(.apple) .card>h2:first-child,#device.chart:not(.apple) .box>.bh,#device.chart:not(.apple) .pl-colhd,#device.chart:not(.apple) .card.fold>.foldhead{letter-spacing:.02em}
+
+/* 위·아래 막대: 두꺼운 이중선 대신 가는 선 (종이 제목의 이중 밑줄은 그대로) */
+#device.chart:not(.apple) .tabbar.sidenav{border-bottom:1px solid var(--ink-line)}
+#device.chart:not(.apple) .pbar{border-bottom:1px solid var(--ink-line)}
+#device.chart:not(.apple) .actbar{border-top:1px solid var(--ink-line);padding:var(--s3) var(--s4)}
+#device.chart:not(.apple) .excard{border-top:1px solid var(--ink-line)}
+
+/* 버튼·입력·칩: 애플과 같은 크기와 모서리 단위, 줄 안에서는 높이 32로 맞춤 */
+#device.chart:not(.apple) .btn{border-radius:var(--r2);padding:6px 12px;font-size:13px;transition:transform 100ms ease-out,background-color 150ms ease-out,border-color 150ms ease-out}
+#device.chart:not(.apple) .btn.small{border-radius:var(--r2);padding:3px 9px}
+#device.chart:not(.apple) .actbar .btn.primary{border-radius:var(--r3)}
+#device.chart:not(.apple) input:not([type=checkbox]):not([type=radio]),#device.chart:not(.apple) select{border-radius:var(--r2)}
+#device.chart:not(.apple) textarea{border-radius:var(--r2)}
+#device.chart:not(.apple) input:focus,#device.chart:not(.apple) select:focus,#device.chart:not(.apple) textarea:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 25%,transparent)}
+#device.chart:not(.apple) .chip{border-radius:var(--r2)}
+#device.chart:not(.apple) .tag,#device.chart:not(.apple) .pill{border-radius:var(--r1)}
+#device.chart:not(.apple) .setchip,#device.chart:not(.apple) .chipedit,#device.chart:not(.apple) .lp-chip{border-radius:var(--r2)}
+#device.chart:not(.apple) .tl .blk{border-radius:var(--r1)}
+#device.chart:not(.apple) .mcal button.today{border-radius:var(--r1)}
+#device.chart:not(.apple) .rstat,#device.chart:not(.apple) .pkg-st{border-radius:var(--r2);overflow:hidden}
+#device.chart:not(.apple) .pbar .vit>span:first-child{border-radius:var(--r2) 0 0 var(--r2)}
+#device.chart:not(.apple) .pbar .vit>span:last-child{border-radius:0 var(--r2) var(--r2) 0}
+#device.chart:not(.apple) .f-row3 .f-bd :is(input:not([type=checkbox]):not([type=radio]),select,.btn){height:32px;box-sizing:border-box;font-size:13px;vertical-align:middle}
+#device.chart:not(.apple) .f-row3 .f-bd .btn{display:inline-flex;align-items:center;padding:0 var(--s3)}
+#device.chart:not(.apple) .f-row3 .f-bd select{padding:0 var(--s2) 0 var(--s3)}
+#device.chart:not(.apple) .f-row3 .f-bd input:not([type=checkbox]):not([type=radio]){padding:0 var(--s3)}
+
+/* 누름 반응: 누르는 순간 바로 살짝 작아짐 (애플과 같은 .97, 100ms) */
+#device.chart:not(.apple) .chip,#device.chart:not(.apple) .setchip,#device.chart:not(.apple) .tl .blk,#device.chart:not(.apple) .hist .hi,#device.chart:not(.apple) .tabbar.sidenav button,
+#device.chart:not(.apple) .st-row,#device.chart:not(.apple) .st-prof,#device.chart:not(.apple) .st-pick,#device.chart:not(.apple) .st-seg button{transition:transform 100ms ease-out,background-color 150ms ease-out}
+#device.chart:not(.apple) .btn:active:not([disabled]),#device.chart:not(.apple) .chip:active,#device.chart:not(.apple) .setchip:active,#device.chart:not(.apple) .tl .blk:active,
+#device.chart:not(.apple) .tabbar.sidenav button:active,#device.chart:not(.apple) .lg-b:active,#device.chart:not(.apple) .lp-cta:active,#device.chart:not(.apple) .lp-ghost:active,#device.chart:not(.apple) .ob-opt:active{transform:scale(.97)}
+#device.chart:not(.apple) .st-row:active,#device.chart:not(.apple) .st-prof:active,#device.chart:not(.apple) .st-pick:active,#device.chart:not(.apple) .st-seg button:active{transform:scale(.98)}
+#device.chart:not(.apple) button,#device.chart:not(.apple) [data-act],#device.chart:not(.apple) input,#device.chart:not(.apple) select,#device.chart:not(.apple) label{touch-action:manipulation}
+
+/* 시트(창): 애플과 같은 움직임. 누른 곳에서 커지며 열리고, 닫을 때 같은 길로 되돌아감 (흐림 효과는 빼고) */
+#device.chart:not(.apple) .overlay.enter{animation:ap-fade 240ms ease-out}
+#device.chart:not(.apple) .overlay.enter .modal{animation:ch-sheet 340ms var(--spring)}
+#device.chart:not(.apple) .overlay.leave{pointer-events:none;animation:ap-fade 220ms ease-in reverse forwards}
+#device.chart:not(.apple) .overlay.leave .modal{animation:ch-sheet 220ms ease-in reverse forwards}
+#device.chart:not(.apple) .toast.enter{animation:ap-toast 320ms var(--spring)}
+@keyframes ch-sheet{from{opacity:0;transform:scale(.94)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){
+  #device.chart:not(.apple) .overlay.enter .modal,#device.chart:not(.apple) .overlay.leave .modal{animation-name:ap-fade}
+  #device.chart:not(.apple) .toast.enter{animation:ap-fade 200ms ease-out}
+  #device.chart:not(.apple) *:active{transform:none!important}
+}
+
+/* 설정: 목록·묶음도 같은 모서리 단위 */
+#device.chart:not(.apple) .st-list,#device.chart:not(.apple) .st-group{border-radius:var(--r2)}
+#device.chart:not(.apple) .st-ic{border-radius:var(--r1)}
+#device.chart:not(.apple) .st-seg,#device.chart:not(.apple) .st-seg button,#device.chart:not(.apple) .lp-pv,#device.chart:not(.apple) .th-pv{border-radius:var(--r1)}

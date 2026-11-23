@@ -96,7 +96,7 @@ Supabase 준비: 프로젝트 만들기 → SQL Editor에서 `web/supabase.sql` 
 
 여는 법: GitHub Pages를 켜면 `https://ihyuna.github.io/business-agent-lab/pt-app/web/` (저장소 Settings → Pages → Branch `main`, 폴더 `/ (root)`).
 
-코드: `src/` 를 시연판과 같이 쓰고, 웹앱에만 `src/50-web.js`(계정·소개·처음 설정·저장)와 `src/web.css` 가 더 들어갑니다(`35-guide.js` 는 빠짐). 소스 안의 `WEBAPP` 값으로 둘을 가릅니다. 설정은 왼쪽 목록 + 오른쪽 내용(아이패드 설정 앱처럼, `src/settings.css`)이고, 두 디자인 모두 다크 모드(라이트·다크·자동)가 있습니다(기록부 다크는 `src/dark.css`). 설정 아이콘은 한 가지 색 선 아이콘입니다. 화면 디자인은 '기록부'(`#device.chart`, `00-head.html`)와 '애플 디자인'(`#device.apple`, `src/apple.css`, 시연판·웹앱 공통) 두 가지이고 설정에서 바꿉니다. 애플 디자인은 emilkowalski/skills 의 apple-design 스킬(MIT) 원칙을 따랐습니다. `web/sw.js`, `web/manifest.webmanifest`, `web/config.js`, `web/supabase.sql`, 아이콘은 직접 고치는 파일입니다.
+코드: `src/` 를 시연판과 같이 쓰고, 웹앱에만 `src/50-web.js`(계정·소개·처음 설정·저장)와 `src/web.css` 가 더 들어갑니다(`35-guide.js` 는 빠짐). 소스 안의 `WEBAPP` 값으로 둘을 가릅니다. 설정은 왼쪽 목록 + 오른쪽 내용(아이패드 설정 앱처럼, `src/settings.css`)이고, 두 디자인 모두 다크 모드(라이트·다크·자동)가 있습니다(기록부 다크는 `src/dark.css`). 기록부는 애플 디자인의 여백·모서리 단위, 버튼 크기, 누름 반응, 창 움직임을 같이 씁니다(`src/chart.css`). 설정 아이콘은 한 가지 색 선 아이콘입니다. 화면 디자인은 '기록부'(`#device.chart`, `00-head.html`)와 '애플 디자인'(`#device.apple`, `src/apple.css`, 시연판·웹앱 공통) 두 가지이고 설정에서 바꿉니다. 애플 디자인은 emilkowalski/skills 의 apple-design 스킬(MIT) 원칙을 따랐습니다. `web/sw.js`, `web/manifest.webmanifest`, `web/config.js`, `web/supabase.sql`, 아이콘은 직접 고치는 파일입니다.
 
 ```sh
 sh build.sh          # index.html, app.html, web/index.html
