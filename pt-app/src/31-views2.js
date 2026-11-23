@@ -253,19 +253,25 @@ V.search=r=>{
 /* ---------- 설정 ---------- */
 /* ---------- 설정: 아이패드 설정 앱처럼 왼쪽 목록 + 오른쪽 내용 (2026-11-23) ----------
    왼쪽에서 묶음을 고르면 오른쪽에 그 묶음만 보인다. 기록부·애플 디자인 둘 다 같은 구성이고 모양만 다르다. */
+/* 아이콘 (2026-11-23 다시): 알록달록한 색 타일 대신 한 가지 색 선 아이콘. 24칸 격자, 선 굵기 1.6, 둥근 끝.
+   평소에는 차분한 연한 바탕 + 강조색 선, 지우기처럼 되돌릴 수 없는 것만 빨강 */
 const ST_ICON={
-  user:'<circle cx="12" cy="8" r="4"/><path d="M4 20c1.5-4 4.5-6 8-6s6.5 2 8 6"/>',
-  display:'<circle cx="12" cy="12" r="8"/><path d="M12 4v16" /><path d="M12 4a8 8 0 0 1 0 16z" fill="currentColor"/>',
-  guide:'<circle cx="12" cy="12" r="8.5"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.7.3-1 .8-1 1.5v.4"/><circle cx="12" cy="17" r=".6" fill="currentColor"/>',
-  timer:'<circle cx="12" cy="13" r="7.5"/><path d="M12 9v4l2.5 2"/><path d="M9.5 3h5"/>',
-  sliders:'<path d="M5 7h9M18 7h1M5 17h3M12 17h7"/><circle cx="16" cy="7" r="2"/><circle cx="10" cy="17" r="2"/>',
-  dumbbell:'<path d="M4 9v6M7 7v10M17 7v10M20 9v6M7 12h10"/>',
-  archive:'<rect x="3.5" y="5" width="17" height="4" rx="1"/><path d="M5 9v9a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V9M10 13h4"/>',
-  info:'<circle cx="12" cy="12" r="8.5"/><path d="M12 11v5"/><circle cx="12" cy="8" r=".6" fill="currentColor"/>',
-  trash:'<path d="M5 7h14M10 7V5h4v2M7 7l1 12h8l1-12"/>',
-  out:'<path d="M14 5h4a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1h-4M10 8l-4 4 4 4M6 12h10"/>',
-  play:'<path d="M8 6l10 6-10 6z"/>'};
-function stIcon(k,c){return `<span class="st-ic" style="--ic:${c}"><svg viewBox="0 0 24 24" aria-hidden="true">${ST_ICON[k]||''}</svg></span>`}
+  user:'<circle cx="12" cy="8.5" r="3.5"/><path d="M5 19.5c1.3-3.2 3.9-4.9 7-4.9s5.7 1.7 7 4.9"/>',
+  display:'<rect x="5" y="3" width="14" height="18" rx="2.5"/><path d="M10.5 18h3"/>',
+  guide:'<path d="M12 3.5l1.6 4.9 4.9 1.6-4.9 1.6L12 16.5l-1.6-4.9L5.5 10l4.9-1.6z"/><path d="M18 16.5l.6 1.9 1.9.6-1.9.6-.6 1.9-.6-1.9-1.9-.6 1.9-.6z"/>',
+  timer:'<circle cx="12" cy="13.5" r="7"/><path d="M12 10v3.5l2.2 1.6M10 3.5h4M18.2 6.8l1.3-1.3"/>',
+  sliders:'<path d="M4 7h10M18 7h2M4 17h2M10 17h10"/><circle cx="16" cy="7" r="2"/><circle cx="8" cy="17" r="2"/>',
+  dumbbell:'<rect x="5" y="7" width="3" height="10" rx="1"/><rect x="16" y="7" width="3" height="10" rx="1"/><path d="M2.5 10v4M21.5 10v4M8 12h8"/>',
+  archive:'<rect x="3.5" y="4.5" width="17" height="4.5" rx="1.2"/><path d="M5 9v9.5c0 .6.4 1 1 1h12c.6 0 1-.4 1-1V9M10 13h4"/>',
+  download:'<path d="M12 4v11M7.5 10.5L12 15l4.5-4.5M5 19.5h14"/>',
+  upload:'<path d="M12 15V4M7.5 8.5L12 4l4.5 4.5M5 19.5h14"/>',
+  cloud:'<path d="M7 18.5a4 4 0 0 1-.6-8 5.5 5.5 0 0 1 10.6-1.3A4.5 4.5 0 0 1 17 18.5z"/>',
+  info:'<circle cx="12" cy="12" r="8.5"/><path d="M12 11v5"/><circle cx="12" cy="8" r=".7" fill="currentColor"/>',
+  trash:'<path d="M4.5 7h15M9.5 7V4.8c0-.4.3-.8.8-.8h3.4c.5 0 .8.4.8.8V7M6.5 7l.9 12.2c0 .5.5.8 1 .8h7.2c.5 0 1-.3 1-.8L17.5 7M10 11v5.5M14 11v5.5"/>',
+  out:'<path d="M14 4.5h3.5c.8 0 1.5.7 1.5 1.5v12c0 .8-.7 1.5-1.5 1.5H14M10 8l-4 4 4 4M6 12h10"/>',
+  eye:'<path d="M2.5 12s3.5-6.5 9.5-6.5S21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z"/><circle cx="12" cy="12" r="2.8"/>',
+  play:'<path d="M8 5.5v13l10.5-6.5z"/>'};
+function stIcon(k,tone){return `<span class="st-ic${tone?' '+tone:''}"><svg viewBox="0 0 24 24" aria-hidden="true">${ST_ICON[k]||''}</svg></span>`}
 function stSwitch(on,act,extra){return `<button class="st-sw${on?' on':''}" role="switch" aria-checked="${on?'true':'false'}" data-act="${act}" data-v="${on?'0':'1'}"${extra||''}><i></i></button>`}
 function stSeg(opts,cur,act){return `<div class="st-seg" role="radiogroup">${opts.map(([v,l])=>`<button class="${v===cur?'on':''}" role="radio" aria-checked="${v===cur}" data-act="${act}" data-v="${v}">${l}</button>`).join('')}</div>`}
 function stItem(ic,title,desc,ctrl,cls){return `<div class="st-item ${cls||''}">${ic||''}<div class="st-tx"><b>${title}</b>${desc?`<span>${desc}</span>`:''}</div>${ctrl?`<div class="st-ctl">${ctrl}</div>`:''}</div>`}
@@ -280,23 +286,22 @@ function settingsSections(){
   const R=S.settings.roles;
   const roleRows=ROLES.map(k=>{const v=R[k];const f=(n,w)=>bIn('roleVal',v[n],{role:k,f:n},{w:w||52,im:'numeric',cls:'num'});return `<tr><td>${k}</td><td>${f('rmin')}~${f('rmax')}</td><td>${f('target')}</td><td>${f('rir')}</td><td>${f('sets')}</td><td>${f('rest',60)}</td></tr>`}).join('');
   const exRows=Object.entries(S.exercises).map(([id,e])=>`<tr><td>${bIn('exName',e.name,{id},{w:190})}</td><td>${bSel('exPart',pairs(['하체','가슴','등','어깨','팔','복근','전신','기타']),e.part,{id},{w:80})}</td><td>${bSel('exUnit',[['','(없음)'],['kg','kg'],['lb','lb']],e.unit,{id},{w:80})}</td><td>${bIn('exInc',e.inc,{id},{w:56,im:'decimal',cls:'num'})}</td><td><input type="checkbox" data-act="exSide" data-id="${id}"${e.side?' checked':''} aria-label="한쪽 무게"></td></tr>`).join('');
-  const apple=UI.look==='emr';
   const sec={};
-  sec.display={ic:['display','#007aff'],t:'화면',sub:'디자인 · 다크 모드',body:()=>
+  sec.display={ic:['display'],t:'화면',sub:'디자인 · 다크 모드',body:()=>
     stGroup('디자인',`<div class="st-cards">${LOOKS.map(([k,l])=>`<button class="st-pick${UI.look===k?' on':''}" data-act="setLook" data-v="${k}">${lookPreview(k)}<b>${l}</b><span>${k==='chart'?'종이 기록부 느낌':'아이패드 기본 앱 느낌'}</span></button>`).join('')}</div>`,'기록은 같고 모양만 바뀌어요. 화면 구성과 위치는 둘 다 같아요.')+
-    stGroup('화면 모드',`<div class="st-cards${apple?'':' off'}">${THEMES.map(([k,l])=>`<button class="st-pick${(UI.theme||'light')===k?' on':''}" data-act="setTheme" data-v="${k}"${apple?'':' disabled'}>${themePreview(k)}<b>${l}</b></button>`).join('')}</div>`,apple?'자동은 아이패드 설정(라이트·다크)을 따라가요.':'다크 모드는 애플 디자인에서 쓸 수 있어요.')};
-  sec.class={ic:['timer','#34c759'],t:'수업',sub:'쉬는 시간 · 숫자 채우기',body:()=>
-    stGroup('',stItem(stIcon('timer','#ff9500'),'쉬는 시간 타이머','켜면 세트를 끝낼 때 계획한 쉬는 시간으로 돌아요. 트레이너 답이 오기 전이라 기본은 꺼 둬요.',stSwitch(!!S.settings.restTimer,'setTimer')))+
+    stGroup('화면 모드',`<div class="st-cards">${THEMES.map(([k,l])=>`<button class="st-pick${(UI.theme||'light')===k?' on':''}" data-act="setTheme" data-v="${k}">${themePreview(k)}<b>${l}</b></button>`).join('')}</div>`,'두 디자인 모두 다크 모드가 있어요. 자동은 아이패드 설정(라이트·다크)을 따라가요.')};
+  sec.class={ic:['timer'],t:'수업',sub:'쉬는 시간 · 숫자 채우기',body:()=>
+    stGroup('',stItem(stIcon('timer'),'쉬는 시간 타이머','켜면 세트를 끝낼 때 계획한 쉬는 시간으로 돌아요. 트레이너 답이 오기 전이라 기본은 꺼 둬요.',stSwitch(!!S.settings.restTimer,'setTimer')))+
     stGroup('지난 실제값 기준',stItem('','다음 목표가 없을 때 채울 숫자','같은 분할에 없는 종목은 가장 최근으로 채워요. 바꾸면 앞으로 만드는 수업 준비부터 적용돼요.',stSeg([['same','같은 분할'],['recent','가장 최근']],S.settings.basis,'setBasis'),'col'))};
-  sec.roles={ic:['sliders','#ff9500'],t:'역할별 기준',sub:'횟수 · 여유 횟수 · 세트 · 쉬는 초',body:()=>
+  sec.roles={ic:['sliders'],t:'역할별 기준',sub:'횟수 · 여유 횟수 · 세트 · 쉬는 초',body:()=>
     stGroup(`역할별 기준 <span class="tag warn">논문 기준 임시값 (D59)</span>`,`<div class="st-pad"><table><tr><th>역할</th><th>횟수 범위</th><th>목표 횟수</th><th>여유 횟수</th><th>세트</th><th>쉬는 초</th></tr>${roleRows}</table></div>`,'트레이너 답(O02)이 오면 바꿀 값이에요. 유산소성 순환은 횟수 칸을 라운드로 써요.')};
-  sec.exercises={ic:['dumbbell','#5856d6'],t:'종목 사전',sub:`${Object.keys(S.exercises).length}개 · 부위 · 단위 · 눈금`,body:()=>
+  sec.exercises={ic:['dumbbell'],t:'종목 사전',sub:`${Object.keys(S.exercises).length}개 · 부위 · 단위 · 눈금`,body:()=>
     stGroup(`종목 사전 <span class="tag warn">단위·눈금은 예시 (O36)</span>`,`<div class="st-pad"><table><tr><th>이름</th><th>부위</th><th>단위</th><th>눈금</th><th>한쪽</th></tr>${exRows}</table></div>`,'눈금은 +/− 한 칸과 계산한 무게를 내릴 때 써요. \'한쪽\'은 40/40kg처럼 한쪽 무게로 적는 기구예요.')+
     stGroup('새 종목',`<div class="st-pad"><div class="row" style="flex-wrap:nowrap">${dIn('newExName','새 종목 이름',{grow:1})}${dSel('newExPart',pairs(['하체','가슴','등','어깨','팔','복근','전신','기타']),'하체',{w:80})}${dSel('newExUnit',[['kg','kg'],['lb','lb'],['','(없음)']],'kg',{w:80})}${dIn('newExInc','눈금',{w:56,im:'decimal',v:'2.5'})}${btn('+ 종목','newEx',null,'small primary')}</div></div>`)};
-  if(!WEBAPP) sec.demo={ic:['play','#8e8e93'],t:'시연',sub:'예시 · 처음 상태로',body:()=>
-    stGroup('',stItem(stIcon('info','#ff9500'),'예시 취소·안 옴 보이기',`수첩에는 취소·안 옴 기록이 없어요. 화면을 보여 주려고 넣은 예시 ${EXAMPLE_CX.length}건이고, 운동 기록은 없어요.`,stSwitch(S.settings.exampleCx!==false,'setExampleCx')))+
-    stGroup('',stItem(stIcon('out','#007aff'),'로그아웃','입력한 기록은 그대로 두고 로그인 화면으로 돌아가요.',btn('로그아웃','logout',null,'small'))+
-      stItem(stIcon('trash','#ff3b30'),'처음 상태로 되돌리기','입력한 것을 모두 지워요.',UI.confirmReset?`${btn('되돌리기','reset',null,'small danger')}${btn('아니요','confirmReset',{v:0},'small')}`:btn('되돌리기','confirmReset',{v:1},'small danger')))};
+  if(!WEBAPP) sec.demo={ic:['play'],t:'시연',sub:'예시 · 처음 상태로',body:()=>
+    stGroup('',stItem(stIcon('eye'),'예시 취소·안 옴 보이기',`수첩에는 취소·안 옴 기록이 없어요. 화면을 보여 주려고 넣은 예시 ${EXAMPLE_CX.length}건이고, 운동 기록은 없어요.`,stSwitch(S.settings.exampleCx!==false,'setExampleCx')))+
+    stGroup('',stItem(stIcon('out'),'로그아웃','입력한 기록은 그대로 두고 로그인 화면으로 돌아가요.',btn('로그아웃','logout',null,'small'))+
+      stItem(stIcon('trash','bad'),'처음 상태로 되돌리기','입력한 것을 모두 지워요.',UI.confirmReset?`${btn('되돌리기','reset',null,'small danger')}${btn('아니요','confirmReset',{v:0},'small')}`:btn('되돌리기','confirmReset',{v:1},'small danger')))};
   return WEBAPP?Object.assign(webSettingsSections(),sec):sec;
 }
 V.settings=()=>{

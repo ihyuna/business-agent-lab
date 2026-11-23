@@ -1,0 +1,43 @@
+/* ---- 기록부 다크 모드 (2026-11-23): 밤에 보는 기록부 ----
+   양식 선·칸·이중 밑줄은 그대로 두고 색만 바꾼다. 종이는 짙은 남색, 글자는 밝은 회청색,
+   칸 머리는 한 단계 밝은 남색, 제목 잉크(남색)는 밝은 하늘색, 도장 빨강은 조금 밝게 */
+#device.chart.dark:not(.apple){
+  --device:#0b111c; --panel:#121a28; --ink:#e3e8f1; --muted:#9aa5b8; --faint:#6a768b;
+  --line:#222d40; --line2:#2d3a52; --soft:#182233; --hd:#17233a; --phd:#17233a;
+  --accent:#5b9bff; --accent-soft:#16284a; --accent-ink:#06101f;
+  --rule:#1a2436; --ink-line:#3a4e70; --stamp:#ff6b70; --navy:#a9c4f5;
+  --side:#0f1622; --zebra:#141d2c; --bar:#4e78b8; --now:#ff6b70;
+  --good:#4cc787; --good-soft:#15291e; --warn:#f0b04a; --warn-soft:#33270f; --bad:#ff7d80; --bad-soft:#3a1d1f;
+  --cond:#ff9a52; --cond-soft:#3d2817; --live:#b39dff; --live-soft:#2c2547;
+  --p1:#7fb0ff; --p1s:#1b2b47; --p2:#c39af2; --p2s:#2c2140; --p3:#ff8fab; --p3s:#3d1f29; --p4:#5fd197; --p4s:#15291e; --p5:#f5b24f; --p5s:#352710; --p6:#5cd0de; --p6s:#132e33;
+  color-scheme:dark;color:var(--ink)}
+#device.chart.dark:not(.apple) .f-paper{box-shadow:0 2px 14px rgba(0,0,0,.35)}
+#device.chart.dark:not(.apple) .btn{background:var(--soft);color:var(--ink)}
+#device.chart.dark:not(.apple) .btn.primary{background:var(--accent);color:var(--accent-ink)}
+#device.chart.dark:not(.apple) .btn.danger{color:var(--bad)}
+#device.chart.dark:not(.apple) .btn:hover:not([disabled]){background:var(--hd)}
+#device.chart.dark:not(.apple) .btn.primary:hover:not([disabled]){background:#7aaeff}
+#device.chart.dark:not(.apple) .modal,#device.chart.dark:not(.apple) .askbar{background:var(--panel);color:var(--ink)}
+#device.chart.dark:not(.apple) .toast{background:#24324a;color:var(--ink)}
+#device.chart.dark:not(.apple) .overlay{background:rgba(0,0,0,.55)}
+#device.chart.dark:not(.apple) .up{color:var(--good)}
+#device.chart.dark:not(.apple) .st-sw:not(.on){background:rgba(120,130,150,.32)}
+#device.chart.dark:not(.apple) .st-sw i{box-shadow:0 2px 6px rgba(0,0,0,.4)}
+#device.chart.dark:not(.apple) img,#device.chart.dark:not(.apple) .kbicon{filter:none}
+/* 웹앱 처음 화면·로그인·처음 설정·화면 안내 (web.css 의 흰 종이 고정색을 다크로) */
+body #device.chart.dark:not(.apple) .lp,body #device.chart.dark:not(.apple) .lg,body #device.chart.dark:not(.apple) .ob{background:var(--device)!important}
+body #device.chart.dark:not(.apple) :is(.lp-top,.lp-hero,.lp-f,.lp-st,.lp-trust,.lp-mock,.lg-col,.ob-top,.ob-body,.ob-opt,.cm-card,.lg-out,.lp-ghost,.ld-card,.ld-mock){background:var(--panel);border-color:var(--ink-line);color:var(--ink);box-shadow:none}
+body #device.chart.dark:not(.apple) .cm-card{box-shadow:0 12px 32px rgba(0,0,0,.55)}
+body #device.chart.dark:not(.apple) :is(.lp-eye,.lp-f h3,.lp-mh,.au-tabs,.cm-card .cm-n,.ob-opt:hover,.ob-opt:focus){background:var(--hd);border-color:var(--line2)}
+body #device.chart.dark:not(.apple) .au-tabs button.on{background:var(--panel);color:var(--ink)}
+body #device.chart.dark:not(.apple) :is(.lp-mrow,.lp-f h3,.lp-mh){border-color:var(--line2)}
+body #device.chart.dark:not(.apple) .lp-mh i{background:var(--line2)}
+body #device.chart.dark:not(.apple) :is(.lg-f input,.ld-f input){background:var(--panel);color:var(--ink);border-color:var(--line2)}
+body #device.chart.dark:not(.apple) .lg-f>span{background:var(--panel)}
+body #device.chart.dark:not(.apple) :is(.lp-cta,.lp-n,.lg-go,.cm-next){background:var(--accent);color:var(--accent-ink)}
+body #device.chart.dark:not(.apple) .lp-hero{border-bottom-color:var(--accent)}
+body #device.chart.dark:not(.apple) :is(.lp-flow h2,.ob h2,.lg-logo){border-bottom-color:var(--accent)}
+body #device.chart.dark:not(.apple) .lp-mrow.h{background:var(--soft)}
+body #device.chart.dark:not(.apple) :is(.lp-mh span,.lp-st b){color:var(--navy)}
+body #device.chart.dark:not(.apple) .au-msg{background:var(--bad-soft);color:var(--bad)}
+body #device.chart.dark:not(.apple) .au-msg.ok{background:var(--accent-soft);color:var(--navy)}
