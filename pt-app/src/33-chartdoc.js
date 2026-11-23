@@ -10,7 +10,8 @@ function idTable(cells,cols){/* cells: [라벨, 값, 칸 수?] */let h='',n=0,ro
   for(const c of cells){const span=c[2]||1;row+=`<th>${c[0]}</th><td${span>1?` colspan="${span*2-1}"`:''}>${c[1]}</td>`;n+=span;if(n>=cols){h+=`<tr>${row}</tr>`;row='';n=0}}
   if(row)h+=`<tr>${row}</tr>`;return `<table class="f-id">${h}</table>`}
 function fsec(label,body,cls){return `<div class="f-sec ${cls||''}"><div class="f-lb"><span>${label}</span></div><div class="f-bd">${body}</div></div>`}
-const signLine=(what,date)=>`<div class="f-sign"><span>${what}</span><span class="f-date">작성일 ${date}</span><span>담당 트레이너</span><i></i><span class="faint">(서명)</span></div>`;
+const trainerName=()=>(S.profile&&S.profile.name)||'';
+const signLine=(what,date)=>`<div class="f-sign"><span>${what}</span><span class="f-date">작성일 ${date}</span><span>담당 트레이너</span><i>${esc(trainerName())}</i><span class="faint">(서명)</span></div>`;
 function topLine(x){const t=topSet({...x,sets:x.sets.filter(st=>st.done||st.aw!=null)});return t?ftop(t,x.exId):''}
 function cmpTop(a,b){if(!a||!b)return null;if(isNum(a.w)&&isNum(b.w)&&a.w!==b.w)return a.w>b.w?1:-1;const ar=+a.r||0,br=+b.r||0;return ar===br?0:ar>br?1:-1}
 const arrow=c=>c==null?'<span class="faint">—</span>':c>0?'<b class="up">▲ 오름</b>':c<0?'<b class="down">▼ 내림</b>':'<span class="muted">= 같음</span>';
@@ -88,6 +89,6 @@ function showDoc(o){
       ${fsec('오늘 쓴<br>근육',muscleBlock([s],220,'오늘'))}
       ${fsec('무게<br>흐름',`<div class="row" style="margin-bottom:6px">${pick}</div>${chart}`)}
     </div>
-    <div class="f-issue"><span>${esc(m.code)} 회원님, 오늘 수고했어요.</span><span class="sp"></span><span>날짜 ${s.date}</span><span>담당 트레이너</span><i></i><span class="faint">(서명)</span></div>
+    <div class="f-issue"><span>${esc(m.code)} 회원님, 오늘 수고했어요.</span><span class="sp"></span><span>날짜 ${s.date}</span><span>담당 트레이너</span><i>${esc(trainerName())}</i><span class="faint">(서명)</span></div>
   </div></div>`;
 }

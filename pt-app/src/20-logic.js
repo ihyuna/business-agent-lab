@@ -18,7 +18,7 @@ const KEY=WEBAPP?'jimnote-v1':'pt-mvp-proto-v4';
 let S=null;
 const UI={look:'chart',ask:null,route:{name:'today'},stack:[],modal:null,draft:{},toast:null,orient:'land',fit:true,timer:null,cur:{},open:{},search:'',edit:null,flags:{}};
 const todayIso=()=>(S&&S.today)||'2026-10-07';
-function save(){if(WEBAPP&&S&&S._fresh)return;try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}if(typeof guideSoon==='function')guideSoon()}
+function save(){if(WEBAPP)return webSave();try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}if(typeof guideSoon==='function')guideSoon()}
 function load(){if(WEBAPP)return webLoad();try{const t=localStorage.getItem(KEY);if(t){const s=JSON.parse(t);if(s&&s.v===3)return s}}catch(e){}return buildSeed()}
 
 const EX=id=>S.exercises[id]||{name:id,part:'',unit:'',inc:2.5};

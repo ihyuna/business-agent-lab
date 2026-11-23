@@ -662,7 +662,7 @@ td.c,th.c{text-align:center}
 .f-two{display:grid;grid-template-columns:1fr 1fr;gap:14px}
 .f-sign,.f-issue{display:flex;align-items:flex-end;gap:10px;margin-top:16px;padding-top:10px;border-top:1px solid var(--ink-line,#333);font-size:12px;color:var(--muted)}
 .f-sign>span:first-child{flex:1}
-.f-sign i,.f-issue i{display:inline-block;width:150px;border-bottom:1px solid var(--ink-line,#333)}
+.f-sign i,.f-issue i{display:inline-block;width:150px;font-style:normal;text-align:center;border-bottom:1px solid var(--ink-line,#333)}
 .f-issue{font-size:13px;color:var(--ink);font-weight:600}
 .f-res.big td{font-size:13.5px;padding:8px}
 .f-res .big{font-size:16px;font-weight:800}
@@ -1875,7 +1875,7 @@ const KEY=WEBAPP?'jimnote-v1':'pt-mvp-proto-v4';
 let S=null;
 const UI={look:'chart',ask:null,route:{name:'today'},stack:[],modal:null,draft:{},toast:null,orient:'land',fit:true,timer:null,cur:{},open:{},search:'',edit:null,flags:{}};
 const todayIso=()=>(S&&S.today)||'2026-10-07';
-function save(){if(WEBAPP&&S&&S._fresh)return;try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}if(typeof guideSoon==='function')guideSoon()}
+function save(){if(WEBAPP)return webSave();try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}if(typeof guideSoon==='function')guideSoon()}
 function load(){if(WEBAPP)return webLoad();try{const t=localStorage.getItem(KEY);if(t){const s=JSON.parse(t);if(s&&s.v===3)return s}}catch(e){}return buildSeed()}
 
 const EX=id=>S.exercises[id]||{name:id,part:'',unit:'',inc:2.5};
@@ -3087,10 +3087,11 @@ V.settings=()=>{
   const exRows=Object.entries(S.exercises).map(([id,e])=>`<tr><td>${bIn('exName',e.name,{id},{w:190})}</td><td>${bSel('exPart',pairs(['하체','가슴','등','어깨','팔','복근','전신','기타']),e.part,{id},{w:80})}</td><td>${bSel('exUnit',[['','(없음)'],['kg','kg'],['lb','lb']],e.unit,{id},{w:80})}</td><td>${bIn('exInc',e.inc,{id},{w:56,im:'decimal',cls:'num'})}</td><td><input type="checkbox" data-act="exSide" data-id="${id}"${e.side?' checked':''} aria-label="한쪽 무게"></td></tr>`).join('');
   return topBar('설정','숫자 채우기 기준과 종목 사전')+
    `<div class="scroll" data-sk="main"><div class="grid2"><div class="col">
+     ${WEBAPP?webSettingsCards():''}
      <div class="card"><h2>쉬는 시간 타이머</h2><div class="row">${chips([['0','끔'],['1','켬']],S.settings.restTimer?'1':'0','setTimer')}</div><div class="tiny muted" style="margin-top:4px">켜면 세트를 끝낼 때 계획한 쉬는 시간으로 돌아요. 트레이너 답이 오기 전이라 기본은 꺼 둬요.</div></div>
      <div class="card"><h2>지난 실제값 기준</h2><div class="row">${chips([['same','같은 분할'],['recent','가장 최근']],S.settings.basis,'setBasis')}</div><div class="tiny muted" style="margin-top:4px">다음 목표가 없을 때 어느 수업의 실제값으로 채울지예요. 같은 분할에 없는 종목은 가장 최근으로 채워요. 바꾸면 앞으로 만드는 수업 준비부터 적용돼요.</div></div>
      <div class="card"><h2>역할별 기준 <span class="tag warn">논문 기준 임시값 (D59)</span></h2><table><tr><th>역할</th><th>횟수 범위</th><th>목표 횟수</th><th>여유 횟수</th><th>세트</th><th>쉬는 초</th></tr>${roleRows}</table><div class="tiny muted" style="margin-top:4px">트레이너 답(O02)이 오면 바꿀 값이에요. 유산소성 순환은 횟수 칸을 라운드로 써요.</div></div>
-     ${WEBAPP?webSettingsCards():`<div class="card"><h2>예시 취소·안 옴 <span class="tag warn">예시</span></h2><div class="row">${chips([['1','보임'],['0','숨김']],S.settings.exampleCx===false?'0':'1','setExampleCx')}</div><div class="tiny muted" style="margin-top:4px">수첩에는 취소·안 옴 기록이 없어요. 화면을 보여 주려고 넣은 예시 ${EXAMPLE_CX.length}건이고, 운동 기록은 없어요. 실제 날짜를 알면 바꿔요.</div></div>
+     ${WEBAPP?'':`<div class="card"><h2>예시 취소·안 옴 <span class="tag warn">예시</span></h2><div class="row">${chips([['1','보임'],['0','숨김']],S.settings.exampleCx===false?'0':'1','setExampleCx')}</div><div class="tiny muted" style="margin-top:4px">수첩에는 취소·안 옴 기록이 없어요. 화면을 보여 주려고 넣은 예시 ${EXAMPLE_CX.length}건이고, 운동 기록은 없어요. 실제 날짜를 알면 바꿔요.</div></div>
      <div class="card"><h2>화면 디자인</h2><div class="row">${chips([['chart','기록부 (B)'],['emr','지금 디자인 (A)']],UI.look,'setLook')}</div><div class="tiny muted" style="margin-top:4px">B는 지도교수님 피드백(11/11)의 종이 기록부 느낌이에요. A는 11/6까지 다듬은 화면 그대로예요. 위쪽 도구 줄 '디자인' 버튼으로도 바꿀 수 있어요.</div></div>
      <div class="card"><h2>처음 화면</h2>${btn('로그아웃 (처음 화면으로)','logout',null,'small')}<div class="tiny muted" style="margin-top:4px">입력한 기록은 그대로 두고 로그인 화면으로 돌아가요.</div></div>
      <div class="card"><h2>처음 상태로</h2>${UI.confirmReset?`<div class="row"><span class="small">입력한 것을 모두 지울까요?</span>${btn('되돌리기','reset',null,'danger')}${btn('아니요','confirmReset',{v:0})}</div>`:btn('처음 상태로 되돌리기','confirmReset',{v:1},'small')}</div>`}</div>
@@ -3441,7 +3442,8 @@ function idTable(cells,cols){/* cells: [라벨, 값, 칸 수?] */let h='',n=0,ro
   for(const c of cells){const span=c[2]||1;row+=`<th>${c[0]}</th><td${span>1?` colspan="${span*2-1}"`:''}>${c[1]}</td>`;n+=span;if(n>=cols){h+=`<tr>${row}</tr>`;row='';n=0}}
   if(row)h+=`<tr>${row}</tr>`;return `<table class="f-id">${h}</table>`}
 function fsec(label,body,cls){return `<div class="f-sec ${cls||''}"><div class="f-lb"><span>${label}</span></div><div class="f-bd">${body}</div></div>`}
-const signLine=(what,date)=>`<div class="f-sign"><span>${what}</span><span class="f-date">작성일 ${date}</span><span>담당 트레이너</span><i></i><span class="faint">(서명)</span></div>`;
+const trainerName=()=>(S.profile&&S.profile.name)||'';
+const signLine=(what,date)=>`<div class="f-sign"><span>${what}</span><span class="f-date">작성일 ${date}</span><span>담당 트레이너</span><i>${esc(trainerName())}</i><span class="faint">(서명)</span></div>`;
 function topLine(x){const t=topSet({...x,sets:x.sets.filter(st=>st.done||st.aw!=null)});return t?ftop(t,x.exId):''}
 function cmpTop(a,b){if(!a||!b)return null;if(isNum(a.w)&&isNum(b.w)&&a.w!==b.w)return a.w>b.w?1:-1;const ar=+a.r||0,br=+b.r||0;return ar===br?0:ar>br?1:-1}
 const arrow=c=>c==null?'<span class="faint">—</span>':c>0?'<b class="up">▲ 오름</b>':c<0?'<b class="down">▼ 내림</b>':'<span class="muted">= 같음</span>';
@@ -3519,7 +3521,7 @@ function showDoc(o){
       ${fsec('오늘 쓴<br>근육',muscleBlock([s],220,'오늘'))}
       ${fsec('무게<br>흐름',`<div class="row" style="margin-bottom:6px">${pick}</div>${chart}`)}
     </div>
-    <div class="f-issue"><span>${esc(m.code)} 회원님, 오늘 수고했어요.</span><span class="sp"></span><span>날짜 ${s.date}</span><span>담당 트레이너</span><i></i><span class="faint">(서명)</span></div>
+    <div class="f-issue"><span>${esc(m.code)} 회원님, 오늘 수고했어요.</span><span class="sp"></span><span>날짜 ${s.date}</span><span>담당 트레이너</span><i>${esc(trainerName())}</i><span class="faint">(서명)</span></div>
   </div></div>`;
 }
 /* ---------- 디자인 B: 나머지 화면도 회원 진료기록부처럼 (2026-11-17 이현아님 요청, D94) ----------
