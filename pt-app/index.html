@@ -1227,6 +1227,10 @@ body #device.apple.dark .lp-mock{background:var(--panel);box-shadow:0 12px 40px 
 }
 #device.apple .card.fold{padding:0}
 #device.apple .card.fold>.foldhead h2{font-size:15px;font-weight:650}
+/* 프로필 동그라미 (2026-11-23): 아이폰 연락처·설정의 이름 첫 글자 동그라미처럼 위가 밝고 아래가 진한 회색.
+   파랑은 '누를 수 있는 것'에만 쓰므로 사람 표시는 중립색으로. 다크에서는 한 단계 어둡게 */
+#device.apple .st-av{background:linear-gradient(180deg,#a5abb6,#858a94);color:#fff;font-weight:600;letter-spacing:-.01em;box-shadow:inset 0 .5px 0 rgba(255,255,255,.25)}
+#device.apple.dark .st-av{background:linear-gradient(180deg,#7c7c82,#56565b)}
 /* ---- 기록부 다크 모드 (2026-11-23): 밤에 보는 기록부 ----
    양식 선·칸·이중 밑줄은 그대로 두고 색만 바꾼다. 종이는 짙은 남색, 글자는 밝은 회청색,
    칸 머리는 한 단계 밝은 남색, 제목 잉크(남색)는 밝은 하늘색, 도장 빨강은 조금 밝게 */
