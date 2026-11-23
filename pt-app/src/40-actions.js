@@ -11,7 +11,9 @@ function render(o={}){
   if(UI.modal&&MOD[UI.modal.type]){let mh;try{mh=MOD[UI.modal.type](UI.modal)}catch(err){console.error(err);mh=`<h3>창을 열지 못했어요</h3>${btn('닫기','closeModal')}`}html+=`<div class="overlay" data-act="overlay"><div class="modal" role="dialog" aria-modal="true">${mh}</div></div>`}
   if(UI.ask) html+=askHTML();
   if(UI.toast) html+=`<div class="toast" role="status">${esc(UI.toast)}</div>`;
+  const prevOv=app.querySelector(':scope>.overlay'), hadToast=!!app.querySelector(':scope>.toast');
   app.innerHTML=html; UI.rk=routeKey();
+  sheetMotion(app,prevOv,hadToast);
   app.querySelectorAll('[data-sk]').forEach(el=>{const v=UI.scrolls[UI.rk+'|'+el.dataset.sk];if(v!=null)el.scrollTop=v});
   if(fk){const el=app.querySelector(`[data-k="${CSS.escape(fk)}"]`);if(el){el.focus({preventScroll:true});if(sel)try{el.setSelectionRange(sel[0],sel[1])}catch(e){}}}
   document.getElementById('device').classList.toggle('chart',chartLayout());document.getElementById('device').classList.toggle('apple',UI.look==='emr');
@@ -19,6 +21,15 @@ function render(o={}){
   document.getElementById('b-orient').textContent=UI.orient==='land'?'세로로 보기':'가로로 보기';
   document.getElementById('b-fit').textContent=UI.fit?'실제 크기':'창에 맞추기';
   if(typeof guideAfter==='function') guideAfter();
+}
+/* 창(시트)과 알림의 나타남·사라짐: 새로 열릴 때만 움직이고(다시 그릴 때마다 깜빡이지 않게),
+   누른 곳에서 커지며 나오고 닫힐 때 같은 곳으로 돌아간다 (apple-design §7). 모양은 CSS(.apple)가 정한다 */
+function sheetMotion(app,prevOv,hadToast){
+  const ov=app.querySelector(':scope>.overlay');
+  if(ov&&!prevOv){ov.classList.add('enter');const m=ov.querySelector('.modal');
+    if(m&&UI.pt){const r=m.getBoundingClientRect(),k=r.width/m.offsetWidth||1;m.style.transformOrigin=`${Math.round((UI.pt[0]-r.left)/k)}px ${Math.round((UI.pt[1]-r.top)/k)}px`}}
+  if(!ov&&prevOv&&UI.look==='emr'){prevOv.classList.remove('enter');prevOv.classList.add('leave');prevOv.querySelectorAll('[data-act]').forEach(e=>e.removeAttribute('data-act'));prevOv.removeAttribute('data-act');app.appendChild(prevOv);setTimeout(()=>prevOv.remove(),240)}
+  const t=app.querySelector(':scope>.toast'); if(t&&!hadToast) t.classList.add('enter');
 }
 let toastT=null;
 function toast(msg){UI.toast=msg;render();clearTimeout(toastT);toastT=setTimeout(()=>{UI.toast=null;document.querySelector('#app .toast')?.remove()},2600)}
@@ -245,5 +256,8 @@ function boot(){
   window.addEventListener('resize',fit);
   try{new ResizeObserver(fit).observe(document.getElementById('stage'))}catch(e){}
   setInterval(()=>{const el=document.getElementById('timer-text');if(el&&UI.timer)el.innerHTML=timerText()},1000);
+  // 누르는 순간 반응(:active)이 아이패드 사파리에서도 바로 보이게, 그리고 창이 누른 곳에서 나오게 누른 위치를 기억
+  document.addEventListener('touchstart',()=>{},{passive:true});
+  document.addEventListener('pointerdown',e=>{UI.pt=[e.clientX,e.clientY]},true);
   render(); fit();
 }
