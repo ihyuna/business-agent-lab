@@ -84,3 +84,6 @@
 #device.chart:not(.apple) .th-auto i{border-radius:0;background:linear-gradient(90deg,#fff 50%,#121a28 50%);box-shadow:inset 0 0 0 1px #6f86ad}
 #device.chart:not(.apple) :is(.th-light,.th-dark,.th-auto) i.s{background:#1f66f2;box-shadow:none}
 #device.chart:not(.apple) .th-dark i.s{background:#5b9bff}
+/* 프로필 동그라미: 기록부도 회색 (파랑은 누르는 것에만) */
+#device.chart:not(.apple) .st-av{background:linear-gradient(180deg,#a5abb6,#858a94);font-weight:600}
+#device.chart.dark:not(.apple) .st-av{background:linear-gradient(180deg,#7a8496,#535d70)}
