@@ -79,11 +79,11 @@ function sessionRow(s,o={}){
     ${s.status==='planned'?`<button class="btn ghost more" data-act="modal" data-type="sessMenu" data-sid="${s.id}" aria-label="수업 메뉴">…</button>`:'<span style="width:44px"></span>'}</div>`;
 }
 function miniCal(d){
-  const x=pd(d); const y=x.getFullYear(), mo=x.getMonth(); const first=new Date(y,mo,1); const start=new Date(y,mo,1-first.getDay());
+  const x=UI.cur.calYM?pd(UI.cur.calYM+'-01'):pd(d); const y=x.getFullYear(), mo=x.getMonth(); const first=new Date(y,mo,1); const start=new Date(y,mo,1-first.getDay());
   const has=new Set(S.sessions.filter(s=>s.status!=='plan_only').map(s=>s.date));
   let rows='';for(let w=0;w<6;w++){rows+='<tr>';for(let k=0;k<7;k++){const c=new Date(start);c.setDate(start.getDate()+w*7+k);const ci=iso(c);
     rows+=`<td><button class="${c.getMonth()!==mo?'other ':''}${k===0?'sun ':''}${has.has(ci)?'has ':''}${ci===d?'today':''}" data-act="setDay" data-v="${ci}" aria-label="${md(ci)}">${c.getDate()}</button></td>`}rows+='</tr>'}
-  return `<div class="mcal"><div class="hd">${y}. ${mo+1}</div><table><tr>${DOW.map(w=>`<th>${w}</th>`).join('')}</tr>${rows}</table></div>`;
+  return `<div class="mcal"><div class="hd"><button class="mnav" data-act="calMove" data-dir="-1" aria-label="전달">‹</button><span>${y}. ${mo+1}</span><button class="mnav" data-act="calMove" data-dir="1" aria-label="다음 달">›</button></div><table><tr>${DOW.map(w=>`<th>${w}</th>`).join('')}</tr>${rows}</table></div>`;
 }
 /* 회차 꼬리표: 18/30. 예정·진행 중이면 남은 횟수(이 수업 포함)로 색: 3 노랑 · 2 주황 · 1 빨강 */
 function noBadge(s){const m=M(s.memberId);const n=sessNo(s);if(!n)return '';const T=pkgTotal(m);const live=s.status==='planned'||s.status==='in_progress';
@@ -284,7 +284,6 @@ V.member=r=>{
         
       </div>
       <div class="cl-right">
-        <h3>월별 수업 횟수</h3>${monthBars(m,262,130)}
         <h3>쓴 근육 <span class="sp"></span>${chips([['last','지난 PT'],['d30','최근 30일']],UI.cur['mus-'+m.id]||'last','musRange',{mid:m.id})}</h3>
         ${(()=>{const rg=UI.cur['mus-'+m.id]||'last';const ss=rg==='last'?(last?[last]:[]):done.filter(s=>daysBetween(s.date,t)>=0&&daysBetween(s.date,t)<30);return muscleBlock(ss,238,rg==='last'?'지난 PT':'최근 30일')})()}
         <h3>메모</h3>${notes.map(n=>`<div class="li small" style="align-items:flex-start">${pill(NOTE_KINDS[n.kind],'gray')}<div style="flex:1">${esc(n.text)}</div>${btn('지우기','delNote',{mid:m.id,id:n.id},'small ghost')}</div>`).join('')||'<div class="empty">없어요.</div>'}

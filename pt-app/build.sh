@@ -9,5 +9,5 @@ wc -c index.html
   cat src/web.css; printf '</style>\n</head>\n<body>\n'
   cat src/00-head.html; printf '<script>\n(()=>{\nconst WEBAPP=true;\n'
   cat src/10-data.js src/15-body.js src/20-logic.js src/30-views.js src/31-views2.js src/32-charts.js src/33-chartdoc.js src/34-docpages.js src/40-actions.js src/50-web.js
-  printf '\nboot();\nwindow.__pt={get S(){return S},UI,ACT,ON};\n})();\n</script>\n</body>\n</html>\n'; } > web/index.html
+  printf '\nboot();\nwindow.__pt={get S(){return S},set S(v){S=v},UI,ACT,ON,notebookState,COACH,save};\n})();\n</script>\n</body>\n</html>\n'; } > web/index.html
 wc -c web/index.html

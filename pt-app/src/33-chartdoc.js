@@ -43,7 +43,6 @@ function memberDoc(o){
     <div class="f-cap">Ⅳ. 다음 PT 계획</div>${fsec('다음 PT',next)}
     <div class="f-cap">Ⅴ. 경과 기록 <span class="muted" style="font-weight:500">최근 ${Math.min(all.length,14)}회 · 줄을 누르면 펼쳐져요</span><span class="sp"></span>${btn('전체 수업 기록','go',{to:'history',mid:m.id},'small ghost')}</div>
     <table class="f-prog"><tr><th style="width:92px">일자</th><th style="width:76px">분할</th><th>실시 내용 (종목 · 최고 세트)</th><th style="width:200px">소견 · 메모</th><th style="width:40px">확인</th></tr>${prog}</table>
-    ${fsec('월별<br><small>수업 횟수</small>',monthHBars(m),'mhsec')}
     <div class="f-cap">Ⅵ. 생활 · 식단 · 개인 운동 메모</div>
     ${fsec('메모',`${notes.map(n=>`<div class="li small">${pill(NOTE_KINDS[n.kind],'gray')}<div style="flex:1">${esc(n.text)}</div>${btn('지우기','delNote',{mid:m.id,id:n.id},'small ghost')}</div>`).join('')||'<div class="empty">없어요.</div>'}<div class="row" style="margin-top:6px;flex-wrap:nowrap">${dSel('nKind-'+m.id,['general','lifestyle','diet','self_train','personality'].map(k=>[k,NOTE_KINDS[k]]),'general',{w:84})}${dIn('nText-'+m.id,'메모',{grow:1})}${btn('넣기','addNote',{mid:m.id},'small')}</div>`)}
     ${signLine('위 기록은 트레이너 수첩과 수업 기록을 옮긴 것이에요.',todayIso())}

@@ -157,22 +157,18 @@ ACT.setNewPw=async()=>{const pw=dval('au-pw');if(pw.length<8){UI.cur.authMsg='�
   AUTH.user={id:data.user.id,email:data.user.email};await enterAccount();toast('비밀번호를 바꿨어요')};
 ACT.logout=()=>{signOut()};
 ACT.obNext=()=>{
-  const st=UI.cur.ob||0;
-  if(st===0){const n=dval('ob-name').trim();if(!n){UI.cur.obMsg='이름을 적어 주세요';render({noSave:true});return}UI.draft.obName=n;UI.draft.obGym=dval('ob-gym').trim();UI.cur.obMsg=''}
-  UI.cur.ob=st+1;render({noSave:true});
+  const n=dval('ob-name').trim();if(!n){UI.cur.obMsg='이름을 적어 주세요';render({noSave:true});return}
+  UI.draft.obName=n;UI.draft.obGym=dval('ob-gym').trim();UI.cur.obMsg='';UI.cur.ob=1;render({noSave:true});
 };
-ACT.obBack=()=>{UI.cur.ob=Math.max(0,(UI.cur.ob||0)-1);render({noSave:true})};
-ACT.obStart=d=>{
-  const prof={name:UI.draft.obName||'',gym:UI.draft.obGym||'',onboarded:false,since:realToday()};
-  if(d.v==='notebook') S=notebookState();
-  else if(d.v==='device'){try{S=JSON.parse(LS.get('jimnote-v1'))}catch(e){S=emptyState()}}
-  else if(d.v!=='keep'||S._fresh) S=emptyState();
+ACT.obBack=()=>{UI.cur.ob=0;render({noSave:true})};
+/* 처음 설정이 끝나면 빈 노트로 시작한다 (2026-11-23 이현아님: 예시 데이터 고르기 빼기). 백업은 설정에서 불러온다 */
+ACT.obFinish=()=>{
+  const prof={name:UI.draft.obName||'',gym:UI.draft.obGym||'',onboarded:true,since:realToday(),coach:{}};
+  if(S._fresh) S=emptyState();
   delete S._fresh; S.profile=Object.assign({},S.profile||{},prof); S.today=realToday(); ensurePackages(); save();
-  UI.cur.obStart=d.v; UI.cur.ob=2; render({noSave:true});
+  resetUI('today'); render({noSave:true});
 };
-ACT.obFinish=()=>{S.profile.onboarded=true;save();const v=UI.cur.obStart;resetUI(v==='empty'?'members':'today');render({noSave:true});
-  toast(v==='empty'?`${S.profile.name} 트레이너님, 반가워요. + 회원으로 첫 회원을 넣어 보세요`:`${S.profile.name} 트레이너님, 반가워요`)};
-ACT.replayOnboard=()=>{UI.route={name:'onboard'};UI.cur.ob=2;UI.cur.obStart='keep';UI.draft.obName=S.profile.name;render({noSave:true})};
+ACT.replayCoach=()=>{S.profile.coach={};save();resetUI('today');render({noSave:true})};
 ACT.exportData=()=>{
   S.settings.lastBackup=new Date().toISOString(); save();
   const blob=new Blob([JSON.stringify({app:'jimnote',ver:APP_VER,exported:S.settings.lastBackup,data:S},null,1)],{type:'application/json'});
@@ -190,7 +186,7 @@ ON.importFile=(v,d,el)=>{
     if(!S._fresh) LS.set(dataKey(AUTH.user.id)+'-before-import',JSON.stringify(S));
     const prof=S.profile;S=st;delete S._fresh;S.today=realToday();S.profile=Object.assign({},st.profile||{},prof&&prof.name?prof:{});
     ensurePackages();save();
-    if(UI.route.name==='onboard'){UI.cur.obStart='import';UI.cur.ob=2;render({noSave:true})}else{resetUI('today');render({noSave:true})}
+    resetUI('today');render({noSave:true});
     toast(`백업을 불러왔어요 · 회원 ${S.members.length}명, 수업 ${S.sessions.length}개`);
   };
   rd.readAsText(f);
@@ -198,7 +194,7 @@ ON.importFile=(v,d,el)=>{
 ACT.undoImport=()=>{const k=dataKey(AUTH.user.id)+'-before-import';try{const t=LS.get(k);if(!t)return;S=JSON.parse(t);LS.del(k);S.today=realToday();save();resetUI('settings');render({noSave:true});toast('불러오기 전으로 되돌렸어요')}catch(e){toast('되돌리지 못했어요')}};
 ACT.saveProfile=()=>{S.profile.name=dval('pf-name').trim()||S.profile.name;S.profile.gym=dval('pf-gym').trim();save();toast('저장했어요')};
 ACT.syncNow=()=>{pushCloud()};
-function webWipe(){const p=S.profile;S=emptyState();S.profile=Object.assign({},p,{onboarded:false});LS.del(dataKey(AUTH.user.id)+'-before-import');save();resetUI('onboard');UI.cur.ob=1;UI.draft.obName=p.name||'';UI.draft.obGym=p.gym||''}
+function webWipe(){const p=S.profile;S=emptyState();S.profile=Object.assign({},p);LS.del(dataKey(AUTH.user.id)+'-before-import');save();resetUI('today')}
 
 function webSettingsCards(){
   const before=!!(AUTH.user&&LS.get(dataKey(AUTH.user.id)+'-before-import'));
@@ -206,7 +202,7 @@ function webSettingsCards(){
   return `<div class="card"><h2>내 계정</h2>
      <div class="small" style="margin-bottom:8px"><b>${esc(AUTH.user?AUTH.user.email:'')}</b> · ${AUTH.mode==='cloud'?'클라우드 계정 (어느 기기에서든 로그인)':'이 기기 계정'} ${syncHTML()}</div>
      <div class="row" style="flex-wrap:nowrap"><input class="ci" data-d="pf-name" value="${esc(P.name||'')}" placeholder="이름" style="width:140px"><input class="ci" data-d="pf-gym" value="${esc(P.gym||'')}" placeholder="센터 이름 (선택)" style="flex:1">${btn('저장','saveProfile',null,'small')}</div>
-     <div class="row" style="margin-top:8px">${AUTH.mode==='cloud'&&AUTH.sync!=='saved'?btn('지금 저장','syncNow',null,'small'):''}${btn('처음 안내 다시 보기','replayOnboard',null,'small ghost')}${btn('로그아웃','logout',null,'small')}</div></div>
+     <div class="row" style="margin-top:8px">${AUTH.mode==='cloud'&&AUTH.sync!=='saved'?btn('지금 저장','syncNow',null,'small'):''}${btn('화면 안내 다시 보기','replayCoach',null,'small ghost')}${btn('로그아웃','logout',null,'small')}</div></div>
    <div class="card"><h2>화면 디자인</h2><div class="row">${chips([['chart','기록부 (B)'],['emr','지금 디자인 (A)']],UI.look,'setLook')}</div></div>
    <div class="card"><h2>기록 보관</h2>
      <div class="small" style="margin-bottom:6px">${AUTH.mode==='cloud'?'기록은 내 계정에만 저장돼요. 다른 트레이너는 볼 수 없어요.':'기록은 <b>이 기기의 이 브라우저</b>에만, 이 계정 몫으로 따로 저장돼요.'} (지금 ${storedKB()}KB)</div>
@@ -267,38 +263,112 @@ V.auth=()=>{
 };
 ACT.authKey=()=>{};
 
-/* ---------- 화면: 처음 설정 (온보딩) ---------- */
-const OB_TOUR=[
-  ['오늘','첫 화면은 오늘 수업 표예요. 수업 블록을 누르면 그 회원의 수업 준비로 가요. 회원 탭에서 회원을 넣고, 회원 기록부에서 \'다음 PT 잡기\'로 수업을 잡아요.'],
-  ['수업 준비','지난 같은 분할의 실제값으로 오늘 세트·무게·횟수를 채워 둬요. 숫자 옆 근거를 보고, 바꿀 숫자만 눌러서 고쳐요.'],
-  ['수업','시작할 때 컨디션을 고르고, 세트를 끝낼 때마다 \'그대로\'를 눌러요. 다르게 했으면 그 자리에서 숫자를 고쳐요. 색 칠한 숫자는 앱이 바꾼 것이고, 누르면 까닭이 나와요.'],
-  ['마무리','오늘 바뀐 것을 확인하고 다음 PT 계획을 정하면 저장돼요. 다음 수업 준비가 미리 채워져요.']];
+/* ---------- 화면: 처음 설정 (온보딩): 이름 → 홈 화면 추가. 화면 쓰는 법은 각 화면을 처음 열 때 하나씩 안내한다 ---------- */
 V.onboard=()=>{
   const st=UI.cur.ob||0; const name=UI.draft.obName||'';
-  const dots=`<div class="ob-dots">${[0,1,2,3].map(i=>`<i class="${i===st?'on':i<st?'done':''}"></i>`).join('')}</div>`;
-  let body='';
-  if(st===0) body=`<h2>반가워요! 어떻게 불러 드릴까요?</h2><p class="ob-p">회원에게 보여 주는 안내서와 마무리 서명 줄에 들어가요.</p>
+  const dots=`<div class="ob-dots">${[0,1].map(i=>`<i class="${i===st?'on':i<st?'done':''}"></i>`).join('')}</div>`;
+  const body=st===0?`<h2>반가워요! 어떻게 불러 드릴까요?</h2><p class="ob-p">경과기록지와 회원 안내서의 서명 줄에 들어가요.</p>
     <label class="lg-f"><span>트레이너 이름</span><input data-d="ob-name" value="${esc(name||S.profile.name||'')}" placeholder="예: 윤 트레이너"></label>
     <label class="lg-f"><span>센터 이름 (선택)</span><input data-d="ob-gym" value="${esc(UI.draft.obGym||S.profile.gym||'')}" placeholder="예: ○○ 피트니스"></label>
     ${UI.cur.obMsg?`<div class="au-msg">${esc(UI.cur.obMsg)}</div>`:''}
-    <div class="ob-nav"><span></span><button class="lg-b lg-go ob-next" data-act="obNext">다음</button></div>`;
-  else if(st===1){const dev=!!LS.get('jimnote-v1');
-    body=`<h2>기록을 어떻게 시작할까요?</h2><p class="ob-p">나중에 설정에서 백업 파일로 언제든 옮길 수 있어요.</p>
-    <div class="ob-opts">
-      <button class="ob-opt" data-act="obStart" data-v="empty"><b>빈 노트로 시작</b><span>회원을 한 명씩 넣어요. 처음 쓰는 트레이너는 이걸 골라요.</span></button>
-      <button class="ob-opt" data-act="obStart" data-v="notebook"><b>예시 기록으로 둘러보기</b><span>실제 트레이너 수첩 기록(회원 6명, 이름은 성+00 코드)이 들어 있어요. 앱을 먼저 눌러 보고 싶을 때 좋아요.</span></button>
-      <label class="ob-opt"><b>백업 파일 불러오기</b><span>짐노트에서 내려받은 백업 파일(.json)로 시작해요.</span><input type="file" accept="application/json,.json" data-on="importFile" style="display:none"></label>
-      ${dev?`<button class="ob-opt" data-act="obStart" data-v="device"><b>이 기기에 있던 기록 가져오기</b><span>로그인 전 버전(웹앱 1.0)에서 이 기기에 쓰던 기록을 이 계정으로 옮겨요.</span></button>`:''}
-    </div><div class="ob-nav"><button class="lg-b lg-out ob-prev" data-act="obBack">이전</button><span></span></div>`}
-  else if(st===2) body=`<h2>짐노트는 이렇게 써요</h2><p class="ob-p">수업 하나가 네 화면으로 흘러가요. 판단은 트레이너가 하고, 앱은 기억하고 계산해요.</p>
-    <div class="ob-tour">${OB_TOUR.map(([t,d],i)=>`<div class="ob-card"><span class="lp-n">${i+1}</span><b>${t}</b><p>${d}</p></div>`).join('')}</div>
-    <div class="ob-nav"><span></span><button class="lg-b lg-go ob-next" data-act="obNext">다음</button></div>`;
-  else body=`<h2>아이패드에서 앱처럼 쓰기</h2>
+    <div class="ob-nav"><span></span><button class="lg-b lg-go ob-next" data-act="obNext">다음</button></div>`
+   :`<h2>아이패드에서 앱처럼 쓰기</h2>
     <ol class="ob-steps"><li>사파리에서 이 페이지를 연 채로 위쪽 <b>공유</b> 버튼(□↑)을 눌러요.</li><li><b>홈 화면에 추가</b>를 누르고 '추가'를 눌러요.</li><li>홈 화면의 짐노트 아이콘으로 열면 주소창 없이 꽉 찬 화면으로 열려요.</li></ol>
     <p class="ob-p">${AUTH.mode==='cloud'?'기록은 내 계정에 저장돼서, 다른 기기에서도 같은 이메일로 로그인하면 이어서 쓸 수 있어요.':'이 버전은 기록을 이 기기에만 저장해요. 기기를 바꿀 땐 설정 → 백업 파일을 옮겨 주세요.'}</p>
-    <div class="ob-nav"><span></span><button class="lg-b lg-go ob-next" data-act="obFinish">짐노트 시작하기</button></div>`;
+    <p class="ob-p">시작하면 화면마다 처음 열 때 무엇이 어디 있는지 하나씩 알려 드려요.</p>
+    <div class="ob-nav"><button class="lg-b lg-out ob-prev" data-act="obBack">이전</button><button class="lg-b lg-go ob-next" data-act="obFinish">짐노트 시작하기</button></div>`;
   return `<div class="ob"><div class="ob-top"><div class="lp-brand">${kbIcon(26)}<b>짐노트</b></div>${dots}<span class="tiny muted">${esc(AUTH.user?AUTH.user.email:'')}</span></div><div class="ob-body">${body}</div></div>`;
 };
+
+/* ---------- 화면별 첫 안내 (D77, 워크플로우 5-11) ----------
+   화면을 처음 열 때 한 번만, 어두운 배경 위에 설명하는 곳만 밝게 하고 카드로 하나씩 알려 준다.
+   본 화면은 S.profile.coach 에 남긴다. 설정 → '화면 안내 다시 보기'로 다시 본다.
+   q = 찾을 곳, has = 그 안 글자, up = 넓혀 밝힐 상자, pair = 제목과 바로 아래 칸을 같이, last = 마지막 것 */
+const COACH={
+ today:[
+  {q:'.pl-mid',t:'오늘 수업',d:'오늘 잡힌 수업이 시간순으로 있어요. 수업 칸을 누르면 그 회원의 수업 준비가 열려요.'},
+  {q:'.pl-mid .blk .more',t:'수업 메뉴',d:'옮기기, 취소, 안 옴을 여기서 남겨요. 이유를 고르면 기록에 같이 남아요.'},
+  {q:'.mcal',t:'달력',d:'날짜를 누르면 그날 수업을 봐요. ‹ › 로 지난달과 다음 달로 넘겨요. 점이 있는 날은 수업이 있는 날이에요.'},
+  {q:'.pl-right',t:'최근 기록',d:'최근 30일 동안 끝낸 수업, 취소, 안 옴을 모아 봐요. 위쪽 칸에서 종류별로 골라 봐요.'},
+  {q:'.tabbar [data-v="members"]',t:'회원',d:'회원 탭에서 + 회원으로 회원을 넣고, 회원 기록부에서 다음 PT를 잡아요.'}],
+ members:[
+  {q:'.btn',has:'+ 회원',t:'회원 넣기',d:'+ 회원을 누르고 회원 이름(또는 코드)과 목표를 적어요.'},
+  {q:'.f-prog, .list',t:'회원 명부',d:'줄을 누르면 그 회원의 기록부가 열려요. 다음 PT, 지난 수업, 누적 횟수, 주의사항 수를 한 줄로 봐요.'}],
+ member:[
+  {q:'.f-cap',has:'Ⅰ.',pair:1,t:'인적 사항',d:'첫 기록, 마지막 수업, 다음 PT, 누적 횟수와 회차를 한눈에 봐요.'},
+  {q:'.f-cap',has:'Ⅱ.',pair:1,t:'특이사항 · 확인 · 목표',d:'주의사항, 다음에 확인할 것, 목표를 여기서 넣어요. 수업 준비 화면 맨 위에 같이 떠요.'},
+  {q:'.f-cap',has:'Ⅲ.',pair:1,t:'지난 PT 한눈에',d:'종목마다 지난번 세트와 그 전 비교, 다음 PT에 쓸 숫자를 봐요. 오르내린 까닭은 앱이 판단하지 않아요.'},
+  {q:'.f-cap',has:'Ⅳ.',pair:1,t:'다음 PT 계획',d:'다음 PT를 잡으면 그 분할의 루틴으로 수업 준비를 미리 채워 둬요.'},
+  {q:'.f-cap',has:'Ⅴ.',pair:1,t:'경과 기록',d:'지난 수업 줄을 누르면 세트가 펼쳐져요. 종목을 누르면 그 숫자가 다음 PT 계획에 들어가요.'}],
+ prep:[
+  {q:'.brief',t:'맨 위 한 줄',d:'지난 수업이 며칠 전인지, 열린 주의사항과 물어볼 것이 몇 개인지 봐요.'},
+  {q:'.prep-head',t:'오늘 숫자 정하기',d:'왼쪽부터 지난번 실제값, 판단(올림 · 내림 · 유지), 오늘 세트 · 무게 × 횟수예요.'},
+  {q:'.plan-ex',t:'종목 한 줄',d:'숫자는 지난 기록에서 가져온 제안이에요. 눌러서 고치면 고친 숫자가 남아요. 꼬리표를 누르면 어디서 가져왔는지 근거가 떠요.'},
+  {q:'.btn.primary',last:1,t:'수업으로',d:'준비가 끝나면 이 버튼으로 수업 시작 화면에 가요.'}],
+ start:[
+  {q:'h2',has:'컨디션',up:'.card',t:'컨디션',d:'모두 평소로 골라져 있어요. 다를 때만 눌러요.'},
+  {q:'h2',has:'오늘 숫자',up:'.card',t:'오늘 숫자',d:'수면 · 피로 · 근육통이 나쁨이면 메인 · 보조 숫자가 주황색으로 조금 가벼워져요. 통증은 숫자를 바꾸지 않아요.'},
+  {q:'[data-act="startSession"]',t:'시작',d:'시작을 누른 시각부터 수업 시계가 가요.'}],
+ live:[
+  {q:'.sets',t:'세트 기록',d:'계획대로 했으면 그대로만 눌러요. 다르면 그 자리에서 숫자를 고쳐요. 앞 세트 결과로 남은 세트가 바뀌면 보라색이 되고, 누르면 원래 숫자로 돌릴 수 있어요.'},
+  {q:'.timebar',t:'남은 시간',d:'지금 시각과 끝까지 남은 시간이에요. 빠듯하면 빨개지고, 뺄 수 있는 종목에 표시가 붙어요.'},
+  {q:'.next',t:'다음 종목',d:'이 종목이 끝나면 눌러서 다음 종목으로 가요. 위쪽 종목 버튼으로 아무 종목이나 골라도 돼요.'},
+  {q:'.sw',t:'스톱워치',d:'쉬는 시간이나 버티기 시간을 잴 때 써요. 랩을 누르면 아래에 쌓여요.'}],
+ summary:[
+  {q:'.f-sec',has:'수업 전',t:'수업 전',d:'수업 전에 고른 컨디션과 회원 말이에요.'},
+  {q:'.f-sec',has:'한 것',t:'오늘 한 것',d:'오늘 한 세트를 지난 같은 분할과 나란히 봐요. 줄을 누르면 고칠 수 있어요.'},
+  {q:'.f-sec',has:'돌아보기',t:'돌아보기',d:'계획과 달라진 곳과 넘은 개인 기록이에요. 기댓값보다 덜 나온 세트는 까닭을 트레이너가 골라요.'},
+  {q:'.btn.primary',last:1,t:'다음 PT 계획',d:'확인했으면 다음 PT 계획으로 넘어가요. 아무것도 안 눌러도 기록은 저장돼요.'}],
+ nextplan:[
+  {q:'h2',has:'1',up:'.card',t:'다음 숫자',d:'목표를 넘은 종목에 표시가 있어요. 표시만 하니, 올릴 종목만 눌러요.'},
+  {q:'h2',has:'다음 PT 날짜',up:'.card',t:'다음 PT 날짜',d:'다음 PT를 여기서 잡아요. 나중에 잡아도 돼요.'},
+  {q:'h2',has:'확인할 것',up:'.card',t:'다음에 확인할 것',d:'다음 수업 때 확인할 것을 남기면 그 수업 준비 맨 위에 떠요.'},
+  {q:'[data-act="finish"]',t:'끝내기',d:'끝내면 기록이 저장되고 다음 수업 준비가 미리 채워져요.'}],
+ show:[
+  {q:'.f-cap',has:'Ⅰ.',pair:1,t:'회원에게 보여 주기',d:'회원에게 그대로 보여 주는 안내서예요. 오늘 결과와 지난번에서 바뀐 것을 담았어요.'}],
+ settings:[
+  {q:'h2',has:'내 계정',up:'.card',t:'내 계정',d:'이름은 서명 줄에 들어가요. 로그아웃과 화면 안내 다시 보기도 여기 있어요.'},
+  {q:'h2',has:'기록 보관',up:'.card',t:'기록 보관',d:'내 기록 전체를 백업 파일로 내려받거나 불러와요.'},
+  {q:'h2',has:'역할별 기준',up:'.card',t:'역할별 기준',d:'역할마다 횟수, 여유 횟수, 세트, 쉬는 시간 기준이에요. 지금은 논문 기준 임시값이라 트레이너 기준으로 바꿔요.'},
+  {q:'h2',has:'종목 사전',up:'.card',t:'종목 사전',d:'기구 눈금과 한쪽 무게를 정해요. 숫자를 올리고 내릴 때 이 눈금을 써요.'}]
+};
+const NO_COACH=['landing','auth','onboard'];
+function coachKey(){const r=UI.route.name;if(r==='live'){const s=SES(UI.route.sid);return s&&s.status==='planned'?'start':'live'}return r}
+function coachFind(app,st){
+  let els=[...app.querySelectorAll(st.q)].filter(e=>!e.closest('.cm')&&e.getClientRects().length&&(!st.has||e.textContent.includes(st.has)));
+  if(!els.length) return null; let el=st.last?els[els.length-1]:els[0];
+  if(st.up&&el.closest(st.up)) el=el.closest(st.up);
+  return el;
+}
+function guideAfter(){
+  const app=document.getElementById('app'); app.querySelector('.cm')?.remove();
+  if(!AUTH.user||S._fresh||NO_COACH.includes(UI.route.name)||UI.modal||!S.profile) return;
+  const key=coachKey(); const steps=COACH[key]; S.profile.coach=S.profile.coach||{};
+  if(!steps||S.profile.coach[key]) return;
+  if(UI.cm?.key!==key) UI.cm={key,i:0};
+  const live=steps.map(st=>({st,el:coachFind(app,st)})).filter(x=>x.el);
+  if(!live.length||UI.cm.i>=live.length){S.profile.coach[key]=true;save();UI.cm=null;return}
+  const {st,el}=live[UI.cm.i];
+  const sc=el.closest('[data-sk],.scroll');
+  if(sc){const er=el.getBoundingClientRect(),sr=sc.getBoundingClientRect();if(er.top<sr.top||er.top>sr.bottom-80)sc.scrollTop+=er.top-sr.top-16}
+  const ar=app.getBoundingClientRect(); const k=ar.width/app.offsetWidth||1;
+  let r=el.getBoundingClientRect(); let L=r.left,T=r.top,R=r.right,B=r.bottom;
+  if(st.pair&&el.nextElementSibling){const n=el.nextElementSibling.getBoundingClientRect();L=Math.min(L,n.left);R=Math.max(R,n.right);B=Math.max(B,n.bottom)}
+  const W=app.offsetWidth,H=app.offsetHeight,P=6;
+  let x=(L-ar.left)/k-P,y=(T-ar.top)/k-P,w=(R-L)/k+2*P,h=(B-T)/k+2*P;
+  x=Math.max(4,x);y=Math.max(4,y);w=Math.min(W-4-x,w);h=Math.min(H-4-y,h);
+  const CW=340,CH=170; let cx=Math.min(Math.max(12,x),W-CW-12), cy;
+  if(y+h+12+CH<H) cy=y+h+12; else if(y-12-CH>0) cy=y-12-CH; else {cy=Math.max(12,Math.min(H-CH-12,y+h/2-CH/2));cx=x+w+12+CW<W?x+w+12:Math.max(12,x-12-CW)}
+  const n=live.length,i=UI.cm.i;
+  const div=document.createElement('div');div.className='cm';
+  div.innerHTML=`<div class="cm-hole" style="left:${x}px;top:${y}px;width:${w}px;height:${h}px"></div>
+   <div class="cm-card" role="dialog" aria-label="화면 안내" style="left:${cx}px;top:${cy}px;width:${CW}px"><div class="cm-n">${i+1} / ${n}</div><b>${esc(st.t)}</b><p>${esc(st.d)}</p>
+   <div class="cm-b"><button class="cm-skip" data-act="coachSkip">건너뛰기</button><span></span>${i>0?'<button class="cm-prev" data-act="coachPrev">이전</button>':''}<button class="cm-next" data-act="coachNext">${i===n-1?'시작':'다음'}</button></div></div>`;
+  app.appendChild(div);
+}
+ACT.coachNext=()=>{if(UI.cm)UI.cm.i++;render()};
+ACT.coachPrev=()=>{if(UI.cm)UI.cm.i=Math.max(0,UI.cm.i-1);render()};
+ACT.coachSkip=()=>{if(UI.cm){S.profile.coach[UI.cm.key]=true;save();UI.cm=null}render()};
 
 /* ---------- 시작 ---------- */
 function webBoot(){

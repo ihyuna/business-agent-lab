@@ -269,6 +269,7 @@ input,select,textarea{border-radius:6px;border-color:#dfe2e7}
 .mcal button.sun{color:var(--bad)}
 .mcal button.has::after{content:'';position:absolute;left:50%;bottom:2px;width:4px;height:4px;margin-left:-2px;border-radius:50%;background:var(--accent)}
 .mcal button.today{background:var(--accent);color:#fff;font-weight:700}
+.mcal .hd .mnav{width:24px;height:24px;border-radius:4px;font-size:15px;line-height:1;color:var(--muted)}
 .mcal button.today::after{background:#fff}
 .mcal button:hover:not(.today){background:var(--soft)}
 .pl-sec{margin-top:14px;font-size:12px;color:var(--muted);font-weight:700;display:flex;align-items:center;gap:6px}
@@ -2476,11 +2477,11 @@ function sessionRow(s,o={}){
     ${s.status==='planned'?`<button class="btn ghost more" data-act="modal" data-type="sessMenu" data-sid="${s.id}" aria-label="수업 메뉴">…</button>`:'<span style="width:44px"></span>'}</div>`;
 }
 function miniCal(d){
-  const x=pd(d); const y=x.getFullYear(), mo=x.getMonth(); const first=new Date(y,mo,1); const start=new Date(y,mo,1-first.getDay());
+  const x=UI.cur.calYM?pd(UI.cur.calYM+'-01'):pd(d); const y=x.getFullYear(), mo=x.getMonth(); const first=new Date(y,mo,1); const start=new Date(y,mo,1-first.getDay());
   const has=new Set(S.sessions.filter(s=>s.status!=='plan_only').map(s=>s.date));
   let rows='';for(let w=0;w<6;w++){rows+='<tr>';for(let k=0;k<7;k++){const c=new Date(start);c.setDate(start.getDate()+w*7+k);const ci=iso(c);
     rows+=`<td><button class="${c.getMonth()!==mo?'other ':''}${k===0?'sun ':''}${has.has(ci)?'has ':''}${ci===d?'today':''}" data-act="setDay" data-v="${ci}" aria-label="${md(ci)}">${c.getDate()}</button></td>`}rows+='</tr>'}
-  return `<div class="mcal"><div class="hd">${y}. ${mo+1}</div><table><tr>${DOW.map(w=>`<th>${w}</th>`).join('')}</tr>${rows}</table></div>`;
+  return `<div class="mcal"><div class="hd"><button class="mnav" data-act="calMove" data-dir="-1" aria-label="전달">‹</button><span>${y}. ${mo+1}</span><button class="mnav" data-act="calMove" data-dir="1" aria-label="다음 달">›</button></div><table><tr>${DOW.map(w=>`<th>${w}</th>`).join('')}</tr>${rows}</table></div>`;
 }
 /* 회차 꼬리표: 18/30. 예정·진행 중이면 남은 횟수(이 수업 포함)로 색: 3 노랑 · 2 주황 · 1 빨강 */
 function noBadge(s){const m=M(s.memberId);const n=sessNo(s);if(!n)return '';const T=pkgTotal(m);const live=s.status==='planned'||s.status==='in_progress';
@@ -2681,7 +2682,6 @@ V.member=r=>{
         
       </div>
       <div class="cl-right">
-        <h3>월별 수업 횟수</h3>${monthBars(m,262,130)}
         <h3>쓴 근육 <span class="sp"></span>${chips([['last','지난 PT'],['d30','최근 30일']],UI.cur['mus-'+m.id]||'last','musRange',{mid:m.id})}</h3>
         ${(()=>{const rg=UI.cur['mus-'+m.id]||'last';const ss=rg==='last'?(last?[last]:[]):done.filter(s=>daysBetween(s.date,t)>=0&&daysBetween(s.date,t)<30);return muscleBlock(ss,238,rg==='last'?'지난 PT':'최근 30일')})()}
         <h3>메모</h3>${notes.map(n=>`<div class="li small" style="align-items:flex-start">${pill(NOTE_KINDS[n.kind],'gray')}<div style="flex:1">${esc(n.text)}</div>${btn('지우기','delNote',{mid:m.id,id:n.id},'small ghost')}</div>`).join('')||'<div class="empty">없어요.</div>'}
@@ -3463,7 +3463,6 @@ function memberDoc(o){
     <div class="f-cap">Ⅳ. 다음 PT 계획</div>${fsec('다음 PT',next)}
     <div class="f-cap">Ⅴ. 경과 기록 <span class="muted" style="font-weight:500">최근 ${Math.min(all.length,14)}회 · 줄을 누르면 펼쳐져요</span><span class="sp"></span>${btn('전체 수업 기록','go',{to:'history',mid:m.id},'small ghost')}</div>
     <table class="f-prog"><tr><th style="width:92px">일자</th><th style="width:76px">분할</th><th>실시 내용 (종목 · 최고 세트)</th><th style="width:200px">소견 · 메모</th><th style="width:40px">확인</th></tr>${prog}</table>
-    ${fsec('월별<br><small>수업 횟수</small>',monthHBars(m),'mhsec')}
     <div class="f-cap">Ⅵ. 생활 · 식단 · 개인 운동 메모</div>
     ${fsec('메모',`${notes.map(n=>`<div class="li small">${pill(NOTE_KINDS[n.kind],'gray')}<div style="flex:1">${esc(n.text)}</div>${btn('지우기','delNote',{mid:m.id,id:n.id},'small ghost')}</div>`).join('')||'<div class="empty">없어요.</div>'}<div class="row" style="margin-top:6px;flex-wrap:nowrap">${dSel('nKind-'+m.id,['general','lifestyle','diet','self_train','personality'].map(k=>[k,NOTE_KINDS[k]]),'general',{w:84})}${dIn('nText-'+m.id,'메모',{grow:1})}${btn('넣기','addNote',{mid:m.id},'small')}</div>`)}
     ${signLine('위 기록은 트레이너 수첩과 수업 기록을 옮긴 것이에요.',todayIso())}
@@ -4078,8 +4077,9 @@ const ACT={
   histOpen:d=>{const k='hx-'+d.mid;const cur=UI.cur[k]===undefined?(completed(d.mid).slice(-1)[0]||{}).id:UI.cur[k];UI.cur[k]=cur===d.sid?null:d.sid;render()},
   copyEx:d=>{const src=SES(d.sid);const x=src.exercises.find(e=>e.uid===d.uid);const r=copyToNext(src,[x]);if(r)toast(`${EX(x.exId).name}을(를) ${md(r.date)} 수업에 복사했어요`)},
   copyAll:d=>{const src=SES(d.sid);const xs=src.exercises.filter(e=>e.status!=='removed'&&e.status!=='swapped');const r=copyToNext(src,xs);if(r)toast(`종목 ${xs.length}개를 ${md(r.date)} 수업에 복사했어요`)},
-  setDay:d=>{S.today=d.v;seedOthers(S.today);save();render()},
-  shiftDay:d=>{S.today=addDays(todayIso(),+d.dir);seedOthers(S.today);save();render()},
+  calMove:d=>{const x=UI.cur.calYM?pd(UI.cur.calYM+'-01'):pd(todayIso());const n=new Date(x.getFullYear(),x.getMonth()+(+d.dir),1);UI.cur.calYM=iso(n).slice(0,7);render()},
+  setDay:d=>{UI.cur.calYM=null;S.today=d.v;seedOthers(S.today);save();render()},
+  shiftDay:d=>{UI.cur.calYM=null;S.today=addDays(todayIso(),+d.dir);seedOthers(S.today);save();render()},
   noop:()=>{},
   go:d=>{const p={};if(d.mid)p.mid=d.mid;if(d.sid)p.sid=d.sid;go(d.to,p)},
   openSession:d=>{const s=SES(d.sid);go(openSessionRoute(s),{sid:s.id})},

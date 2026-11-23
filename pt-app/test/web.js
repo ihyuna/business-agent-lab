@@ -12,7 +12,11 @@ const st=p=>p.evaluate(()=>({route:__pt.UI.route.name,members:__pt.S.members.len
 async function signup(p,name,email,pw){if(await p.$('[data-act="goAuth"][data-v="signup"]'))await p.click('[data-act="goAuth"][data-v="signup"]');else await p.click('[data-act="authTab"][data-v="signup"]');await p.fill('[data-d="au-name"]',name);await p.fill('[data-d="au-email"]',email);await p.fill('[data-d="au-pw"]',pw);await p.click('[data-act="doAuth"]');await p.waitForTimeout(400)}
 async function login(p,email,pw){if(await p.$('[data-act="goAuth"][data-v="login"]'))await p.click('[data-act="goAuth"][data-v="login"]');else await p.click('[data-act="authTab"][data-v="login"]');await p.fill('[data-d="au-email"]',email);await p.fill('[data-d="au-pw"]',pw);await p.click('[data-act="doAuth"]');await p.waitForTimeout(400)}
 async function onboard(p,start,shotPrefix){if(shotPrefix)await p.screenshot({path:out+'/'+shotPrefix+'-ob1.png'});await p.click('[data-act="obNext"]');await p.waitForTimeout(150);if(shotPrefix)await p.screenshot({path:out+'/'+shotPrefix+'-ob2.png'});
-  await p.click(`[data-act="obStart"][data-v="${start}"]`);await p.waitForTimeout(250);if(shotPrefix)await p.screenshot({path:out+'/'+shotPrefix+'-ob3.png'});await p.click('[data-act="obNext"]');await p.waitForTimeout(150);if(shotPrefix)await p.screenshot({path:out+'/'+shotPrefix+'-ob4.png'});await p.click('[data-act="obFinish"]');await p.waitForTimeout(250)}
+  await p.click('[data-act="obFinish"]');await p.waitForTimeout(250);
+  if(start==='notebook')await p.evaluate(()=>{const pr=__pt.S.profile;__pt.S=__pt.notebookState();__pt.S.profile=pr;__pt.save();__pt.ACT.home()});
+  if(!shotPrefix)await noCoach(p)}
+async function noCoach(p){await p.evaluate(()=>{for(const k in __pt.COACH)__pt.S.profile.coach[k]=true;__pt.save();__pt.ACT.noop();__pt.UI.cm=null;__pt.ACT.home()});await p.waitForTimeout(100)}
+async function walkCoach(p,name){const n=[];for(let k=0;k<12;k++){const c=await p.$('#app .cm');if(!c)break;if(k<2||name)await p.screenshot({path:out+`/c-${name}-${k+1}.png`});n.push(await p.textContent('#app .cm-card b'));await p.click('#app .cm-next');await p.waitForTimeout(120)}return n}
 async function logout(p){await p.evaluate(()=>__pt.ACT.logout());await p.waitForTimeout(400)}
 
 (async()=>{
@@ -26,15 +30,28 @@ async function logout(p){await p.evaluate(()=>__pt.ACT.logout());await p.waitFor
    await p.fill('[data-d="au-pw"]','password-a');await p.click('[data-act="doAuth"]');await p.waitForTimeout(400);
    ok((await st(p)).route==='onboard','가입 뒤 처음 설정');
    await onboard(p,'notebook','w2');
+   let cm=await walkCoach(p,'today');ok(cm.length>=4,'오늘 화면 안내 '+cm.length+'개: '+cm.join(', '));
+   ok(await p.evaluate(()=>__pt.S.profile.coach.today===true)&&!(await p.$('#app .cm')),'본 안내는 다시 안 뜸');
+   await p.evaluate(()=>__pt.ACT.go({to:'member',mid:__pt.S.members.find(m=>m.code==='이00_3').id}));await p.waitForTimeout(200);
+   cm=await walkCoach(p,'member');ok(cm.length===5,'회원 기록부 안내 '+cm.join(', '));
+   await p.evaluate(()=>__pt.ACT.home());await p.waitForTimeout(100);
    let s=await st(p);ok(s.route==='today'&&s.members===6&&s.name==='윤 트레이너','수첩 예시로 시작: '+JSON.stringify(s));await p.screenshot({path:out+'/w3-today.png'});
    // 다음 PT 잡고 수업 한 세트
    const sid=await p.evaluate(()=>{const m=__pt.S.members.find(m=>m.code==='이00_3');__pt.ACT.modal({type:'schedule',mid:m.id});return m.id});
    await p.fill('input[type=date]',await p.evaluate(()=>__pt.S.today));await p.fill('input[type=time]','18:00');await p.click('[data-act="saveSchedule"]');await p.waitForTimeout(200);
    const ses=await p.evaluate(()=>__pt.S.sessions.find(s=>s.status==='planned').id);
-   await p.evaluate(sid=>{__pt.ACT.startSession({sid})},ses);await p.waitForTimeout(200);await p.click('#app [data-act="same"]');await p.waitForTimeout(150);await p.screenshot({path:out+'/w4-live.png'});
+   await p.evaluate(sid=>__pt.ACT.openSession({sid}),ses);await p.waitForTimeout(200);cm=await walkCoach(p,'prep');ok(cm.length>=3,'수업 준비 안내 '+cm.join(', '));
+   await p.evaluate(sid=>__pt.ACT.go({to:'live',sid}),ses);await p.waitForTimeout(200);cm=await walkCoach(p,'start');ok(cm.length===3,'수업 시작 안내 '+cm.join(', '));
+   await p.evaluate(sid=>{__pt.ACT.startSession({sid})},ses);await p.waitForTimeout(200);cm=await walkCoach(p,'live');ok(cm.length===4,'수업 중 안내 '+cm.join(', '));
+   await p.evaluate(sid=>__pt.ACT.go({to:'summary',sid}),ses);await p.waitForTimeout(200);cm=await walkCoach(p,'summary');ok(cm.length>=3,'마무리 안내 '+cm.join(', '));
+   await p.evaluate(sid=>__pt.ACT.go({to:'nextplan',sid}),ses);await p.waitForTimeout(200);cm=await walkCoach(p,'nextplan');ok(cm.length===4,'다음 PT 계획 안내 '+cm.join(', '));
+   await p.evaluate(sid=>__pt.ACT.go({to:'live',sid}),ses);await p.waitForTimeout(200);await noCoach(p);await p.evaluate(sid=>__pt.ACT.go({to:'live',sid}),ses);await p.waitForTimeout(200);await p.waitForTimeout(200);await p.click('#app [data-act="same"]');await p.waitForTimeout(150);await p.screenshot({path:out+'/w4-live.png'});
    ok(await p.evaluate(sid=>__pt.S.sessions.find(s=>s.id===sid).exercises.some(x=>x.sets.some(t=>t.done)),ses),'세트 기록');
    await p.reload();await p.waitForTimeout(600);s=await st(p);ok(s.route==='today'&&s.members===6,'새로고침해도 로그인·기록 유지');
-   await p.evaluate(()=>__pt.ACT.go({to:'settings'}));await p.waitForTimeout(200);await p.screenshot({path:out+'/w5-settings.png'});
+   await p.evaluate(()=>{__pt.S.profile.coach.settings=false;__pt.ACT.go({to:'settings'})});await p.waitForTimeout(200);cm=await walkCoach(p,'settings');ok(cm.length===4,'설정 안내 '+cm.join(', '));await p.screenshot({path:out+'/w5-settings.png'});
+   await p.evaluate(()=>__pt.ACT.home());await p.waitForTimeout(100);const m0=await p.textContent('#app .mcal .hd span');await p.click('#app .mcal [data-dir="-1"]');await p.waitForTimeout(100);const m1=await p.textContent('#app .mcal .hd span');await p.screenshot({path:out+'/w5b-cal-prev.png'});
+   ok(m0!==m1&&/10$/.test(m1),'달력 전달로: '+m0+' → '+m1);
+   await p.evaluate(()=>__pt.ACT.go({to:'member',mid:__pt.S.members[0].id}));await p.waitForTimeout(100);ok(!(await p.textContent('#app')).includes('수업 횟수'),'회원 화면에 월별 수업 횟수 없음');
    await logout(p);ok((await st(p)).route==='landing'&&(await st(p)).members===0,'로그아웃하면 소개 화면, 기록 안 보임');
    await signup(p,'김 트레이너','b@test.kr','password-b');
    await onboard(p,'empty');s=await st(p);ok(s.members===0&&s.name==='김 트레이너','두 번째 트레이너는 빈 노트: '+JSON.stringify(s));
