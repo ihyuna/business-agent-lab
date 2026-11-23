@@ -1,0 +1,74 @@
+/* ---- 설정 화면 (2026-11-23): 아이패드 설정 앱처럼 왼쪽 목록 + 오른쪽 내용 ----
+   글자만 늘어놓지 않고 색 아이콘·스위치·나눔 버튼·미리보기 그림으로 고르게 한다. 두 디자인 공통 구성 */
+.st-split{display:grid;grid-template-columns:300px minmax(0,1fr);gap:16px;align-items:start}
+.st-side{position:sticky;top:0;display:flex;flex-direction:column;gap:12px}
+.st-list{background:var(--panel);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.st-row,.st-prof{display:flex;align-items:center;gap:12px;width:100%;border:0;background:none;text-align:left;padding:10px 12px;font:inherit;color:var(--ink)}
+.st-row+.st-row{box-shadow:inset 0 1px 0 var(--line)}
+.st-row:hover,.st-prof:hover{background:var(--soft)}
+.st-row.on,.st-prof.on{background:var(--accent-soft)}
+.st-row.on .st-tx b,.st-prof.on .st-tx b{color:var(--accent)}
+.st-tx{flex:1;min-width:0;display:flex;flex-direction:column;gap:1px}
+.st-tx b{font-size:14.5px;font-weight:600}
+.st-tx>span{font-size:12px;color:var(--muted);line-height:1.45}
+.st-row .st-tx>span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.st-chev{color:var(--faint);font-size:18px;line-height:1}
+.st-out{justify-content:center}.st-out .st-tx{align-items:center}.st-out b{color:var(--bad)}
+.st-ic{flex:none;display:inline-grid;place-items:center;width:30px;height:30px;border-radius:8px;background:var(--ic);color:#fff}
+.st-ic svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.st-av{flex:none;display:inline-grid;place-items:center;width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#7aa7ff,#1f66f2);color:#fff;font-weight:700;font-size:18px}
+.st-av.big{width:72px;height:72px;font-size:30px}
+.st-prof{padding:12px}
+.st-pane{min-width:0}
+.st-title{display:flex;align-items:center;gap:10px;font-size:22px;font-weight:700;margin:2px 0 16px}
+.st-title .st-ic{width:32px;height:32px}
+.st-gh{font-size:12px;font-weight:600;color:var(--muted);margin:20px 4px 8px;display:flex;align-items:center;gap:8px}
+.st-title+.st-gh,.st-title+.st-group,.st-title+.st-hero{margin-top:0}
+.st-group{background:var(--panel);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.st-group+.st-group{margin-top:16px}
+.st-gf{font-size:12px;color:var(--muted);line-height:1.5;margin:8px 4px 0}
+.st-item{display:flex;align-items:center;gap:12px;padding:12px 16px;min-height:28px}
+.st-item+.st-item{box-shadow:inset 0 1px 0 var(--line)}
+.st-item.col{flex-direction:column;align-items:flex-start;gap:10px}.st-item.col .st-tx{align-self:stretch;text-align:left}
+.st-item.danger .st-tx b{color:var(--bad)}
+.st-ctl{flex:none;display:flex;align-items:center;gap:8px}
+.st-pad{padding:12px 16px}
+.st-pad table{width:100%}
+.st-hero{display:flex;flex-direction:column;align-items:center;gap:4px;padding:8px 0 20px;text-align:center}
+.st-hero b{font-size:20px;margin-top:6px}.st-hero>span{font-size:13px;color:var(--muted)}
+/* 켜고 끄기 스위치 */
+.st-sw{position:relative;width:51px;height:31px;border-radius:999px;border:0;background:rgba(120,120,128,.32);padding:0;flex:none;transition:background-color 200ms ease-out}
+.st-sw i{position:absolute;top:2px;left:2px;width:27px;height:27px;border-radius:50%;background:#fff;box-shadow:0 2px 6px rgba(0,0,0,.18);transition:transform 250ms cubic-bezier(.32,.72,0,1)}
+.st-sw.on{background:var(--good)}
+.st-sw.on i{transform:translateX(20px)}
+/* 나눔 버튼 */
+.st-seg{display:inline-flex;background:rgba(118,118,128,.12);border-radius:9px;padding:2px;gap:2px}
+.st-seg button{border:0;background:none;border-radius:7px;padding:6px 16px;font:inherit;font-size:13.5px;font-weight:500;color:var(--ink)}
+.st-seg button.on{background:var(--panel);box-shadow:0 1px 4px rgba(0,0,0,.12);font-weight:600}
+/* 미리보기 그림으로 고르기 */
+.st-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px;padding:16px}
+.st-cards.off{opacity:.45}
+.st-pick{display:flex;flex-direction:column;align-items:center;gap:4px;border:0;background:none;padding:0;font:inherit;color:var(--ink)}
+.st-pick b{font-size:13.5px;font-weight:600;margin-top:6px}.st-pick>span{font-size:11.5px;color:var(--muted)}
+.st-pick .lp-pv,.st-pick .th-pv{outline:2px solid transparent;outline-offset:3px;transition:outline-color 150ms ease-out}
+.st-pick.on .lp-pv,.st-pick.on .th-pv{outline-color:var(--accent)}
+.st-pick.on b{color:var(--accent)}
+.st-pick[disabled]{cursor:default}
+.lp-pv,.th-pv{display:flex;flex-direction:column;gap:5px;width:132px;height:88px;padding:10px;box-sizing:border-box;border-radius:12px;box-shadow:0 0 0 1px var(--line)}
+.lp-pv i,.th-pv i{display:block}
+.pv-chart{background:#fff;border-radius:4px}
+.pv-chart .pv-t{height:9px;width:60%;background:#173a8a;box-shadow:0 4px 0 -1px #fff,0 5px 0 -1px #1f66f2}
+.pv-chart .pv-r{height:12px;border:1px solid #9db0cf;background:linear-gradient(90deg,#edf3fe 28%,#fff 28%)}
+.pv-chart .pv-r.s{width:70%}
+.pv-apple{background:#f2f2f7}
+.pv-apple .pv-c{height:17px;border-radius:5px;background:#fff}
+.pv-apple .pv-c.w{width:60%;background:#007aff}
+.th-light{background:#f2f2f7}.th-light i{height:16px;border-radius:5px;background:#fff}.th-light i.s{width:55%;background:#007aff}
+.th-dark{background:#000}.th-dark i{height:16px;border-radius:5px;background:#1c1c1e}.th-dark i.s{width:55%;background:#0a84ff}
+.th-auto{background:linear-gradient(90deg,#f2f2f7 50%,#000 50%)}.th-auto i{height:16px;border-radius:5px;background:linear-gradient(90deg,#fff 50%,#1c1c1e 50%)}.th-auto i.s{width:55%;background:#007aff}
+/* 기록부 모양: 각진 칸과 잉크 선 */
+#device.chart:not(.apple) .st-list,#device.chart:not(.apple) .st-group{border-radius:0;border-color:var(--ink-line)}
+#device.chart:not(.apple) .st-ic{border-radius:2px}
+#device.chart:not(.apple) .st-gh{color:#173a8a;font-weight:800;letter-spacing:.04em}
+#device.chart:not(.apple) .st-title{color:#173a8a}
+#device.chart:not(.apple) .st-seg,#device.chart:not(.apple) .st-seg button,#device.chart:not(.apple) .lp-pv,#device.chart:not(.apple) .th-pv{border-radius:2px}

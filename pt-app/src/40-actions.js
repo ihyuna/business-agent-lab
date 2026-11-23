@@ -16,7 +16,7 @@ function render(o={}){
   sheetMotion(app,prevOv,hadToast);
   app.querySelectorAll('[data-sk]').forEach(el=>{const v=UI.scrolls[UI.rk+'|'+el.dataset.sk];if(v!=null)el.scrollTop=v});
   if(fk){const el=app.querySelector(`[data-k="${CSS.escape(fk)}"]`);if(el){el.focus({preventScroll:true});if(sel)try{el.setSelectionRange(sel[0],sel[1])}catch(e){}}}
-  document.getElementById('device').classList.toggle('chart',chartLayout());document.getElementById('device').classList.toggle('apple',UI.look==='emr');
+  document.getElementById('device').classList.toggle('chart',chartLayout());document.getElementById('device').classList.toggle('apple',UI.look==='emr');document.getElementById('device').classList.toggle('dark',isDark());
   document.getElementById('b-look').textContent=UI.look==='chart'?'디자인: 기록부':'디자인: 애플';
   document.getElementById('b-orient').textContent=UI.orient==='land'?'세로로 보기':'가로로 보기';
   document.getElementById('b-fit').textContent=UI.fit?'실제 크기':'창에 맞추기';
@@ -31,6 +31,9 @@ function sheetMotion(app,prevOv,hadToast){
   if(!ov&&prevOv&&UI.look==='emr'){prevOv.classList.remove('enter');prevOv.classList.add('leave');prevOv.querySelectorAll('[data-act]').forEach(e=>e.removeAttribute('data-act'));prevOv.removeAttribute('data-act');app.appendChild(prevOv);setTimeout(()=>prevOv.remove(),240)}
   const t=app.querySelector(':scope>.toast'); if(t&&!hadToast) t.classList.add('enter');
 }
+/* 다크 모드: 애플 디자인에서만. '자동'은 기기 설정(라이트·다크)을 따른다 */
+const darkMQ=window.matchMedia?matchMedia('(prefers-color-scheme: dark)'):null;
+function isDark(){return UI.look==='emr'&&(UI.theme==='dark'||(UI.theme==='auto'&&!!darkMQ&&darkMQ.matches))}
 let toastT=null;
 function toast(msg){UI.toast=msg;render();clearTimeout(toastT);toastT=setTimeout(()=>{UI.toast=null;document.querySelector('#app .toast')?.remove()},2600)}
 function go(name,params){
@@ -216,7 +219,7 @@ function fit(){
   const sc=UI.fit?Math.min(st.clientWidth/W,st.clientHeight/H):1;
   fr.style.transform=`scale(${sc})`; fr.style.left=Math.max(0,(st.clientWidth-W*sc)/2)+'px'; fr.style.width=W+'px'; fr.style.height=H+'px';
 }
-function saveView(){try{localStorage.setItem(KEY+'-view',JSON.stringify({look:UI.look,orient:UI.orient,fit:UI.fit,guide:{open:G.open,scene:G.scene,step:G.step}}))}catch(e){}}
+function saveView(){try{localStorage.setItem(KEY+'-view',JSON.stringify({look:UI.look,theme:UI.theme,orient:UI.orient,fit:UI.fit,guide:{open:G.open,scene:G.scene,step:G.step}}))}catch(e){}}
 /* 입력 칸이 바뀐 직후 버튼을 누르면 그 버튼이 다시 그려지며 사라지지 않게, 그리기를 잠깐 미룬다 */
 let soonT=null;
 function renderSoon(){clearTimeout(soonT);soonT=setTimeout(()=>{soonT=null;render()},300)}
@@ -228,11 +231,13 @@ const ENTER_KEY=KEY+'-entered';
 function enterApp(){try{sessionStorage.setItem(ENTER_KEY,'1')}catch(e){}UI.stack=[];UI.route={name:'today'};UI.modal=null;UI.edit=null}
 ACT.enter=()=>{enterApp();document.querySelectorAll('#app .ld-f input').forEach(i=>i.value='');render({noSave:true})};
 ACT.setLook=d=>{UI.look=d.v;saveView();render()};
+ACT.setTheme=d=>{UI.theme=d.v;saveView();render()};
+ACT.setSec=d=>{UI.cur.setSec=d.v;UI.confirmReset=false;render()};
 ACT.logout=()=>{try{sessionStorage.removeItem(ENTER_KEY)}catch(e){}UI.stack=[];UI.route={name:'landing'};UI.modal=null;UI.edit=null;render({noSave:true})};
 
 /* ---------- 시작 ---------- */
 function boot(){
-  try{const v=JSON.parse(localStorage.getItem(KEY+'-view')||'null');if(v){UI.look=v.look==='emr'?'emr':'chart';UI.orient=v.orient==='port'?'port':'land';UI.fit=v.fit!==false;if(v.guide){G.open=v.guide.open!==false;G.scene=Math.min(+v.guide.scene||0,SCENES.length-1);G.step=+v.guide.step||0}}}catch(e){}
+  try{const v=JSON.parse(localStorage.getItem(KEY+'-view')||'null');if(v){UI.look=v.look==='emr'?'emr':'chart';UI.theme=['dark','auto'].includes(v.theme)?v.theme:'light';UI.orient=v.orient==='port'?'port':'land';UI.fit=v.fit!==false;if(v.guide){G.open=v.guide.open!==false;G.scene=Math.min(+v.guide.scene||0,SCENES.length-1);G.step=+v.guide.step||0}}}catch(e){}
   S=load(); ensurePackages(); save();
   let entered=false;try{entered=sessionStorage.getItem(ENTER_KEY)==='1'}catch(e){}
   if(WEBAPP) webBoot(); else if(!entered) UI.route={name:'landing'};
@@ -258,6 +263,7 @@ function boot(){
   setInterval(()=>{const el=document.getElementById('timer-text');if(el&&UI.timer)el.innerHTML=timerText()},1000);
   // 누르는 순간 반응(:active)이 아이패드 사파리에서도 바로 보이게, 그리고 창이 누른 곳에서 나오게 누른 위치를 기억
   document.addEventListener('touchstart',()=>{},{passive:true});
+  try{darkMQ&&darkMQ.addEventListener('change',()=>{if(UI.theme==='auto')render()})}catch(e){}
   document.addEventListener('pointerdown',e=>{UI.pt=[e.clientX,e.clientY]},true);
   render(); fit();
 }

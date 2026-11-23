@@ -774,6 +774,80 @@ body.full #app .hl{outline:0!important;box-shadow:none!important;animation:none!
   <div id="main"><div id="stage"><div id="frame"><div id="device"><div id="app"></div></div></div></div><aside id="guide" aria-label="시나리오 따라 하기"></aside></div>
 </div>
 <style>
+/* ---- 설정 화면 (2026-11-23): 아이패드 설정 앱처럼 왼쪽 목록 + 오른쪽 내용 ----
+   글자만 늘어놓지 않고 색 아이콘·스위치·나눔 버튼·미리보기 그림으로 고르게 한다. 두 디자인 공통 구성 */
+.st-split{display:grid;grid-template-columns:300px minmax(0,1fr);gap:16px;align-items:start}
+.st-side{position:sticky;top:0;display:flex;flex-direction:column;gap:12px}
+.st-list{background:var(--panel);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.st-row,.st-prof{display:flex;align-items:center;gap:12px;width:100%;border:0;background:none;text-align:left;padding:10px 12px;font:inherit;color:var(--ink)}
+.st-row+.st-row{box-shadow:inset 0 1px 0 var(--line)}
+.st-row:hover,.st-prof:hover{background:var(--soft)}
+.st-row.on,.st-prof.on{background:var(--accent-soft)}
+.st-row.on .st-tx b,.st-prof.on .st-tx b{color:var(--accent)}
+.st-tx{flex:1;min-width:0;display:flex;flex-direction:column;gap:1px}
+.st-tx b{font-size:14.5px;font-weight:600}
+.st-tx>span{font-size:12px;color:var(--muted);line-height:1.45}
+.st-row .st-tx>span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.st-chev{color:var(--faint);font-size:18px;line-height:1}
+.st-out{justify-content:center}.st-out .st-tx{align-items:center}.st-out b{color:var(--bad)}
+.st-ic{flex:none;display:inline-grid;place-items:center;width:30px;height:30px;border-radius:8px;background:var(--ic);color:#fff}
+.st-ic svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.st-av{flex:none;display:inline-grid;place-items:center;width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#7aa7ff,#1f66f2);color:#fff;font-weight:700;font-size:18px}
+.st-av.big{width:72px;height:72px;font-size:30px}
+.st-prof{padding:12px}
+.st-pane{min-width:0}
+.st-title{display:flex;align-items:center;gap:10px;font-size:22px;font-weight:700;margin:2px 0 16px}
+.st-title .st-ic{width:32px;height:32px}
+.st-gh{font-size:12px;font-weight:600;color:var(--muted);margin:20px 4px 8px;display:flex;align-items:center;gap:8px}
+.st-title+.st-gh,.st-title+.st-group,.st-title+.st-hero{margin-top:0}
+.st-group{background:var(--panel);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.st-group+.st-group{margin-top:16px}
+.st-gf{font-size:12px;color:var(--muted);line-height:1.5;margin:8px 4px 0}
+.st-item{display:flex;align-items:center;gap:12px;padding:12px 16px;min-height:28px}
+.st-item+.st-item{box-shadow:inset 0 1px 0 var(--line)}
+.st-item.col{flex-direction:column;align-items:flex-start;gap:10px}.st-item.col .st-tx{align-self:stretch;text-align:left}
+.st-item.danger .st-tx b{color:var(--bad)}
+.st-ctl{flex:none;display:flex;align-items:center;gap:8px}
+.st-pad{padding:12px 16px}
+.st-pad table{width:100%}
+.st-hero{display:flex;flex-direction:column;align-items:center;gap:4px;padding:8px 0 20px;text-align:center}
+.st-hero b{font-size:20px;margin-top:6px}.st-hero>span{font-size:13px;color:var(--muted)}
+/* 켜고 끄기 스위치 */
+.st-sw{position:relative;width:51px;height:31px;border-radius:999px;border:0;background:rgba(120,120,128,.32);padding:0;flex:none;transition:background-color 200ms ease-out}
+.st-sw i{position:absolute;top:2px;left:2px;width:27px;height:27px;border-radius:50%;background:#fff;box-shadow:0 2px 6px rgba(0,0,0,.18);transition:transform 250ms cubic-bezier(.32,.72,0,1)}
+.st-sw.on{background:var(--good)}
+.st-sw.on i{transform:translateX(20px)}
+/* 나눔 버튼 */
+.st-seg{display:inline-flex;background:rgba(118,118,128,.12);border-radius:9px;padding:2px;gap:2px}
+.st-seg button{border:0;background:none;border-radius:7px;padding:6px 16px;font:inherit;font-size:13.5px;font-weight:500;color:var(--ink)}
+.st-seg button.on{background:var(--panel);box-shadow:0 1px 4px rgba(0,0,0,.12);font-weight:600}
+/* 미리보기 그림으로 고르기 */
+.st-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px;padding:16px}
+.st-cards.off{opacity:.45}
+.st-pick{display:flex;flex-direction:column;align-items:center;gap:4px;border:0;background:none;padding:0;font:inherit;color:var(--ink)}
+.st-pick b{font-size:13.5px;font-weight:600;margin-top:6px}.st-pick>span{font-size:11.5px;color:var(--muted)}
+.st-pick .lp-pv,.st-pick .th-pv{outline:2px solid transparent;outline-offset:3px;transition:outline-color 150ms ease-out}
+.st-pick.on .lp-pv,.st-pick.on .th-pv{outline-color:var(--accent)}
+.st-pick.on b{color:var(--accent)}
+.st-pick[disabled]{cursor:default}
+.lp-pv,.th-pv{display:flex;flex-direction:column;gap:5px;width:132px;height:88px;padding:10px;box-sizing:border-box;border-radius:12px;box-shadow:0 0 0 1px var(--line)}
+.lp-pv i,.th-pv i{display:block}
+.pv-chart{background:#fff;border-radius:4px}
+.pv-chart .pv-t{height:9px;width:60%;background:#173a8a;box-shadow:0 4px 0 -1px #fff,0 5px 0 -1px #1f66f2}
+.pv-chart .pv-r{height:12px;border:1px solid #9db0cf;background:linear-gradient(90deg,#edf3fe 28%,#fff 28%)}
+.pv-chart .pv-r.s{width:70%}
+.pv-apple{background:#f2f2f7}
+.pv-apple .pv-c{height:17px;border-radius:5px;background:#fff}
+.pv-apple .pv-c.w{width:60%;background:#007aff}
+.th-light{background:#f2f2f7}.th-light i{height:16px;border-radius:5px;background:#fff}.th-light i.s{width:55%;background:#007aff}
+.th-dark{background:#000}.th-dark i{height:16px;border-radius:5px;background:#1c1c1e}.th-dark i.s{width:55%;background:#0a84ff}
+.th-auto{background:linear-gradient(90deg,#f2f2f7 50%,#000 50%)}.th-auto i{height:16px;border-radius:5px;background:linear-gradient(90deg,#fff 50%,#1c1c1e 50%)}.th-auto i.s{width:55%;background:#007aff}
+/* 기록부 모양: 각진 칸과 잉크 선 */
+#device.chart:not(.apple) .st-list,#device.chart:not(.apple) .st-group{border-radius:0;border-color:var(--ink-line)}
+#device.chart:not(.apple) .st-ic{border-radius:2px}
+#device.chart:not(.apple) .st-gh{color:#173a8a;font-weight:800;letter-spacing:.04em}
+#device.chart:not(.apple) .st-title{color:#173a8a}
+#device.chart:not(.apple) .st-seg,#device.chart:not(.apple) .st-seg button,#device.chart:not(.apple) .lp-pv,#device.chart:not(.apple) .th-pv{border-radius:2px}
 /* ---- 애플 디자인 (2026-11-23) ----
    설정 → 화면 디자인 → '애플 디자인'(UI.look 'emr')을 고르면 #device에 .apple이 붙는다.
    원칙: emilkowalski/skills 'apple-design' 스킬(MIT)에서 가져옴.
@@ -791,7 +865,7 @@ body.full #app .hl{outline:0!important;box-shadow:none!important;animation:none!
   --good:#248a3d; --good-soft:rgba(52,199,89,.14); --warn:#a05a00; --warn-soft:rgba(255,149,0,.14);
   --bad:#d70015; --bad-soft:rgba(255,59,48,.11); --cond:#c93400; --cond-soft:rgba(255,149,0,.13);
   --live:#5e5ce6; --live-soft:rgba(94,92,230,.12); --now:#ff3b30;
-  --bar:rgba(255,255,255,.72); --spring:cubic-bezier(.32,.72,0,1);
+  --mat:rgba(255,255,255,.72); --sub:#3c3c43; --spring:cubic-bezier(.32,.72,0,1);
   color-scheme:light;background:var(--device);border-radius:18px;
   -webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
 
@@ -801,17 +875,17 @@ body.full #app .hl{outline:0!important;box-shadow:none!important;animation:none!
 #device.apple .card h2,#device.apple .pl-colhd,#device.apple .box>.bh{letter-spacing:-.01em}
 
 /* 위 메뉴: 반투명 막대 + 가운데 알약 모양 탭 (iPadOS 위쪽 탭 막대) */
-#device.apple .tabbar.sidenav{background:var(--bar);-webkit-backdrop-filter:blur(20px) saturate(180%);backdrop-filter:blur(20px) saturate(180%);border-bottom:.5px solid var(--line2);padding:0 12px;gap:4px;align-items:center;z-index:5}
+#device.apple .tabbar.sidenav{background:var(--mat);-webkit-backdrop-filter:blur(20px) saturate(180%);backdrop-filter:blur(20px) saturate(180%);border-bottom:.5px solid var(--line2);padding:0 12px;gap:4px;align-items:center;z-index:5}
 #device.apple .sidenav .logo::before{background:var(--accent);border-radius:3px}
 #device.apple .tabbar.sidenav button{height:32px;padding:0 14px;border-radius:999px;font-weight:500;color:var(--ink)}
 #device.apple .tabbar.sidenav button svg{stroke:var(--accent)}
 #device.apple .tabbar.sidenav button.on{background:var(--fill);color:var(--accent);font-weight:600;box-shadow:none}
-#device.apple .top{background:var(--bar);-webkit-backdrop-filter:blur(20px) saturate(180%);backdrop-filter:blur(20px) saturate(180%);border-bottom:.5px solid var(--line)}
+#device.apple .top{background:var(--mat);-webkit-backdrop-filter:blur(20px) saturate(180%);backdrop-filter:blur(20px) saturate(180%);border-bottom:.5px solid var(--line)}
 #device.apple .top .sub{color:var(--muted)}
 #device.apple .pbar{background:var(--panel);border-bottom:.5px solid var(--line);gap:12px}
 #device.apple .pbar .vit{gap:14px}
 #device.apple .timebar{background:var(--panel);border-bottom:.5px solid var(--line)}
-#device.apple .actbar{background:var(--bar);-webkit-backdrop-filter:blur(20px) saturate(180%);backdrop-filter:blur(20px) saturate(180%);border-top:.5px solid var(--line2)}
+#device.apple .actbar{background:var(--mat);-webkit-backdrop-filter:blur(20px) saturate(180%);backdrop-filter:blur(20px) saturate(180%);border-top:.5px solid var(--line2)}
 
 /* 바탕과 카드: 테두리 없이 흰 면, 둥근 모서리 */
 #device.apple .scroll,#device.apple .planner,#device.apple .chartlay{background:var(--device)}
@@ -909,14 +983,14 @@ body.full #app .hl{outline:0!important;box-shadow:none!important;animation:none!
 #device.apple .overlay.leave .modal{animation:ap-sheet 220ms ease-in reverse forwards}
 #device.apple .toast{border:0;border-radius:999px;background:rgba(28,28,30,.82);color:#fff;-webkit-backdrop-filter:blur(20px) saturate(180%);backdrop-filter:blur(20px) saturate(180%);box-shadow:0 8px 24px rgba(0,0,0,.16)}
 #device.apple .toast.enter{animation:ap-toast 320ms var(--spring)}
-#device.apple .askbar{border:0;border-radius:var(--r4);background:var(--bar);-webkit-backdrop-filter:blur(20px) saturate(180%);backdrop-filter:blur(20px) saturate(180%);box-shadow:0 10px 32px rgba(0,0,0,.16),0 0 0 .5px var(--line2)}
+#device.apple .askbar{border:0;border-radius:var(--r4);background:var(--mat);-webkit-backdrop-filter:blur(20px) saturate(180%);backdrop-filter:blur(20px) saturate(180%);box-shadow:0 10px 32px rgba(0,0,0,.16),0 0 0 .5px var(--line2)}
 @keyframes ap-fade{from{opacity:0}to{opacity:1}}
 @keyframes ap-sheet{from{opacity:0;transform:scale(.92);filter:blur(6px)}to{opacity:1;transform:none;filter:none}}
 @keyframes ap-toast{from{opacity:0;transform:translate(-50%,12px)}to{opacity:1;transform:translate(-50%,0)}}
 
 /* 웹앱 화면별 첫 안내 */
 body #device.apple .cm-hole{border-radius:12px!important;box-shadow:0 0 0 2px var(--accent),0 0 0 9999px rgba(0,0,0,.45)}
-body #device.apple .cm-card{border:0!important;border-radius:16px!important;padding:16px 18px 14px;background:var(--bar);-webkit-backdrop-filter:blur(24px) saturate(180%);backdrop-filter:blur(24px) saturate(180%);box-shadow:0 18px 48px rgba(0,0,0,.25)}
+body #device.apple .cm-card{border:0!important;border-radius:16px!important;padding:16px 18px 14px;background:var(--mat);-webkit-backdrop-filter:blur(24px) saturate(180%);backdrop-filter:blur(24px) saturate(180%);box-shadow:0 18px 48px rgba(0,0,0,.25)}
 body #device.apple .cm-card .cm-n{padding:0;margin:0 0 4px;background:none;border:0;color:var(--accent)}
 body #device.apple .cm-card b{padding:0;color:var(--ink);letter-spacing:-.01em}
 body #device.apple .cm-card p,body #device.apple .cm-b{padding:0}
@@ -927,7 +1001,7 @@ body #device.apple .cm-next{background:var(--accent)}
 
 /* 웹앱 소개·로그인·처음 설정 */
 body #device.apple .lp,body #device.apple .lg,body #device.apple .ob{background:var(--device)!important}
-body #device.apple .lp-top,body #device.apple .ob-top{background:var(--bar);-webkit-backdrop-filter:blur(20px) saturate(180%);backdrop-filter:blur(20px) saturate(180%);border-bottom:.5px solid var(--line2)}
+body #device.apple .lp-top,body #device.apple .ob-top{background:var(--mat);-webkit-backdrop-filter:blur(20px) saturate(180%);backdrop-filter:blur(20px) saturate(180%);border-bottom:.5px solid var(--line2)}
 body #device.apple .lp-hero{background:var(--panel);border:0;border-radius:22px;margin:16px 40px 0}
 body #device.apple .lp-hero h1{color:var(--ink);letter-spacing:-.03em}
 body #device.apple .lp-eye{border-radius:999px;background:var(--accent-soft);color:var(--accent)}
@@ -1054,15 +1128,15 @@ body #device.apple .cm-card{padding:var(--s4) var(--s5) var(--s4)}
 #device.apple .rstat span,#device.apple .pkg-st span,#device.apple .f-no,#device.apple .chartno,body #device.apple .cm-n,#device.apple .tl .blk .bt,#device.apple .tl .hr span{letter-spacing:.01em}
 /* 반투명 막대 위 글자는 회색 대신 진하게(§12 vibrancy) */
 #device.apple .tabbar.sidenav button{color:var(--ink);font-weight:550}
-#device.apple .top .sub{color:#3c3c43}
+#device.apple .top .sub{color:var(--sub)}
 
 /* §12 구분선 대신 스크롤 가장자리: 위 제목 줄·아래 버튼 줄의 1px 선을 빼고,
    내용이 그 밑으로 스크롤될 때만 가장자리가 살짝 흐려진다 (스크롤 위치로 움직이는 CSS, 안 되는 브라우저에서는 그냥 선 없음) */
 #device.apple .top,#device.apple .actbar{border:0}
 #device.apple .scroll::before,#device.apple .scroll::after{content:'';display:block;position:sticky;left:0;right:0;height:var(--s5);z-index:4;pointer-events:none;opacity:0}
-#device.apple .scroll::before{top:calc(-1 * var(--s4));margin:calc(-1 * var(--s4)) calc(-1 * var(--s4)) calc(-1 * var(--s1));background:linear-gradient(var(--device),rgba(242,242,247,0));
+#device.apple .scroll::before{top:calc(-1 * var(--s4));margin:calc(-1 * var(--s4)) calc(-1 * var(--s4)) calc(-1 * var(--s1));background:linear-gradient(var(--device),transparent);
   animation:ap-edge linear both;animation-timeline:scroll(self);animation-range:0 var(--s6)}
-#device.apple .scroll::after{bottom:calc(-1 * var(--s6));margin:calc(-1 * var(--s1)) calc(-1 * var(--s4)) calc(-1 * var(--s6));background:linear-gradient(rgba(242,242,247,0),var(--device));
+#device.apple .scroll::after{bottom:calc(-1 * var(--s6));margin:calc(-1 * var(--s1)) calc(-1 * var(--s4)) calc(-1 * var(--s6));background:linear-gradient(transparent,var(--device));
   opacity:1;animation:ap-edge-out linear both;animation-timeline:scroll(self);animation-range:calc(100% - var(--s6)) 100%}
 @keyframes ap-edge{to{opacity:1}}
 @keyframes ap-edge-out{to{opacity:0}}
@@ -1070,6 +1144,55 @@ body #device.apple .cm-card{padding:var(--s4) var(--s5) var(--s4)}
 
 /* §1 반응: 두 번 눌러 확대를 기다리는 지연(~300ms)을 없애 누르는 순간 바로 반응 */
 #device.apple button,#device.apple [data-act],#device.apple input,#device.apple select,#device.apple label{touch-action:manipulation}
+
+/* 설정 화면 (애플): 테두리 없는 둥근 목록, 고른 줄은 파란 면 + 흰 글자 (아이패드 설정 앱 옆 목록) */
+#device.apple .st-list,#device.apple .st-group{border:0;border-radius:var(--r3)}
+#device.apple .st-row,#device.apple .st-prof{border-radius:0;transition:background-color 150ms ease-out}
+#device.apple .st-row.on,#device.apple .st-prof.on{background:var(--accent)}
+#device.apple .st-row.on .st-tx b,#device.apple .st-prof.on .st-tx b,#device.apple .st-row.on .st-tx>span,#device.apple .st-prof.on .st-tx>span,#device.apple .st-row.on .st-chev,#device.apple .st-prof.on .st-chev{color:#fff}
+#device.apple .st-row.on+.st-row,#device.apple .st-row+.st-row.on{box-shadow:none}
+#device.apple .st-row+.st-row,#device.apple .st-item+.st-item{box-shadow:inset 54px 0 0 var(--panel),inset 0 .5px 0 var(--line2)}
+#device.apple .st-item+.st-item{box-shadow:inset 0 .5px 0 var(--line2)}
+#device.apple .st-ic{border-radius:7px}
+#device.apple .st-title{font-size:28px;letter-spacing:-.02em;line-height:1.2}
+#device.apple .st-gh{font-weight:500;letter-spacing:.01em;text-transform:none}
+#device.apple .st-row:active,#device.apple .st-prof:active,#device.apple .st-pick:active,#device.apple .st-seg button:active{transform:scale(.98)}
+#device.apple .st-pick,#device.apple .st-seg button{transition:transform 100ms ease-out}
+
+/* 설정은 종이 판 없이 회색 바탕 위에 흰 목록이 떠 있게 (아이패드 설정 앱) */
+#device.apple .gdoc.r-settings .f-paper{background:transparent;padding:0 0 var(--s4)}
+#device.apple .gdoc.r-settings .f-title{border-bottom:0;margin-bottom:var(--s3)}
+
+/* ---- 다크 모드 (설정 → 화면 → 화면 모드). 애플 시스템 색의 다크 값 ----
+   바탕은 검정, 판은 한 단계 밝은 회색(#1c1c1e), 위로 뜬 판은 한 단계 더(#2c2c2e). 색은 다크용으로 조금 밝게 */
+#device.apple.dark{
+  --device:#000000; --panel:#1c1c1e; --ink:#ffffff; --muted:#98989f; --faint:#636366; --sub:#d1d1d6;
+  --line:rgba(84,84,88,.5); --line2:rgba(84,84,88,.75); --soft:#2c2c2e;
+  --fill:rgba(118,118,128,.24); --fill2:rgba(118,118,128,.16);
+  --accent:#0a84ff; --accent-soft:rgba(10,132,255,.2);
+  --good:#30d158; --good-soft:rgba(48,209,88,.18); --warn:#ffb340; --warn-soft:rgba(255,159,10,.18);
+  --bad:#ff6961; --bad-soft:rgba(255,69,58,.2); --cond:#ff9f0a; --cond-soft:rgba(255,159,10,.18);
+  --live:#7d7aff; --live-soft:rgba(94,92,230,.24); --now:#ff453a;
+  --mat:rgba(28,28,30,.72); --ink-line:rgba(84,84,88,.75); --hd:transparent; --phd:transparent; --side:#1c1c1e;
+  --mus0:#3a3a3c; --musbase:#48484a; --musline:#1c1c1e;
+  --zebra:rgba(255,255,255,.035); --bar:#4e78b8;
+  --p1:#7fb0ff; --p1s:#1b2b47; --p2:#c39af2; --p2s:#2c2140; --p3:#ff8fab; --p3s:#3d1f29; --p4:#5fd197; --p4s:#15291e; --p5:#f5b24f; --p5s:#352710; --p6:#5cd0de; --p6s:#132e33;
+  color-scheme:dark;color:var(--ink)}
+#device.apple.dark .modal,#device.apple.dark .askbar{background:#2c2c2e}
+#device.apple.dark .btn:hover:not([disabled]){background:rgba(118,118,128,.32)}
+#device.apple.dark .btn.primary:hover:not([disabled]){background:#409cff}
+#device.apple.dark .toast{background:rgba(58,58,60,.9)}
+#device.apple.dark .overlay{background:rgba(0,0,0,.5)}
+#device.apple.dark .st-seg button.on,#device.apple.dark .au-tabs button.on{background:#636366}
+#device.apple.dark .st-sw i{box-shadow:0 2px 6px rgba(0,0,0,.4)}
+#device.apple.dark .st-sw:not(.on){background:rgba(120,120,128,.36)}
+body #device.apple.dark .lp-mrow.h{background:var(--soft)}
+body #device.apple.dark .ob-dots i{background:#3a3a3c}
+body #device.apple.dark .au-msg{background:var(--bad-soft);color:var(--bad)}
+body #device.apple.dark .au-msg.ok{background:var(--accent-soft);color:var(--accent)}
+body #device.apple.dark .lp-hero{background:var(--panel)}
+body #device.apple.dark .lp-mock{background:var(--panel);box-shadow:0 12px 40px rgba(0,0,0,.5)}
+#device.apple.dark img,#device.apple.dark .kbicon{filter:none}
 
 /* 움직임 줄이기: 커지기·미끄러지기·누름 축소를 빼고, 짧은 흐려짐(cross-fade)만 남긴다 (§14) */
 @media (prefers-reduced-motion:reduce){
@@ -1080,7 +1203,7 @@ body #device.apple .cm-card{padding:var(--s4) var(--s5) var(--s4)}
   #device.apple .scroll::before,#device.apple .scroll::after{animation:none}
 }
 @media (prefers-reduced-transparency:reduce){
-  #device.apple{--bar:#f9f9f9}
+  #device.apple{--mat:#f9f9f9}
   #device.apple .tabbar.sidenav,#device.apple .top,#device.apple .actbar,#device.apple .toast,#device.apple .askbar,body #device.apple .cm-card,body #device.apple .lp-top,body #device.apple .ob-top{-webkit-backdrop-filter:none;backdrop-filter:none}
   #device.apple .toast{background:#1c1c1e}
 }
@@ -2185,7 +2308,7 @@ const firstNum=v=>{if(isNum(v))return v;const m=String(v??'').match(/\d+(\.\d+)?
 /* ---------- 상태 ---------- */
 const KEY=WEBAPP?'jimnote-v1':'pt-mvp-proto-v4';
 let S=null;
-const UI={look:'chart',ask:null,route:{name:'today'},stack:[],modal:null,draft:{},toast:null,orient:'land',fit:true,timer:null,cur:{},open:{},search:'',edit:null,flags:{}};
+const UI={look:'chart',theme:'light',ask:null,route:{name:'today'},stack:[],modal:null,draft:{},toast:null,orient:'land',fit:true,timer:null,cur:{},open:{},search:'',edit:null,flags:{}};
 const todayIso=()=>(S&&S.today)||'2026-10-07';
 function save(){if(WEBAPP)return webSave();try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}if(typeof guideSoon==='function')guideSoon()}
 function load(){if(WEBAPP)return webLoad();try{const t=localStorage.getItem(KEY);if(t){const s=JSON.parse(t);if(s&&s.v===3)return s}}catch(e){}return buildSeed()}
@@ -3392,23 +3515,64 @@ V.search=r=>{
 };
 
 /* ---------- 설정 ---------- */
-V.settings=()=>{
+/* ---------- 설정: 아이패드 설정 앱처럼 왼쪽 목록 + 오른쪽 내용 (2026-11-23) ----------
+   왼쪽에서 묶음을 고르면 오른쪽에 그 묶음만 보인다. 기록부·애플 디자인 둘 다 같은 구성이고 모양만 다르다. */
+const ST_ICON={
+  user:'<circle cx="12" cy="8" r="4"/><path d="M4 20c1.5-4 4.5-6 8-6s6.5 2 8 6"/>',
+  display:'<circle cx="12" cy="12" r="8"/><path d="M12 4v16" /><path d="M12 4a8 8 0 0 1 0 16z" fill="currentColor"/>',
+  guide:'<circle cx="12" cy="12" r="8.5"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.7.3-1 .8-1 1.5v.4"/><circle cx="12" cy="17" r=".6" fill="currentColor"/>',
+  timer:'<circle cx="12" cy="13" r="7.5"/><path d="M12 9v4l2.5 2"/><path d="M9.5 3h5"/>',
+  sliders:'<path d="M5 7h9M18 7h1M5 17h3M12 17h7"/><circle cx="16" cy="7" r="2"/><circle cx="10" cy="17" r="2"/>',
+  dumbbell:'<path d="M4 9v6M7 7v10M17 7v10M20 9v6M7 12h10"/>',
+  archive:'<rect x="3.5" y="5" width="17" height="4" rx="1"/><path d="M5 9v9a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V9M10 13h4"/>',
+  info:'<circle cx="12" cy="12" r="8.5"/><path d="M12 11v5"/><circle cx="12" cy="8" r=".6" fill="currentColor"/>',
+  trash:'<path d="M5 7h14M10 7V5h4v2M7 7l1 12h8l1-12"/>',
+  out:'<path d="M14 5h4a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1h-4M10 8l-4 4 4 4M6 12h10"/>',
+  play:'<path d="M8 6l10 6-10 6z"/>'};
+function stIcon(k,c){return `<span class="st-ic" style="--ic:${c}"><svg viewBox="0 0 24 24" aria-hidden="true">${ST_ICON[k]||''}</svg></span>`}
+function stSwitch(on,act,extra){return `<button class="st-sw${on?' on':''}" role="switch" aria-checked="${on?'true':'false'}" data-act="${act}" data-v="${on?'0':'1'}"${extra||''}><i></i></button>`}
+function stSeg(opts,cur,act){return `<div class="st-seg" role="radiogroup">${opts.map(([v,l])=>`<button class="${v===cur?'on':''}" role="radio" aria-checked="${v===cur}" data-act="${act}" data-v="${v}">${l}</button>`).join('')}</div>`}
+function stItem(ic,title,desc,ctrl,cls){return `<div class="st-item ${cls||''}">${ic||''}<div class="st-tx"><b>${title}</b>${desc?`<span>${desc}</span>`:''}</div>${ctrl?`<div class="st-ctl">${ctrl}</div>`:''}</div>`}
+function stGroup(head,body,foot){return `${head?`<div class="st-gh">${head}</div>`:''}<div class="st-group">${body}</div>${foot?`<div class="st-gf">${foot}</div>`:''}`}
+/* 화면 미리보기 그림: 글자 대신 모양으로 고르게 */
+function lookPreview(k){return k==='chart'
+  ?`<span class="lp-pv pv-chart"><i class="pv-t"></i><i class="pv-r"></i><i class="pv-r"></i><i class="pv-r s"></i></span>`
+  :`<span class="lp-pv pv-apple"><i class="pv-c"></i><i class="pv-c"></i><i class="pv-c w"></i></span>`}
+function themePreview(k){return `<span class="th-pv th-${k}"><i></i><i></i><i class="s"></i></span>`}
+const THEMES=[['light','라이트'],['dark','다크'],['auto','자동']];
+function settingsSections(){
   const R=S.settings.roles;
   const roleRows=ROLES.map(k=>{const v=R[k];const f=(n,w)=>bIn('roleVal',v[n],{role:k,f:n},{w:w||52,im:'numeric',cls:'num'});return `<tr><td>${k}</td><td>${f('rmin')}~${f('rmax')}</td><td>${f('target')}</td><td>${f('rir')}</td><td>${f('sets')}</td><td>${f('rest',60)}</td></tr>`}).join('');
   const exRows=Object.entries(S.exercises).map(([id,e])=>`<tr><td>${bIn('exName',e.name,{id},{w:190})}</td><td>${bSel('exPart',pairs(['하체','가슴','등','어깨','팔','복근','전신','기타']),e.part,{id},{w:80})}</td><td>${bSel('exUnit',[['','(없음)'],['kg','kg'],['lb','lb']],e.unit,{id},{w:80})}</td><td>${bIn('exInc',e.inc,{id},{w:56,im:'decimal',cls:'num'})}</td><td><input type="checkbox" data-act="exSide" data-id="${id}"${e.side?' checked':''} aria-label="한쪽 무게"></td></tr>`).join('');
-  return topBar('설정','숫자 채우기 기준과 종목 사전')+
-   `<div class="scroll" data-sk="main"><div class="grid2"><div class="col">
-     ${WEBAPP?webSettingsCards():''}
-     <div class="card"><h2>쉬는 시간 타이머</h2><div class="row">${chips([['0','끔'],['1','켬']],S.settings.restTimer?'1':'0','setTimer')}</div><div class="tiny muted" style="margin-top:4px">켜면 세트를 끝낼 때 계획한 쉬는 시간으로 돌아요. 트레이너 답이 오기 전이라 기본은 꺼 둬요.</div></div>
-     <div class="card"><h2>지난 실제값 기준</h2><div class="row">${chips([['same','같은 분할'],['recent','가장 최근']],S.settings.basis,'setBasis')}</div><div class="tiny muted" style="margin-top:4px">다음 목표가 없을 때 어느 수업의 실제값으로 채울지예요. 같은 분할에 없는 종목은 가장 최근으로 채워요. 바꾸면 앞으로 만드는 수업 준비부터 적용돼요.</div></div>
-     <div class="card"><h2>역할별 기준 <span class="tag warn">논문 기준 임시값 (D59)</span></h2><table><tr><th>역할</th><th>횟수 범위</th><th>목표 횟수</th><th>여유 횟수</th><th>세트</th><th>쉬는 초</th></tr>${roleRows}</table><div class="tiny muted" style="margin-top:4px">트레이너 답(O02)이 오면 바꿀 값이에요. 유산소성 순환은 횟수 칸을 라운드로 써요.</div></div>
-     ${WEBAPP?'':`<div class="card"><h2>예시 취소·안 옴 <span class="tag warn">예시</span></h2><div class="row">${chips([['1','보임'],['0','숨김']],S.settings.exampleCx===false?'0':'1','setExampleCx')}</div><div class="tiny muted" style="margin-top:4px">수첩에는 취소·안 옴 기록이 없어요. 화면을 보여 주려고 넣은 예시 ${EXAMPLE_CX.length}건이고, 운동 기록은 없어요. 실제 날짜를 알면 바꿔요.</div></div>
-     <div class="card"><h2>화면 디자인</h2><div class="row">${chips(LOOKS,UI.look,'setLook')}</div><div class="tiny muted" style="margin-top:4px">기록부는 지도교수님 피드백(11/11)의 종이 기록부 느낌이에요. 애플 디자인은 아이패드 기본 앱처럼 회색 바탕에 흰 카드, 반투명 메뉴예요. 위쪽 도구 줄 '디자인' 버튼으로도 바꿀 수 있어요.</div></div>
-     <div class="card"><h2>처음 화면</h2>${btn('로그아웃 (처음 화면으로)','logout',null,'small')}<div class="tiny muted" style="margin-top:4px">입력한 기록은 그대로 두고 로그인 화면으로 돌아가요.</div></div>
-     <div class="card"><h2>처음 상태로</h2>${UI.confirmReset?`<div class="row"><span class="small">입력한 것을 모두 지울까요?</span>${btn('되돌리기','reset',null,'danger')}${btn('아니요','confirmReset',{v:0})}</div>`:btn('처음 상태로 되돌리기','confirmReset',{v:1},'small')}</div>`}</div>
-    <div class="card"><h2>종목 사전 <span class="tag warn">단위·눈금은 예시 (O36)</span></h2><div class="tiny muted" style="margin-bottom:4px">눈금은 +/− 한 칸과 계산한 무게를 내릴 때 써요. '한쪽'은 40/40kg처럼 한쪽 무게로 적는 기구예요.</div>
-     <table><tr><th>이름</th><th>부위</th><th>단위</th><th>눈금</th><th>한쪽</th></tr>${exRows}</table>
-     <div class="row" style="margin-top:8px;flex-wrap:nowrap">${dIn('newExName','새 종목 이름',{grow:1})}${dSel('newExPart',pairs(['하체','가슴','등','어깨','팔','복근','전신','기타']),'하체',{w:80})}${dSel('newExUnit',[['kg','kg'],['lb','lb'],['','(없음)']],'kg',{w:80})}${dIn('newExInc','눈금',{w:56,im:'decimal',v:'2.5'})}${btn('+ 종목','newEx',null,'small')}</div></div></div></div>`;
+  const apple=UI.look==='emr';
+  const sec={};
+  sec.display={ic:['display','#007aff'],t:'화면',sub:'디자인 · 다크 모드',body:()=>
+    stGroup('디자인',`<div class="st-cards">${LOOKS.map(([k,l])=>`<button class="st-pick${UI.look===k?' on':''}" data-act="setLook" data-v="${k}">${lookPreview(k)}<b>${l}</b><span>${k==='chart'?'종이 기록부 느낌':'아이패드 기본 앱 느낌'}</span></button>`).join('')}</div>`,'기록은 같고 모양만 바뀌어요. 화면 구성과 위치는 둘 다 같아요.')+
+    stGroup('화면 모드',`<div class="st-cards${apple?'':' off'}">${THEMES.map(([k,l])=>`<button class="st-pick${(UI.theme||'light')===k?' on':''}" data-act="setTheme" data-v="${k}"${apple?'':' disabled'}>${themePreview(k)}<b>${l}</b></button>`).join('')}</div>`,apple?'자동은 아이패드 설정(라이트·다크)을 따라가요.':'다크 모드는 애플 디자인에서 쓸 수 있어요.')};
+  sec.class={ic:['timer','#34c759'],t:'수업',sub:'쉬는 시간 · 숫자 채우기',body:()=>
+    stGroup('',stItem(stIcon('timer','#ff9500'),'쉬는 시간 타이머','켜면 세트를 끝낼 때 계획한 쉬는 시간으로 돌아요. 트레이너 답이 오기 전이라 기본은 꺼 둬요.',stSwitch(!!S.settings.restTimer,'setTimer')))+
+    stGroup('지난 실제값 기준',stItem('','다음 목표가 없을 때 채울 숫자','같은 분할에 없는 종목은 가장 최근으로 채워요. 바꾸면 앞으로 만드는 수업 준비부터 적용돼요.',stSeg([['same','같은 분할'],['recent','가장 최근']],S.settings.basis,'setBasis'),'col'))};
+  sec.roles={ic:['sliders','#ff9500'],t:'역할별 기준',sub:'횟수 · 여유 횟수 · 세트 · 쉬는 초',body:()=>
+    stGroup(`역할별 기준 <span class="tag warn">논문 기준 임시값 (D59)</span>`,`<div class="st-pad"><table><tr><th>역할</th><th>횟수 범위</th><th>목표 횟수</th><th>여유 횟수</th><th>세트</th><th>쉬는 초</th></tr>${roleRows}</table></div>`,'트레이너 답(O02)이 오면 바꿀 값이에요. 유산소성 순환은 횟수 칸을 라운드로 써요.')};
+  sec.exercises={ic:['dumbbell','#5856d6'],t:'종목 사전',sub:`${Object.keys(S.exercises).length}개 · 부위 · 단위 · 눈금`,body:()=>
+    stGroup(`종목 사전 <span class="tag warn">단위·눈금은 예시 (O36)</span>`,`<div class="st-pad"><table><tr><th>이름</th><th>부위</th><th>단위</th><th>눈금</th><th>한쪽</th></tr>${exRows}</table></div>`,'눈금은 +/− 한 칸과 계산한 무게를 내릴 때 써요. \'한쪽\'은 40/40kg처럼 한쪽 무게로 적는 기구예요.')+
+    stGroup('새 종목',`<div class="st-pad"><div class="row" style="flex-wrap:nowrap">${dIn('newExName','새 종목 이름',{grow:1})}${dSel('newExPart',pairs(['하체','가슴','등','어깨','팔','복근','전신','기타']),'하체',{w:80})}${dSel('newExUnit',[['kg','kg'],['lb','lb'],['','(없음)']],'kg',{w:80})}${dIn('newExInc','눈금',{w:56,im:'decimal',v:'2.5'})}${btn('+ 종목','newEx',null,'small primary')}</div></div>`)};
+  if(!WEBAPP) sec.demo={ic:['play','#8e8e93'],t:'시연',sub:'예시 · 처음 상태로',body:()=>
+    stGroup('',stItem(stIcon('info','#ff9500'),'예시 취소·안 옴 보이기',`수첩에는 취소·안 옴 기록이 없어요. 화면을 보여 주려고 넣은 예시 ${EXAMPLE_CX.length}건이고, 운동 기록은 없어요.`,stSwitch(S.settings.exampleCx!==false,'setExampleCx')))+
+    stGroup('',stItem(stIcon('out','#007aff'),'로그아웃','입력한 기록은 그대로 두고 로그인 화면으로 돌아가요.',btn('로그아웃','logout',null,'small'))+
+      stItem(stIcon('trash','#ff3b30'),'처음 상태로 되돌리기','입력한 것을 모두 지워요.',UI.confirmReset?`${btn('되돌리기','reset',null,'small danger')}${btn('아니요','confirmReset',{v:0},'small')}`:btn('되돌리기','confirmReset',{v:1},'small danger')))};
+  return WEBAPP?Object.assign(webSettingsSections(),sec):sec;
+}
+V.settings=()=>{
+  const sec=settingsSections(); const order=WEBAPP?WEB_SETTINGS_ORDER:['display','class','roles','exercises','demo'];
+  let cur=UI.cur.setSec; if(!sec[cur]) cur=order.find(k=>sec[k]&&!sec[k].head)||order[0];
+  const row=k=>{const x=sec[k];if(x.head) return x.head(cur===k);return `<button class="st-row${cur===k?' on':''}" data-act="setSec" data-v="${k}">${stIcon(x.ic[0],x.ic[1])}<span class="st-tx"><b>${x.t}</b><span>${x.sub||''}</span></span><span class="st-chev">›</span></button>`};
+  const groups=[]; let g=[]; order.forEach(k=>{if(k==='|'){if(g.length)groups.push(g);g=[]}else if(sec[k])g.push(k)}); if(g.length)groups.push(g);
+  const x=sec[cur];
+  return topBar('설정',WEBAPP?'내 계정과 화면, 수업 기준':'숫자 채우기 기준과 종목 사전')+
+   `<div class="scroll" data-sk="main"><div class="st-split">
+     <nav class="st-side" aria-label="설정 목록">${groups.map(g=>`<div class="st-list">${g.map(row).join('')}</div>`).join('')}</nav>
+     <section class="st-pane" data-sk="pane"><h2 class="st-title">${stIcon(x.ic[0],x.ic[1])}${x.t}</h2>${x.body()}</section></div></div>`;
 };
 
 /* ---------- 창 ---------- */
@@ -4363,7 +4527,7 @@ function render(o={}){
   sheetMotion(app,prevOv,hadToast);
   app.querySelectorAll('[data-sk]').forEach(el=>{const v=UI.scrolls[UI.rk+'|'+el.dataset.sk];if(v!=null)el.scrollTop=v});
   if(fk){const el=app.querySelector(`[data-k="${CSS.escape(fk)}"]`);if(el){el.focus({preventScroll:true});if(sel)try{el.setSelectionRange(sel[0],sel[1])}catch(e){}}}
-  document.getElementById('device').classList.toggle('chart',chartLayout());document.getElementById('device').classList.toggle('apple',UI.look==='emr');
+  document.getElementById('device').classList.toggle('chart',chartLayout());document.getElementById('device').classList.toggle('apple',UI.look==='emr');document.getElementById('device').classList.toggle('dark',isDark());
   document.getElementById('b-look').textContent=UI.look==='chart'?'디자인: 기록부':'디자인: 애플';
   document.getElementById('b-orient').textContent=UI.orient==='land'?'세로로 보기':'가로로 보기';
   document.getElementById('b-fit').textContent=UI.fit?'실제 크기':'창에 맞추기';
@@ -4378,6 +4542,9 @@ function sheetMotion(app,prevOv,hadToast){
   if(!ov&&prevOv&&UI.look==='emr'){prevOv.classList.remove('enter');prevOv.classList.add('leave');prevOv.querySelectorAll('[data-act]').forEach(e=>e.removeAttribute('data-act'));prevOv.removeAttribute('data-act');app.appendChild(prevOv);setTimeout(()=>prevOv.remove(),240)}
   const t=app.querySelector(':scope>.toast'); if(t&&!hadToast) t.classList.add('enter');
 }
+/* 다크 모드: 애플 디자인에서만. '자동'은 기기 설정(라이트·다크)을 따른다 */
+const darkMQ=window.matchMedia?matchMedia('(prefers-color-scheme: dark)'):null;
+function isDark(){return UI.look==='emr'&&(UI.theme==='dark'||(UI.theme==='auto'&&!!darkMQ&&darkMQ.matches))}
 let toastT=null;
 function toast(msg){UI.toast=msg;render();clearTimeout(toastT);toastT=setTimeout(()=>{UI.toast=null;document.querySelector('#app .toast')?.remove()},2600)}
 function go(name,params){
@@ -4563,7 +4730,7 @@ function fit(){
   const sc=UI.fit?Math.min(st.clientWidth/W,st.clientHeight/H):1;
   fr.style.transform=`scale(${sc})`; fr.style.left=Math.max(0,(st.clientWidth-W*sc)/2)+'px'; fr.style.width=W+'px'; fr.style.height=H+'px';
 }
-function saveView(){try{localStorage.setItem(KEY+'-view',JSON.stringify({look:UI.look,orient:UI.orient,fit:UI.fit,guide:{open:G.open,scene:G.scene,step:G.step}}))}catch(e){}}
+function saveView(){try{localStorage.setItem(KEY+'-view',JSON.stringify({look:UI.look,theme:UI.theme,orient:UI.orient,fit:UI.fit,guide:{open:G.open,scene:G.scene,step:G.step}}))}catch(e){}}
 /* 입력 칸이 바뀐 직후 버튼을 누르면 그 버튼이 다시 그려지며 사라지지 않게, 그리기를 잠깐 미룬다 */
 let soonT=null;
 function renderSoon(){clearTimeout(soonT);soonT=setTimeout(()=>{soonT=null;render()},300)}
@@ -4575,11 +4742,13 @@ const ENTER_KEY=KEY+'-entered';
 function enterApp(){try{sessionStorage.setItem(ENTER_KEY,'1')}catch(e){}UI.stack=[];UI.route={name:'today'};UI.modal=null;UI.edit=null}
 ACT.enter=()=>{enterApp();document.querySelectorAll('#app .ld-f input').forEach(i=>i.value='');render({noSave:true})};
 ACT.setLook=d=>{UI.look=d.v;saveView();render()};
+ACT.setTheme=d=>{UI.theme=d.v;saveView();render()};
+ACT.setSec=d=>{UI.cur.setSec=d.v;UI.confirmReset=false;render()};
 ACT.logout=()=>{try{sessionStorage.removeItem(ENTER_KEY)}catch(e){}UI.stack=[];UI.route={name:'landing'};UI.modal=null;UI.edit=null;render({noSave:true})};
 
 /* ---------- 시작 ---------- */
 function boot(){
-  try{const v=JSON.parse(localStorage.getItem(KEY+'-view')||'null');if(v){UI.look=v.look==='emr'?'emr':'chart';UI.orient=v.orient==='port'?'port':'land';UI.fit=v.fit!==false;if(v.guide){G.open=v.guide.open!==false;G.scene=Math.min(+v.guide.scene||0,SCENES.length-1);G.step=+v.guide.step||0}}}catch(e){}
+  try{const v=JSON.parse(localStorage.getItem(KEY+'-view')||'null');if(v){UI.look=v.look==='emr'?'emr':'chart';UI.theme=['dark','auto'].includes(v.theme)?v.theme:'light';UI.orient=v.orient==='port'?'port':'land';UI.fit=v.fit!==false;if(v.guide){G.open=v.guide.open!==false;G.scene=Math.min(+v.guide.scene||0,SCENES.length-1);G.step=+v.guide.step||0}}}catch(e){}
   S=load(); ensurePackages(); save();
   let entered=false;try{entered=sessionStorage.getItem(ENTER_KEY)==='1'}catch(e){}
   if(WEBAPP) webBoot(); else if(!entered) UI.route={name:'landing'};
@@ -4605,6 +4774,7 @@ function boot(){
   setInterval(()=>{const el=document.getElementById('timer-text');if(el&&UI.timer)el.innerHTML=timerText()},1000);
   // 누르는 순간 반응(:active)이 아이패드 사파리에서도 바로 보이게, 그리고 창이 누른 곳에서 나오게 누른 위치를 기억
   document.addEventListener('touchstart',()=>{},{passive:true});
+  try{darkMQ&&darkMQ.addEventListener('change',()=>{if(UI.theme==='auto')render()})}catch(e){}
   document.addEventListener('pointerdown',e=>{UI.pt=[e.clientX,e.clientY]},true);
   render(); fit();
 }
