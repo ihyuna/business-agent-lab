@@ -310,10 +310,10 @@ V.settings=()=>{
   const row=k=>{const x=sec[k];if(x.head) return x.head(cur===k);return `<button class="st-row${cur===k?' on':''}" data-act="setSec" data-v="${k}">${stIcon(x.ic[0],x.ic[1])}<span class="st-tx"><b>${x.t}</b><span>${x.sub||''}</span></span><span class="st-chev">›</span></button>`};
   const groups=[]; let g=[]; order.forEach(k=>{if(k==='|'){if(g.length)groups.push(g);g=[]}else if(sec[k])g.push(k)}); if(g.length)groups.push(g);
   const x=sec[cur];
-  return topBar('설정',WEBAPP?'내 계정과 화면, 수업 기준':'숫자 채우기 기준과 종목 사전')+
+  return topBar('설정',WEBAPP?'내 계정과 화면, 수업 기준':'숫자 채우기 기준과 종목 사전','',{noBack:true})+
    `<div class="scroll" data-sk="main"><div class="st-split">
      <nav class="st-side" aria-label="설정 목록">${groups.map(g=>`<div class="st-list">${g.map(row).join('')}</div>`).join('')}</nav>
-     <section class="st-pane" data-sk="pane"><h2 class="st-title">${stIcon(x.ic[0],x.ic[1])}${x.t}</h2>${x.body()}</section></div></div>`;
+     <section class="st-pane" data-sk="pane"><h2 class="st-title">${stIcon(x.ic[0],x.ic[1])}${x.t}</h2>${x.body()}</section></div></div>`+tabBar('settings');
 };
 
 /* ---------- 창 ---------- */
