@@ -7,7 +7,8 @@
 | 시나리오 | [docs/시나리오.md](docs/시나리오.md) |
 | 데이터 구조 | [docs/데이터-구조.md](docs/데이터-구조.md) |
 | **짐노트 웹앱** | [web/index.html](web/index.html) (실제로 쓰는 웹앱, 아래 '웹앱') |
-| PT 기록 앱 MVP (시연판) | [app.html](app.html) (크롬에서 열기), 코드는 [src/](src/) |
+| 짐노트 웹앱 (기본) | [app.html](app.html) → [web/index.html](web/index.html) (크롬에서 열기) |
+| PT 기록 앱 MVP (시연판, 시나리오 안내) | [demo.html](demo.html), 코드는 [src/](src/) |
 | 가명 처리한 실제 데이터 기록 | [data/](data/README.md) |
 
 회원은 성+00 코드로만 씁니다. 기록은 트레이너 수첩 그대로입니다.
@@ -22,7 +23,7 @@ PT 트레이너가 회원 수업을 준비하고, 진행하고, 마무리하는 
 
 ## 여는 법
 
-크롬 등 브라우저에서 `app.html`을 열면 됩니다(파일로 열거나 웹 주소로). 서버나 설치가 필요 없습니다. `index.html`은 Claude 아티팩트용 조각입니다. 입력한 내용은 그 브라우저의 localStorage(`pt-mvp-proto-v3.3`)에만 남고, 화면의 '처음 상태로 되돌리기'로 지울 수 있습니다.
+크롬 등 브라우저에서 `app.html`을 열면 웹앱(`web/index.html`)으로 넘어갑니다. 시연판은 `demo.html`을 열면 됩니다(파일로 열거나 웹 주소로). 서버나 설치가 필요 없습니다. `index.html`은 Claude 아티팩트용 조각입니다. 입력한 내용은 그 브라우저의 localStorage(`pt-mvp-proto-v3.3`)에만 남고, 화면의 '처음 상태로 되돌리기'로 지울 수 있습니다.
 
 오른쪽 '시나리오 따라 하기' 패널이 8개 장면을 안내합니다. 각 단계에서 직접 누르거나 '대신 하기'를 누르면 됩니다.
 
@@ -51,14 +52,14 @@ PT 트레이너가 회원 수업을 준비하고, 진행하고, 마무리하는 
 | `src/30-views.js`, `src/31-views2.js` | 화면 |
 | `src/35-guide.js` | '시나리오 따라 하기' 장면 |
 | `src/40-actions.js` | 버튼 동작 |
-| `build.sh` | `src/`를 합쳐 `index.html`과 독립 페이지 `app.html`을 만듭니다 |
+| `build.sh` | `src/`를 합쳐 `index.html`, 시연판 `demo.html`, 웹앱 `web/index.html`, 웹앱 입구 `app.html`을 만듭니다 |
 
 `index.html`은 빌드 결과물입니다. `src/`를 고친 뒤 다시 만들어 주세요.
 
 ## 빌드와 테스트
 
 ```sh
-sh build.sh          # index.html, app.html 다시 만들기
+sh build.sh          # index.html, demo.html, web/index.html, app.html 다시 만들기
 node test/smoke.js   # 8개 장면을 끝까지 자동으로 돌려 보고 결과와 오류를 출력
 node test/check.js   # 장면 1~7을 한 단계씩 돌리며 시간 띠·색 표시 상태를 출력
 ```
@@ -73,7 +74,7 @@ node test/check.js   # 장면 1~7을 한 단계씩 돌리며 시간 띠·색 표
 
 # 짐노트 웹앱 (`web/`)
 
-시연판(`app.html`)과 같은 화면·계산을 쓰되, 트레이너가 실제로 쓰도록 바꾼 웹앱입니다. 지도교수님 피드백(11/11)대로 아이패드 앱 대신 웹앱이고, 화면 기준은 그대로 아이패드 9세대(1080×810)입니다.
+시연판(`demo.html`)과 같은 화면·계산을 쓰되, 트레이너가 실제로 쓰도록 바꾼 웹앱입니다. 지도교수님 피드백(11/11)대로 아이패드 앱 대신 웹앱이고, 화면 기준은 그대로 아이패드 9세대(1080×810)입니다.
 
 흐름: **소개(랜딩) → 로그인/계정 만들기 → 처음 설정(이름 → 홈 화면 추가 안내) → 앱(빈 노트)**. 앱의 각 화면은 처음 열 때 한 번, 어두운 배경 위에 설명하는 곳만 밝히고 카드로 하나씩 안내합니다(D77, 워크플로우 5-11). 설정 → '화면 안내 다시 보기'로 다시 봅니다.
 
@@ -99,6 +100,6 @@ Supabase 준비: 프로젝트 만들기 → SQL Editor에서 `web/supabase.sql` 
 코드: `src/` 를 시연판과 같이 쓰고, 웹앱에만 `src/50-web.js`(계정·소개·처음 설정·저장)와 `src/web.css` 가 더 들어갑니다(`35-guide.js` 는 빠짐). 소스 안의 `WEBAPP` 값으로 둘을 가릅니다. 설정은 왼쪽 목록 + 오른쪽 내용(아이패드 설정 앱처럼, `src/settings.css`)이고, 두 디자인 모두 다크 모드(라이트·다크·자동)가 있습니다(기록부 다크는 `src/dark.css`). 기록부는 애플 디자인의 여백·모서리 단위, 버튼 크기, 누름 반응, 창 움직임을 같이 씁니다(`src/chart.css`). 설정 아이콘은 한 가지 색 선 아이콘입니다. 화면 디자인은 '기록부'(`#device.chart`, `00-head.html`)와 '애플 디자인'(`#device.apple`, `src/apple.css`, 시연판·웹앱 공통) 두 가지이고 설정에서 바꿉니다. 애플 디자인은 emilkowalski/skills 의 apple-design 스킬(MIT) 원칙을 따랐습니다. `web/sw.js`, `web/manifest.webmanifest`, `web/config.js`, `web/supabase.sql`, 아이콘은 직접 고치는 파일입니다.
 
 ```sh
-sh build.sh          # index.html, app.html, web/index.html
+sh build.sh          # index.html, demo.html, web/index.html, app.html(웹앱 입구)
 node test/web.js     # 이 기기 계정 + 가짜 Supabase로 가입·처음 설정·수업·새로고침·로그아웃·계정 분리·다른 기기 로그인 확인
 ```
