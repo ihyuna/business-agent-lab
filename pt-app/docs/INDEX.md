@@ -13,4 +13,4 @@
 - `참고/`: 위 문서를 만들 때 쓴 분석, 원자료, 결정 기록(decisions.md). 실명 대응표는 뺐습니다. 수첩 사진과 업로드 원본은 올리지 않아서, 이 폴더 안 링크 일부는 열리지 않습니다.
 - 수첩 기록 데이터: [../data/](../data/README.md)
 - 웹앱(기본): [../app.html](../app.html) → [../web/index.html](../web/index.html). 시연판: [../demo.html](../demo.html)
-- 결정과 지금 할 일: [참고/decisions.md](참고/decisions.md) (2026-11-25 기준 D110까지)
+- 결정과 지금 할 일: [참고/decisions.md](참고/decisions.md) (2026-11-25 기준 D111까지)
