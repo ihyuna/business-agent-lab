@@ -1,9 +1,9 @@
 # 논문 기준 임시값
 
-> 상태: 임시 · 버전 v0.1 · 최종 수정 2026-10-27 · 이 문서가 기준인 주제: 트레이너 답(O01·O02·O03·O08)과 추정 1RM 공식(O20)이 오기 전까지 쓰는 논문 기준 임시값과 출처
+> 상태: 임시 · 버전 v0.2 · 최종 수정 2026-11-25 · 이 문서가 기준인 주제: 트레이너 답(O01~O14, O28, O29)과 추정 1RM 공식(O20)이 오기 전까지 쓰는 논문 기준 임시값과 출처
 
-- 만든 까닭: 2026-10-27 이현아님 "지금 트레이너가 답변을 주기 어려운 상황이라 논문과 객관적인 정보를 바탕으로 일단 진행하고" (D59).
-- 논문 인용 표기는 `[문헌 Craven 2022]`처럼 쓰고, 목록은 [9절](#9-출처)에 있다. 연구보고서가 이미 인용한 논문(Halperin 2022, Nuzzo 2024, Huang 2025, Vieira 2022)은 [project-analysis.md 6절](../analysis/project-analysis.md#6-문헌-기반-설계-원칙-pdf-317장)을 따른다.
+- 만든 까닭: 2026-10-27 이현아님 "지금 트레이너가 답변을 주기 어려운 상황이라 논문과 객관적인 정보를 바탕으로 일단 진행하고" (D59). 2026-11-25 이현아님 "답 기다리고 있는 것들 전부 논문 임시값으로 진행해줘"로 나머지 질문도 넣었다(D115, [8절](#8-나머지-트레이너-질문의-임시값-d115)).
+- 논문 인용 표기는 `[문헌 Craven 2022]`처럼 쓰고, 목록은 [10절](#10-출처)에 있다. 연구보고서가 이미 인용한 논문(Halperin 2022, Nuzzo 2024, Huang 2025, Vieira 2022)은 [project-analysis.md 6절](../analysis/project-analysis.md#6-문헌-기반-설계-원칙-pdf-317장)을 따른다.
 - 예시 숫자는 모두 계산을 보여 주려고 지어낸 '예시'다. 회원 기록이 아니다.
 
 ---
@@ -15,6 +15,7 @@
 3. **세트 구성:** 백오프·피라미드 무게는 고정 %가 아니라 그 세트의 목표 횟수·RIR로 추정 1RM에서 다시 계산한다. 드롭세트만 논문 예시대로 약 20% 내린다.
 4. **RIR과 RPE:** RIR('몇 개 더 할 수 있었나')로 적는다. 칸은 비워 두고(D37), 메인 종목 마지막 세트에서만 한 번 탭으로 고르게 권한다.
 5. **컨디션:** 수면·피로·근육통이 '평소보다 나쁨'이면 목표 RIR을 1 늘려 무게를 다시 계산한다. 고정 %로 깎지 않는다. 통증은 숫자를 바꾸지 않고 트레이너가 확인한다.
+6. **나머지 질문 13개(D115):** 생리 주기는 숫자를 자동으로 바꾸지 않고, 몸 쓰는 감각 점수에 뜻을 붙이고, 같은 부위 통증이 7일 넘거나 2번 연달아면 주의사항으로 옮기기를 권하고, 훈련 방향은 4주 단위로 한다. 나머지는 지금 가정 그대로다.
 
 ## 1. 논문 값을 쓰는 원칙
 
@@ -95,7 +96,29 @@
 
 무게를 거꾸로 계산하면 기구 눈금에 맞춰 내려야 한다. 그래서 종목 사전에 **무게 눈금**(원판 2.5kg·5kg, 핀 한 칸 무게) 칸이 필요하다. 눈금이 너무 커서 한 칸 올리면 범위를 넘을 때는 무게 대신 횟수를 하나 올린다. 이 방식은 경쟁 앱 RP Hypertrophy에서 가져왔다([경쟁 앱 분석](https://claude.ai/artifact/2ESBBjsAsBztcDGNQUcJEH)). 지금 데이터 구조에는 이 칸이 없다.
 
-## 8. 바뀌는 곳
+## 8. 나머지 트레이너 질문의 임시값 (D115)
+
+2026-11-25 이현아님 "답 기다리고 있는 것들 전부 논문 임시값으로 진행해줘" (D115). 아직 안 보낸 질문 13개(O04~O14, O28, O29)도 트레이너 답을 기다리지 않고 아래 값으로 간다. 논문이 직접 답하는 질문은 논문 값을 쓰고, 논문이 다룰 수 없는 질문(기기 예절, 말뜻, 수업 습관)은 객관적 근거(수첩 기록, 일반 기준)로 정하고 [해석]이라고 밝힌다. 1절 원칙(출발값, 범위, 바뀜, 밝힘)은 그대로다. 트레이너가 나중에 답하면 그 답이 앞선다.
+
+| 질문 | 임시값 | 근거 | 앱에서 |
+|---|---|---|---|
+| O04 생리 주기 | 시작일만 적는다(동의한 회원만, D41). 주기 단계로 무게·횟수를 자동으로 바꾸지 않는다. 브리핑에 '주기 n일째'만 보이고, 바꿀지는 트레이너가 정한다 | 주기 단계에 따른 수행 차이는 평균적으로 아주 작았고(초기 난포기만 '사소한' 감소) 사람마다 달라 개인별로 보라고 했다([문헌 McNulty 2020]). 근력 수행과 근력 운동 적응에 주기 단계 영향이 없다는 정리도 있다([문헌 Colenso-Semple 2023]) | 바뀌는 것 없음. 시작일 칸과 동의 확인은 그대로 |
+| O05 수업 중 iPad | 써도 된다고 가정한다(D02). 화면은 한 손 탭 위주, 수업 중 입력은 3~5분 안(D03) | 논문이 답할 수 없는 질문이다 [해석]. 트레이너 설문에서 폰을 꺼리는 이유는 '예의'로 읽힌다([설문 Q5]). 센터 규정이면 그때 다시 본다 | 바뀌는 것 없음 |
+| O06 몸 쓰는 감각 단계 | 1~5점 그대로. 점수 뜻을 정해 둔다: 5 보상 동작 없이 깔끔, 3 보상 동작이 있지만 해냄, 1 못 하거나 통증. 2·4는 그 사이. 첫 수업 워밍업·테스트 세트에서 본다(D30) | 기능 동작 검사(FMS)는 동작마다 '보상 없이 수행 / 보상 동작으로 수행 / 수행 못 함 / 통증'의 단계로 점수를 매긴다([문헌 Cook 2014]). 그 기준을 5점 척도의 1·3·5에 맞췄다 [해석] | 회원 화면 안내 문구를 '1 못 함·통증 / 3 보상 있음 / 5 깔끔'으로 |
+| O07 무게 적는 기준 | 덤벨은 한 개 무게(표시값), 바벨은 바 포함, 머신은 표시값(핀·스택) 그대로, 한쪽씩 하는 운동은 한쪽 횟수. 다른 기구끼리는 숫자를 비교하지 않는다(2절) | 수첩에는 기구에 보이는 숫자를 그대로 적은 것으로 읽힌다 [해석]. 덤벨이 한 개 무게인지는 수첩만으로 확정할 수 없어 트레이너 답이 오면 다시 본다. 수첩 숫자는 고치지 않고 그대로 쓴다. 볼륨은 세트 × 횟수 × 무게로, 같은 종목 안에서만 비교한다 | 바뀌는 것 없음. 종목 사전의 무게 기준 칸(`exercise.weight_basis`) 기본값 |
+| O08 컨디션 반영 | 6절 그대로 | 6절 | 이미 들어가 있음 |
+| O09 세팅을 바꾸는 관찰 | 숫자를 자동으로 바꾸는 관찰은 없다. 5종(집중력·몰입도·반응·동작 안정성·회복 속도)은 '튀는 날만' 메모로 남긴다(D38). 동작 안정성이 무너지면 그 세트 RIR을 0~1로 보고 남은 세트를 다시 맞추는 것만 권한다 | 실패에 가까울수록 피로가 커지고(Vieira 2022, [PDF 6장 표]), 남은 세트는 그날 수행으로 맞춘다(6절 3, [문헌 Helms 2018]) [해석] | 바뀌는 것 없음 |
+| O10 '이상치'의 뜻 | 화면 이름은 '기대 범위'로 쓴다. 그 회원 기록과 기준으로 계산한 오늘 예상 무게·횟수 범위를 말한다. '최소 기댓값'은 범위의 아래 끝이다 | 말뜻 질문이라 논문이 없다 [해석]. 값 하나 대신 범위로 내는 원칙(D13)에 맞춘 이름이다 | 바뀌는 것 없음(지금 화면도 범위) |
+| O11 오늘 목표 방식 | 운동 목표, 진행 방향, 부위 셋 다 저장하고, 화면은 '부위 + 진행 방향(올리기/유지/조절)' 한 줄로 먼저 고르게 한다 | 트레이너 답 "오늘은 그 틀을 따라서"([인터뷰 2차 질문 2])와 수첩 머리글(하체, 밀기, 당기기)이 부위 단위다 [해석] | 바뀌는 것 없음 |
+| O12 오래 가는 통증과 그날 불편 | 그날 불편은 컨디션 통증(`cond_pain`)에 적는다. 같은 부위가 7일 넘게 이어지거나 수업 2번 이상 연달아 나오면 '주의사항으로 옮길까요?'를 띄우고 트레이너가 정한다 | 운동 뒤 근육통(지연성 근육통)은 24~72시간에 가장 심하고 대개 5~7일 안에 사라진다([문헌 Cheung 2003]). 그보다 오래가면 근육통이 아닐 수 있다 [해석]. 원인은 앱이 판단하지 않는다(D11, D12) | 웹앱 수업 시작 화면: 오늘 통증이 있고 지난 수업에도 통증이 있었으면 '이어지면 주의사항으로 옮길지 정해요' 안내가 뜬다. 옮기는 버튼은 원래 있던 '주의사항에 추가' |
+| O13 수업 중 루틴 변경 | 자주 바뀐다고 본다. 수업 중 종목 바꾸기·세트 추가·빼기는 한 번 탭으로 둔다(지금 화면 그대로) | 이00_3 수첩은 머신 세팅을 거의 매번 고쳐 적었다 [해석]. 트레이너 답 "대화를 통해서 바꾸기도"([인터뷰 2차 질문 3]) | 바뀌는 것 없음 |
+| O14 숫자 자동 채우기 | 쓴다고 보고 D56대로 간다. 채운 숫자는 범위와 근거 카드로 보이고 트레이너가 고친다 | 2026-10-27 일부 답(R09) "있어도 안 쓸 수준이면 없는 게 좋고". 그래서 근거와 수정이 쉬워야 한다 [해석] | 바뀌는 것 없음 |
+| O28 목표 우선순위 | 목표가 여러 개면 하나를 '먼저'로 둔다(`member_goal.priority` = 1). 브리핑은 그 목표를 맨 위에 둔다 | 근력 운동과 유산소를 같이 하면 근비대·근력 이득이 줄 수 있다([문헌 Wilson 2012]). 목표가 겹칠 때 무엇을 먼저 볼지 정해 두는 근거로 쓴다 [해석] | 바뀌는 것 없음(우선순위 칸 있음) |
+| O29 훈련 방향 기간 | 4주를 기본으로 잡고, 끝나는 날 '다음 4주 방향'을 다시 고르게 한다. 진행 방향(`progression_target`)도 같이 정한다. 트레이너가 기간을 바꿀 수 있다 | 주기화(기간을 나눠 진행을 바꾸는 방식)가 주기화하지 않은 훈련보다 최대 근력 증가가 컸다([문헌 Williams 2017]). 한 기간을 4주로 잡는 것은 흔한 실무 단위를 따른 것이다 [해석] | 데이터 구조에는 시작·종료일 칸이 있어 기본 종료일 = 시작 + 4주. 웹앱은 시작일로 쌓고 훈련 방향 창에 '기본은 4주마다 다시 골라요'를 적었다 |
+
+**질문지는 버리지 않는다.** O01~O14, O28, O29는 트레이너가 답할 수 있게 되면 그대로 보낸다. 답이 오면 이 표의 값을 바꾸고 변경 기록에 남긴다.
+
+## 9. 바뀌는 곳
 
 | 이 문서의 값 | 들어갈 곳 | 트레이너 답이 오면 |
 |---|---|---|
@@ -105,22 +128,31 @@
 | 5절 RIR | `trainer.effort_scale` = RIR | O03 답으로 바꾼다 |
 | 6절 컨디션 | `recommendation.inputs_json`, 근거 문장 `rationale` | O08 답으로 바꾼다 |
 | 7절 무게 눈금 | `exercise`에 새 칸 (O36) | O36을 정할 때 함께 |
+| 8절 나머지 질문 | 회원 화면 감각 점수 안내(O06), 통증 → 주의사항 안내(O12), 훈련 방향 기본 4주(O29), 나머지는 지금 칸 그대로 | 각 O 답으로 바꾼다 |
 
-## 9. 출처
+## 10. 출처
 
+- [문헌 Cheung 2003] Cheung K, Hume PA, Maxwell L. Delayed Onset Muscle Soreness: Treatment Strategies and Performance Factors. *Sports Medicine*. 2003;33(2):145–164. https://doi.org/10.2165/00007256-200333020-00005
+- [문헌 Colenso-Semple 2023] Colenso-Semple LM, D'Souza AC, Elliott-Sale KJ, Phillips SM. Current evidence shows no influence of women's menstrual cycle phase on acute strength performance or adaptations to resistance exercise training. *Frontiers in Sports and Active Living*. 2023;5:1054542. https://doi.org/10.3389/fspor.2023.1054542
+- [문헌 Cook 2014] Cook G, Burton L, Hoogenboom BJ, Voight M. Functional movement screening: the use of fundamental movements as an assessment of function - part 1. *International Journal of Sports Physical Therapy*. 2014;9(3):396–409. PMID 24944860 (DOI 없음)
 - [문헌 Craven 2022] Craven J, McCartney D, Desbrow B, Sabapathy S, Bellinger P, Roberts L, Irwin C. Effects of Acute Sleep Loss on Physical Performance: A Systematic and Meta-Analytical Review. *Sports Medicine*. 2022;52(11):2669–2690. https://doi.org/10.1007/s40279-022-01706-y
 - [문헌 Helms 2016] Helms ER, Cronin J, Storey A, Zourdos MC. Application of the Repetitions in Reserve-based Rating of Perceived Exertion Scale for Resistance Training. *Strength and Conditioning Journal*. 2016;38(4):42–49. https://doi.org/10.1519/SSC.0000000000000218
 - [문헌 Helms 2018] Helms ER et al. RPE vs. Percentage 1RM Loading in Periodized Programs Matched for Sets and Repetitions. *Frontiers in Physiology*. 2018;9:247. https://doi.org/10.3389/fphys.2018.00247
 - [문헌 Krzysztofik 2019] Krzysztofik M, Wilk M, Wojdała G, Gołaś A. Maximizing Muscle Hypertrophy: A Systematic Review of Advanced Resistance Training Techniques and Methods. *International Journal of Environmental Research and Public Health*. 2019;16(24):4897. https://doi.org/10.3390/ijerph16244897
+- [문헌 McNulty 2020] McNulty KL, Elliott-Sale KJ, Dolan E, Swinton PA, Ansdell P, Goodall S, Thomas K, Hicks KM. The Effects of Menstrual Cycle Phase on Exercise Performance in Eumenorrheic Women: A Systematic Review and Meta-Analysis. *Sports Medicine*. 2020;50(10):1813–1827. https://doi.org/10.1007/s40279-020-01319-3
 - [문헌 Reynolds 2006] Reynolds JM, Gordon TJ, Robergs RA. Prediction of One Repetition Maximum Strength from Multiple Repetition Maximum Testing and Anthropometry. *Journal of Strength and Conditioning Research*. 2006;20(3):584–592.
 - [문헌 Robinson 2024] Robinson ZP, Pelland JC, Remmert JF, Refalo MC, Jukic I, Steele J, Zourdos MC. Exploring the Dose-Response Relationship Between Estimated Resistance Training Proximity to Failure, Strength Gain, and Muscle Hypertrophy: A Series of Meta-Regressions. *Sports Medicine*. 2024;54(9):2209–2231. https://doi.org/10.1007/s40279-024-02069-2
 - [문헌 Schoenfeld 2016] Schoenfeld BJ, Pope ZK, Benik FM, et al. Longer Interset Rest Periods Enhance Muscle Strength and Hypertrophy in Resistance-Trained Men. *Journal of Strength and Conditioning Research*. 2016;30(7):1805–1812.
 - [문헌 Schoenfeld 2021] Schoenfeld BJ, Grgic J, Van Every DW, Plotkin DL. Loading Recommendations for Muscle Strength, Hypertrophy, and Local Endurance: A Re-Examination of the Repetition Continuum. *Sports*. 2021;9(2):32.
 - [문헌 Singer 2024] Singer A, Wolf M, Generoso L, et al. Give it a rest: a systematic review with Bayesian meta-analysis on the effect of inter-set rest interval duration on muscle hypertrophy. *Frontiers in Sports and Active Living*. 2024;6. https://doi.org/10.3389/fspor.2024.1429789
+- [문헌 Williams 2017] Williams TD, Tolusso DV, Fedewa MV, Esco MR. Comparison of Periodized and Non-Periodized Resistance Training on Maximal Strength: A Meta-Analysis. *Sports Medicine*. 2017;47(10):2083–2100. https://doi.org/10.1007/s40279-017-0734-y
+- [문헌 Wilson 2012] Wilson JM, Marin PJ, Rhea MR, Wilson SMC, Loenneke JP, Anderson JC. Concurrent Training: A Meta-Analysis Examining Interference of Aerobic and Resistance Exercises. *Journal of Strength and Conditioning Research*. 2012;26(8):2293–2307. https://doi.org/10.1519/JSC.0b013e31823a3e2d
 - [문헌 Zourdos 2016] Zourdos MC, Klemp A, Dolan C, et al. Novel Resistance Training-specific Rating of Perceived Exertion Scale Measuring Repetitions in Reserve. *Journal of Strength and Conditioning Research*. 2016;30(1):267–275. https://doi.org/10.1519/JSC.0000000000001049
 - Epley 공식은 원 출처(1985년 Boyd Epley의 무게 환산표)를 직접 보지 못했고, [문헌 Reynolds 2006]이 비교한 공식으로 인용한다.
 - 2026-10-27에 초록과 출판사·저장소 페이지로 확인했다. 본문 전체를 읽은 것은 아니다.
+- 2026-11-25에 넣은 6편(Cheung, Colenso-Semple, Cook, McNulty, Williams, Wilson)은 DOI 등록처(Crossref) 기록으로 저자·권호·쪽을 확인했고 철회·정정 기록이 없었다. Cook 2014는 DOI가 없어 OpenAlex·PubMed 번호로 확인했다.
 
 ## 변경 기록
 
 - 2026-10-27 v0.1: 이현아님 요청(트레이너 답 대신 논문 기준으로 진행, D59)으로 새로 썼다.
+- 2026-11-25 v0.2: 이현아님 요청(답을 기다리는 질문 전부 논문 임시값으로, D115)으로 8절을 넣고 바뀌는 곳·출처를 9·10절로 옮겼다. 논문 6편 추가.

@@ -3323,7 +3323,7 @@ V.memberEdit=r=>{
     <div class="col">
      <div class="card"><h2>몸 기록</h2><table><tr><th>날짜</th><th>키</th><th>체중</th><th>골격근량</th></tr>${body||'<tr><td colspan="4" class="empty">아직 없어요.</td></tr>'}</table>
        <div class="row" style="margin-top:6px;flex-wrap:nowrap">${dIn('bDate-'+m.id,'',{type:'date',w:140})}${dIn('bH-'+m.id,'키',{w:60,im:'decimal'})}${dIn('bW-'+m.id,'체중',{w:60,im:'decimal'})}${dIn('bM-'+m.id,'골격근',{w:66,im:'decimal'})}${btn('넣기','addBody',{mid:m.id},'small')}</div></div>
-     <div class="card"><h2>몸 쓰는 감각 5항목</h2><div class="tiny muted" style="margin-bottom:6px">1 낮음 ~ 5 높음.</div>
+     <div class="card"><h2>몸 쓰는 감각 5항목</h2><div class="tiny muted" style="margin-bottom:6px">1 못 함·통증 · 3 보상 동작 있음 · 5 깔끔. 2·4는 그 사이.</div>
        ${MOVE_ITEMS.map(([k,l])=>`<div class="row" style="margin-bottom:6px"><span style="width:120px">${l}</span>${chips([[1,'1'],[2,'2'],[3,'3'],[4,'4'],[5,'5']],mv[k],'move',{mid:m.id,item:k})}</div>`).join('')}
        <div class="row"><span style="width:120px">힘 쓰는 부위</span>${bIn('mForce',mv.force,{mid:m.id},{grow:1,ph:'예: 하체는 앞쪽 허벅지로 먼저 씀'})}</div></div>
      ${notesCard(m,['lifestyle','diet','self_train','personality','general'],'생활·식단·개인 운동 메모')}</div></div></div>`+
@@ -3441,7 +3441,7 @@ function startSheet(s,m){
   if(!s.cond) s.cond={sleep:'normal',fatigue:'normal',soreness:'normal',pain:'none',painWhere:''};
   const last=prevDone(m,s.date).find(p=>p.cond);
   const cond=COND_ITEMS.map(([k,l])=>`<div class="row" style="margin-bottom:8px"><span style="width:64px">${l}</span>${chips(k==='pain'?PAIN3:COND3,s.cond[k],'cond',{sid:s.id,item:k})}<span class="tiny muted">${last?`지난번 ${lab(k==='pain'?PAIN3:COND3,last.cond[k])}`:'지난번 남긴 것 없음'}</span></div>`).join('');
-  const pain=s.cond.pain!=='none'?`<div class="row" style="flex-wrap:nowrap">${bIn('painWhere',s.cond.painWhere,{sid:s.id},{grow:1,ph:'어디가 어떻게 (예: 왼쪽 어깨 들 때)'})}${btn('주의사항에 추가','painToCaution',{sid:s.id},'small')}</div><div class="tiny muted">통증은 숫자를 바꾸지 않아요. 트레이너가 정해요.</div>`:'';
+  const pain=s.cond.pain!=='none'?`<div class="row" style="flex-wrap:nowrap">${bIn('painWhere',s.cond.painWhere,{sid:s.id},{grow:1,ph:'어디가 어떻게 (예: 왼쪽 어깨 들 때)'})}${btn('주의사항에 추가','painToCaution',{sid:s.id},'small')}</div><div class="tiny muted">통증은 숫자를 바꾸지 않아요. 트레이너가 정해요.</div>${last&&last.cond.pain&&last.cond.pain!=='none'?`<div class="tiny" style="color:var(--bad);margin-top:4px">지난 수업(${esc(last.date)})에도 통증이 있었어요${last.cond.painWhere?': '+esc(last.cond.painWhere):''}. 이어지면 주의사항으로 옮길지 정해요.</div>`:''}`:'';
   const cs=openCautions(m).map(c=>`<div class="row" style="margin-bottom:6px"><span style="flex:1;min-width:0"><span class="tag warn">${esc(c.part)}</span> ${esc(c.text)}</span>${chips(CHECK4,s.cautionChecks[c.id],'ccheck',{sid:s.id,id:c.id})}</div>`).join('');
   const memo=todayMemos(m,s);
   const bad=condBadNames(s.cond); let nAdj=0;
@@ -3798,7 +3798,7 @@ MOD.addEx=o=>{const to=UI.modal.to;const s=o.sid&&SES(o.sid);
 MOD.block=o=>{const m=M(o.mid);const b=curBlock(m);const dir=UI.modal.dir||b?.dir||'발전';
   return `<h3>훈련 방향</h3><div class="row" style="margin-bottom:8px">${chips(pairs(DIRS),dir,'pickDir')}</div>
    <div class="row" style="margin-bottom:8px">${dIn('bl-f','집중이면 부위나 종목 (예: 하체)',{grow:1,v:b?.focus||''})}${dIn('bl-s','',{type:'date',w:150,v:iso(new Date())})}</div>
-   <div class="tiny muted" style="margin-bottom:10px">방향은 기간으로 쌓여요. '다이어트면 볼륨 유지' 같은 규칙은 넣지 않아요(D19). 몇 주 단위로 잡을지는 아직 모름(O29).</div>
+   <div class="tiny muted" style="margin-bottom:10px">방향은 기간으로 쌓여요. '다이어트면 볼륨 유지' 같은 규칙은 넣지 않아요(D19). 기본은 4주마다 다시 골라요(임시값, D115).</div>
    <div class="row" style="justify-content:flex-end">${btn('닫기','closeModal')}${btn('저장','saveBlock',null,'primary')}</div>`};
 MOD.addPkg=o=>{const m=M(o.mid);const k='pkn-'+m.id;const pick=UI.draft[k]||'';
   const list=(m.packages||[]).map(p=>`<div class="li small"><span class="num">${p.date?md(p.date):''}</span><b>${p.n}회</b>${p.example?EXAMPLE('예시 · 수첩에 등록 횟수가 없어 30회 단위로 넣음'):''}<span class="sp"></span>${btn('지우기','delPkg',{mid:m.id,id:p.id},'small ghost')}</div>`).join('');
