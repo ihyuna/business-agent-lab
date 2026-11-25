@@ -18,7 +18,7 @@
 .st-ic.bad{background:var(--bad-soft);color:var(--bad)}
 .st-ic svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
 .st-row.on .st-ic{background:var(--accent);color:var(--accent-ink)}
-.st-av{flex:none;display:inline-grid;place-items:center;width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#7aa7ff,#1f66f2);color:#fff;font-weight:700;font-size:18px}
+.st-av{flex:none;display:inline-grid;place-items:center;width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#7aa7ff,#0b7a80);color:#fff;font-weight:700;font-size:18px}
 .st-av.big{width:72px;height:72px;font-size:30px}
 .st-prof{padding:12px}
 .st-pane{min-width:0}
@@ -58,32 +58,32 @@
 .lp-pv,.th-pv{display:flex;flex-direction:column;gap:5px;width:132px;height:88px;padding:10px;box-sizing:border-box;border-radius:12px;box-shadow:0 0 0 1px var(--line)}
 .lp-pv i,.th-pv i{display:block}
 .pv-chart{background:#fff;border-radius:4px}
-.pv-chart .pv-t{height:9px;width:60%;background:#173a8a;box-shadow:0 4px 0 -1px #fff,0 5px 0 -1px #1f66f2}
-.pv-chart .pv-r{height:12px;border:1px solid #9db0cf;background:linear-gradient(90deg,#edf3fe 28%,#fff 28%)}
+.pv-chart .pv-t{height:9px;width:60%;background:#0a4f53;box-shadow:0 4px 0 -1px #fff,0 5px 0 -1px #0b7a80}
+.pv-chart .pv-r{height:12px;border:1px solid #93b9bb;background:linear-gradient(90deg,#e6f3f3 28%,#fff 28%)}
 .pv-chart .pv-r.s{width:70%}
 .pv-apple{background:#f2f2f7}
 .pv-apple .pv-c{height:17px;border-radius:5px;background:#fff}
-.pv-apple .pv-c.w{width:60%;background:#007aff}
-.th-light{background:#f2f2f7}.th-light i{height:16px;border-radius:5px;background:#fff}.th-light i.s{width:55%;background:#007aff}
-.th-dark{background:#000}.th-dark i{height:16px;border-radius:5px;background:#1c1c1e}.th-dark i.s{width:55%;background:#0a84ff}
-.th-auto{background:linear-gradient(90deg,#f2f2f7 50%,#000 50%)}.th-auto i{height:16px;border-radius:5px;background:linear-gradient(90deg,#fff 50%,#1c1c1e 50%)}.th-auto i.s{width:55%;background:#007aff}
+.pv-apple .pv-c.w{width:60%;background:#0b7a80}
+.th-light{background:#f2f2f7}.th-light i{height:16px;border-radius:5px;background:#fff}.th-light i.s{width:55%;background:#0b7a80}
+.th-dark{background:#000}.th-dark i{height:16px;border-radius:5px;background:#1c1c1e}.th-dark i.s{width:55%;background:#2fb3b9}
+.th-auto{background:linear-gradient(90deg,#f2f2f7 50%,#000 50%)}.th-auto i{height:16px;border-radius:5px;background:linear-gradient(90deg,#fff 50%,#1c1c1e 50%)}.th-auto i.s{width:55%;background:#0b7a80}
 /* 기록부 모양: 각진 칸과 잉크 선 */
 #device.chart:not(.apple) .st-list,#device.chart:not(.apple) .st-group{border-radius:0;border-color:var(--ink-line)}
 #device.chart:not(.apple) .st-ic{border-radius:2px;background:var(--hd);color:var(--navy);box-shadow:inset 0 0 0 1px var(--ink-line)}
 #device.chart:not(.apple) .st-ic.bad{background:var(--bad-soft);color:var(--stamp);box-shadow:inset 0 0 0 1px currentColor}
 #device.chart:not(.apple) .st-row.on .st-ic{background:var(--accent);color:var(--accent-ink);box-shadow:none}
-#device.chart:not(.apple) .st-gh{color:var(--navy,#173a8a);font-weight:800;letter-spacing:.04em}
-#device.chart:not(.apple) .st-title{color:var(--navy,#173a8a)}
+#device.chart:not(.apple) .st-gh{color:var(--navy,#0a4f53);font-weight:800;letter-spacing:.04em}
+#device.chart:not(.apple) .st-title{color:var(--navy,#0a4f53)}
 #device.chart:not(.apple) .st-seg,#device.chart:not(.apple) .st-seg button,#device.chart:not(.apple) .lp-pv,#device.chart:not(.apple) .th-pv{border-radius:2px}
 /* 기록부에서는 화면 모드 그림도 종이 기록부 색으로 */
 #device.chart:not(.apple) .th-light{background:#f3f6fb}
-#device.chart:not(.apple) .th-light i{background:#fff;border-radius:0;box-shadow:inset 0 0 0 1px #9db0cf}
+#device.chart:not(.apple) .th-light i{background:#fff;border-radius:0;box-shadow:inset 0 0 0 1px #93b9bb}
 #device.chart:not(.apple) .th-dark{background:#0b111c}
 #device.chart:not(.apple) .th-dark i{background:#121a28;border-radius:0;box-shadow:inset 0 0 0 1px #3a4e70}
 #device.chart:not(.apple) .th-auto{background:linear-gradient(90deg,#f3f6fb 50%,#0b111c 50%)}
 #device.chart:not(.apple) .th-auto i{border-radius:0;background:linear-gradient(90deg,#fff 50%,#121a28 50%);box-shadow:inset 0 0 0 1px #6f86ad}
-#device.chart:not(.apple) :is(.th-light,.th-dark,.th-auto) i.s{background:#1f66f2;box-shadow:none}
-#device.chart:not(.apple) .th-dark i.s{background:#5b9bff}
+#device.chart:not(.apple) :is(.th-light,.th-dark,.th-auto) i.s{background:#0b7a80;box-shadow:none}
+#device.chart:not(.apple) .th-dark i.s{background:#3fbcc2}
 /* 프로필 동그라미: 기록부도 회색 (파랑은 누르는 것에만) */
 #device.chart:not(.apple) .st-av{background:linear-gradient(180deg,#a5abb6,#858a94);font-weight:600}
 #device.chart.dark:not(.apple) .st-av{background:linear-gradient(180deg,#7a8496,#535d70)}
