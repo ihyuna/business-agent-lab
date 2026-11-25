@@ -1,6 +1,6 @@
 # 논문 기준 임시값
 
-> 상태: 임시 · 버전 v0.2 · 최종 수정 2026-11-25 · 이 문서가 기준인 주제: 트레이너 답(O01~O14, O28, O29)과 추정 1RM 공식(O20)이 오기 전까지 쓰는 논문 기준 임시값과 출처
+> 상태: 임시 · 버전 v0.3 · 최종 수정 2026-11-25 · 이 문서가 기준인 주제: 트레이너 답(O01~O14, O28, O29)과 추정 1RM 공식(O20)이 오기 전까지 쓰는 논문 기준 임시값과 출처
 
 - 만든 까닭: 2026-10-27 이현아님 "지금 트레이너가 답변을 주기 어려운 상황이라 논문과 객관적인 정보를 바탕으로 일단 진행하고" (D59). 2026-11-25 이현아님 "답 기다리고 있는 것들 전부 논문 임시값으로 진행해줘"로 나머지 질문도 넣었다(D115, [8절](#8-나머지-트레이너-질문의-임시값-d115)).
 - 논문 인용 표기는 `[문헌 Craven 2022]`처럼 쓰고, 목록은 [10절](#10-출처)에 있다. 연구보고서가 이미 인용한 논문(Halperin 2022, Nuzzo 2024, Huang 2025, Vieira 2022)은 [project-analysis.md 6절](../analysis/project-analysis.md#6-문헌-기반-설계-원칙-pdf-317장)을 따른다.
@@ -16,6 +16,7 @@
 4. **RIR과 RPE:** RIR('몇 개 더 할 수 있었나')로 적는다. 칸은 비워 두고(D37), 메인 종목 마지막 세트에서만 한 번 탭으로 고르게 권한다.
 5. **컨디션:** 수면·피로·근육통이 '평소보다 나쁨'이면 목표 RIR을 1 늘려 무게를 다시 계산한다. 고정 %로 깎지 않는다. 통증은 숫자를 바꾸지 않고 트레이너가 확인한다.
 6. **나머지 질문 13개(D115):** 생리 주기는 숫자를 자동으로 바꾸지 않고, 몸 쓰는 감각 점수에 뜻을 붙이고, 같은 부위 통증이 7일 넘거나 2번 연달아면 주의사항으로 옮기기를 권하고, 훈련 방향은 4주 단위로 한다. 나머지는 지금 가정 그대로다.
+7. **근거 점검(D116):** 추천 숫자를 받치는 논문 11편을 다시 봤다. 강함 5편, 보통 5편, 약함 1편(설명 글). 잘못 쓰던 1편을 메타분석 2편으로 바꿨고 값은 그대로다([11절](#11-근거-논문-점검-d116)).
 
 ## 1. 논문 값을 쓰는 원칙
 
@@ -47,13 +48,13 @@
 | 역할 | 임시값 | 논문과 견준 것 |
 |---|---|---|
 | 워밍업 | 12~15회 / 5개 이상 / 1~2세트 / 30~60초. 무게는 첫 본세트의 약 50%, 75% | 워밍업 세트 무게는 논문 근거를 찾지 못한 실무 관행이다 [해석]. 경쟁 앱 Alpha Progression도 워밍업 세트를 자동으로 넣는다 |
-| 메인 | 6~10회 / 1~3개 / 3~5세트 / 2~3분 | 3분 휴식이 1분보다 근력·근비대가 모두 컸다([문헌 Schoenfeld 2016]). 근력은 RIR 폭넓게 비슷했고 근비대는 실패에 가까울수록 컸다([문헌 Robinson 2024]) |
+| 메인 | 6~10회 / 1~3개 / 3~5세트 / 2~3분 | 3분 휴식이 1분보다 근력·근비대가 모두 컸다([문헌 Schoenfeld 2016], 훈련된 남성 21명 무작위 실험 하나라 [문헌 Singer 2024] 메타분석으로 함께 받친다). 근력은 RIR 폭넓게 비슷했고 근비대는 실패에 가까울수록 컸다([문헌 Robinson 2024]) |
 | 보조 | 8~12회 / 1~2개 / 3세트 / 60~90초 | 60초보다 길게 쉬면 근비대에 작은 이득이 있고, 90초를 넘으면 차이를 찾지 못했다([문헌 Singer 2024]) |
-| 마무리 털기 | 15~20회 / 0~1개 / 2~3세트 / 30~60초 | 가벼운 무게도 실패 가까이 하면 근비대가 된다([문헌 Schoenfeld 2021]). 실패에 가까울수록 피로가 커지니 수업 끝에 둔다(Vieira 2022, [PDF 6장 표]) |
+| 마무리 털기 | 15~20회 / 0~1개 / 2~3세트 / 30~60초 | 가벼운 무게도 실패 가까이 하면 근비대는 무거운 무게와 비슷했다([문헌 Schoenfeld 2017], [문헌 Lopez 2021]). 실패에 가까울수록 피로가 커지니 수업 끝에 둔다(Vieira 2022, [PDF 6장 표]) |
 | 혈류 모으기 | 15~25회 / 1~2개 / 2~3세트 / 30초 | 60초보다 짧은 휴식은 근비대에 조금 불리할 수 있다([문헌 Singer 2024]). 트레이너가 목적을 갖고 고르는 역할이라 값은 두고, 근거 카드에 이 점을 적는다 [해석] |
 | 유산소성 순환 | 횟수 대신 시간·라운드 / 여유 있게 / 3~4라운드 / 거의 안 쉼 | 길항근·상하체를 번갈아 하는 묶음은 시간을 아낀다([문헌 Krzysztofik 2019]) |
 
-**목표에 따라 바뀌는 것:** 근력 목표면 메인을 3~6회로 둔다. 무거운 무게가 최대 근력에 유리하다는 반복수 연속체의 틀을 따른 것이다([문헌 Schoenfeld 2021]). 근비대·체지방 감소 목표는 위 표 그대로다 [해석]. 템포는 논문 기준값을 두지 않고 비워 둔다.
+**목표에 따라 바뀌는 것:** 근력 목표면 메인을 3~6회로 둔다. 최대 근력(1RM)은 무거운 무게가 가벼운 무게보다 더 올랐다는 메타분석 두 편을 따른 것이다([문헌 Schoenfeld 2017], [문헌 Lopez 2021]). 무거운 무게와 중간 무게의 차이는 뚜렷하지 않았다([문헌 Lopez 2021]). 근비대·체지방 감소 목표는 위 표 그대로다 [해석]. 템포는 논문 기준값을 두지 않고 비워 둔다.
 
 ## 4. 세트 구성 규칙 (O01)
 
@@ -137,13 +138,14 @@
 - [문헌 Cook 2014] Cook G, Burton L, Hoogenboom BJ, Voight M. Functional movement screening: the use of fundamental movements as an assessment of function - part 1. *International Journal of Sports Physical Therapy*. 2014;9(3):396–409. PMID 24944860 (DOI 없음)
 - [문헌 Craven 2022] Craven J, McCartney D, Desbrow B, Sabapathy S, Bellinger P, Roberts L, Irwin C. Effects of Acute Sleep Loss on Physical Performance: A Systematic and Meta-Analytical Review. *Sports Medicine*. 2022;52(11):2669–2690. https://doi.org/10.1007/s40279-022-01706-y
 - [문헌 Helms 2016] Helms ER, Cronin J, Storey A, Zourdos MC. Application of the Repetitions in Reserve-based Rating of Perceived Exertion Scale for Resistance Training. *Strength and Conditioning Journal*. 2016;38(4):42–49. https://doi.org/10.1519/SSC.0000000000000218
-- [문헌 Helms 2018] Helms ER et al. RPE vs. Percentage 1RM Loading in Periodized Programs Matched for Sets and Repetitions. *Frontiers in Physiology*. 2018;9:247. https://doi.org/10.3389/fphys.2018.00247
+- [문헌 Helms 2018] Helms ER, Byrnes RK, Cooke DM, Haischer MH, Carzoli JP, Johnson TK, Cross MR, Cronin JB, Storey AG, Zourdos MC. RPE vs. Percentage 1RM Loading in Periodized Programs Matched for Sets and Repetitions. *Frontiers in Physiology*. 2018;9:247. https://doi.org/10.3389/fphys.2018.00247
 - [문헌 Krzysztofik 2019] Krzysztofik M, Wilk M, Wojdała G, Gołaś A. Maximizing Muscle Hypertrophy: A Systematic Review of Advanced Resistance Training Techniques and Methods. *International Journal of Environmental Research and Public Health*. 2019;16(24):4897. https://doi.org/10.3390/ijerph16244897
 - [문헌 McNulty 2020] McNulty KL, Elliott-Sale KJ, Dolan E, Swinton PA, Ansdell P, Goodall S, Thomas K, Hicks KM. The Effects of Menstrual Cycle Phase on Exercise Performance in Eumenorrheic Women: A Systematic Review and Meta-Analysis. *Sports Medicine*. 2020;50(10):1813–1827. https://doi.org/10.1007/s40279-020-01319-3
-- [문헌 Reynolds 2006] Reynolds JM, Gordon TJ, Robergs RA. Prediction of One Repetition Maximum Strength from Multiple Repetition Maximum Testing and Anthropometry. *Journal of Strength and Conditioning Research*. 2006;20(3):584–592.
+- [문헌 Lopez 2021] Lopez P, Radaelli R, Taaffe DR, Newton RU, Galvão DA, Trajano GS, Teodoro JL, Kraemer WJ, Häkkinen K, Pinto RS. Resistance Training Load Effects on Muscle Hypertrophy and Strength Gain: Systematic Review and Network Meta-analysis. *Medicine & Science in Sports & Exercise*. 2021;53(6):1206–1216. https://doi.org/10.1249/MSS.0000000000002585 (2022년 정정 공지 있음, 철회 아님)
+- [문헌 Reynolds 2006] Reynolds JM, Gordon TJ, Robergs RA. Prediction of One Repetition Maximum Strength from Multiple Repetition Maximum Testing and Anthropometry. *Journal of Strength and Conditioning Research*. 2006;20(3):584–592. https://doi.org/10.1519/00124278-200608000-00020
 - [문헌 Robinson 2024] Robinson ZP, Pelland JC, Remmert JF, Refalo MC, Jukic I, Steele J, Zourdos MC. Exploring the Dose-Response Relationship Between Estimated Resistance Training Proximity to Failure, Strength Gain, and Muscle Hypertrophy: A Series of Meta-Regressions. *Sports Medicine*. 2024;54(9):2209–2231. https://doi.org/10.1007/s40279-024-02069-2
-- [문헌 Schoenfeld 2016] Schoenfeld BJ, Pope ZK, Benik FM, et al. Longer Interset Rest Periods Enhance Muscle Strength and Hypertrophy in Resistance-Trained Men. *Journal of Strength and Conditioning Research*. 2016;30(7):1805–1812.
-- [문헌 Schoenfeld 2021] Schoenfeld BJ, Grgic J, Van Every DW, Plotkin DL. Loading Recommendations for Muscle Strength, Hypertrophy, and Local Endurance: A Re-Examination of the Repetition Continuum. *Sports*. 2021;9(2):32.
+- [문헌 Schoenfeld 2016] Schoenfeld BJ, Pope ZK, Benik FM, Hester GM, Sellers J, Nooner JL, Schnaiter JA, Bond-Williams KE, Carter AS, Ross CL, Just BL, Henselmans M, Krieger JW. Longer Interset Rest Periods Enhance Muscle Strength and Hypertrophy in Resistance-Trained Men. *Journal of Strength and Conditioning Research*. 2016;30(7):1805–1812. https://doi.org/10.1519/JSC.0000000000001272
+- [문헌 Schoenfeld 2017] Schoenfeld BJ, Grgic J, Ogborn D, Krieger JW. Strength and Hypertrophy Adaptations Between Low- vs. High-Load Resistance Training: A Systematic Review and Meta-analysis. *Journal of Strength and Conditioning Research*. 2017;31(12):3508–3523. https://doi.org/10.1519/JSC.0000000000002200
 - [문헌 Singer 2024] Singer A, Wolf M, Generoso L, et al. Give it a rest: a systematic review with Bayesian meta-analysis on the effect of inter-set rest interval duration on muscle hypertrophy. *Frontiers in Sports and Active Living*. 2024;6. https://doi.org/10.3389/fspor.2024.1429789
 - [문헌 Williams 2017] Williams TD, Tolusso DV, Fedewa MV, Esco MR. Comparison of Periodized and Non-Periodized Resistance Training on Maximal Strength: A Meta-Analysis. *Sports Medicine*. 2017;47(10):2083–2100. https://doi.org/10.1007/s40279-017-0734-y
 - [문헌 Wilson 2012] Wilson JM, Marin PJ, Rhea MR, Wilson SMC, Loenneke JP, Anderson JC. Concurrent Training: A Meta-Analysis Examining Interference of Aerobic and Resistance Exercises. *Journal of Strength and Conditioning Research*. 2012;26(8):2293–2307. https://doi.org/10.1519/JSC.0b013e31823a3e2d
@@ -152,7 +154,42 @@
 - 2026-10-27에 초록과 출판사·저장소 페이지로 확인했다. 본문 전체를 읽은 것은 아니다.
 - 2026-11-25에 넣은 6편(Cheung, Colenso-Semple, Cook, McNulty, Williams, Wilson)은 DOI 등록처(Crossref) 기록으로 저자·권호·쪽을 확인했고 철회·정정 기록이 없었다. Cook 2014는 DOI가 없어 OpenAlex·PubMed 번호로 확인했다.
 
+## 11. 근거 논문 점검 (D116)
+
+2026-11-25 이현아님 "가장 중요한 추천값의 근거가 되는 논문들도 다시 제대로 점검해줘. 공신력있는지, 인정받은 결과인지, 객관적인지" (D116). 추천 숫자(추정 1RM, 역할별 기준, 세트 구성, RIR, 컨디션)를 받치는 논문을 DOI 등록처(Crossref)와 OpenAlex 기록으로 다시 봤다.
+
+**보는 기준**
+- 공신력: 동료 심사 학술지인가, 철회나 정정이 있는가.
+- 인정: 다른 연구가 얼마나 인용했나(OpenAlex 인용 수, 2026-11-25 기준).
+- 객관성: 여러 연구를 모은 메타분석인가 연구 하나인가, 대상이 누구이고 몇 명인가, 저자와 이해관계가 겹치는가.
+- 판정: **강함** = 메타분석·체계적 문헌고찰이고 많이 인용됨. **보통** = 연구 하나이거나 새 논문이라 인용이 적음, 다른 근거와 같이 쓴다. **약함** = 연구가 아닌 설명 글이거나 이해관계가 있음, 혼자서는 근거로 쓰지 않는다.
+
+| 논문 | 쓰는 곳 | 학술지 · 종류 | 규모 | 인용 수 | 철회·정정 | 판정 |
+|---|---|---|---|---|---|---|
+| Craven 2022 | 컨디션 반영(6절) | Sports Medicine · 체계적 문헌고찰 + 메타분석 | 논문 69편, 참가자 959명 | 142 | 없음 | 강함. 다만 참가자 89%가 남성이라 여성 회원에게 그대로 옮기기는 조심 |
+| Robinson 2024 | 메인 RIR(3절) | Sports Medicine · 체계적 문헌고찰 + 메타회귀 | (초록에 편수 없음) | 63 | 없음 | 강함 |
+| Schoenfeld 2017 | 근력 목표 3~6회, 마무리 털기(3절) | J Strength Cond Res · 메타분석 | 연구 21편 | 1,119 | 없음 | 강함 (이번에 새로 넣음) |
+| Lopez 2021 | 근력 목표 3~6회, 마무리 털기(3절) | Med Sci Sports Exerc · 네트워크 메타분석 | 연구 28편, 747명 | 400 | 2022년 정정 공지 1건(철회 아님) | 강함 (이번에 새로 넣음) |
+| Krzysztofik 2019 | 드롭·클러스터·슈퍼세트(4절) | IJERPH · 체계적 문헌고찰 | 연구 30편 | 390 | 없음 | 강함. 단, 이 논문은 '이 방법들이 더 낫다'는 근거가 부족하다고 결론냈다. 그래서 효과가 아니라 방법을 정의하는 데만 쓴다 |
+| Reynolds 2006 | 추정 1RM 공식, 10회 이하(2절) | J Strength Cond Res · 회귀 연구 | 70명(남 34, 여 36, 18~69세) | 473 | 없음 | 보통. 연구 하나지만 많이 인용됐고 남녀·나이대가 넓다 |
+| Schoenfeld 2016 | 메인 휴식 2~3분(3절) | J Strength Cond Res · 무작위 실험 | 훈련된 남성 21명, 8주 | 262 | 없음 | 보통. 규모가 작아 Singer 2024 메타분석과 같이 쓴다 |
+| Singer 2024 | 보조·혈류 휴식(3절) | Front Sports Act Living · 베이즈 메타분석(사전 등록) | 연구 9편 | 14 | 없음 | 보통. 방법은 탄탄하지만 새 논문이라 인용이 아직 적다 |
+| Zourdos 2016 | RIR 척도(5절) | J Strength Cond Res · 측정 도구 검증 | 29명, 한 번 측정 | 469 | 없음 | 보통. 척도를 정의한 원 논문이라 쓰고, RIR을 실제보다 적게 말하는 경향은 Halperin 2022 메타분석(보고서 인용)으로 받친다 |
+| Helms 2018 | 백오프·남은 세트 다시 맞추기(4·6절) | Frontiers in Physiology · 8주 훈련 비교 | 21명 | 126 | 없음 | 보통. 규모가 작다. 자동 조절의 주 근거는 Huang 2025 메타분석(보고서 인용)이고 이 논문은 보조다 |
+| Helms 2016 | RIR ↔ RPE 바꿔 읽기(5절) | Strength Cond J · 실무 설명 글 | 연구 아님 | 217 (Crossref) | 없음 | 약함. 연구 결과가 아니라 척도 쓰는 법을 설명한 글이다. 바꿔 읽는 규칙은 Zourdos 2016에도 있어 그쪽을 주 근거로 둔다 |
+
+**고친 것**
+- **Schoenfeld 2021을 뺐다.** 이 논문은 '무거운 무게가 최대 근력에 가장 좋다'는 반복수 연속체를 **따져 보는** 서술형 리뷰다. 우리는 거꾸로 그 틀을 받치는 근거로 썼다. 같은 내용을 메타분석 두 편(Schoenfeld 2017, Lopez 2021)으로 바꿨다. 1RM은 무거운 무게가 가벼운 무게보다 더 올랐고, 근비대는 무게와 상관없이 비슷했다. 값(근력 목표 3~6회, 마무리 15~20회)은 바뀌지 않는다.
+- **Schoenfeld 2016은 단독으로 쓰지 않는다.** 휴식 근거에 Singer 2024 메타분석을 함께 적었다.
+
+**객관성에서 눈여겨볼 것**
+- RIR 관련 논문(Zourdos 2016, Helms 2016, Helms 2018, Robinson 2024)은 같은 연구 모임 저자가 겹친다. 그래서 RIR을 쓰는 방식은 다른 연구진의 메타분석(Halperin 2022, Huang 2025, 보고서 인용)으로도 받친다.
+- 대부분 훈련 경험이 있는 젊은 남성 대상이다. 짐노트 회원(여성, 초보 포함)에게는 그대로 맞지 않을 수 있어서, 값은 범위로 내고 회원 기록이 쌓이면 회원별 공식이 앞선다(1절, D57).
+
+**D115에서 넣은 6편**: McNulty 2020, Wilson 2012, Williams 2017은 메타분석이고, Colenso-Semple 2023, Cheung 2003은 리뷰라 근거 수준이 한 단계 낮다. **Cook 2014는 약함**이다. 저자 Gray Cook이 FMS를 만든 사람이라 이해관계가 있다. 그래서 점수 뜻(1·3·5)을 정하는 표현만 빌리고, 효과 근거로는 쓰지 않는다.
+
 ## 변경 기록
 
 - 2026-10-27 v0.1: 이현아님 요청(트레이너 답 대신 논문 기준으로 진행, D59)으로 새로 썼다.
 - 2026-11-25 v0.2: 이현아님 요청(답을 기다리는 질문 전부 논문 임시값으로, D115)으로 8절을 넣고 바뀌는 곳·출처를 9·10절로 옮겼다. 논문 6편 추가.
+- 2026-11-25 v0.3: 이현아님 요청(추천값 근거 논문 공신력·인정·객관성 점검, D116)으로 11절을 넣음. Schoenfeld 2021을 빼고 메타분석 Schoenfeld 2017, Lopez 2021로 바꿈. 빠진 DOI·저자를 채움.
