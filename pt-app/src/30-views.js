@@ -23,7 +23,7 @@ const NAV_IC={today:`<svg viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" hei
  search:`<svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></svg>`,
  settings:`<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2.8v2.4M12 18.8v2.4M2.8 12h2.4M18.8 12h2.4M5.5 5.5l1.7 1.7M16.8 16.8l1.7 1.7M5.5 18.5l1.7-1.7M16.8 7.2l1.7-1.7"/></svg>`};
 function tabBar(cur){return `<nav class="tabbar sidenav" aria-label="메뉴"><div class="logo">${kbIcon(26)}</div>${[['today','오늘','tab'],['members','회원','tab']].map(([v,l,a])=>`<button class="${cur===v?'on':''}" data-act="${a}" data-v="${v}">${NAV_IC[v]}${l}</button>`).join('')}
-  <button data-act="go" data-to="search">${NAV_IC.search}기록 찾기</button><span class="sp"></span><button data-act="go" data-to="settings">${NAV_IC.settings}설정</button></nav>`}
+  <button class="${cur==='search'?'on':''}" data-act="go" data-to="search">${NAV_IC.search}기록 찾기</button><span class="sp"></span><button class="${cur==='settings'?'on':''}" data-act="go" data-to="settings">${NAV_IC.settings}설정</button></nav>`}
 /* 파스텔 꼬리표: 같은 글자는 늘 같은 색 */
 function hueOf(t){let h=0;for(const c of String(t||''))h=(h*31+c.charCodeAt(0))>>>0;return 'c'+(h%6+1)}
 const pill=(t,cls)=>`<span class="pill ${cls||hueOf(t)}">${esc(t)}</span>`;

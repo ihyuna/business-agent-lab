@@ -92,5 +92,4 @@
 
 /* 설정: 목록·묶음도 같은 모서리 단위 */
 #device.chart:not(.apple) .st-list,#device.chart:not(.apple) .st-group{border-radius:var(--r2)}
-#device.chart:not(.apple) .st-ic{border-radius:var(--r1)}
 #device.chart:not(.apple) .st-seg,#device.chart:not(.apple) .st-seg button,#device.chart:not(.apple) .lp-pv,#device.chart:not(.apple) .th-pv{border-radius:var(--r1)}
