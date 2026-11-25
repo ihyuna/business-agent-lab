@@ -11,7 +11,7 @@
   --device:#f2f2f7; --panel:#ffffff; --ink:#1c1c1e; --muted:#6c6c70; --faint:#a1a1a6;
   --line:rgba(60,60,67,.13); --line2:rgba(60,60,67,.2); --soft:#f2f2f7; --hd:transparent; --phd:transparent; --side:#ffffff;
   --fill:rgba(118,118,128,.12); --fill2:rgba(118,118,128,.08);
-  --accent:#0b7a80; --accent-soft:rgba(11,122,128,.1); --accent-ink:#ffffff;
+  --accent:#007aff; --accent-soft:rgba(0,122,255,.1); --accent-ink:#ffffff;
   --good:#248a3d; --good-soft:rgba(52,199,89,.14); --warn:#a05a00; --warn-soft:rgba(255,149,0,.14);
   --bad:#d70015; --bad-soft:rgba(255,59,48,.11); --cond:#c93400; --cond-soft:rgba(255,149,0,.13);
   --live:#5e5ce6; --live-soft:rgba(94,92,230,.12); --now:#ff3b30;
@@ -96,7 +96,7 @@
 
 /* 입력칸: 테두리 없는 회색 면 */
 #device.apple input:not([type=checkbox]):not([type=radio]),#device.apple select,#device.apple textarea{border:0;border-radius:10px;background:var(--fill2)}
-#device.apple input:focus,#device.apple select:focus,#device.apple textarea:focus{outline:none;box-shadow:0 0 0 3px rgba(11,122,128,.3);background:var(--panel)}
+#device.apple input:focus,#device.apple select:focus,#device.apple textarea:focus{outline:none;box-shadow:0 0 0 3px rgba(0,122,255,.3);background:var(--panel)}
 
 /* 오늘: 달력·시간표 */
 #device.apple .mcal button.today{border-radius:50%;background:var(--accent)}
@@ -176,7 +176,7 @@ body #device.apple .lg-col{border:0;border-radius:22px;background:var(--panel);b
 body #device.apple .lg-logo{border-bottom:0}
 body #device.apple .lg-f>span{color:var(--muted);font-weight:500;background:transparent;position:static;display:block;padding:0 4px 6px}
 body #device.apple .lg-f input{border:0!important;border-radius:12px!important;background:var(--fill2);box-shadow:none}
-body #device.apple .lg-f input:focus{background:var(--panel);box-shadow:0 0 0 3px rgba(11,122,128,.3)}
+body #device.apple .lg-f input:focus{background:var(--panel);box-shadow:0 0 0 3px rgba(0,122,255,.3)}
 body #device.apple .lg-b{border-radius:12px!important}
 body #device.apple .lg-go{background:var(--accent)}
 body #device.apple .au-tabs{border:0!important;border-radius:10px!important;background:var(--fill)}
@@ -321,14 +321,14 @@ body #device.apple .cm-card{padding:var(--s4) var(--s5) var(--s4)}
   --device:#000000; --panel:#1c1c1e; --ink:#ffffff; --muted:#98989f; --faint:#636366; --sub:#d1d1d6;
   --line:rgba(84,84,88,.5); --line2:rgba(84,84,88,.75); --soft:#2c2c2e;
   --fill:rgba(118,118,128,.24); --fill2:rgba(118,118,128,.16);
-  --accent:#2fb3b9; --accent-soft:rgba(47,179,185,.2);
+  --accent:#0a84ff; --accent-soft:rgba(10,132,255,.2);
   --good:#30d158; --good-soft:rgba(48,209,88,.18); --warn:#ffb340; --warn-soft:rgba(255,159,10,.18);
   --bad:#ff6961; --bad-soft:rgba(255,69,58,.2); --cond:#ff9f0a; --cond-soft:rgba(255,159,10,.18);
   --live:#7d7aff; --live-soft:rgba(94,92,230,.24); --now:#ff453a;
   --mat:rgba(28,28,30,.72); --ink-line:rgba(84,84,88,.75); --hd:transparent; --phd:transparent; --side:#1c1c1e;
   --mus0:#3a3a3c; --musbase:#48484a; --musline:#1c1c1e;
-  --zebra:rgba(255,255,255,.035); --bar:#3e8f93;
-  --p1:#6fd0d4; --p1s:#16393b; --p2:#c39af2; --p2s:#2c2140; --p3:#ff8fab; --p3s:#3d1f29; --p4:#5fd197; --p4s:#15291e; --p5:#f5b24f; --p5s:#352710; --p6:#5cd0de; --p6s:#132e33;
+  --zebra:rgba(255,255,255,.035); --bar:#4e78b8;
+  --p1:#7fb0ff; --p1s:#1b2b47; --p2:#c39af2; --p2s:#2c2140; --p3:#ff8fab; --p3s:#3d1f29; --p4:#5fd197; --p4s:#15291e; --p5:#f5b24f; --p5s:#352710; --p6:#5cd0de; --p6s:#132e33;
   color-scheme:dark;color:var(--ink)}
 #device.apple.dark .modal,#device.apple.dark .askbar{background:#2c2c2e}
 #device.apple.dark .btn:hover:not([disabled]){background:rgba(118,118,128,.32)}
