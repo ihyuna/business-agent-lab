@@ -9,7 +9,7 @@
 | **짐노트 웹앱 (기본)** | [app.html](app.html) → [web/index.html](web/index.html) (크롬에서 열기, 실제로 쓰는 웹앱, 아래 '웹앱') |
 | PT 기록 앱 MVP (시연판, 시나리오 안내) | [demo.html](demo.html), 코드는 [src/](src/) |
 | 키컬러 비교 사본 (청록 후보 4개, 고르는 중) | [colors/](colors/) (`python3 colors/make.py`로 demo.html에서 만듦, D98) |
-| 결정 기록·지금 할 일 | [docs/참고/decisions.md](docs/참고/decisions.md) (D01~D110) |
+| 결정 기록·지금 할 일 | [docs/참고/decisions.md](docs/참고/decisions.md) (D01~D111) |
 | 가명 처리한 실제 데이터 기록 | [data/](data/README.md) |
 
 회원은 성+00 코드로만 씁니다. 기록은 트레이너 수첩 그대로입니다.
