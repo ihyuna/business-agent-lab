@@ -1,6 +1,6 @@
-# 키컬러 비교용: 파랑 app.html에서 색만 바꾼 사본을 만든다 (python3 pt-app/colors/make.py). main 앱은 파랑 그대로.
+# 키컬러 비교용: 파랑 시연판 demo.html에서 색만 바꾼 사본을 만든다 (python3 pt-app/colors/make.py). main 앱은 파랑 그대로.
 import re,os,colorsys
-D=os.path.dirname(os.path.abspath(__file__));SRC=open(os.path.join(D,'..','app.html'),encoding='utf8').read()
+D=os.path.dirname(os.path.abspath(__file__));SRC=open(os.path.join(D,'..','demo.html'),encoding='utf8').read()
 def rgb(h):return [int(h[i:i+2],16) for i in (0,2,4)]
 def hx(c):return ''.join('%02x'%round(max(0,min(255,v))) for v in c)
 def mix(a,b,t):return [x+(y-x)*t for x,y in zip(a,b)]
