@@ -1,0 +1,275 @@
+# 데이터 구조 검사 결과
+schema: PT 트레이너 의사결정 지원 앱(짐노트): 데이터 구조 v0.3 (2026-11-25)
+sample: 예시 데이터 v0.3 (2026-11-25, v0.2에 [v0.3] 행 추가): 가상 회원 김서연. 설계 검증용이며 숫자는 모두 가상이다.
+SQLite 3.53.1
+
+## 1. 무결성
+foreign_key_check: OK
+integrity_check: ok
+테이블 29개, 뷰 4개, 트리거 10개
+행 수: body_comp_phase 2, body_measurement 4, cycle_log 1, deviation_review 1, exercise 8, exercise_muscle 18, expectation 6, member 1, member_consent 2, member_exercise_setting 2, member_goal 4, member_note 12, member_package 1, movement_assessment 1, next_target 2, recommendation 4, role_default 6, routine_template 4, routine_template_item 12, routine_template_version 2, session 8, session_caution_check 11, session_change 2, session_exercise 19, session_observation 2, set_entry 56, set_structure 9, trainer 1, training_block 2
+
+## 2. 검증 쿼리
+### Q1-a 브리핑: 현재 목표(여러 개, 우선순위) + 체성분 단계 + 훈련 방향 + 오늘 목표
+priority | goal_type | description | started_on | body_comp | block | today_goal
+1 | fat_loss | 체지방 감소 | 2024-03-21 | cut | increase/load | hypertrophy: 후면사슬 근비대 (maintain/volume)
+2 | hypertrophy | 탄탄한 하체 라인 | 2024-03-21 | cut | increase/load | hypertrophy: 후면사슬 근비대 (maintain/volume)
+3 | strength | 스쿼트 중량 늘리기 | 2026-10-01 | cut | increase/load | hypertrophy: 후면사슬 근비대 (maintain/volume)
+PASS expect: rows=3
+PASS expect: #1 -> goal_type=fat_loss; body_comp=cut; block=increase/load
+PASS expect: #3 -> goal_type=strength; started_on=2026-10-01
+PASS expect: #1 -> today_goal=hypertrophy: 후면사슬 근비대 (maintain/volume)
+
+### Q1-b 브리핑: 열린 주의사항 + 마지막 확인 결과 + 오늘 확인했는지 (매 수업 확인)
+title | body_region | created_on | last_check | checked_today
+오른쪽 무릎 불편감 | knee_r | 2026-09-28 | ok (13회차 10-15) | 확인함
+허리 과신전 주의 | low_back | 2026-09-14 | same (12회차 10-12) | 아직
+PASS expect: rows=2
+PASS expect: title=오른쪽 무릎 불편감 -> last_check=ok (13회차 10-15); checked_today=확인함
+PASS expect: title=허리 과신전 주의 -> last_check=same (12회차 10-12); checked_today=아직
+
+### Q1-c 브리핑: 다음에 물어보기로 한 것 + 개인 운동/식단/생활 메모 (열린 것만)
+kind | title | detail | created_by | created_on
+check | 레그컬 마지막 세트 횟수 확인 | 12회차 3세트 25kg 10회(예상 11~13회). 휴식 45초(계획 60초) | ai_suggested | 2026-10-12
+check | 식단 사진 피드백 |  | trainer | 2026-10-12
+check | 개인 루틴 숙지 여부 확인 |  | trainer | 2026-10-12
+diet | 저녁 탄수 줄이는 중 | 단백질 목표 100g | trainer | 2026-10-05
+self_train | 주 2회 개인 유산소 | 퇴근 후 천국의 계단 20분 | trainer | 2026-10-01
+lifestyle | 월말 업무 마감 | 매달 마지막 주 수면 부족 경향 | trainer | 2026-09-28
+PASS expect: rows=6
+PASS expect: title=레그컬 마지막 세트 횟수 확인 -> kind=check; created_by=ai_suggested
+PASS expect: #1 -> kind=check
+
+### Q1-d 브리핑: 지난 수업(가장 최근 완료)의 컨디션, 메모, 특이 관찰
+session_no | started_at | cond_sleep | cond_fatigue | cond_soreness | cond_pain | cond_note | memo | observations
+12 | 2026-10-12 17:01 | good | normal | normal | none |  | 스쿼트 42.5kg 8회 안정적. 무릎 통증 없음 | stability:better
+PASS expect: rows=1
+PASS expect: #1 -> session_no=12; observations=stability:better; cond_sleep=good
+
+### Q1-e 브리핑: 오늘 계획 종목마다 '지난 동일 종목' 기록 — 당시 역할과 함께
+exercise | today_role | last_date | last_role | last_sets
+루마니안 데드리프트 | main | 2026-09-28 | main | 40x10 RIR2 RPE8 / 40x10 RIR2 RPE8 / 35x10 RIR3 RPE7
+힙쓰러스트 | main | 2026-09-28 | accessory | 60x12 RIR2 RPE8 / 60x12 RIR1 RPE9 / 60x11 RIR0 RPE10
+라잉 레그컬 | finisher | 2026-10-12 | accessory | 25x12 RIR2 RPE8 / 25x12 RIR1 RPE9 / 25x10 RIR0 RPE10
+PASS expect: rows=3
+PASS expect: exercise=라잉 레그컬 -> today_role=finisher; last_date=2026-10-12; last_role=accessory; last_sets=25x12 RIR2 RPE8 / 25x12 RIR1 RPE9 / 25x10 RIR0 RPE10
+PASS expect: exercise=힙쓰러스트 -> today_role=main; last_role=accessory; last_date=2026-09-28
+PASS expect: exercise=루마니안 데드리프트 -> last_sets=40x10 RIR2 RPE8 / 40x10 RIR2 RPE8 / 35x10 RIR3 RPE7
+
+### Q1-f 브리핑: 이전 '동일 루틴'(같은 routine_template)과 비교 — 설문 18-1 요구
+session_no | date | routine | status | exercise_count | sets | total_volume_load
+13 | 2026-10-15 | 후면사슬 루틴 | in_progress | 3 | 7/9 | 3717.5
+9 | 2026-09-18 | 후면사슬 루틴 | completed | 3 | 8/8 | 3200
+PASS expect: rows=2
+PASS expect: #1 -> session_no=13; sets=7/9
+PASS expect: #2 -> session_no=9; sets=8/8; total_volume_load=3200
+
+### Q1-g 한눈에: 다음 PT 일정과 예정 루틴 (종목별 참고사항 포함, 앱 설명 4-5)
+session_no | date | routine | plan_order | exercise | role | plan | note
+14 | 2026-10-19 17:00 | 상체 당기기 | 1 | 랫풀다운 | main | 3세트 35kg 10~12회 | 어깨 으쓱 없이 견갑 내리고 시작
+14 | 2026-10-19 17:00 | 상체 당기기 | 2 | 시티드 로우 | accessory | 3세트 30kg 12회 | 
+PASS expect: rows=2
+PASS expect: #1 -> session_no=14; date=2026-10-19 17:00; exercise=랫풀다운; plan=3세트 35kg 10~12회; note=어깨 으쓱 없이 견갑 내리고 시작
+PASS expect: #2 -> exercise=시티드 로우; plan=3세트 30kg 12회; note=NULL
+
+### Q2 추천 입력: 오늘 각 종목 '직전까지'의 세션 내 맥락 — 인터뷰 1차-1 "앞 운동 볼륨"
+exercise | role | status | actual_order | prior_sets | prior_work_sets | prior_warmup_sets | prior_main_work_sets | prior_volume_load | prior_min_rir_work | prior_avg_rir_work
+루마니안 데드리프트 | main | done | 1 | 0 | 0 | 0 | 0 | 0 |  | 
+힙쓰러스트 | main | done | 2 | 4 | 4 | 0 | 4 | 1572.5 | 1 | 1.5
+라잉 레그컬 | finisher | pending |  | 7 | 7 | 0 | 7 | 3717.5 | 1 | 1.4
+PASS expect: rows=3
+PASS expect: exercise=라잉 레그컬 -> prior_sets=7; prior_work_sets=7; prior_main_work_sets=7; prior_volume_load=3717.5; prior_min_rir_work=1; prior_avg_rir_work=1.4
+PASS expect: exercise=힙쓰러스트 -> prior_sets=4; prior_volume_load=1572.5
+PASS expect: exercise=루마니안 데드리프트 -> prior_sets=0; prior_volume_load=0
+
+### Q3 추천 입력: 레그컬의 과거 기록 전체를 '역할 + 당시 선행 맥락'과 함께 (다른 역할 기록에서 오늘 역할을 추정)
+date | routine | role | set_structure | prior_sets | prior_work_sets | prior_main_work_sets | prior_volume_load | prior_avg_rir_work | sets
+2026-09-28 | 뒷다리 루틴 | warmup | straight | 0 | 0 | 0 | 0 |  | 20x15 / 20x15
+2026-10-12 | 스쿼트 중심 하체 | accessory | straight | 8 | 8 | 4 | 5025 | 1.6 | 25x12 RIR2 / 25x12 RIR1 / 25x10 RIR0
+2026-10-15 | 후면사슬 루틴 | finisher | drop | 7 | 7 | 7 | 3717.5 | 1.4 | -
+PASS expect: rows=3
+PASS expect: date=2026-09-28 -> role=warmup; prior_sets=0; sets=20x15 / 20x15
+PASS expect: date=2026-10-12 -> role=accessory; prior_work_sets=8; prior_main_work_sets=4; prior_volume_load=5025
+PASS expect: date=2026-10-15 -> role=finisher; prior_sets=7; sets=-
+
+### Q4 추천 출발점: 오늘 역할(마무리)의 트레이너 기본 기준. 회원 목표별 행이 있으면 그것을, 없으면 공통 행을 쓴다.
+role | applies_to | reps_min | reps_max | rir_min | rir_max | sets_min | sets_max | rest_sec_min | rest_sec_max | note
+finisher | 공통 | 15 | 20 | 0 | 1 | 2 | 3 | 30 | 60 | 추가질문 2번 예시값(임시)
+PASS expect: rows=1
+PASS expect: #1 -> role=finisher; reps_min=15; reps_max=20; rir_min=0; rir_max=1; applies_to=공통
+
+### Q5 수업 기록 카드: 회차별 요약 (앱 설명 4-3: 날짜, 부위, 종목 수, 완료/전체 세트, 평균 강도, 메모)
+session_no | date | session_type | focus | status | exercise_count | sets | avg_rpe_work | avg_rir_work | total_volume_load | caution_checked | memo_head
+8 | 2026-09-14 | lower | 하체 | completed | 2 | 6/6 | 8.2 | 1.8 | 3720 | 1 | 스쿼트 할 때 허리가 과하게 젖혀짐.
+9 | 2026-09-18 | lower | 후면사슬 | completed | 3 | 8/8 | 8.9 | 1.1 | 3200 | 1 | 
+10 | 2026-09-28 | lower | 하체 후면 | completed | 4 | 10/10 | 8.6 | 1.4 | 3250 | 1 | RDL 3세트째 오른쪽 무릎 뒤쪽 당
+11 | 2026-10-08 | upper | 상체 | completed | 2 | 6/6 | 8.3 | 1.3 | 2235 | 1 | 
+12 | 2026-10-12 | lower | 하체 집중 | completed | 3 | 11/11 | 8.5 | 1.5 | 5875 | 1 | 스쿼트 42.5kg 8회 안정적. 무
+13 | 2026-10-15 | lower | 후면사슬 | in_progress | 3 | 7/9 | 8.6 | 1.4 | 3717.5 | 1 | 
+PASS expect: rows=6
+PASS expect: session_no=13 -> sets=7/9; status=in_progress; total_volume_load=3717.5; caution_checked=1
+PASS expect: session_no=12 -> sets=11/11; total_volume_load=5875; avg_rir_work=1.5
+PASS expect: session_no=11 -> avg_rpe_work=8.3; avg_rir_work=1.3
+PASS expect: session_no=10 -> total_volume_load=3250
+PASS expect: session_no=8 -> total_volume_load=3720
+
+### Q6 주간 부위별 볼륨 (작업 세트만, 주 = 월요일 시작)
+week_start | muscle_group | weighted_sets | weighted_volume_load
+2026-09-14 | glutes | 10 | 5060
+2026-09-14 | quads | 6 | 3720
+2026-09-14 | hamstrings | 5.5 | 2180
+2026-09-14 | adductors | 1.5 | 600
+2026-09-14 | back_upper | 1.5 | 580
+2026-09-28 | glutes | 7 | 3250
+2026-09-28 | hamstrings | 5.5 | 2200
+2026-09-28 | back_upper | 1.5 | 575
+2026-10-05 | back_lats | 4.5 | 1695
+2026-10-05 | back_upper | 3 | 1080
+2026-10-05 | biceps | 3 | 1118
+2026-10-12 | glutes | 11 | 6230
+2026-10-12 | hamstrings | 8.5 | 3495
+2026-10-12 | quads | 8 | 5025
+2026-10-12 | adductors | 2 | 750
+2026-10-12 | back_upper | 2 | 786
+PASS expect: rows=16
+PASS expect: week_start=2026-10-12 -> muscle_group=glutes; weighted_sets=11
+PASS expect: week_start=2026-09-28 & muscle_group=hamstrings -> weighted_sets=5.5
+
+### Q7 회차별 당시 목표·체성분 단계·훈련 방향 — 현재 값으로 덮어쓰지 않았는지, 블록 연결이 빠지지 않았는지
+session_no | date | goals_then | phase_then | block_by_link | block_by_date | block_check
+8 | 2026-09-14 | fat_loss,hypertrophy | cut |  | maintain/volume | 연결 없음
+9 | 2026-09-18 | fat_loss,hypertrophy | cut | maintain/volume | maintain/volume | 같음
+10 | 2026-09-28 | fat_loss,hypertrophy | cut | maintain/volume | maintain/volume | 같음
+11 | 2026-10-08 | fat_loss,hypertrophy,strength | cut | increase/load | increase/load | 같음
+12 | 2026-10-12 | fat_loss,hypertrophy,strength | cut | increase/load | increase/load | 같음
+13 | 2026-10-15 | fat_loss,hypertrophy,strength | cut | increase/load | increase/load | 같음
+PASS expect: rows=6
+PASS expect: session_no=8 -> block_by_link=NULL; block_by_date=maintain/volume; block_check=연결 없음
+PASS expect: session_no=10 -> goals_then=fat_loss,hypertrophy; phase_then=cut; block_check=같음
+PASS expect: session_no=12 -> goals_then=fat_loss,hypertrophy,strength; block_by_link=increase/load
+
+### Q8-a 피드백 루프(세트 직전 추천): 추천 vs 트레이너 결정 vs 실제, 근거 예상과의 오차 (RQ3)
+rec_id | method | shown | direction | changed_variable | rec_kg | rec_reps | trainer_action | decided_kg | decided_reps | actual_kg | actual_reps | expected_reps | error_reps | vs_expected
+rc1 | personal | 1 | increase | load | 42.5~45 | 6~8 | accepted | 42.5 | 8 | 42.5 | 8 | 8~9 | -0.5 | within
+rc2 | population | 0 | increase | load | 42.5~42.5 | 7~8 |  | 42.5 | 8 | 42.5 | 8 | 7~8 | 0.5 | within
+rc4 | personal_context | 1 | adjust | load | 17.5~20 | 15~18 |  |  |  |  |  | 15~17 |  | 아직
+PASS expect: rows=3
+PASS expect: rec_id=rc1 -> trainer_action=accepted; decided_kg=42.5; actual_reps=8; expected_reps=8~9; error_reps=-0.5; vs_expected=within
+PASS expect: rec_id=rc2 -> shown=0; trainer_action=NULL; expected_reps=7~8; error_reps=0.5
+PASS expect: rec_id=rc4 -> trainer_action=NULL; actual_reps=NULL; vs_expected=아직
+
+### Q8-b 피드백 루프(루틴 작성 때 종목 단위 추천): 추천 vs 계획(plan_) — 수정·거부 이유 태그 (RQ3)
+rec_id | exercise | direction | changed_variable | rec_kg | plan_kg | rec_sets | plan_sets | trainer_action | reasons | feedback
+rc3 | 레그프레스 | increase | load | 77.5~80 | 75 | 4 | 4 | modified | ["pain_caution"] | 무릎 주의사항 때문에 증량 폭을 줄임
+PASS expect: rows=1
+PASS expect: rec_id=rc3 -> trainer_action=modified; rec_kg=77.5~80; plan_kg=75; rec_sets=4; plan_sets=4; reasons=["pain_caution"]
+
+### Q8-c 연구 비교: 같은 세트에 대한 예측 방식별 예상과 실제의 오차 (RQ1 = personal vs personal_context, RQ2 = population·recent vs personal)
+expectation_id | exercise | method | at_weight_kg | expected_reps | actual_reps | error_reps | vs_expected
+xp-sq-pop | 바벨 백스쿼트 | population | 42.5 | 7~8 | 8 | 0.5 | within
+xp-sq-rec | 바벨 백스쿼트 | recent | 42.5 | 9~10 | 8 | -1.5 | below
+xp-sq-per | 바벨 백스쿼트 | personal | 42.5 | 8~9 | 8 | -0.5 | within
+xp-sq-pc | 바벨 백스쿼트 | personal_context | 42.5 | 8~9 | 8 | -0.5 | within
+xp-lc12-pc | 라잉 레그컬 | personal_context | 25 | 11~13 | 10 | -2 | below
+PASS expect: rows=5
+PASS expect: expectation_id=xp-sq-rec -> method=recent; error_reps=-1.5
+PASS expect: expectation_id=xp-sq-pop -> error_reps=0.5
+PASS expect: expectation_id=xp-lc12-pc -> error_reps=-2; vs_expected=below
+
+### Q9 진행 추이: 체중·근육량·체지방 (오늘 기준 최근 3개월)
+measured_on | weight_kg | skeletal_muscle_kg | body_fat_pct | change_kg
+2026-07-15 | 63.4 | 22 | 31.5 | 0
+2026-08-15 | 61.6 | 22.1 | 30 | -1.8
+2026-09-15 | 59.9 | 22 | 28.6 | -3.5
+2026-10-14 | 58.2 | 22.1 | 27.1 | -5.2
+PASS expect: rows=4
+PASS expect: #4 -> measured_on=2026-10-14; change_kg=-5.2
+
+### Q10 기댓값 이탈 검토: 데이터상 차이(AI) + 원인 태그(트레이너) — PDF 25장
+date | exercise | set_index | method | expected_reps | actual | direction | data_diffs_json | cause_tags | note
+2026-10-12 | 라잉 레그컬 | 3 | personal_context | 11~13 | 25x10 | below | {"reps":{"expected":"11~13","actual":10},"rest_before_sec":{"planned":60,"actual":45}} | ["breathing"] | 마지막 세트 호흡 끊김 (트레이너 판단)
+PASS expect: rows=1
+PASS expect: #1 -> exercise=라잉 레그컬; direction=below; cause_tags=["breathing"]; actual=25x10
+
+### Q11 [v0.3] 종목 카드 맨 위: 회원별 지금 기구 세팅 (가장 최근 행)
+exercise_id | setting | set_on | is_trial
+ex-legpress | 등받이:1, 발판:3 | 2026-10-08 | 1
+PASS expect: rows=1
+PASS expect: #1 -> exercise_id=ex-legpress; setting=등받이:1, 발판:3; is_trial=1
+
+### Q12 [v0.3] 다음 PT 준비: 종목별 숫자 채우기 첫 출처(아직 쓰지 않은 다음 목표)
+exercise_id | target_weight_kg | target_reps
+ex-hipthrust |  | 12
+ex-rdl | 62.5 | 8
+PASS expect: rows=2
+PASS expect: exercise_id=ex-rdl -> target_weight_kg=62.5; target_reps=8
+
+### Q13 [v0.3] 일정 바뀐 기록 요약과 남은 등록 횟수
+moved | cancelled | left_n
+1 | 1 | 24
+PASS expect: #1 -> moved=1; cancelled=1; left_n=24
+
+### Q14 [v0.3] 연습 세트를 뺀 작업 세트 볼륨 (13회차)
+work_sets | vol
+6 | 3377.5
+PASS expect: rows=1
+PASS expect: #1 -> work_sets=6
+
+### Q15 [v0.3] 종목 카드에 다시 뜨는 종목 메모
+id | title | important
+n-ex1 | 발끝 당기고 내릴 때 천천히 | 1
+PASS expect: rows=1
+PASS expect: #1 -> id=n-ex1; important=1
+
+## 3. 제약 테스트
+PASS 역할별 공통 기준 중복 → 막힘: UNIQUE constraint failed: role_default.trainer_id, role_default.role
+PASS 목표별 기준은 공통 기준과 따로 허용 → 통과
+PASS 열린 훈련 방향 두 개 → 막힘: UNIQUE constraint failed: training_block.member_id
+PASS 집중 대상은 direction=focus일 때만 → 막힘: CHECK constraint failed: focus_target IS NULL OR direction = 'focus'
+PASS 열린 체성분 단계 두 개 → 막힘: UNIQUE constraint failed: body_comp_phase.member_id
+PASS 동의 없는 회원의 생리 주기 기록 → 막힘: cycle consent required
+PASS 동의 없는 회원의 수업에 주기 일차 → 막힘: cycle consent required
+PASS 동의 없는 회원의 수업에 주기 일차를 나중에 입력 → 막힘: cycle consent required
+PASS 동의 철회 뒤 주기 기록 → 막힘: cycle consent required
+PASS 수업 시작 뒤 계획값 변경 → 막힘: plan values are frozen after session start
+PASS 수업 시작 뒤 결정값 기록은 허용 → 통과
+PASS 시작 전 수업의 계획값 변경은 허용 → 통과
+PASS 수업 시작 뒤 계획 시간 변경 → 막힘: plan values are frozen after session start
+PASS 수업 시작 뒤 종목 계획 세트 수 변경 → 막힘: plan values are frozen after session start
+PASS 시작 전 수업의 종목 계획 변경은 허용 → 통과
+PASS RPE 범위 밖(15) → 막힘: CHECK constraint failed: act_rpe IS NULL OR act_rpe BETWEEN 1 AND 10
+PASS 완료 세트인데 입력 출처 없음 → 막힘: CHECK constraint failed: completed = 0 OR act_source IS NOT NULL
+PASS 계획 횟수 최소 > 최대 → 막힘: CHECK constraint failed: plan_reps_min IS NULL OR plan_reps_max IS NULL OR plan_reps_min <= plan_reps_max
+PASS 같은 회원 같은 회차 중복 → 막힘: UNIQUE constraint failed: session.member_id, session.session_no
+PASS 주의사항 확인이 caution이 아닌 메모를 가리킴 → 막힘: caution check must reference a caution note of the same member
+PASS 다른 회원의 주의사항을 확인 → 막힘: caution check must reference a caution note of the same member
+PASS 해결 상태인데 해결일 없음 → 막힘: CHECK constraint failed: (status = 'open' AND resolved_on IS NULL AND resolved_session_id IS NULL)
+      OR (status = 'resolved' AND resolved_on IS NOT NULL)
+PASS 부위는 caution 메모에만 → 막힘: CHECK constraint failed: kind = 'caution' OR body_region IS NULL
+PASS 화면에 보이는 같은 추천 두 개 → 막힘: UNIQUE constraint failed: index 'ux_rec_shown'
+PASS 보이지 않은 추천에 트레이너 반응 → 막힘: CHECK constraint failed: shown = 1 OR trainer_action IS NULL
+PASS 이탈 후 재추천은 여러 번 허용 → 통과
+PASS 추천의 세트와 종목 불일치 → 막힘: recommendation set/exercise mismatch
+PASS 예상의 세트와 종목 불일치 → 막힘: expectation set/exercise mismatch
+PASS 같은 예상 중복 계산 → 막힘: UNIQUE constraint failed: index 'ux_expectation_once'
+PASS 예상 범위 low > high → 막힘: CHECK constraint failed: exp_reps_low <= exp_reps_high
+PASS 편차 검토의 세트와 예상 불일치 → 막힘: deviation_review set/expectation mismatch
+PASS 다른 회원 전용 루틴으로 수업 만들기 → 막힘: routine template belongs to another member
+PASS 없는 세트 구성 코드 → 막힘: FOREIGN KEY constraint failed
+PASS 옮김인데 옮긴 날짜 없음 → 막힘: CHECK constraint failed: (kind = 'moved') = (from_start IS NOT NULL AND to_start IS NOT NULL)
+PASS 옮김을 횟수에서 차감 → 막힘: CHECK constraint failed: kind <> 'moved' OR deduct = 0
+PASS 안 옴 차감은 허용 → 통과
+PASS 없는 일정 변경 이유 → 막힘: CHECK constraint failed: reason IN ('member','pain','work','no_contact','trainer','other')
+PASS 내용 없는 다음 목표 → 막힘: CHECK constraint failed: target_weight_kg IS NOT NULL OR target_reps IS NOT NULL OR text IS NOT NULL
+PASS 같은 수업 같은 종목 다음 목표 두 번 → 막힘: UNIQUE constraint failed: next_target.source_session_id, next_target.exercise_id
+PASS 종목 범위 메모인데 종목 없음 → 막힘: CHECK constraint failed: scope <> 'exercise' OR related_exercise_id IS NOT NULL
+PASS 분할 범위 메모는 루틴 틀과 함께 허용 → 통과
+PASS 계획 무게 범위 최소 > 최대 → 막힘: CHECK constraint failed: plan_weight_max_kg IS NULL OR plan_weight_kg IS NULL OR plan_weight_kg <= plan_weight_max_kg
+PASS 없는 숫자 채우기 기준 → 막힘: CHECK constraint failed: plan_basis IN ('next_target','same_split','recent','rule','weight_find','trainer')
+PASS 없는 입력 단위 → 막힘: CHECK constraint failed: input_unit IN ('kg','lb','stack','none')
+PASS 빼기 이유 칩은 뺀 종목에 → 막힘: CHECK constraint failed: change_reason_tag IS NULL OR status IN ('skipped','replaced','partial','done')
+PASS 같은 날 같은 종목 세팅 두 번 → 막힘: UNIQUE constraint failed: member_exercise_setting.member_id, member_exercise_setting.exercise_id, member_exercise_setting.set_on
+
+## 요약
+쿼리 23개, 기대값 68개, 제약 테스트 46개
+전부 통과

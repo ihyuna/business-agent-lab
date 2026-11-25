@@ -1,5 +1,7 @@
 # 데이터 구조 설계 v0.2
 
+> **2026-11-25 v0.3:** 같은 폴더의 schema.sql·queries.sql·sample-data.sql·run_check.py는 v0.3이다(`python3 run_check.py`로 검사). v0.3 설명은 ../../../데이터-구조.md 3-9절과 변경 기록에 있고, 이 문서는 v0.2 설명이다.
+
 > 상태: 최신 · 버전 v0.2 · 최종 수정 2026-10-15 · 이 문서가 기준인 주제: 테이블·필드·선택지 목록의 뜻과 쓰는 규칙(정의 자체는 `schema.sql`)
 > 근거: [project-analysis.md](../../analysis/project-analysis.md)(PDF 연구보고서 + 앱 설명), [trainer-interview.md](../../analysis/trainer-interview.md)(트레이너 설문·인터뷰). 결정(D··)·열린 질문(O··)은 [decisions.md](../../decisions.md), 용어는 [glossary.md](../../glossary.md).
 
