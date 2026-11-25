@@ -305,7 +305,7 @@ V.memberEdit=r=>{
     <div class="col">
      <div class="card"><h2>몸 기록</h2><table><tr><th>날짜</th><th>키</th><th>체중</th><th>골격근량</th></tr>${body||'<tr><td colspan="4" class="empty">아직 없어요.</td></tr>'}</table>
        <div class="row" style="margin-top:6px;flex-wrap:nowrap">${dIn('bDate-'+m.id,'',{type:'date',w:140})}${dIn('bH-'+m.id,'키',{w:60,im:'decimal'})}${dIn('bW-'+m.id,'체중',{w:60,im:'decimal'})}${dIn('bM-'+m.id,'골격근',{w:66,im:'decimal'})}${btn('넣기','addBody',{mid:m.id},'small')}</div></div>
-     <div class="card"><h2>몸 쓰는 감각 5항목</h2><div class="tiny muted" style="margin-bottom:6px">1 낮음 ~ 5 높음.</div>
+     <div class="card"><h2>몸 쓰는 감각 5항목</h2><div class="tiny muted" style="margin-bottom:6px">1 못 함·통증 · 3 보상 동작 있음 · 5 깔끔. 2·4는 그 사이.</div>
        ${MOVE_ITEMS.map(([k,l])=>`<div class="row" style="margin-bottom:6px"><span style="width:120px">${l}</span>${chips([[1,'1'],[2,'2'],[3,'3'],[4,'4'],[5,'5']],mv[k],'move',{mid:m.id,item:k})}</div>`).join('')}
        <div class="row"><span style="width:120px">힘 쓰는 부위</span>${bIn('mForce',mv.force,{mid:m.id},{grow:1,ph:'예: 하체는 앞쪽 허벅지로 먼저 씀'})}</div></div>
      ${notesCard(m,['lifestyle','diet','self_train','personality','general'],'생활·식단·개인 운동 메모')}</div></div></div>`+
