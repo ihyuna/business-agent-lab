@@ -200,23 +200,23 @@ mark{background:var(--warn-soft);color:var(--ink);border-radius:3px;padding:0 1p
 /* ===== 클리닉 EMR 테마 v2 (2026-11-03, 닥터팔레트 차트·플래너 화면 참고: 흰 바탕, 얇은 회색 선, 왼쪽 메뉴, 파스텔 꼬리표, 시간표 블록) ===== */
 :root{
   --bg:#e9ecf1; --device:#ffffff; --panel:#ffffff; --ink:#1f2329; --muted:#6b7380; --faint:#9aa1ab;
-  --line:#e6e8ec; --soft:#f6f7f9; --hd:#f6f7f9; --accent:#2f7cf6; --accent-soft:#eaf2ff; --accent-ink:#ffffff;
-  --side:#f7f8fa; --zebra:#fafbfc; --bar:#9bbdf7; --now:#f0434b;
+  --line:#e6e8ec; --soft:#f6f7f9; --hd:#f6f7f9; --accent:#0b7a80; --accent-soft:#e7f2f2; --accent-ink:#ffffff;
+  --side:#f7f8fa; --zebra:#fafbfc; --bar:#9cf2f6; --now:#f0434b;
   --good:#1e9a5a; --good-soft:#e6f6ec; --warn:#c27a00; --warn-soft:#fff3dc; --bad:#e5484d; --bad-soft:#ffebec;
-  --p1:#2f7cf6; --p1s:#e9f1ff; --p2:#9b51e0; --p2s:#f4ecfd; --p3:#e5486f; --p3s:#ffeaf0; --p4:#1e9a5a; --p4s:#e6f6ec; --p5:#d97706; --p5s:#fff3e0; --p6:#0e8a9a; --p6s:#e4f6f8;
+  --p1:#0b7a80; --p1s:#ebfcfd; --p2:#9b51e0; --p2s:#f4ecfd; --p3:#e5486f; --p3s:#ffeaf0; --p4:#1e9a5a; --p4s:#e6f6ec; --p5:#d97706; --p5s:#fff3e0; --p6:#0e8a9a; --p6s:#e4f6f8;
   --font:"Aeonik Hangul","Aeonik Hangul Variable","AeonikHangul","Pretendard","IBM Plex Sans KR","Apple SD Gothic Neo","Noto Sans KR","Malgun Gothic",system-ui,sans-serif}
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
   --bg:#0e1116; --device:#16191f; --panel:#16191f; --ink:#e6e9ee; --muted:#a0a8b4; --faint:#747c88;
-  --line:#2a2f37; --soft:#1e2229; --hd:#1e2229; --accent:#5b9bff; --accent-soft:#1a2a45; --accent-ink:#081324;
-  --side:#121519; --zebra:#1a1d23; --bar:#4e78b8; --now:#ff6b70;
+  --line:#2a2f37; --soft:#1e2229; --hd:#1e2229; --accent:#60a9ac; --accent-soft:#153032; --accent-ink:#021213;
+  --side:#121519; --zebra:#1a1d23; --bar:#1a676c; --now:#ff6b70;
   --good:#4cc787; --good-soft:#15291e; --warn:#f0b04a; --warn-soft:#33270f; --bad:#ff7d80; --bad-soft:#3a1d1f;
-  --p1:#7fb0ff; --p1s:#1b2b47; --p2:#c39af2; --p2s:#2c2140; --p3:#ff8fab; --p3s:#3d1f29; --p4:#5fd197; --p4s:#15291e; --p5:#f5b24f; --p5s:#352710; --p6:#5cd0de; --p6s:#132e33}}
+  --p1:#91c3c6; --p1s:#153032; --p2:#c39af2; --p2s:#2c2140; --p3:#ff8fab; --p3s:#3d1f29; --p4:#5fd197; --p4s:#15291e; --p5:#f5b24f; --p5s:#352710; --p6:#5cd0de; --p6s:#132e33}}
 :root[data-theme="dark"]{
   --bg:#0e1116; --device:#16191f; --panel:#16191f; --ink:#e6e9ee; --muted:#a0a8b4; --faint:#747c88;
-  --line:#2a2f37; --soft:#1e2229; --hd:#1e2229; --accent:#5b9bff; --accent-soft:#1a2a45; --accent-ink:#081324;
-  --side:#121519; --zebra:#1a1d23; --bar:#4e78b8; --now:#ff6b70;
+  --line:#2a2f37; --soft:#1e2229; --hd:#1e2229; --accent:#60a9ac; --accent-soft:#153032; --accent-ink:#021213;
+  --side:#121519; --zebra:#1a1d23; --bar:#1a676c; --now:#ff6b70;
   --good:#4cc787; --good-soft:#15291e; --warn:#f0b04a; --warn-soft:#33270f; --bad:#ff7d80; --bad-soft:#3a1d1f;
-  --p1:#7fb0ff; --p1s:#1b2b47; --p2:#c39af2; --p2s:#2c2140; --p3:#ff8fab; --p3s:#3d1f29; --p4:#5fd197; --p4s:#15291e; --p5:#f5b24f; --p5s:#352710; --p6:#5cd0de; --p6s:#132e33}
+  --p1:#91c3c6; --p1s:#153032; --p2:#c39af2; --p2s:#2c2140; --p3:#ff8fab; --p3s:#3d1f29; --p4:#5fd197; --p4s:#15291e; --p5:#f5b24f; --p5s:#352710; --p6:#5cd0de; --p6s:#132e33}
 #device{font-size:13.5px;border-radius:14px}
 .top{background:var(--panel);border-bottom:1px solid var(--line);min-height:50px;padding:8px 14px}
 .top h1{font-size:16px;font-weight:700;letter-spacing:-.01em}
@@ -455,10 +455,10 @@ input,select,textarea{border-radius:6px;border-color:#dfe2e7}
 /* ===== 테마 v3 (2026-11-06, 인투씨엔에스 클라우드 EMR 느낌: 회색 바탕 위 흰 패널 여러 개, 머리줄 있는 패널, 촘촘한 표, 위쪽 메뉴, 진한 파랑) ===== */
 :root{
   --bg:#dfe4eb; --device:#eef1f5; --panel:#ffffff; --ink:#1b2130; --muted:#5f6b7c; --faint:#97a1ae;
-  --line:#dce1e8; --line2:#cdd4de; --soft:#f4f6f9; --hd:#f3f5f8; --phd:#fafbfc; --accent:#1f66f2; --accent-soft:#e8f0ff; --accent-ink:#ffffff;
-  --side:#ffffff; --zebra:#fafbfd; --bar:#a9c4f7}
-@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--device:#101318; --line2:#323843; --phd:#1b1f26; --accent:#5c95ff}}
-:root[data-theme="dark"]{--device:#101318; --line2:#323843; --phd:#1b1f26; --accent:#5c95ff}
+  --line:#dce1e8; --line2:#cdd4de; --soft:#f4f6f9; --hd:#f3f5f8; --phd:#fafbfc; --accent:#0b7a80; --accent-soft:#eafcfd; --accent-ink:#ffffff;
+  --side:#ffffff; --zebra:#fafbfd; --bar:#a9f3f7}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--device:#101318; --line2:#323843; --phd:#1b1f26; --accent:#69ebf2}}
+:root[data-theme="dark"]{--device:#101318; --line2:#323843; --phd:#1b1f26; --accent:#69ebf2}
 #device{font-size:13px;border-radius:12px;background:var(--device)}
 /* 위쪽 메뉴 (왼쪽 메뉴를 위로) */
 #app:has(> .sidenav){padding-left:0;padding-top:44px}
@@ -548,14 +548,14 @@ tr.click:hover td{background:var(--accent-soft)}
    지금 디자인(A)은 그대로 두고 #device.chart 일 때만 덮어쓴다. 바탕은 종이색, 선은 잉크색, 모서리는 각지게,
    칸 머리는 양식 이름표처럼, 표는 모든 칸에 선, 강조는 남색 잉크, 경고는 빨간 도장색 */
 #device.chart{--device:#f3f6fb; --panel:#ffffff; --ink:#1a2233; --muted:#5b6678; --faint:#98a2b3;
-  --line:#e1e7f0; --line2:#c9d4e4; --soft:#f6f8fc; --hd:#edf3fe; --phd:#edf3fe; --accent:#1f66f2; --accent-soft:#eaf1ff; --accent-ink:#ffffff;
-  --rule:#e6ecf5; --ink-line:#9db0cf; --stamp:#e5484d; --navy:#173a8a;
+  --line:#e1e7f0; --line2:#c9d7d8; --soft:#f6fcfc; --hd:#e7f2f2; --phd:#e7f2f2; --accent:#0b7a80; --accent-soft:#ecfcfd; --accent-ink:#ffffff;
+  --rule:#e6ecf5; --ink-line:#90b1b3; --stamp:#e5484d; --navy:#074f53;
   border-radius:4px;background:var(--device)}
 /* 2026-11-17 색 다시: 누런 종이색이 탁하다는 의견으로 흰 종이 + 맑은 파랑. 양식 선·칸 구성은 그대로 */
-#device.chart .f-tt,#device.chart .f-cap{color:var(--navy,#173a8a)}
+#device.chart .f-tt,#device.chart .f-cap{color:var(--navy,#074f53)}
 #device.chart .f-title{border-bottom-color:var(--accent)}
-#device.chart .f-lb{color:var(--navy,#173a8a)}
-#device.chart .f-paper{border-color:var(--ink-line);box-shadow:0 2px 10px rgba(31,102,242,.06)}
+#device.chart .f-lb{color:var(--navy,#074f53)}
+#device.chart .f-paper{border-color:var(--ink-line);box-shadow:0 2px 10px rgba(11,122,128,.06)}
 #device.chart .f-no{border-color:var(--accent);color:var(--accent)}
 #device.chart .tabbar.sidenav,#device.chart .actbar,#device.chart .pbar{border-color:var(--ink-line)}
 #device.chart .scroll,#device.chart .planner,#device.chart .chartlay{background:var(--device)}
@@ -679,9 +679,9 @@ body.full #app .hl{outline:0!important;box-shadow:none!important;animation:none!
 .ld-eyebrow{font-size:13px;font-weight:600;color:var(--accent);letter-spacing:.02em}
 .ld-h{font-size:34px;line-height:1.25;margin:0;font-weight:800;letter-spacing:-.025em;color:var(--ink)}
 .ld-sub{margin:2px 0 8px;color:var(--muted);font-size:15px;line-height:1.55;max-width:480px}
-.ld-mock{max-width:470px;border:1px solid var(--ink-line,var(--line));background:var(--panel);box-shadow:0 12px 32px rgba(31,102,242,.10),0 2px 6px rgba(26,34,51,.06);border-radius:6px;overflow:hidden}
+.ld-mock{max-width:470px;border:1px solid var(--ink-line,var(--line));background:var(--panel);box-shadow:0 12px 32px rgba(11,122,128,.10),0 2px 6px rgba(26,34,51,.06);border-radius:6px;overflow:hidden}
 .ld-mock-hd{display:flex;align-items:center;justify-content:space-between;padding:9px 14px;background:var(--hd,var(--accent-soft));border-bottom:1px solid var(--ink-line,var(--line))}
-.ld-mock-t{font-weight:700;font-size:13px;color:var(--navy,#173a8a)}
+.ld-mock-t{font-weight:700;font-size:13px;color:var(--navy,#074f53)}
 .ld-mock-no{font-size:11px;font-weight:700;color:var(--accent);border:1px solid var(--accent);padding:0 6px;border-radius:3px}
 .ld-mock-id{display:flex;gap:16px;padding:8px 14px;font-size:12px;color:var(--muted);border-bottom:1px solid var(--line)}
 .ld-mock-id b{color:var(--ink)}
@@ -714,7 +714,7 @@ body.full #app .hl{outline:0!important;box-shadow:none!important;animation:none!
 .gdoc .f-paper>.card,.gdoc .f-paper .col>.card,.gdoc .f-paper .grid2 .card{border-radius:0!important}
 /* 카드 제목 = 왼쪽 라벨 칸 (회원 진료기록부의 fsec와 같은 모양) */
 #device.chart .gdoc:not(.r-settings) .card:has(>h2:first-child){display:grid;grid-template-columns:62px minmax(0,1fr);padding:0!important;margin-top:-1px}
-#device.chart .gdoc:not(.r-settings) .card:has(>h2:first-child)>h2:first-child{grid-column:1;grid-row:1/span 60;margin:0!important;padding:6px 2px!important;border:0!important;border-right:1px solid var(--ink-line)!important;border-radius:0!important;background:var(--hd)!important;display:flex!important;flex-direction:column;justify-content:center;align-items:center;gap:2px;text-align:center;font-size:12px!important;font-weight:800;line-height:1.3;color:var(--navy,#173a8a)}
+#device.chart .gdoc:not(.r-settings) .card:has(>h2:first-child)>h2:first-child{grid-column:1;grid-row:1/span 60;margin:0!important;padding:6px 2px!important;border:0!important;border-right:1px solid var(--ink-line)!important;border-radius:0!important;background:var(--hd)!important;display:flex!important;flex-direction:column;justify-content:center;align-items:center;gap:2px;text-align:center;font-size:12px!important;font-weight:800;line-height:1.3;color:var(--navy,#074f53)}
 #device.chart .gdoc:not(.r-settings) .card:has(>h2:first-child)>h2:first-child::before{display:none!important}
 #device.chart .gdoc:not(.r-settings) .card:has(>h2:first-child)>h2:first-child>*{font-size:10.5px;font-weight:600;color:var(--muted);margin:0}
 #device.chart .gdoc:not(.r-settings) .card:has(>h2:first-child)>:not(h2:first-child){grid-column:2;margin-left:10px;margin-right:10px;max-width:calc(100% - 20px);box-sizing:border-box}

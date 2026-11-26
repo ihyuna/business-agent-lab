@@ -8,7 +8,7 @@
 | 데이터 구조 | [docs/데이터-구조.md](docs/데이터-구조.md) |
 | **짐노트 웹앱 (기본)** | [app.html](app.html) → [web/index.html](web/index.html) (크롬에서 열기, 실제로 쓰는 웹앱, 아래 '웹앱') |
 | PT 기록 앱 MVP (시연판, 시나리오 안내) | [demo.html](demo.html), 코드는 [src/](src/) |
-| 키컬러 비교 사본 (청록 후보 4개, 고르는 중) | [colors/](colors/) (`python3 colors/make.py`로 demo.html에서 만듦, D98) |
+| 키컬러 비교 사본 (청록 후보 4개, 진청록으로 확정 D118) | [colors/](colors/) (`make.py` 비교 사본, `apply.py` 소스에 적용한 색 바꾸기) |
 | 결정 기록·지금 할 일 | [docs/참고/decisions.md](docs/참고/decisions.md) (D01~D117) |
 | 가명 처리한 실제 데이터 기록 | [data/](data/README.md) |
 
